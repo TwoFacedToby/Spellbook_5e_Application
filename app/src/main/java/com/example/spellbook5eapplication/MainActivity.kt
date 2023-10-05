@@ -10,11 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             Spellbook5eApplicationTheme {
                 // A surface container using the 'background' color from the theme
@@ -26,6 +28,16 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        val controller = SpellController()
+        val spellList = controller.getAllSpellsList()
+        if(spellList != null){
+            controller.loadSpellList(spellList)
+            spellList.printInfoToConsole()
+        }
+
+
+
     }
 }
 
