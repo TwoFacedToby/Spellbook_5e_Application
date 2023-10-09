@@ -1,4 +1,4 @@
-package com.dtu.uemad.birthdaycardtest.Model.Data_Model
+package com.example.spellbook5eapplication.app.Model.Data_Model
 
 class Filter {
     private var spellName = ""
@@ -154,7 +154,7 @@ class Filter {
         this.level.clear()
     }
 
-    fun getIsLevel(): List<Int> {
+    fun getLevel(): List<Int> {
         return this.level.toList()
     }
     enum class School(val value: String) {

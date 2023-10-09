@@ -1,4 +1,4 @@
-package com.dtu.uemad.birthdaycardtest.Model
+package com.example.spellbook5eapplication.app.Model
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

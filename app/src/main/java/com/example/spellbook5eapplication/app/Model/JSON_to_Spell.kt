@@ -1,7 +1,7 @@
-package com.dtu.uemad.birthdaycardtest.Model
+package com.example.spellbook5eapplication.app.Model
 
-import com.dtu.uemad.birthdaycardtest.Model.Data_Model.SpellList
-import com.dtu.uemad.birthdaycardtest.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
@@ -11,6 +11,7 @@ class JSON_to_Spell {
         val gson = Gson()
         val spell = gson.fromJson(json, Spell_Info.SpellInfo::class.java)
         if(spell.description?.isEmpty() != false) return null
+        spell.index = json
         return spell
     }
     fun jsonToSpellList(json : String) : SpellList?{

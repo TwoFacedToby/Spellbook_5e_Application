@@ -1,4 +1,6 @@
-package com.dtu.uemad.birthdaycardtest.Model.Data_Model
+package com.example.spellbook5eapplication.app.Model.Data_Model
+
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 
 class SpellList {
     private var namesList: List<String> = emptyList()
@@ -32,6 +34,7 @@ class SpellList {
             println("- Spell Level: ${spell.level}")
             println("- Components: ${spell.components}")
         }
+        println("Printed ${spellInfoList.size} spells")
 
     }
 }

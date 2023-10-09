@@ -1,7 +1,10 @@
-package com.dtu.uemad.birthdaycardtest.Model
+package com.example.spellbook5eapplication.app.Model
 
-import com.dtu.uemad.birthdaycardtest.Model.Data_Model.SpellList
-import com.dtu.uemad.birthdaycardtest.Model.Data_Model.Spell_Info
+import androidx.compose.ui.text.toLowerCase
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import java.util.Locale
 
 class Search {
     /**@author Tobias s224271
@@ -33,32 +36,22 @@ class Search {
         toReturn.setSpellNamesList(matches.toList())
         return toReturn
     }
-
-    /**@author Tobias s224271
-     * @param spellList the list that should be searched
-     * @param filter the SpellInfo data class that has the same properties as the spell you want to find
-     * @return A SpellList that only contains the spells that has the same properties as the filter
-     *
-     * Checks to see if the filter doesnt have null value for the properties we are filtering for, if it is not a null value, then
-     * it should remove all the spells from the spellList that doesn't have the same value.
-     * It checks the more obscure filters first as that will remove a lot so later it wont have to go through that many.
-     */
-    fun searchSpellListWithFilter(spellList: SpellList, filter : Spell_Info.SpellInfo) : SpellList {
+    fun searchSpellListWithFilter(spellList: SpellList, filter : Filter) : SpellList {
         var changingSpellList = spellList
-        if(filter.name != null) changingSpellList = searchSpellList(changingSpellList, filter.name)
-        if(filter.castingTime != null) removeAllButFilter(spellList, "casting_time", filter)
-        if(filter.areaOfEffect != null) removeAllButFilter(spellList, "aoe", filter)
-        if(filter.duration != null) removeAllButFilter(spellList, "duration", filter)
-        if(filter.components != null) removeAllButFilter(spellList, "components", filter)
-        if(filter.school != null) removeAllButFilter(spellList, "school", filter)
-        if(filter.isRitual != null) removeAllButFilter(spellList, "ritual", filter)
-        if(filter.damage != null) removeAllButFilter(spellList, "damage", filter)
-        if(filter.level != null) removeAllButFilter(spellList, "level",filter)
-        if(filter.classes != null) removeAllButFilter(spellList, "classes", filter)
-        if(filter.dc != null) removeAllButFilter(spellList, "dc", filter)
-        if(filter.isConcentration != null) removeAllButFilter(spellList, "concentration", filter)
+        if(filter.getSpellName() != "") changingSpellList = searchSpellList(changingSpellList, filter.getSpellName())
+        if(filter.getCastingTime().isNotEmpty()) filterSpells(spellList, "casting_time", filter)
+        if(filter.getAreaOfEffect().isNotEmpty()) filterSpells(spellList, "aoe", filter)
+        if(filter.getDuration().isNotEmpty()) filterSpells(spellList, "duration", filter)
+        if(filter.getComponent().isNotEmpty()) filterSpells(spellList, "components", filter)
+        if(filter.getSchool().isNotEmpty()) filterSpells(spellList, "school", filter)
+        if(filter.getIsRitual().isNotEmpty()) filterSpells(spellList, "ritual", filter)
+        if(filter.getDamageType().isNotEmpty()) filterSpells(spellList, "damage", filter)
+        if(filter.getLevel().isNotEmpty()) filterSpells(spellList, "level", filter)
+        if(filter.getClasses().isNotEmpty()) filterSpells(spellList, "classes", filter)
+        if(filter.getIsConcentration().isNotEmpty()) filterSpells(spellList, "concentration", filter)
         return changingSpellList
     }
+
     /**@author Tobias s224271
      * @param spellList The list that should be searched
      * @param type  The type of filter it should remove from
@@ -68,62 +61,149 @@ class Search {
      * If it doesnt have the same, it will be removed from the list.
      * The MutableList is then converted back to a List, and put into the spellList, so it now contains fewer spells for the next filter or finished list.
      */
-    private fun removeAllButFilter(spellList : SpellList, type : String, filter : Spell_Info.SpellInfo){
+    private fun filterSpells(spellList : SpellList, type : String, filter : Filter){
         val list = spellList.getSpellInfoList().toMutableList()
         when (type) {
             "level" -> {
-                for(element in list){
-                    if(element.level != filter.level) list.remove(element)
+                var index = 0
+                while(index < list.size){
+                    if(!filter.getLevel().contains(list[index].level)) list.remove(list[index])
+                    else{
+                        index++
+                    }
                 }
             }
             "casting_time" ->{
-                for(element in list){
-                    if(element.castingTime != filter.castingTime) list.remove(element)
+                var index = 0
+                while(index < list.size){
+                    var found = false
+                    for(time in filter.getCastingTime()){
+                        if(lower(time.value) == lower(list[index].castingTime)) {
+                            found = true
+                            break
+                        }
+                    }
+                    if(!found) list.remove(list[index])
+                    else{
+                        index++
+                    }
                 }
             }
             "school" ->{
-                for(element in list){
-                    if(element.school != filter.school) list.remove(element)
+                var index = 0
+                while(index < list.size){
+                    var found = false
+                    for(school in filter.getSchool()){
+                        if(lower(school.value) == lower(list[index].school?.name)) {
+                            found = true
+                            break
+                        }
+                    }
+                    if(!found) list.remove(list[index])
+                    else{
+                        index++
+                    }
                 }
             }
             "concentration" ->{
-                for(element in list){
-                    if(element.isConcentration != filter.isConcentration) list.remove(element)
+                var index = 0
+                while(index < list.size){
+                    if(!filter.getIsConcentration().contains(list[index].isConcentration)) {
+                        list.removeAt(index)
+                    }
+                    else{
+                        index++
+                    }
                 }
             }
             "ritual" ->{
-                for(element in list){
-                    if(element.isRitual != filter.isRitual) list.remove(element)
+                var index = 0
+                while(index < list.size){
+                    if(!filter.getIsRitual().contains(list[index].isRitual)) list.remove(list[index])
+                    else{
+                        index++
+                    }
                 }
             }
             "aoe" ->{
-                for(element in list){
-                    if(element.areaOfEffect != filter.areaOfEffect) list.remove(element)
+                var index = 0
+                while(index < list.size){
+                    var found = false
+                    for(aoe in filter.getAreaOfEffect()){
+                        if(lower(aoe.value) == lower(list[index].areaOfEffect?.type)) {
+                            found = true
+                            break
+                        }
+                    }
+                    if(!found) list.remove(list[index])
+                    else{
+                        index++
+                    }
                 }
             }
             "components" ->{
-                for(element in list){
-                    if(element.components != filter.components) list.remove(element)
-                }
-            }
-            "dc" ->{
-                for(element in list){
-                    if(element.dc != filter.dc) list.remove(element)
+                var index = 0
+                while(index < list.size){
+                    var found = true
+                    for(component in filter.getComponent()){
+                        if(list[index].components?.contains(component.value) == false){
+                            found = false
+                            break
+                        }
+                    }
+                    if(!found) list.remove(list[index])
+                    else{
+                        index++
+                    }
                 }
             }
             "duration" ->{
-                for(element in list){
-                    if(element.duration != filter.duration) list.remove(element)
+                var index = 0
+                while(index < list.size){
+                    var found = false
+                    for(duration in filter.getDuration()){
+                        if(lower(duration.value)?.let { lower(list[index].duration)?.contains(it) } == true) {
+                            found = true
+                            break
+                        }
+                    }
+                    if(!found) list.remove(list[index])
+                    else{
+                        index++
+                    }
                 }
             }
             "classes" ->{
-                for(element in list){
-                    if(element.classes != filter.classes) list.remove(element)
+                var index = 0
+                while(index < list.size){
+                    var found = false
+                    for(filterClass in filter.getClasses()){
+                        for(spellClass in list[index].classes!!){
+                            if(lower(spellClass.name) == lower(filterClass.name)){
+                                found = true
+                                break
+                            }
+                        }
+                    }
+                    if(!found) list.remove(list[index])
+                    else{
+                        index++
+                    }
                 }
             }
             "damage" ->{
-                for(element in list){
-                    if(element.damage != filter.damage) list.remove(element)
+                var index = 0
+                while(index < list.size){
+                    var found = false
+                    for(damage in filter.getDamageType()){
+                        if(lower(damage.value) == lower((list[index].damage?.damageType?.name))) {
+                            found = true
+                            break
+                        }
+                    }
+                    if(!found) list.remove(list[index])else{
+                        index++
+                    }
                 }
             }
             else -> { // Note the block
@@ -133,8 +213,8 @@ class Search {
         spellList.setSpellInfoList(list.toList())
     }
 
-
-
-
+    private fun lower(value : String?) : String? {
+        return value?.lowercase(Locale.ROOT)
+    }
 
 }

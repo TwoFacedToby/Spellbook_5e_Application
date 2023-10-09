@@ -1,10 +1,11 @@
 package com.example.spellbook5eapplication.app.Utility
 
-import com.dtu.uemad.birthdaycardtest.Model.API
-import com.dtu.uemad.birthdaycardtest.Model.JSON_to_Spell
-import com.dtu.uemad.birthdaycardtest.Model.Search
-import com.dtu.uemad.birthdaycardtest.Model.Data_Model.SpellList
-import com.dtu.uemad.birthdaycardtest.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.API
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
+import com.example.spellbook5eapplication.app.Model.Search
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -51,8 +52,11 @@ class SpellController {
         if(list != null) return list
         return null
     }
-    fun searchSpellList(spellList : SpellList, searchString : String) : SpellList {
+    fun searchSpellName(spellList : SpellList, searchString : String) : SpellList {
         return search.searchSpellList(spellList, searchString)
+    }
+    fun searchSpellListWithFilter(spellList : SpellList, filter: Filter) : SpellList {
+        return search.searchSpellListWithFilter(spellList, filter)
     }
     fun loadSpellList(spellList : SpellList){
         var spellInfoJson : List<String?>

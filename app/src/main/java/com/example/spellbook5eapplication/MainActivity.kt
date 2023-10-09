@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 
@@ -33,6 +34,12 @@ class MainActivity : ComponentActivity() {
         val spellList = controller.getAllSpellsList()
         if(spellList != null){
             controller.loadSpellList(spellList)
+            val filter = Filter()
+            filter.addDamageType(Filter.Damage_Type.FIRE)
+            filter.addSchool(Filter.School.EVOCATION)
+            filter.addLevel(2)
+            filter.addLevel(3)
+            controller.searchSpellListWithFilter(spellList, filter)
             spellList.printInfoToConsole()
         }
 

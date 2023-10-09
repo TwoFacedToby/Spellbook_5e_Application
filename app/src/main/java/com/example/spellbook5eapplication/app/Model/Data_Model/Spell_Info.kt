@@ -1,12 +1,9 @@
-package com.dtu.uemad.birthdaycardtest.Model.Data_Model
+package com.example.spellbook5eapplication.app.Model.Data_Model
 import com.google.gson.annotations.SerializedName
 class Spell_Info {
 
-
-
-
     data class SpellInfo(
-        @SerializedName("index") val index: String?,
+        @SerializedName("index") var index: String?,
         @SerializedName("name") val name: String?,
         @SerializedName("desc") val description: List<String>?,
         @SerializedName("higher_level") val higherLevelDescription: List<String>?,
