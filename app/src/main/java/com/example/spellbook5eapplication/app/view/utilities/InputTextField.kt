@@ -34,7 +34,7 @@ fun UserInputField(label: String){
         onValueChange = { input = it },
         modifier = Modifier.height(48.dp)
             .width(250.dp)
-            .background(colorResource(id = R.color.secondary_dark), RoundedCornerShape(2.dp))
+            .background(colorResource(id = R.color.border_color_dark), RoundedCornerShape(2.dp))
             .padding(2.dp),
         singleLine = true,
         cursorBrush = SolidColor(colorResource(id = R.color.white)),
@@ -53,7 +53,7 @@ fun UserInputField(label: String){
                 if(input.isEmpty())
                     Text(text = label,
                         style = LocalTextStyle.current.copy(
-                            color = colorResource(id = R.color.secondary_dark),
+                            color = colorResource(id = R.color.border_color_dark),
                             fontWeight = FontWeight.Bold,
                             fontSize = 12.sp)
                     )

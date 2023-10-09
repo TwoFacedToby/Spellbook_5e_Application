@@ -27,7 +27,7 @@ fun FilterButton(){
                 shape = RoundedCornerShape(2.dp))
             .border(BorderStroke(
                 2.dp,
-                colorResource(id = R.color.secondary_dark)),
+                colorResource(id = R.color.border_color_dark)),
                 shape = RoundedCornerShape(2.dp)),
         colors = IconButtonDefaults.iconButtonColors(containerColor = colorResource(id = R.color.primary_dark), contentColor = colorResource(
             id = R.color.primary_white))
