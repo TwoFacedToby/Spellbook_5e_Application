@@ -33,7 +33,7 @@ import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 fun SearchScreen(){
 
     var showSpellbookOverlay by remember { mutableStateOf(false) }
-    var showSpellDialog by remember { mutableStateOf(false) }
+    var showSpellcardOverlay by remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier
@@ -64,19 +64,19 @@ fun SearchScreen(){
                     FilterButton()
                 }
                 //TODO insert the lazy column for seacrh results
-                SpellCard(onDialogRequest = {showSpellDialog = true}, onOverlayRequest = {showSpellbookOverlay = true})
+                SpellCard(onDialogRequest = {showSpellcardOverlay = true}, onOverlayRequest = {showSpellbookOverlay = true})
 
-                if(showSpellDialog){
-                    SpellCardOverlay(
-                        isSpellbookOverlayVisible = showSpellbookOverlay,
-                        onToggleSpellbookOverlay = { showSpellbookOverlay = !showSpellbookOverlay },
-                        onDismissRequest = { showSpellDialog = false })
-                }
-                if(showSpellbookOverlay){
-                    SpellBookOverlay(
-                        isSpellbookOverlayVisible = showSpellbookOverlay,
-                        onDismissRequest = {showSpellbookOverlay = false})
-                }
+            }
+            if(showSpellcardOverlay){
+                SpellCardOverlay(
+                    isSpellcardOverlayVisible = showSpellcardOverlay,
+                    onToggleSpellbookOverlay = { showSpellbookOverlay = !showSpellbookOverlay },
+                    onDismissRequest = { showSpellcardOverlay = false })
+            }
+            if(showSpellbookOverlay){
+                SpellBookOverlay(
+                    isSpellbookOverlayVisible = showSpellbookOverlay,
+                    onDismissRequest = {showSpellbookOverlay = false})
             }
         }
     }
