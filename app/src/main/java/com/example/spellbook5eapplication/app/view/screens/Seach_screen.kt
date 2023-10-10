@@ -22,9 +22,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.app.view.Favorites.SpellBookOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.SettingsOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.SpellBookOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCardOverlay
+import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
@@ -69,14 +71,13 @@ fun SearchScreen(){
             }
             if(showSpellcardOverlay){
                 SpellCardOverlay(
-                    isSpellcardOverlayVisible = showSpellcardOverlay,
                     onToggleSpellbookOverlay = { showSpellbookOverlay = !showSpellbookOverlay },
                     onDismissRequest = { showSpellcardOverlay = false })
             }
             if(showSpellbookOverlay){
-                SpellBookOverlay(
-                    isSpellbookOverlayVisible = showSpellbookOverlay,
-                    onDismissRequest = {showSpellbookOverlay = false})
+                CustomOverlay(onDismissRequest = {showSpellbookOverlay = false}) {
+                    SpellBookOverlay(onDismissRequest = {showSpellbookOverlay = false})
+                }
             }
         }
     }

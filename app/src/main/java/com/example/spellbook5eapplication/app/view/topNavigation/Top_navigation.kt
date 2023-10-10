@@ -24,7 +24,10 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.view.Overlays.SettingsOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.UserOverlay
 import com.example.spellbook5eapplication.app.view.bottomNavigation.Screens
+import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -69,11 +72,15 @@ fun TopBar(navController: NavController){
             )
         )
     }
-    if(isSettingsOverlayVisible){
-        SettingsOverlay { isSettingsOverlayVisible = false }
+    if (isSettingsOverlayVisible) {
+        CustomOverlay(onDismissRequest = {isSettingsOverlayVisible = false}) {
+            SettingsOverlay(onDismissRequest = {isSettingsOverlayVisible = false})
+        }
     }
     if(isUserOverlayVisible){
-        UserOverlay { isUserOverlayVisible = false }
+        CustomOverlay(onDismissRequest = {isUserOverlayVisible = false}) {
+            UserOverlay(onDismissRequest = {isUserOverlayVisible = false})
+        }
     }
 }
 @Preview(showBackground = true)
