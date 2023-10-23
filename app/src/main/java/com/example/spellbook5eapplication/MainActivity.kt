@@ -11,10 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
+    val scope = CoroutineScope(Dispatchers.IO)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,23 +35,33 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
-        val controller = SpellController()
-        val spellList = controller.getAllSpellsList()
-        if(spellList != null){
-            controller.loadSpellList(spellList)
-            val filter = Filter()
-            filter.addDamageType(Filter.Damage_Type.FIRE)
-            filter.addSchool(Filter.School.EVOCATION)
-            filter.addLevel(2)
-            filter.addLevel(3)
-            controller.searchSpellListWithFilter(spellList, filter)
-            spellList.printInfoToConsole()
+        scope.launch {
+            runBlocking {
+                networkRequest { spellList ->
+                    spellList.printInfoToConsole()
+                }
+            }
         }
 
-
-
     }
+}
+fun networkRequest(callback: (result:SpellList) -> Unit){
+    val controller = SpellController()
+    val spellList = controller.getAllSpellsList()
+    if(spellList != null){
+        controller.loadSpellList(spellList)
+        val filter = exampleFilter()
+        controller.searchSpellListWithFilter(spellList, filter)
+        callback(spellList)
+    }
+}
+fun exampleFilter() : Filter{
+    val filter = Filter()
+    filter.addDamageType(Filter.Damage_Type.FIRE)
+    filter.addSchool(Filter.School.EVOCATION)
+    filter.addLevel(2)
+    filter.addLevel(3)
+    return filter
 }
 
 @Composable
