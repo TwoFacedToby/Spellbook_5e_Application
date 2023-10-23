@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
@@ -80,6 +81,51 @@ modifier = Modifier
                 UserInputField(label = "Name")
                 Spacer(modifier = Modifier.width(5.dp))
 
+            }
+
+            //Space between name and description
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            )
+            {
+                //Write a description
+                UserInputField(label = "Description")
+                Spacer(modifier = Modifier.width(5.dp))
+            }
+
+            //Space between description and School
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            )
+            {
+                //Write a description
+                UserInputField(label = "School")
+                Spacer(modifier = Modifier.width(5.dp))
+            }
+
+            //Space between school and class
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            )
+            {
+                //Write a description
+                UserInputField(label = "Class")
+                Spacer(modifier = Modifier.width(5.dp))
+                //add class to a list
+                Button(
+                    onClick = { /* TO DO */ },
+                ) {
+                    Text(text = "+", fontSize = 12.sp)
+                }
             }
             //Save the spell
             Button(
