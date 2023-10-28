@@ -2,6 +2,7 @@ package com.example.spellbook5eapplication.app.view.topNavigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Settings
@@ -16,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.spellbook5eapplication.R
@@ -47,7 +49,8 @@ fun TopBar(navController: NavController, globalOverlayState: GlobalOverlayState)
                     Icon(
                         imageVector = Icons.Outlined.Settings,
                         contentDescription = "Settings button",
-                        tint = colorResource(id = R.color.white)
+                        tint = colorResource(id = R.color.unselected_icon),
+                        modifier = Modifier.size(35.dp)
                     )
                 }
             },
@@ -56,12 +59,13 @@ fun TopBar(navController: NavController, globalOverlayState: GlobalOverlayState)
                     Icon(
                         imageVector = Icons.Outlined.Person,
                         contentDescription = "Profile button",
-                        tint = colorResource(id = R.color.white)
+                        tint = colorResource(id = R.color.unselected_icon),
+                        modifier = Modifier.size(35.dp)
                     )
                 }
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = colorResource(id = R.color.primary_dark),
+                containerColor = colorResource(id = R.color.main_color),
                 titleContentColor = colorResource(id = R.color.white)
             )
         )

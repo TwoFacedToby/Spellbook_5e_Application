@@ -54,7 +54,7 @@ fun LargeSpellCardOverlay(
             Card(
                 elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.primary_white)),
+                colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.spellcard_color)),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(600.dp)
@@ -85,7 +85,7 @@ fun LargeSpellCardOverlay(
                                 Icon(
                                     imageVector = Icons.Outlined.Add,
                                     contentDescription = "Add to spellbook",
-                                    tint = colorResource(id = R.color.border_color_dark)
+                                    tint = colorResource(id = R.color.spellcard_button)
                                 )
                             }
 
@@ -93,7 +93,7 @@ fun LargeSpellCardOverlay(
                                 Icon(
                                     imageVector = Icons.Outlined.FavoriteBorder,
                                     contentDescription = "Favorite button",
-                                    tint = colorResource(id = R.color.border_color_dark)
+                                    tint = colorResource(id = R.color.spellcard_button)
                                 )
                             }
 
@@ -102,7 +102,7 @@ fun LargeSpellCardOverlay(
                                 Icon(
                                     imageVector = Icons.Outlined.Close,
                                     contentDescription = "Close",
-                                    tint = colorResource(id = R.color.border_color_dark)
+                                    tint = colorResource(id = R.color.spellcard_button)
                                 )
                             }
                         }
@@ -161,7 +161,7 @@ fun LargeSpellCardOverlay(
                                     .clip(RoundedCornerShape(2.dp))
                                     .border(
                                         0.5.dp,
-                                        colorResource(id = R.color.secondary_dark),
+                                        colorResource(id = R.color.border_color),
                                         shape = RoundedCornerShape(2.dp)
                                     )
                             )

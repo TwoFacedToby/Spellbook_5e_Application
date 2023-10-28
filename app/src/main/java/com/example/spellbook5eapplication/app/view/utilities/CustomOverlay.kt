@@ -81,7 +81,7 @@ fun CustomOverlay(
                     .fillMaxWidth()
                     .height(screenHeight.dp)
                     .background(
-                        colorResource(id = R.color.primary_dark),
+                        colorResource(id = R.color.main_color),
                         shape = RoundedCornerShape(20.dp)
                     )
                     .padding(16.dp)

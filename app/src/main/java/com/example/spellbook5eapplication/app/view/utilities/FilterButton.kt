@@ -23,14 +23,14 @@ fun FilterButton(){
         onClick = { /*TODO*/ },
         modifier = Modifier
             .background(
-                color = colorResource(id = R.color.primary_dark),
+                color = colorResource(id = R.color.main_color),
                 shape = RoundedCornerShape(2.dp))
             .border(BorderStroke(
                 2.dp,
-                colorResource(id = R.color.border_color_dark)),
+                colorResource(id = R.color.border_color)),
                 shape = RoundedCornerShape(2.dp)),
-        colors = IconButtonDefaults.iconButtonColors(containerColor = colorResource(id = R.color.primary_dark), contentColor = colorResource(
-            id = R.color.primary_white))
+        colors = IconButtonDefaults.iconButtonColors(containerColor = colorResource(id = R.color.main_color), contentColor = colorResource(
+            id = R.color.white))
     )
     {
         Icon(imageVector = Icons.Outlined.List, contentDescription = "")
