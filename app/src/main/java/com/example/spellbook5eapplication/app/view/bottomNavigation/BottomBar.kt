@@ -13,10 +13,12 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 
 @Composable
 fun BottomBar(
     navController: NavHostController,
+    globalOverlayState: GlobalOverlayState,
 ){
     val bottomNavItems = listOf(
         Screens.Favorite,
@@ -35,7 +37,8 @@ fun BottomBar(
             AddItem(
                 bottomNavItem = screen,
                 currentDestination = currentDestination,
-                navController = navController
+                navController = navController,
+                globalOverlayState = globalOverlayState
             )
         }
     }
@@ -45,11 +48,15 @@ fun BottomBar(
 fun RowScope.AddItem(
     bottomNavItem : Screens,
     currentDestination : NavDestination?,
-    navController: NavHostController)
+    navController: NavHostController,
+    globalOverlayState: GlobalOverlayState)
 {
     BottomNavigationItem(
         selected = currentDestination?.hierarchy?.any { it.route == bottomNavItem.route } == true,
         onClick = {
+            if (globalOverlayState.getOverlayStack().isNotEmpty()) {
+                globalOverlayState.dismissOverlay()
+            }
             navController.navigate(bottomNavItem.route) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true

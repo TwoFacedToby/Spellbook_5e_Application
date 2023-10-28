@@ -18,7 +18,7 @@ fun MainScreen(){
     val globalOverlayState = GlobalOverlayState()
     Scaffold(
         topBar = { TopBar(navController = navController, globalOverlayState)},
-        bottomBar = { BottomBar(navController = navController) }
+        bottomBar = { BottomBar(navController = navController, globalOverlayState) }
     ){
         BottomNavigationGraph(navController = navController, globalOverlayState)
     }
