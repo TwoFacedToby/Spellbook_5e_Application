@@ -38,12 +38,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 
 @Composable
-fun SpellCardOverlay(
-    onToggleSpellbookOverlay: () -> Unit,
-    onDismissRequest: () -> Unit)
+fun LargeSpellCardOverlay(
+    globalOverlayState: GlobalOverlayState,
+    onDismissRequest: () -> Unit
+)
 {
         Box(modifier = Modifier
             .fillMaxSize()
@@ -78,7 +81,7 @@ fun SpellCardOverlay(
                             horizontalArrangement = Arrangement.End
                         ) {
                             IconButton(
-                                onClick = { onToggleSpellbookOverlay() }) {
+                                onClick = { globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
                                 Icon(
                                     imageVector = Icons.Outlined.Add,
                                     contentDescription = "Add to spellbook",
@@ -144,7 +147,6 @@ fun SpellCardOverlay(
                                         .shadow(elevation = 5.dp)
                                 )
                             }
-
                             SpellInfo()
                         }
 

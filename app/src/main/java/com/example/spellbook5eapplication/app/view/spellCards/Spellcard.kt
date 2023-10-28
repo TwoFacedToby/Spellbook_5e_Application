@@ -35,7 +35,9 @@ import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
 
 @Composable
-fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit) {
+fun SpellCard(
+    onFullSpellCardRequest: () -> Unit,
+    onAddToSpellbookRequest: () -> Unit) {
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -101,7 +103,7 @@ fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit) {
                     }
                 }
                 IconButton(
-                    onClick = { onOverlayRequest() }) {
+                    onClick = { onAddToSpellbookRequest() }) {
                     Icon(
                         imageVector = Icons.Outlined.Add,
                         contentDescription = "Add to spellbook",
@@ -127,7 +129,7 @@ fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit) {
             )
             {
                 Spacer(modifier = Modifier.width(228.dp))
-                IconButton(onClick = { onDialogRequest() }) {
+                IconButton(onClick = { onFullSpellCardRequest() }) {
                     Icon(
                         imageVector = Icons.Outlined.KeyboardArrowDown,
                         contentDescription = "Expand button",

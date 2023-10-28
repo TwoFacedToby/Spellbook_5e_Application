@@ -30,32 +30,46 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.launch
 
 @Composable
 fun CustomOverlay(
+    globalOverlayState: GlobalOverlayState,
+    overlayType: OverlayType,
     onDismissRequest: () -> Unit,
     content: @Composable (BoxScope.() -> Unit)? = null
 ) {
-    val screenHeight = LocalConfiguration.current.screenHeightDp
-    val offsetY = remember { Animatable(screenHeight.toFloat()) }
+    if(globalOverlayState.getTopOverlay() == overlayType) {
+        val screenHeight = LocalConfiguration.current.screenHeightDp
+        val offsetY = remember { Animatable(screenHeight.toFloat()) }
 
-    val scope = rememberCoroutineScope()
+        val scope = rememberCoroutineScope()
 
-    val onDismiss: () -> Unit = {
-        scope.launch {
-            offsetY.animateTo(
-                targetValue = screenHeight.toFloat(),
-                animationSpec = spring(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessLow)
-            )
-            onDismissRequest()
+        val onDismiss: () -> Unit = {
+            scope.launch {
+                offsetY.animateTo(
+                    targetValue = screenHeight.toFloat(),
+                    animationSpec = spring(
+                        dampingRatio = Spring.DampingRatioNoBouncy,
+                        stiffness = Spring.StiffnessLow
+                    )
+                )
+                onDismissRequest()
+                globalOverlayState.dismissOverlay()
+            }
         }
-    }
 
-    LaunchedEffect(key1 = true) {
-        offsetY.animateTo((screenHeight.toFloat() / 5),
-            animationSpec = spring(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessLow))
-    }
+        LaunchedEffect(key1 = true) {
+            offsetY.animateTo(
+                (screenHeight.toFloat() / 5),
+                animationSpec = spring(
+                    dampingRatio = Spring.DampingRatioNoBouncy,
+                    stiffness = Spring.StiffnessLow
+                )
+            )
+        }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -73,13 +87,14 @@ fun CustomOverlay(
                     .padding(16.dp)
             ) {
                 Log.d("CustomOverlay", "Is content null?: ${content == null}") // Logging statement
-                if(content != null) {
+                if (content != null) {
                     content()
                 } else {
                     DefaultContent(onDismiss)
                 }
             }
         }
+    }
 }
 
 @Composable

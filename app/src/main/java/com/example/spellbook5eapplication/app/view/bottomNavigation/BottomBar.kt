@@ -7,18 +7,16 @@ import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.spellbook5eapplication.R
 
 @Composable
 fun BottomBar(
-    navController: NavHostController
+    navController: NavHostController,
 ){
     val bottomNavItems = listOf(
         Screens.Favorite,
@@ -68,10 +66,4 @@ fun RowScope.AddItem(
         selectedContentColor = colorResource(id = R.color.white),
         unselectedContentColor = colorResource(id = R.color.secondary_dark)
     )
-}
-
-@Preview
-@Composable
-fun BottomBarPreview(){
-    BottomBar(navController = rememberNavController())
 }
