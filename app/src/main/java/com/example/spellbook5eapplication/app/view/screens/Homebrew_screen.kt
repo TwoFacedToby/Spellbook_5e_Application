@@ -1,6 +1,9 @@
 package com.example.spellbook5eapplication.app.view.screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,11 +25,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.material.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.List
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -92,7 +107,7 @@ modifier = Modifier
             )
             {
                 //Write a description
-                UserInputField(label = "Description")
+                UserDescField(label = "Description")
                 Spacer(modifier = Modifier.width(5.dp))
             }
 
@@ -117,15 +132,11 @@ modifier = Modifier
                 horizontalArrangement = Arrangement.Center
             )
             {
-                //Write a description
+                //Write a class name
                 UserInputField(label = "Class")
                 Spacer(modifier = Modifier.width(5.dp))
                 //add class to a list
-                Button(
-                    onClick = { /* TO DO */ },
-                ) {
-                    Text(text = "+", fontSize = 12.sp)
-                }
+                AddClassButton()
             }
             //Save the spell
             Button(
@@ -159,6 +170,71 @@ fun CreateSpell(modifier: Modifier = Modifier) {
 }
 
  */
+
+//Field to write description in
+@Composable
+fun UserDescField(label: String){
+    var input by remember { mutableStateOf("") }
+
+    BasicTextField(
+        value = input,
+        onValueChange = { input = it },
+        modifier = Modifier.height(192.dp)
+            .width(250.dp)
+            .background(colorResource(id = R.color.border_color_dark), RoundedCornerShape(2.dp))
+            .padding(2.dp),
+        singleLine = true,
+        cursorBrush = SolidColor(colorResource(id = R.color.white)),
+        textStyle = LocalTextStyle.current.copy(color = colorResource(id = R.color.white)),
+        decorationBox = {
+                innerTextField ->
+            Row(
+                modifier = Modifier.width(250.dp)
+                    . background(
+                        colorResource(id = R.color.primary_dark),
+                        shape = RoundedCornerShape(2.dp)
+                    )
+                    .padding(10.dp),
+                verticalAlignment = Alignment.Top)
+            {
+                if(input.isEmpty())
+                    Text(text = label,
+                        style = LocalTextStyle.current.copy(
+                            color = colorResource(id = R.color.border_color_dark),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 12.sp)
+                    )
+                innerTextField()
+            }
+        }
+    )
+}
+
+//Button to add class
+@Composable
+fun AddClassButton(){
+    IconButton(
+        onClick = { /*TODO*/ },
+        modifier = Modifier
+            .background(
+                color = colorResource(id = R.color.primary_dark),
+                shape = RoundedCornerShape(2.dp)
+            )
+            .border(
+                BorderStroke(
+                2.dp,
+                colorResource(id = R.color.border_color_dark)
+                ),
+                shape = RoundedCornerShape(2.dp)
+            ),
+        colors = IconButtonDefaults.iconButtonColors(containerColor = colorResource(id = R.color.primary_dark), contentColor = colorResource(
+            id = R.color.primary_white)
+        )
+    )
+    {
+        Icon(imageVector = Icons.Outlined.Add, contentDescription = "")
+    }
+}
 
 @Preview
 @Composable
