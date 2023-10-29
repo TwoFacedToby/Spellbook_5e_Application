@@ -70,7 +70,8 @@ fun SpellCardOverlay(
                             text = "Spell name here",
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
-                            modifier = Modifier.padding(5.dp, 0.dp)
+                            modifier = Modifier.padding(5.dp, 0.dp),
+                            color = colorResource(id = R.color.black)
                         )
                         Row(
                             modifier = Modifier
@@ -173,7 +174,8 @@ fun SpellCardOverlay(
                 ) {
                     Text(
                         text = "Spell description",
-                        modifier = Modifier.padding(start = 10.dp)
+                        modifier = Modifier.padding(start = 10.dp),
+                        color = colorResource(id = R.color.black)
                     )
                 }
                 Column(
@@ -187,7 +189,8 @@ fun SpellCardOverlay(
                         text = "Tags:",
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(start = 10.dp)
+                        modifier = Modifier.padding(start = 10.dp),
+                        color = colorResource(id = R.color.black)
                     )
                     Divider(
                         color = colorResource(id = R.color.black),
