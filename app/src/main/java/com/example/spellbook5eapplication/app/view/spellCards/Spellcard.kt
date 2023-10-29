@@ -78,7 +78,8 @@ fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit) {
                         text = "Spell name here",
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
-                        modifier = Modifier.padding(5.dp, 0.dp)
+                        modifier = Modifier.padding(5.dp, 0.dp),
+                        color = colorResource(id = R.color.black)
                     )
                     Divider(
                         color = colorResource(id = R.color.black),
@@ -152,25 +153,25 @@ fun SpellInfo(){
         Column(
             modifier = Modifier.padding(end = 10.dp)
         ) {
-            Text(text = "Level:", fontSize = 10.sp, maxLines = 1)
+            Text(text = "Level:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
-            Text(text = "Range:", fontSize = 10.sp, maxLines = 1)
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
-        }
-        Column(
-            modifier = Modifier.padding(end = 10.dp)
-        ) {
-            Text(text = "School:", fontSize = 10.sp, maxLines = 1)
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
-            Text(text = "Duration:", fontSize = 10.sp, maxLines = 1)
+            Text(text = "Range:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
         }
         Column(
             modifier = Modifier.padding(end = 10.dp)
         ) {
-            Text(text = "Casting Time:", fontSize = 10.sp, maxLines = 1)
+            Text(text = "School:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
-            Text(text = "Components:", fontSize = 10.sp, maxLines = 1)
+            Text(text = "Duration:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+        }
+        Column(
+            modifier = Modifier.padding(end = 10.dp)
+        ) {
+            Text(text = "Casting Time:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            Text(text = "Components:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
         }
     }
