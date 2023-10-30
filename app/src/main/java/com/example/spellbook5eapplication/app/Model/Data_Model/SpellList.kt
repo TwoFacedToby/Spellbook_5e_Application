@@ -1,7 +1,6 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
 
 class SpellList {
-    private var namesList: List<String> = emptyList()
     private var indexList: List<String> = emptyList()
     private var spellInfoList: List<Spell_Info.SpellInfo> = emptyList()
 
@@ -13,22 +12,6 @@ class SpellList {
     }
     fun setSpellInfoList(spellInfo: List<Spell_Info.SpellInfo>) {
         spellInfoList = spellInfo
-        fillNamesList()
-
-    }
-    private fun fillNamesList(){
-        val names = namesList.toMutableList()
-        names.clear()
-        for(info in spellInfoList){
-            info.name?.let { names.add(it) }
-        }
-        this.namesList = names.toList()
-    }
-    fun setNamesList(names : List<String>){
-        this.namesList = names
-    }
-    fun getNamesList() : List<String>{
-        return namesList
     }
     fun getSpellInfoList(): List<Spell_Info.SpellInfo> {
         return spellInfoList
