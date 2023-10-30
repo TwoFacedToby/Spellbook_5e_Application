@@ -1,6 +1,5 @@
 package com.example.spellbook5eapplication.app.Model
 
-import androidx.compose.ui.text.toLowerCase
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
@@ -20,25 +19,36 @@ class Search {
      * even though it matches multiple keywords.
      * Then it converts the MutableList into a list and adds it to the spell list that it returns.
      */
-    fun searchSpellList(spellList : SpellList, searchString : String) : SpellList {
-        val namesList = spellList.getSpellNamesList()
+    fun searchSpellNames(spellList : SpellList, searchString : String) : SpellList {
+        val namesList = spellList.getIndexList()
         val keywords = searchString.split(" ")
-        val toReturn = SpellList()
         val matches = mutableListOf<String>()
         for(name in namesList){
             for(keyword in keywords){
-                if(keyword in name){
+                if(keyword.lowercase() in name.lowercase()){
                     matches.add(name)
                     break
                 }
             }
         }
-        toReturn.setSpellNamesList(matches.toList())
-        return toReturn
+        spellList.setIndexList(matches.toList())
+        matchLists(spellList)
+        return spellList
+    }
+    private fun matchLists(spellList : SpellList){
+        if(spellList.getSpellInfoList().isEmpty()) return
+        val names = spellList.getIndexList()
+        val spells = mutableListOf<Spell_Info.SpellInfo>()
+        for(info in spellList.getSpellInfoList()){
+            if(info.index != null)
+                if(names.contains(info.index))
+                    spells.add(info)
+        }
+        spellList.setSpellInfoList(spells.toList())
     }
     fun searchSpellListWithFilter(spellList: SpellList, filter : Filter) : SpellList {
         var changingSpellList = spellList
-        if(filter.getSpellName() != "") changingSpellList = searchSpellList(changingSpellList, filter.getSpellName())
+        if(filter.getSpellName() != "") changingSpellList = searchSpellNames(changingSpellList, filter.getSpellName())
         if(filter.getCastingTime().isNotEmpty()) filterSpells(spellList, "casting_time", filter)
         if(filter.getAreaOfEffect().isNotEmpty()) filterSpells(spellList, "aoe", filter)
         if(filter.getDuration().isNotEmpty()) filterSpells(spellList, "duration", filter)

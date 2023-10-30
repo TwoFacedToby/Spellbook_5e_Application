@@ -53,7 +53,7 @@ class SpellController {
         return null
     }
     fun searchSpellName(spellList : SpellList, searchString : String) : SpellList {
-        return search.searchSpellList(spellList, searchString)
+        return search.searchSpellNames(spellList, searchString)
     }
     fun searchSpellListWithFilter(spellList : SpellList, filter: Filter) : SpellList {
         return search.searchSpellListWithFilter(spellList, filter)
@@ -61,7 +61,7 @@ class SpellController {
     fun loadSpellList(spellList : SpellList){
         var spellInfoJson : List<String?>
         runBlocking {
-            spellInfoJson = api.getSpellsFromApi(spellList.getSpellNamesList())
+            spellInfoJson = api.getSpellsFromApi(spellList.getIndexList())
         }
         if(spellInfoJson.isEmpty()) return
         val spellInfoList = mutableListOf<Spell_Info.SpellInfo>()

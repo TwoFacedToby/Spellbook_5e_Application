@@ -1,34 +1,54 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
 
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
-
 class SpellList {
     private var namesList: List<String> = emptyList()
+    private var indexList: List<String> = emptyList()
     private var spellInfoList: List<Spell_Info.SpellInfo> = emptyList()
 
-    fun setSpellNamesList(names: List<String>) {
-        namesList = names
+    fun setIndexList(names: List<String>) {
+        indexList = names
     }
-    fun getSpellNamesList(): List<String> {
-        return namesList
+    fun getIndexList(): List<String> {
+        return indexList
     }
     fun setSpellInfoList(spellInfo: List<Spell_Info.SpellInfo>) {
         spellInfoList = spellInfo
+        fillNamesList()
+
+    }
+    private fun fillNamesList(){
+        val names = namesList.toMutableList()
+        names.clear()
+        for(info in spellInfoList){
+            info.name?.let { names.add(it) }
+        }
+        this.namesList = names.toList()
+    }
+    fun setNamesList(names : List<String>){
+        this.namesList = names
+    }
+    fun getNamesList() : List<String>{
+        return namesList
     }
     fun getSpellInfoList(): List<Spell_Info.SpellInfo> {
         return spellInfoList
     }
-    fun printNamesToConsole(){
+    fun printIndexesToConsole(){
         println("Printing spells from list:")
-        for(name in namesList){
+        for(name in indexList){
             println("- $name")
         }
     }
     fun printInfoToConsole(){
         println("Printing Spell Info")
         for(spell in spellInfoList){
+            val spellClasses = emptyList<String>().toMutableList()
+            for(c in spell.classes!!){
+                c.name?.let { spellClasses.add(it) }
+            }
+
             println("${spell.name}")
-            println("- Classes: ${spell.classes}")
+            println("- Classes: ${spellClasses.toString()}")
             println("- Casting Time: ${spell.castingTime}")
             println("- Duration: ${spell.duration}")
             println("- Spell Level: ${spell.level}")

@@ -42,7 +42,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-
     }
 }
 fun networkRequest(callback: (result:SpellList) -> Unit){
@@ -57,10 +56,7 @@ fun networkRequest(callback: (result:SpellList) -> Unit){
 }
 fun exampleFilter() : Filter{
     val filter = Filter()
-    filter.addDamageType(Filter.Damage_Type.FIRE)
-    filter.addSchool(Filter.School.EVOCATION)
-    filter.addLevel(2)
-    filter.addLevel(3)
+    filter.setSpellName("Fire")
     return filter
 }
 

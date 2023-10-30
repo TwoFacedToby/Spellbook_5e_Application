@@ -11,12 +11,12 @@ class JSON_to_Spell {
         val gson = Gson()
         val spell = gson.fromJson(json, Spell_Info.SpellInfo::class.java)
         if(spell.description?.isEmpty() != false) return null
-        spell.index = json
+        spell.url = json
         return spell
     }
     fun jsonToSpellList(json : String) : SpellList?{
         val spells = SpellList()
-        spells.setSpellNamesList(extractIndexesFromJson(json))
+        spells.setIndexList(extractIndexesFromJson(json))
         return spells
     }
 

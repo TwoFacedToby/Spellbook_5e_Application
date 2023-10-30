@@ -156,6 +156,7 @@ class Filter {
 
     fun getLevel(): List<Int> {
         return this.level.toList()
+
     }
     enum class School(val value: String) {
         ABJURATION("Abjuration"),

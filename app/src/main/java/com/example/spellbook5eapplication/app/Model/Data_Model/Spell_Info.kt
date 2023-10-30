@@ -18,7 +18,7 @@ class Spell_Info {
         @SerializedName("school") val school: SpellSchool?,
         @SerializedName("classes") val classes: List<SpellClass>?,
         @SerializedName("subclasses") val subclasses: List<SpellClass>?,
-        @SerializedName("url") val url: String?,
+        @SerializedName("url") var url: String?,
         @SerializedName("attack_type") val attackType: String?,
         @SerializedName("damage") val damage: SpellDamage?,
         @SerializedName("dc") val dc: SpellDC?,
