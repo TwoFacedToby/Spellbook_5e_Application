@@ -1,7 +1,11 @@
 package com.example.spellbook5eapplication.app.view.utilities
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -50,29 +54,42 @@ fun UserInputField(
             input = it
             onInputChanged(it)
         },
-        modifier = Modifier,
+        modifier = modifier,
         singleLine = singleLine,
         cursorBrush = SolidColor(colorResource(id = R.color.white)),
         textStyle = LocalTextStyle.current.copy(color = colorResource(id = R.color.white)),
         decorationBox = {
                 innerTextField ->
-            Row(
-                modifier = Modifier.width(250.dp)
-                    . background(
-                colorResource(id = R.color.main_color),
-                    shape = RoundedCornerShape(2.dp)
-            )
-                .padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically)
-            {
-                if(input.isEmpty())
-                    Text(text = label,
-                        style = LocalTextStyle.current.copy(
-                            color = colorResource(id = R.color.border_color),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp)
-                    )
-                innerTextField()
+            Box(
+                modifier = Modifier
+                    .border(
+                        width = 2.dp,
+                        color = colorResource(id = R.color.border_color),
+                        shape = RoundedCornerShape(2.dp))
+                    .background(
+                        colorResource(id = R.color.main_color),
+                        shape = RoundedCornerShape(2.dp))
+                    .fillMaxWidth()
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 5.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                )
+                {
+                    if (input.isEmpty())
+                        Text(
+                            text = label,
+                            style = LocalTextStyle.current.copy(
+                                color = colorResource(id = R.color.border_color),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp
+                            )
+                        )
+                    innerTextField()
+                }
             }
         }
     )

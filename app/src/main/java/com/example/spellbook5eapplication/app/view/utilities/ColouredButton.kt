@@ -1,11 +1,9 @@
 package com.example.spellbook5eapplication.app.view.utilities
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,14 +17,18 @@ import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
 
 @Composable
-fun GreenButton(
+fun ColouredButton(
     label : String,
+    modifier : Modifier,
+    color : ButtonColors,
     onClick: () -> Unit
 ){
-    Button(onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
+    Button(
+        modifier = modifier,
+        onClick = onClick,
+        colors = color,
         border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.border_color)),
-        shape = RoundedCornerShape(5.dp)
+        shape = RoundedCornerShape(5.dp),
     ) {
         Text(
             text = label,
@@ -39,8 +41,10 @@ fun GreenButton(
 
 @Preview
 @Composable
-fun GreenButtonPreview(){
-    GreenButton("Create"){
+fun ColouredButtonPreview(){
+    ColouredButton("Create", modifier = Modifier, color = ButtonDefaults.buttonColors(containerColor = colorResource(
+        id =R.color.green_button
+    ))){
         println("Button clicked")
     }
 }

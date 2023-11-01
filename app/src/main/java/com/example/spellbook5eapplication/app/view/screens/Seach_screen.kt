@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -61,7 +62,7 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                                 input -> println("User input: $input")
                         },
                         modifier = Modifier
-                            .size(width = 189.dp, height = 38.dp),
+                            .size(width = 220.dp, height = 48.dp),
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     FilterButton(
@@ -71,19 +72,23 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                         )
                     })
                 }
-                //TODO insert the lazy column for search results
-                SpellCard(
-                    onFullSpellCardRequest = {
-                        globalOverlayState.showOverlay(
-                            OverlayType.LARGE_SPELLCARD,
-                        )
-                    },
-                    onAddToSpellbookRequest = {
-                        globalOverlayState.showOverlay(
-                            OverlayType.ADD_TO_SPELLBOOK,
-                        )
-                    }
-                )
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    item { SpellCard(
+                        onFullSpellCardRequest = {
+                            globalOverlayState.showOverlay(
+                                OverlayType.LARGE_SPELLCARD,
+                            )
+                        },
+                        onAddToSpellbookRequest = {
+                            globalOverlayState.showOverlay(
+                                OverlayType.ADD_TO_SPELLBOOK,
+                            )
+                        }
+                    ) }
+                }
             }
             for (overlayType in globalOverlayState.getOverlayStack()) {
                 when (overlayType) {

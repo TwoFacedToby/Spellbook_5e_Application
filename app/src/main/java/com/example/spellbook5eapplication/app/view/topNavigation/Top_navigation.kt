@@ -45,21 +45,36 @@ fun TopBar(navController: NavController, globalOverlayState: GlobalOverlayState)
                 )
             },
             navigationIcon = {
-                IconButton(onClick = { globalOverlayState.showOverlay(OverlayType.SETTINGS) }) {
+                IconButton(onClick = {
+                    globalOverlayState.dismissAllOverlays()
+                    globalOverlayState.showOverlay(OverlayType.SETTINGS) }
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.Settings,
                         contentDescription = "Settings button",
-                        tint = colorResource(id = R.color.unselected_icon),
+                        tint = if (globalOverlayState.isOverlayVisible(OverlayType.SETTINGS)) {
+                            colorResource(id = R.color.white)
+                        } else {
+                            colorResource(id = R.color.unselected_icon)
+                        },
                         modifier = Modifier.size(35.dp)
                     )
                 }
             },
             actions = {
-                IconButton(onClick = { globalOverlayState.showOverlay(OverlayType.PROFILE) }) {
+                IconButton(
+                    onClick = {
+                        globalOverlayState.dismissAllOverlays()
+                        globalOverlayState.showOverlay(OverlayType.PROFILE)
+                    }) {
                     Icon(
                         imageVector = Icons.Outlined.Person,
                         contentDescription = "Profile button",
-                        tint = colorResource(id = R.color.unselected_icon),
+                        tint = if (globalOverlayState.isOverlayVisible(OverlayType.PROFILE)) {
+                            colorResource(id = R.color.white)
+                        } else {
+                            colorResource(id = R.color.unselected_icon)
+                        },
                         modifier = Modifier.size(35.dp)
                     )
                 }

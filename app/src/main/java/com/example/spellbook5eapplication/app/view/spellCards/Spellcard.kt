@@ -57,7 +57,7 @@ fun SpellCard(
     ) {
         Column(
             modifier = Modifier
-                .height(140.dp)
+                .height(120.dp)
                 .width(290.dp)
         )
         {

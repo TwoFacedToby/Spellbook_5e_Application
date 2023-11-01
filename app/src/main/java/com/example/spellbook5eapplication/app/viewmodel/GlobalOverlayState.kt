@@ -26,4 +26,8 @@ class GlobalOverlayState {
     fun getOverlayStack(): List<OverlayType> {
         return overlayStack
     }
+
+    fun isOverlayVisible(overlayType: OverlayType): Boolean {
+        return overlayType in overlayStack
+    }
 }

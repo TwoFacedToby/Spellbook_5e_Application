@@ -26,17 +26,24 @@ import com.example.spellbook5eapplication.app.view.utilities.OverlayBox
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
-import com.example.spellbook5eapplication.app.view.utilities.GreenButton
+import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
+import com.example.spellbook5eapplication.app.view.utilities.CreateDialog
 
 @Composable
 fun AddToSpellBookOverlay(
     onDismissRequest: () -> Unit,
     listOfStrings : List<String>? = null
 ) {
+    var showDialog by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
             .padding(top = 8.dp, start = 15.dp, end = 15.dp)
@@ -100,8 +107,14 @@ fun AddToSpellBookOverlay(
             }
         )
         Spacer(modifier = Modifier.height(20.dp))
-        GreenButton(label = "Create new spellbook") {
-            println("Button pressed")
+        ColouredButton(
+            label = "Create new spellbook",
+            modifier = Modifier,
+            color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
+            onClick = { showDialog = true})
+
+        if (showDialog) {
+            CreateDialog(onDismissRequest = { showDialog = false })
         }
     }
 }
