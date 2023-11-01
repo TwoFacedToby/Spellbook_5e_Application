@@ -26,17 +26,32 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 
 @Composable
-fun UserInputField(label: String){
+fun UserInputField(
+    label: String,
+    onInputChanged: (String) -> Unit,
+    modifier : Modifier,
+    singleLine : Boolean
+){
     var input by remember { mutableStateOf("") }
+    //val coroutineScope = rememberCoroutineScope()
 
     BasicTextField(
         value = input,
-        onValueChange = { input = it },
-        modifier = Modifier.height(48.dp)
-            .width(250.dp)
-            .background(colorResource(id = R.color.border_color), RoundedCornerShape(2.dp))
-            .padding(2.dp),
-        singleLine = true,
+        /*onValueChange = {
+            input = it
+            coroutineScope.launch {
+                delay(300)  // Wait for 300ms
+                if (input == it) {
+                    onInputChanged(it)
+                }
+            }
+        }*/
+        onValueChange = {
+            input = it
+            onInputChanged(it)
+        },
+        modifier = Modifier,
+        singleLine = singleLine,
         cursorBrush = SolidColor(colorResource(id = R.color.white)),
         textStyle = LocalTextStyle.current.copy(color = colorResource(id = R.color.white)),
         decorationBox = {
@@ -61,12 +76,4 @@ fun UserInputField(label: String){
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun InputField() {
-    Spellbook5eApplicationTheme {
-        UserInputField("Search")
-    }
 }

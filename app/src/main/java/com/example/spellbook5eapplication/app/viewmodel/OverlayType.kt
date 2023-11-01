@@ -5,4 +5,5 @@ enum class OverlayType {
     SETTINGS,
     PROFILE,
     ADD_TO_SPELLBOOK,
+    FILTER
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
@@ -17,7 +18,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.app.view.Overlays.SpellBookOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
@@ -52,11 +54,24 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                     horizontalArrangement = Arrangement.Center
                 )
                 {
-                    UserInputField(label = "Search")
+                    UserInputField(
+                        label = "Search",
+                        singleLine = true,
+                        onInputChanged = {
+                                input -> println("User input: $input")
+                        },
+                        modifier = Modifier
+                            .size(width = 189.dp, height = 38.dp),
+                    )
                     Spacer(modifier = Modifier.width(5.dp))
-                    FilterButton()
+                    FilterButton(
+                        onShowFiltersRequest = {
+                        globalOverlayState.showOverlay(
+                            OverlayType.FILTER,
+                        )
+                    })
                 }
-                //TODO insert the lazy column for seacrh results
+                //TODO insert the lazy column for search results
                 SpellCard(
                     onFullSpellCardRequest = {
                         globalOverlayState.showOverlay(
@@ -73,7 +88,7 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
             for (overlayType in globalOverlayState.getOverlayStack()) {
                 when (overlayType) {
                     OverlayType.LARGE_SPELLCARD -> {
-                        LargeSpellCardOverlay(globalOverlayState, { globalOverlayState.dismissOverlay() })
+                        LargeSpellCardOverlay(globalOverlayState) { globalOverlayState.dismissOverlay() }
                     }
                     OverlayType.ADD_TO_SPELLBOOK -> {
                         CustomOverlay(
@@ -81,9 +96,18 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                             overlayType = OverlayType.ADD_TO_SPELLBOOK,
                             onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ) {
-                            SpellBookOverlay(
+                            AddToSpellBookOverlay(
                                 onDismissRequest = { globalOverlayState.dismissOverlay() }
                             )
+                        }
+                    }
+                    OverlayType.FILTER -> {
+                        CustomOverlay(
+                            globalOverlayState = globalOverlayState,
+                            overlayType = OverlayType.FILTER,
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                        ){
+                            FiltersOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */})
                         }
                     }
                     else -> Unit
