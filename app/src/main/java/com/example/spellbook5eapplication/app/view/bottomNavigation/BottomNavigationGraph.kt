@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.spellbook5eapplication.app.view.screens.FavoriteScreen
-import com.example.spellbook5eapplication.app.view.screens.HomebrewScreen
+import com.example.spellbook5eapplication.app.view.screens.BrewScreen
 import com.example.spellbook5eapplication.app.view.screens.SearchScreen
 import com.example.spellbook5eapplication.app.view.screens.SpellbooksScreen
 
@@ -22,7 +22,7 @@ fun BottomNavigationGraph(navController: NavHostController){
             SpellbooksScreen()
         }
         composable(route = Screens.Homebrew.route){
-            HomebrewScreen()
+            BrewScreen()
         }
     }
 }
