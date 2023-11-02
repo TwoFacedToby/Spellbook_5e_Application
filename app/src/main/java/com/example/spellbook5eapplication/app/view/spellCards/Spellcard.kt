@@ -1,8 +1,10 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.Card
@@ -42,10 +45,12 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SpellCard(
     onFullSpellCardRequest: () -> Unit,
-    onAddToSpellbookRequest: () -> Unit) {
+    onAddToSpellbookRequest: () -> Unit
+) {
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -53,7 +58,11 @@ fun SpellCard(
         colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.spellcard_color)),
         modifier = Modifier
             .padding(10.dp)
-            .clickable { onFullSpellCardRequest() }
+            .combinedClickable(
+                onClick = { onFullSpellCardRequest() },
+                onLongClick = { /* TODO  delete option*/ }
+            )
+            /*.clickable { onFullSpellCardRequest() }*/
     ) {
         Column(
             modifier = Modifier
@@ -185,8 +194,8 @@ fun SpellInfo(){
 @Composable
 fun PreviewSpellCard() {
             SpellCard(
-                onFullSpellCardRequest = { /* TODO: Add action for when the full spell card is requested */ },
-                onAddToSpellbookRequest = { /* TODO: Add action for when adding to spellbook is requested */ }
+                onFullSpellCardRequest = { println("Full spellcard request") },
+                onAddToSpellbookRequest = { println("Add to spellbook request") }
             )
         }
 
