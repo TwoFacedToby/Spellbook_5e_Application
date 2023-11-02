@@ -15,22 +15,23 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 
 @Composable
-fun FilterButton(){
+fun FilterButton(onShowFiltersRequest: () -> Unit){
     IconButton(
-        onClick = { /*TODO*/ },
+        onClick = { onShowFiltersRequest() },
         modifier = Modifier
             .background(
-                color = colorResource(id = R.color.primary_dark),
+                color = colorResource(id = R.color.main_color),
                 shape = RoundedCornerShape(2.dp))
             .border(BorderStroke(
                 2.dp,
-                colorResource(id = R.color.border_color_dark)),
+                colorResource(id = R.color.border_color)),
                 shape = RoundedCornerShape(2.dp)),
-        colors = IconButtonDefaults.iconButtonColors(containerColor = colorResource(id = R.color.primary_dark), contentColor = colorResource(
-            id = R.color.primary_white))
+        colors = IconButtonDefaults.iconButtonColors(containerColor = colorResource(id = R.color.main_color), contentColor = colorResource(
+            id = R.color.white))
     )
     {
         Icon(imageVector = Icons.Outlined.List, contentDescription = "")
@@ -41,6 +42,6 @@ fun FilterButton(){
 @Composable
 fun FilterButtonPreview() {
     Spellbook5eApplicationTheme {
-        FilterButton()
+        FilterButton(onShowFiltersRequest = {println("show filters")})
     }
 }

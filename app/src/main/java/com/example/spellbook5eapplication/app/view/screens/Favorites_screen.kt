@@ -15,9 +15,3 @@ fun FavoriteScreen(){
         Text(text = "Favorite screen")
     }
 }
-
-@Preview
-@Composable
-fun FavoriteScreenPreview(){
-    FavoriteScreen()
-}

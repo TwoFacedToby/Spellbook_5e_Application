@@ -1,24 +1,27 @@
 package com.example.spellbook5eapplication.app.view.bottomNavigation
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 
 @Composable
 fun BottomBar(
-    navController: NavHostController
+    navController: NavHostController,
+    globalOverlayState: GlobalOverlayState,
 ){
     val bottomNavItems = listOf(
         Screens.Favorite,
@@ -30,14 +33,15 @@ fun BottomBar(
     val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(
-        backgroundColor = colorResource(id = R.color.primary_dark)
+        backgroundColor = colorResource(id = R.color.main_color)
     )
     {
         bottomNavItems.forEach { screen ->
             AddItem(
                 bottomNavItem = screen,
                 currentDestination = currentDestination,
-                navController = navController
+                navController = navController,
+                globalOverlayState = globalOverlayState
             )
         }
     }
@@ -47,11 +51,15 @@ fun BottomBar(
 fun RowScope.AddItem(
     bottomNavItem : Screens,
     currentDestination : NavDestination?,
-    navController: NavHostController)
+    navController: NavHostController,
+    globalOverlayState: GlobalOverlayState)
 {
     BottomNavigationItem(
         selected = currentDestination?.hierarchy?.any { it.route == bottomNavItem.route } == true,
         onClick = {
+            if (globalOverlayState.getOverlayStack().isNotEmpty()) {
+                globalOverlayState.dismissOverlay()
+            }
             navController.navigate(bottomNavItem.route) {
                 popUpTo(navController.graph.findStartDestination().id) {
                     saveState = true
@@ -63,15 +71,10 @@ fun RowScope.AddItem(
         icon = {
             Icon(
                 imageVector = bottomNavItem.icon,
-                contentDescription = "Navigation icon")
+                contentDescription = "Navigation icon",
+                modifier = Modifier.size(35.dp))
         },
         selectedContentColor = colorResource(id = R.color.white),
-        unselectedContentColor = colorResource(id = R.color.secondary_dark)
+        unselectedContentColor = colorResource(id = R.color.unselected_icon)
     )
-}
-
-@Preview
-@Composable
-fun BottomBarPreview(){
-    BottomBar(navController = rememberNavController())
 }
