@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Surface
@@ -66,15 +67,18 @@ fun BrewScreen(){
                     Spacer(modifier = Modifier.width(5.dp))
                     FilterButton()
                 }
+                Spacer(modifier = Modifier.height(5.dp))
+
+                //TODO insert the lazy column for seacrh results
+                SpellCard(onDialogRequest = {showSpellDialog = true}, onOverlayRequest = {showSpellbookOverlay = true})
+
+                //Button to create own spells
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ){
-                    //Spacer(modifier = Modifier.heigth(5.dp))
                     CreateButton()
                 }
-                //TODO insert the lazy column for seacrh results
-                SpellCard(onDialogRequest = {showSpellDialog = true}, onOverlayRequest = {showSpellbookOverlay = true})
 
                 if(showSpellDialog){
                     SpellCardOverlay(
