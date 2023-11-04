@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Surface
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,13 +24,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
+import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
+import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 //import com.example.spellbook5eapplication.app.view.spellCards.SpellCardOverlay
-import com.example.spellbook5eapplication.app.view.utilities.CreateButton
+import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
@@ -66,6 +73,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                     horizontalArrangement = Arrangement.Center
                 )
                 {
+                    // Search field
                     UserInputField(
                         label = "Search",
                         singleLine = true,
@@ -76,6 +84,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                             .size(width = 220.dp, height = 48.dp),
                     )
                     Spacer(modifier = Modifier.width(5.dp))
+                    // Button to filter
                     FilterButton(
                         onShowFiltersRequest = {
                             globalOverlayState.showOverlay(
@@ -85,29 +94,67 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                 }
                 Spacer(modifier = Modifier.height(5.dp))
 
-                //TODO insert the lazy column for seacrh results
-                SpellCard(onDialogRequest = {showSpellDialog = true}, onOverlayRequest = {showSpellbookOverlay = true})
-
+                //List of spells
+                LazyColumn(
+                    modifier = Modifier.height(600.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    item { SpellCard(
+                        onFullSpellCardRequest = {
+                            globalOverlayState.showOverlay(
+                                OverlayType.LARGE_SPELLCARD,
+                            )
+                        },
+                        onAddToSpellbookRequest = {
+                            globalOverlayState.showOverlay(
+                                OverlayType.ADD_TO_SPELLBOOK,
+                            )
+                        }
+                    ) }
+                }
+                Spacer(modifier = Modifier.height(5.dp))
+                
                 //Button to create own spells
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ){
-                    CreateButton()
+                    ColouredButton("New Homebrew", modifier = Modifier, color = ButtonDefaults.buttonColors(containerColor = colorResource(
+                        id =R.color.green_button
+                    ))){
+                        println("Button clicked")
+                    }
                 }
 
-                if(showSpellDialog){
-                    SpellCardOverlay(
-                        isSpellbookOverlayVisible = showSpellbookOverlay,
-                        onToggleSpellbookOverlay = { showSpellbookOverlay = !showSpellbookOverlay },
-                        onDismissRequest = { showSpellDialog = false })
-                }
-                if(showSpellbookOverlay){
-                    /*
-                    SpellBookOverlay(
-                        isSpellbookOverlayVisible = showSpellbookOverlay,
-                        onDismissRequest = {showSpellbookOverlay = false})
-               */
+                // Overlay management
+                for (overlayType in globalOverlayState.getOverlayStack()) {
+                    when (overlayType) {
+                        OverlayType.LARGE_SPELLCARD -> {
+                            LargeSpellCardOverlay(globalOverlayState) { globalOverlayState.dismissOverlay() }
+                        }
+                        OverlayType.ADD_TO_SPELLBOOK -> {
+                            CustomOverlay(
+                                globalOverlayState = globalOverlayState,
+                                overlayType = OverlayType.ADD_TO_SPELLBOOK,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            ) {
+                                AddToSpellBookOverlay(
+                                    onDismissRequest = { globalOverlayState.dismissOverlay() }
+                                )
+                            }
+                        }
+                        OverlayType.FILTER -> {
+                            CustomOverlay(
+                                globalOverlayState = globalOverlayState,
+                                overlayType = OverlayType.FILTER,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            ){
+                                FiltersOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */})
+                            }
+                        }
+                        else -> Unit
+                    }
+
                 }
             }
         }
@@ -118,6 +165,8 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
 @Composable
 fun BrewScreenview() {
     Spellbook5eApplicationTheme {
-        BrewScreen()
+        //val globalOverlay : GlobalOverlayState(darkTheme = false,dynamicColor = false, content = NULL)
+        val globalOverlayState = GlobalOverlayState()
+        BrewScreen(globalOverlayState = globalOverlayState)
     }
 }
