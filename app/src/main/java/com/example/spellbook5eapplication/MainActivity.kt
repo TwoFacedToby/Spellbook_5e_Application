@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -37,21 +38,21 @@ class MainActivity : ComponentActivity() {
         }
         scope.launch {
             runBlocking {
-                networkRequest { spellList ->
+                networkRequest(this@MainActivity) { spellList ->
                     spellList.printInfoToConsole()
                 }
             }
         }
     }
 }
-fun networkRequest(callback: (result:SpellList) -> Unit){
-    val controller = SpellController()
+fun networkRequest(context: Context, callback: (result:SpellList) -> Unit){
+    val controller = SpellController(context)
     val spellList = controller.getAllSpellsList()
     if(spellList != null){
         controller.loadSpellList(spellList)
-        val filter = exampleFilter()
-        controller.searchSpellListWithFilter(spellList, filter)
-        callback(spellList)
+        //val filter = exampleFilter()
+        //controller.searchSpellListWithFilter(spellList, filter)
+        //callback(spellList)
     }
 }
 fun exampleFilter() : Filter{

@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.Utility
 
+import android.content.Context
 import com.example.spellbook5eapplication.app.Model.API
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
@@ -10,8 +11,9 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
-class SpellController {
+class SpellController(private val context: Context) {
 
     private val api = API()
     private val jsonToSpell = JSON_to_Spell()
@@ -43,6 +45,7 @@ class SpellController {
             try {
                 val json = api.getListOfSpells()
                 if(json != null){
+                    saveJsonToFile(context, json, "LocalJSONData", "spells.json")
                     list = jsonToSpell.jsonToSpellList(json)
                 }
             } catch (e: Exception) {
@@ -52,6 +55,29 @@ class SpellController {
         if(list != null) return list
         return null
     }
+
+    /**
+     * Author: Kenneth Kaiser
+     * Desc: Saves a json string on the PC in a specific folder
+     */
+    fun saveJsonToFile(context: Context, json: String, directoryName: String, fileName: String) {
+        try {
+            // Create the directory in the internal storage
+            val directory = File(context.filesDir, directoryName)
+            if (!directory.exists()) {
+                directory.mkdirs() // Make the directory if it does not exist
+            }
+
+            // Create the file within the new directory
+            val file = File(directory, fileName)
+            file.writeText(json) // Write the JSON string to the file
+
+            println("JSON saved to ${file.absolutePath}")
+        } catch (e: Exception) {
+            println("Failed to save JSON to file: ${e.message}")
+        }
+    }
+
     fun searchSpellName(spellList : SpellList, searchString : String) : SpellList {
         return search.searchSpellNames(spellList, searchString)
     }
