@@ -90,11 +90,22 @@ class SpellController(private val context: Context) {
             spellInfoJson = api.getSpellsFromApi(spellList.getIndexList())
         }
         if(spellInfoJson.isEmpty()) return
+
+
+
+
         val spellInfoList = mutableListOf<Spell_Info.SpellInfo>()
         for(spell in spellInfoJson){
             if(spell != null){
+
+
                 val spellInfo = jsonToSpell.jsonToSpell(spell)
-                if(spellInfo != null) spellInfoList.add(spellInfo)
+                if(spellInfo != null){
+                    spellInfoList.add(spellInfo)
+
+                    //Test for saving every spell
+                    saveJsonToFile(context, spell, "IndividualSpells", spellInfo.name + ".json")
+                }
             }
         }
         if(spellInfoList.isNotEmpty()) {
