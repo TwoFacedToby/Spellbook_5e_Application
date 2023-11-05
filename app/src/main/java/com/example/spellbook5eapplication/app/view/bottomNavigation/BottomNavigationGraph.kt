@@ -23,7 +23,7 @@ fun BottomNavigationGraph(navController: NavHostController, globalOverlayState: 
             SpellbooksScreen()
         }
         composable(route = Screens.Homebrew.route){
-            BrewScreen()
+            BrewScreen(globalOverlayState)
         }
     }
 }
