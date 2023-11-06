@@ -1,0 +1,436 @@
+package com.example.spellbook5eapplication.app.view.Overlays
+
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
+import com.example.spellbook5eapplication.app.view.utilities.UserInputField
+import com.example.spellbook5eapplication.app.viewmodel.FilterItem
+import com.example.spellbook5eapplication.app.viewmodel.artificer
+import com.example.spellbook5eapplication.app.viewmodel.bard
+import com.example.spellbook5eapplication.app.viewmodel.charisma
+import com.example.spellbook5eapplication.app.viewmodel.cleric
+import com.example.spellbook5eapplication.app.viewmodel.constitution
+import com.example.spellbook5eapplication.app.viewmodel.dexterity
+import com.example.spellbook5eapplication.app.viewmodel.druid
+import com.example.spellbook5eapplication.app.viewmodel.intelligence
+import com.example.spellbook5eapplication.app.viewmodel.level0
+import com.example.spellbook5eapplication.app.viewmodel.level1
+import com.example.spellbook5eapplication.app.viewmodel.level2
+import com.example.spellbook5eapplication.app.viewmodel.level3
+import com.example.spellbook5eapplication.app.viewmodel.level4
+import com.example.spellbook5eapplication.app.viewmodel.level5
+import com.example.spellbook5eapplication.app.viewmodel.level6
+import com.example.spellbook5eapplication.app.viewmodel.level7
+import com.example.spellbook5eapplication.app.viewmodel.level8
+import com.example.spellbook5eapplication.app.viewmodel.level9
+import com.example.spellbook5eapplication.app.viewmodel.matrial
+import com.example.spellbook5eapplication.app.viewmodel.noConcentration
+import com.example.spellbook5eapplication.app.viewmodel.noRitual
+import com.example.spellbook5eapplication.app.viewmodel.semantic
+import com.example.spellbook5eapplication.app.viewmodel.strength
+import com.example.spellbook5eapplication.app.viewmodel.verbal
+import com.example.spellbook5eapplication.app.viewmodel.wisdom
+import com.example.spellbook5eapplication.app.viewmodel.yesConcentration
+import com.example.spellbook5eapplication.app.viewmodel.yesRitual
+
+@Composable
+fun NewSpellOverlay(
+    onDismissRequest: () -> Unit,
+    onFilterSelected: (FilterItem) -> Unit
+) {
+    // This may need to be mutable and remember
+    val name: String
+
+    val spelllevel = remember {
+        mutableStateListOf(
+            level0, level1, level2, level3, level4, level5, level6, level7, level8, level9
+        )
+    }
+
+    val concentration = remember {
+        mutableStateListOf(
+            yesConcentration, noConcentration
+        )
+    }
+    val ritual = remember {
+        mutableStateListOf(
+            yesRitual, noRitual
+        )
+    }
+
+    val components = remember {
+        mutableStateListOf(
+            verbal, semantic, matrial
+        )
+    }
+
+    val saveReq = remember {
+        mutableStateListOf(
+            strength, dexterity, constitution, intelligence, wisdom, charisma,
+        )
+    }
+    val classes = remember {
+        mutableStateListOf(
+            artificer, bard, cleric, druid,
+
+            )
+    }
+
+    Column(
+        modifier = Modifier
+            .padding(top = 8.dp, start = 15.dp, end = 15.dp)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Divider(
+            modifier = Modifier
+                .width(250.dp)
+                .height(15.dp)
+                .clip(shape = RoundedCornerShape(5.dp))
+                .clickable { onDismissRequest() },
+            color = colorResource(id = R.color.black).copy(alpha = 0.2F),
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Box(
+            modifier = Modifier
+                .height(500.dp)
+                .fillMaxWidth()
+                .background(
+                    color = colorResource(id = R.color.overlay_box_color),
+                    shape = RoundedCornerShape(20.dp)
+                ),
+            contentAlignment = Alignment.TopCenter
+        ) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp))
+            {
+                item {Spacer(modifier = Modifier.height(5.dp))}
+
+                // Giving the spell a name, name is just printed at this moment
+                item {Text(
+                    text = "Name your new spell",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )}
+                item {
+                    UserInputField(
+                        label = "name",
+                        onInputChanged = { input -> println("User input: $input") },
+                        modifier = Modifier
+                            .size(width = 220.dp, height = 48.dp), singleLine = true
+                    )
+                }
+                item {Spacer(modifier = Modifier.height(5.dp))}
+
+                // Chossing the level of the spell
+                item {Text(
+                    text = "Spell Level",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )}
+                spelllevel.chunked(5).forEach { rowLevels ->
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            rowLevels.forEach { level ->
+                                FilterButton(
+                                    modifier = Modifier.size(55.dp),
+                                    contentPaddingValues = PaddingValues(1.dp),
+                                    filter = level,
+                                    onFilterSelected = { onFilterSelected(level) }
+                                )
+                            }
+                        }
+                    }
+                }
+                item { Spacer(modifier = Modifier.height(5.dp)) }
+                item {Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Concentration",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Row {
+                            concentration.forEach(){ concentration ->
+                                FilterButton(
+                                    modifier = Modifier.size(46.dp),
+                                    contentPaddingValues = PaddingValues(1.dp),
+                                    filter = concentration,
+                                    onFilterSelected = { onFilterSelected(concentration)}
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+                        }
+                    }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Ritual",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Row {
+                            ritual.forEach(){ ritual ->
+                                FilterButton(
+                                    modifier = Modifier.size(46.dp),
+                                    contentPaddingValues = PaddingValues(1.dp),
+                                    filter = ritual,
+                                    onFilterSelected = { onFilterSelected(ritual)}
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                            }
+                        }
+                    }
+                }
+                }
+                item {Spacer(modifier = Modifier.height(5.dp))}
+                item {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    )
+                    {
+                        Text(
+                            text = "Components",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            components.forEach() { components ->
+                                FilterButton(
+                                    modifier = Modifier.size(width = 100.dp, height = 40.dp),
+                                    contentPaddingValues = PaddingValues(1.dp),
+                                    filter = components,
+                                    onFilterSelected = { onFilterSelected(components) }
+                                )
+                            }
+                        }
+                    }
+                }
+                item {Spacer(modifier = Modifier.height(5.dp)) }
+                item {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Save Required",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        saveReq.chunked(3).forEach { rowLevels ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                rowLevels.forEach { level ->
+                                    FilterButton(
+                                        modifier = Modifier.size(width = 100.dp, height = 40.dp),
+                                        filter = level,
+                                        contentPaddingValues = PaddingValues(1.dp),
+                                        onFilterSelected = { onFilterSelected(level) }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+                item {Spacer(modifier = Modifier.height(5.dp))}
+                item {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Spell list",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        classes.chunked(2).forEach { rowLevels ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                rowLevels.forEach { level ->
+                                    CreateButton(
+                                        modifier = Modifier.size(width = 145.dp, height = 40.dp),
+                                        filter = level,
+                                        onFilterSelected = { onFilterSelected(level) }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                item {Spacer(modifier = Modifier.height(5.dp))}
+                // Giving the spell a name, name is just printed at this moment
+                item {Text(
+                    text = "Describe your spell!",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )}
+                item {
+                    UserInputField(
+                        label = "",
+                        onInputChanged = { input -> println("User input: $input") },
+                        modifier = Modifier
+                            .size(width = 300.dp, height = (48 * 5).dp), singleLine = false
+                    )
+                }
+                item {Spacer(modifier = Modifier.height(5.dp))}
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+
+                        ColouredButton(
+                            "Create", modifier = Modifier, color = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(
+                                    id = R.color.green_button
+                                )
+                            )
+                        ) {
+                            //Create spell here, Im only printing now (,^ _ ^)
+                            println("Button delete clicked")
+                        }
+
+                        Spacer(modifier = Modifier.width(30.dp))
+
+                        ColouredButton(
+                            "Cancel", modifier = Modifier, color = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(
+                                    id = R.color.red_button
+                                )
+                            )
+                        ) {
+                            println("Button Stop creation and delete when clicked")
+                        }
+                    }
+
+                }
+                item {Spacer(modifier = Modifier.height(5.dp))}
+            }
+        }
+    }
+}
+
+@Composable
+fun CreateButton(
+    modifier: Modifier,
+    contentPaddingValues: PaddingValues? = null,
+    filter: FilterItem,
+    onFilterSelected: (FilterItem) -> Unit) {
+    if(contentPaddingValues == null) {
+        Button(
+            modifier = modifier,
+            onClick = {
+                filter.isSelected.value = !filter.isSelected.value
+                onFilterSelected(filter)
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (filter.isSelected.value) colorResource(id = R.color.selected_button)
+                else colorResource(id = R.color.unselected_button)
+            ),
+            border = BorderStroke(
+                width = 2.dp,
+                color = colorResource(id = R.color.border_color)
+            ),
+            shape = RoundedCornerShape(5.dp),
+        ) {
+            Text(
+                text = filter.label,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+    } else {
+        Button(
+            modifier = modifier,
+            onClick = {
+                filter.isSelected.value = !filter.isSelected.value
+                onFilterSelected(filter)
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (filter.isSelected.value) colorResource(id = R.color.selected_button)
+                else colorResource(id = R.color.unselected_button)
+            ),
+            border = BorderStroke(
+                width = 2.dp,
+                color = colorResource(id = R.color.border_color)
+            ),
+            contentPadding = contentPaddingValues,
+            shape = RoundedCornerShape(5.dp),
+        ) {
+            Text(
+                text = filter.label,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        }
+    }
+}
+
+
+@Preview
+@Composable
+fun CreateOverlayPreview(){
+    NewSpellOverlay(
+        onDismissRequest = { println("Dismiss button clicked") },
+        onFilterSelected = { println("filter selected") })
+}
