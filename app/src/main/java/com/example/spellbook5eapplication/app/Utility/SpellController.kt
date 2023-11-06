@@ -12,8 +12,20 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
 import java.io.File
+import java.lang.ref.WeakReference
 
-class SpellController(private val context: Context) {
+object SpellController {
+
+    private var context: WeakReference<Context>? = null
+
+    fun setContext(appContext: Context) {
+        context = WeakReference(appContext.applicationContext)
+    }
+
+    private fun getContext(): Context? {
+        return context?.get()
+    }
+
 
     private val api = API()
     private val jsonToSpell = JSON_to_Spell()
@@ -45,7 +57,7 @@ class SpellController(private val context: Context) {
             try {
                 val json = api.getListOfSpells()
                 if(json != null){
-                    saveJsonToFile(context, json, "LocalJSONData", "spells.json")
+                    saveJsonToFile(json, "LocalJSONData", "spells.json")
                     list = jsonToSpell.jsonToSpellList(json)
                 }
             } catch (e: Exception) {
@@ -60,21 +72,24 @@ class SpellController(private val context: Context) {
      * Author: Kenneth Kaiser
      * Desc: Saves a json string on the PC in a specific folder
      */
-    fun saveJsonToFile(context: Context, json: String, directoryName: String, fileName: String) {
-        try {
-            // Create the directory in the internal storage
-            val directory = File(context.filesDir, directoryName)
-            if (!directory.exists()) {
-                directory.mkdirs() // Make the directory if it does not exist
+    fun saveJsonToFile(json: String, directoryName: String, fileName: String) {
+        val appContext = getContext()
+        if (appContext != null) {
+            try {
+                // Create the directory in the internal storage
+                val directory = File(appContext.filesDir, directoryName)
+                if (!directory.exists()) {
+                    directory.mkdirs() // Make the directory if it does not exist
+                }
+
+                // Create the file within the new directory
+                val file = File(directory, fileName)
+                file.writeText(json) // Write the JSON string to the file
+
+                println("JSON saved to ${file.absolutePath}")
+            } catch (e: Exception) {
+                println("Failed to save JSON to file: ${e.message}")
             }
-
-            // Create the file within the new directory
-            val file = File(directory, fileName)
-            file.writeText(json) // Write the JSON string to the file
-
-            println("JSON saved to ${file.absolutePath}")
-        } catch (e: Exception) {
-            println("Failed to save JSON to file: ${e.message}")
         }
     }
 
@@ -104,7 +119,7 @@ class SpellController(private val context: Context) {
                     spellInfoList.add(spellInfo)
 
                     //Test for saving every spell
-                    saveJsonToFile(context, spell, "IndividualSpells", spellInfo.name + ".json")
+                    saveJsonToFile(spell, "IndividualSpells", spellInfo.name + ".json")
                 }
             }
         }
