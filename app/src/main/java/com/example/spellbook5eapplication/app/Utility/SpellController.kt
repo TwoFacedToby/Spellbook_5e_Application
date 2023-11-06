@@ -56,6 +56,10 @@ class SpellController(private val context: Context) {
         return null
     }
 
+
+
+
+
     /**
      * Author: Kenneth Kaiser
      * Desc: Saves a json string on the PC in a specific folder
@@ -84,8 +88,17 @@ class SpellController(private val context: Context) {
     fun searchSpellListWithFilter(spellList : SpellList, filter: Filter) : SpellList {
         return search.searchSpellListWithFilter(spellList, filter)
     }
+
+    suspend fun getJson(index : String) : String?{
+
+        api.getSpellFromApiWithRetry(index, 100)
+
+        return null
+    }
+
     fun loadSpellList(spellList : SpellList){
         var spellInfoJson : List<String?>
+
         runBlocking {
             spellInfoJson = api.getSpellsFromApi(spellList.getIndexList())
         }
