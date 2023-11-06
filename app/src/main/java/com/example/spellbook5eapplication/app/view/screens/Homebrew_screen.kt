@@ -32,6 +32,7 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
+import com.example.spellbook5eapplication.app.view.spellCards.LocalLargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 //import com.example.spellbook5eapplication.app.view.spellCards.SpellCardOverlay
@@ -130,7 +131,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                 for (overlayType in globalOverlayState.getOverlayStack()) {
                     when (overlayType) {
                         OverlayType.LARGE_SPELLCARD -> {
-                            LargeSpellCardOverlay(globalOverlayState) { globalOverlayState.dismissOverlay() }
+                            LocalLargeSpellCardOverlay(globalOverlayState) { globalOverlayState.dismissOverlay() }
                         }
                         OverlayType.ADD_TO_SPELLBOOK -> {
                             CustomOverlay(
