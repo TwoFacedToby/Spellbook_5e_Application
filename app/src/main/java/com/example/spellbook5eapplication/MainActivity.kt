@@ -1,6 +1,5 @@
 package com.example.spellbook5eapplication
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,17 +12,33 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.SpellController
+import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
-    val scope = CoroutineScope(Dispatchers.IO)
+    // Define a CoroutineScope for launching coroutines
+    private val scope = CoroutineScope(Dispatchers.Main)
+    private lateinit var spellbookManager: SpellbookManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Initialize SpellController with context
+        SpellController.setContext(applicationContext)
+
+        spellbookManager = SpellbookManager()
+
+        // Mock some Spellbook data
+        addMockSpellbooks()
+        addMockSpellsToSpellbooks()
+
+        // Save the Spellbooks to file
+        saveSpellbooks()
 
         setContent {
             Spellbook5eApplicationTheme {
@@ -36,26 +51,46 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
+        // Make network requests
+        networkRequest { spellList ->
+            // Handle the spellList here, like updating the UI
+            spellList.printInfoToConsole()
+        }
+    }
+
+    private fun addMockSpellbooks() {
+        spellbookManager.addSpellbook(Spellbook("Wizard's Handbook"))
+        spellbookManager.addSpellbook(Spellbook("Cleric's Compendium"))
+    }
+
+    private fun addMockSpellsToSpellbooks(){
+        spellbookManager.getSpellbook("Wizard's Handbook")?.addSpell("Fire Ball - of course")
+    }
+
+    private fun saveSpellbooks() {
+        // Get all spellbooks from your manager
+        spellbookManager.getAllSpellbooks().forEach { spellbook ->
+            // Use the spellbook's name for the file name
+            val spellBookFileName = spellbook.spellbookName
+
+            // Save each spellbook to a file named after the spellbook itself
+            spellbookManager.saveSpellbookToFile(spellBookFileName)
+        }
+    }
+
+    private fun networkRequest(callback: (result: SpellList) -> Unit) {
         scope.launch {
-            runBlocking {
-                networkRequest(this@MainActivity) { spellList ->
-                    spellList.printInfoToConsole()
-                }
+            val spellList = SpellController.getAllSpellsList()
+            if (spellList != null) {
+                SpellController.loadSpellList(spellList)
+                // Do something with the spell list, like updating the UI
+                callback(spellList)
             }
         }
     }
 }
-fun networkRequest(context: Context, callback: (result:SpellList) -> Unit){
-    val controller = SpellController(context)
-    val spellList = controller.getAllSpellsList()
-    if(spellList != null){
-        controller.loadSpellList(spellList)
-        //val filter = exampleFilter()
-        //controller.searchSpellListWithFilter(spellList, filter)
-        //callback(spellList)
-    }
-}
-fun exampleFilter() : Filter{
+fun exampleFilter() : Filter {
     val filter = Filter()
     filter.setSpellName("Fire")
     return filter
