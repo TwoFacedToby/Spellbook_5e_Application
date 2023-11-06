@@ -16,94 +16,36 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.app.viewmodel.FilterItem
-import com.example.spellbook5eapplication.app.viewmodel.artificer
-import com.example.spellbook5eapplication.app.viewmodel.bard
-import com.example.spellbook5eapplication.app.viewmodel.charisma
-import com.example.spellbook5eapplication.app.viewmodel.cleric
-import com.example.spellbook5eapplication.app.viewmodel.constitution
-import com.example.spellbook5eapplication.app.viewmodel.dexterity
-import com.example.spellbook5eapplication.app.viewmodel.druid
-import com.example.spellbook5eapplication.app.viewmodel.intelligence
-import com.example.spellbook5eapplication.app.viewmodel.level0
-import com.example.spellbook5eapplication.app.viewmodel.level1
-import com.example.spellbook5eapplication.app.viewmodel.level2
-import com.example.spellbook5eapplication.app.viewmodel.level3
-import com.example.spellbook5eapplication.app.viewmodel.level4
-import com.example.spellbook5eapplication.app.viewmodel.level5
-import com.example.spellbook5eapplication.app.viewmodel.level6
-import com.example.spellbook5eapplication.app.viewmodel.level7
-import com.example.spellbook5eapplication.app.viewmodel.level8
-import com.example.spellbook5eapplication.app.viewmodel.level9
-import com.example.spellbook5eapplication.app.viewmodel.matrial
-import com.example.spellbook5eapplication.app.viewmodel.noConcentration
-import com.example.spellbook5eapplication.app.viewmodel.noRitual
-import com.example.spellbook5eapplication.app.viewmodel.semantic
-import com.example.spellbook5eapplication.app.viewmodel.strength
-import com.example.spellbook5eapplication.app.viewmodel.verbal
-import com.example.spellbook5eapplication.app.viewmodel.wisdom
-import com.example.spellbook5eapplication.app.viewmodel.yesConcentration
-import com.example.spellbook5eapplication.app.viewmodel.yesRitual
+import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 
 @Composable
 fun FiltersOverlay(
+    filterViewModel: FilterViewModel,
     onDismissRequest: () -> Unit,
-    onFilterSelected: (FilterItem) -> Unit
 ) {
-    val spelllevel = remember {
-        mutableStateListOf(
-            level0, level1, level2, level3, level4, level5, level6, level7, level8, level9
-        )
-    }
-
-    val concentration = remember {
-        mutableStateListOf(
-            yesConcentration, noConcentration
-        )
-    }
-    val ritual = remember {
-        mutableStateListOf(
-            yesRitual, noRitual
-        )
-    }
-
-    val components = remember {
-        mutableStateListOf(
-            verbal, semantic, matrial
-        )
-    }
-
-    val saveReq = remember {
-        mutableStateListOf(
-            strength, dexterity, constitution, intelligence, wisdom, charisma,
-        )
-    }
-    val classes = remember {
-        mutableStateListOf(
-            artificer, bard, cleric, druid,
-
-            )
-    }
+    val spellLevel by filterViewModel.selectedLevels.observeAsState(listOf())
+    val isConcentrationSelected by filterViewModel.isConcentrationSelected.observeAsState(false)
+    val isRitualSelected by filterViewModel.isRitualSelected.observeAsState(false)
+    val selectedComponents by filterViewModel.selectedComponents.observeAsState(listOf())
+    val selectedSaves by filterViewModel.selectedSaves.observeAsState(listOf())
+    val selectedClasses by filterViewModel.selectedClasses.observeAsState(listOf())
 
     Column(
         modifier = Modifier
@@ -143,7 +85,7 @@ fun FiltersOverlay(
                     color = Color.White,
                     fontWeight = FontWeight.Bold
                 )}
-                    spelllevel.chunked(5).forEach { rowLevels ->
+                    filterViewModel.spellLevels.chunked(5).forEach { rowLevels ->
                         item {
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
@@ -153,8 +95,14 @@ fun FiltersOverlay(
                                     FilterButton(
                                         modifier = Modifier.size(55.dp),
                                         contentPaddingValues = PaddingValues(1.dp),
-                                        filter = level,
-                                        onFilterSelected = { onFilterSelected(level) }
+                                        label = level.toString(),
+                                        isSelected = rememberIsLevelSelected(
+                                            filterViewModel = filterViewModel,
+                                            level = level
+                                        ),
+                                        onToggleSelection = {
+                                            filterViewModel.toggleLevelSelection(level)
+                                        },
                                     )
                                 }
                             }
@@ -175,15 +123,22 @@ fun FiltersOverlay(
                             fontWeight = FontWeight.Bold
                         )
                         Row {
-                            concentration.forEach(){ concentration ->
-                                FilterButton(
-                                    modifier = Modifier.size(46.dp),
-                                    contentPaddingValues = PaddingValues(1.dp),
-                                    filter = concentration,
-                                    onFilterSelected = { onFilterSelected(concentration)}
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                            }
+                            FilterButton(
+                                modifier = Modifier.size(46.dp),
+                                contentPaddingValues = PaddingValues(1.dp),
+                                isSelected = isConcentrationSelected,
+                                label = "Yes",
+                                onToggleSelection = { filterViewModel.toggleConcentrationSelection() }
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            FilterButton(
+                                modifier = Modifier.size(46.dp),
+                                contentPaddingValues = PaddingValues(1.dp),
+                                isSelected = !isConcentrationSelected,
+                                label = "No",
+                                onToggleSelection = { filterViewModel.toggleConcentrationSelection() }
+                            )
                         }
                     }
                     Column(
@@ -196,20 +151,27 @@ fun FiltersOverlay(
                             fontWeight = FontWeight.Bold
                         )
                         Row {
-                            ritual.forEach(){ ritual ->
-                                FilterButton(
-                                    modifier = Modifier.size(46.dp),
-                                    contentPaddingValues = PaddingValues(1.dp),
-                                    filter = ritual,
-                                    onFilterSelected = { onFilterSelected(ritual)}
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                            }
+                            FilterButton(
+                                modifier = Modifier.size(46.dp),
+                                contentPaddingValues = PaddingValues(1.dp),
+                                isSelected = isRitualSelected,
+                                label = "Yes",
+                                onToggleSelection = { filterViewModel.toggleRitualSelection() }
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            FilterButton(
+                                modifier = Modifier.size(46.dp),
+                                contentPaddingValues = PaddingValues(1.dp),
+                                isSelected = !isRitualSelected,
+                                label = "No",
+                                onToggleSelection = { filterViewModel.toggleRitualSelection() }
+                            )
                         }
                     }
                 }
                 }
-                item {Spacer(modifier = Modifier.height(5.dp))}
+                item { Spacer(modifier = Modifier.height(5.dp))}
                 item {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -225,18 +187,22 @@ fun FiltersOverlay(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            components.forEach() { components ->
+                            filterViewModel.components.forEach() { components ->
                                 FilterButton(
                                     modifier = Modifier.size(width = 100.dp, height = 40.dp),
                                     contentPaddingValues = PaddingValues(1.dp),
-                                    filter = components,
-                                    onFilterSelected = { onFilterSelected(components) }
+                                    label = components,
+                                    isSelected = rememberIsComponentSelected(
+                                        filterViewModel = filterViewModel,
+                                        component = components
+                                    ),
+                                    onToggleSelection = {filterViewModel.toggleComponentSelection(components)}
                                 )
                             }
                         }
                     }
                 }
-                item {Spacer(modifier = Modifier.height(5.dp)) }
+                item { Spacer(modifier = Modifier.height(5.dp)) }
                 item {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -248,7 +214,7 @@ fun FiltersOverlay(
                             fontWeight = FontWeight.Bold
                         )
 
-                        saveReq.chunked(3).forEach { rowLevels ->
+                        filterViewModel.saves.chunked(3).forEach { rowLevels ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -256,16 +222,20 @@ fun FiltersOverlay(
                                 rowLevels.forEach { level ->
                                     FilterButton(
                                         modifier = Modifier.size(width = 100.dp, height = 40.dp),
-                                        filter = level,
+                                        label = level,
                                         contentPaddingValues = PaddingValues(1.dp),
-                                        onFilterSelected = { onFilterSelected(level) }
+                                        isSelected = rememberIsSaveSelected(
+                                            filterViewModel = filterViewModel,
+                                            save = level
+                                        ),
+                                        onToggleSelection = { filterViewModel.toggleSaveSelection(level) }
                                     )
                                 }
                             }
                         }
                     }
                 }
-                item {Spacer(modifier = Modifier.height(5.dp))}
+                item { Spacer(modifier = Modifier.height(5.dp)) }
                 item {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -277,7 +247,7 @@ fun FiltersOverlay(
                             fontWeight = FontWeight.Bold
                         )
 
-                        classes.chunked(2).forEach { rowLevels ->
+                        filterViewModel.classes.chunked(2).forEach { rowLevels ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -285,8 +255,12 @@ fun FiltersOverlay(
                                 rowLevels.forEach { level ->
                                     FilterButton(
                                         modifier = Modifier.size(width = 145.dp, height = 40.dp),
-                                        filter = level,
-                                        onFilterSelected = { onFilterSelected(level) }
+                                        label = level,
+                                        isSelected = rememberIsClassSelected(
+                                            filterViewModel = filterViewModel,
+                                            classes = level
+                                        ),
+                                        onToggleSelection = { filterViewModel.toggleClassSelection(level) }
                                     )
                                 }
                             }
@@ -302,17 +276,15 @@ fun FiltersOverlay(
 fun FilterButton(
     modifier: Modifier,
     contentPaddingValues: PaddingValues? = null,
-    filter: FilterItem,
-    onFilterSelected: (FilterItem) -> Unit) {
+    label: String,
+    isSelected: Boolean,
+    onToggleSelection: () -> Unit) {
     if(contentPaddingValues == null) {
         Button(
             modifier = modifier,
-            onClick = {
-                filter.isSelected.value = !filter.isSelected.value
-                onFilterSelected(filter)
-            },
+            onClick = onToggleSelection,
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (filter.isSelected.value) colorResource(id = R.color.selected_button)
+                containerColor = if (isSelected) colorResource(id = R.color.selected_button)
                 else colorResource(id = R.color.unselected_button)
             ),
             border = BorderStroke(
@@ -322,7 +294,7 @@ fun FilterButton(
             shape = RoundedCornerShape(5.dp),
         ) {
             Text(
-                text = filter.label,
+                text = label,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -331,12 +303,9 @@ fun FilterButton(
     } else {
         Button(
             modifier = modifier,
-            onClick = {
-                filter.isSelected.value = !filter.isSelected.value
-                onFilterSelected(filter)
-            },
+            onClick = onToggleSelection,
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (filter.isSelected.value) colorResource(id = R.color.selected_button)
+                containerColor = if (isSelected) colorResource(id = R.color.selected_button)
                 else colorResource(id = R.color.unselected_button)
             ),
             border = BorderStroke(
@@ -347,7 +316,7 @@ fun FilterButton(
             shape = RoundedCornerShape(5.dp),
         ) {
             Text(
-                text = filter.label,
+                text = label,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
@@ -356,11 +325,28 @@ fun FilterButton(
     }
 }
 
-
-@Preview
 @Composable
-fun FiltersOverlayPreview(){
-    FiltersOverlay(
-        onDismissRequest = { println("Dismiss button clicked") },
-        onFilterSelected = { println("filter selected") })
+fun rememberIsLevelSelected(filterViewModel: FilterViewModel, level: Int): Boolean {
+    val selectedLevels by filterViewModel.selectedLevels.observeAsState(initial = emptyList())
+    return selectedLevels.contains(level)
 }
+
+@Composable
+fun rememberIsComponentSelected(filterViewModel: FilterViewModel, component: String): Boolean {
+    val selectedComponents by filterViewModel.selectedComponents.observeAsState(initial = emptyList())
+    return selectedComponents.contains(component)
+}
+
+@Composable
+fun rememberIsSaveSelected(filterViewModel: FilterViewModel, save: String): Boolean {
+    val selectedSaves by filterViewModel.selectedComponents.observeAsState(initial = emptyList())
+    return selectedSaves.contains(save)
+}
+
+@Composable
+fun rememberIsClassSelected(filterViewModel: FilterViewModel, classes: String): Boolean {
+    val selectedClasses by filterViewModel.selectedComponents.observeAsState(initial = emptyList())
+    return selectedClasses.contains(classes)
+}
+
+

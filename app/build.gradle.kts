@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation ("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.compose.ui:ui:1.1.0-alpha01")  // Replace with the latest version
@@ -74,9 +75,6 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-
-    val nav_version = "2.7.4"
-
-    implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.navigation:navigation-compose:2.7.4")
 
 }

@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.spellbook5eapplication.app.view.bottomNavigation.BottomBar
 import com.example.spellbook5eapplication.app.view.bottomNavigation.BottomNavigationGraph
 import com.example.spellbook5eapplication.app.view.topNavigation.TopBar
+import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -16,10 +17,11 @@ import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 fun MainScreen(){
     val navController = rememberNavController()
     val globalOverlayState = GlobalOverlayState()
+    val filterViewModel = FilterViewModel()
     Scaffold(
         topBar = { TopBar(navController = navController, globalOverlayState)},
         bottomBar = { BottomBar(navController = navController, globalOverlayState) }
     ){
-        BottomNavigationGraph(navController = navController, globalOverlayState)
+        BottomNavigationGraph(navController = navController, globalOverlayState, filterViewModel)
     }
 }

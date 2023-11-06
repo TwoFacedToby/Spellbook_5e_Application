@@ -8,13 +8,14 @@ import com.example.spellbook5eapplication.app.view.screens.FavoriteScreen
 import com.example.spellbook5eapplication.app.view.screens.HomebrewScreen
 import com.example.spellbook5eapplication.app.view.screens.SearchScreen
 import com.example.spellbook5eapplication.app.view.screens.SpellbooksScreen
+import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 
 @Composable
-fun BottomNavigationGraph(navController: NavHostController, globalOverlayState: GlobalOverlayState){
+fun BottomNavigationGraph(navController: NavHostController, globalOverlayState: GlobalOverlayState, filterViewModel: FilterViewModel){
     NavHost(navController = navController, startDestination = Screens.Search.route){
         composable(route = Screens.Search.route){
-            SearchScreen(globalOverlayState)
+            SearchScreen(globalOverlayState, filterViewModel)
         }
         composable(route = Screens.Favorite.route){
             FavoriteScreen()

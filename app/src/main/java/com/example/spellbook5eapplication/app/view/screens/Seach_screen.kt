@@ -26,11 +26,12 @@ import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
+import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 @Composable
-fun SearchScreen(globalOverlayState: GlobalOverlayState){
+fun SearchScreen(globalOverlayState: GlobalOverlayState, filterViewModel: FilterViewModel){
     Surface(
         modifier = Modifier
         .fillMaxSize()
@@ -76,7 +77,8 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    item { SpellCard(
+                    item {
+                        SpellCard(
                         onFullSpellCardRequest = {
                             globalOverlayState.showOverlay(
                                 OverlayType.LARGE_SPELLCARD,
@@ -87,7 +89,8 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                                 OverlayType.ADD_TO_SPELLBOOK,
                             )
                         }
-                    ) }
+                    )
+                    }
                 }
             }
             for (overlayType in globalOverlayState.getOverlayStack()) {
@@ -112,7 +115,7 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                             overlayType = OverlayType.FILTER,
                             onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ){
-                            FiltersOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */})
+                            FiltersOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, filterViewModel = filterViewModel)
                         }
                     }
                     else -> Unit
