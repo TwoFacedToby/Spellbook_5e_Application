@@ -102,7 +102,7 @@ fun LocalLargeSpellCardOverlay(
 
                         //Newly added button
                         IconButton(
-                            onClick = { globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
+                            onClick = { globalOverlayState.showOverlay(OverlayType.DELETE_PROMPT) }) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
                                 contentDescription = "Delete spell from local device",

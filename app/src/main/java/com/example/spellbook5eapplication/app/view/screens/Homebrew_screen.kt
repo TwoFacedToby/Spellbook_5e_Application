@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.DeleteOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LocalLargeSpellCardOverlay
@@ -103,7 +104,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                     item { SpellCard(
                         onFullSpellCardRequest = {
                             globalOverlayState.showOverlay(
-                                OverlayType.LARGE_SPELLCARD,
+                                OverlayType.LOCAL_LARGE_SPELLCARD,
                             )
                         },
                         onAddToSpellbookRequest = {
@@ -130,7 +131,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                 // Overlay management
                 for (overlayType in globalOverlayState.getOverlayStack()) {
                     when (overlayType) {
-                        OverlayType.LARGE_SPELLCARD -> {
+                        OverlayType.LOCAL_LARGE_SPELLCARD -> {
                             LocalLargeSpellCardOverlay(globalOverlayState) { globalOverlayState.dismissOverlay() }
                         }
                         OverlayType.ADD_TO_SPELLBOOK -> {
@@ -152,6 +153,9 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                             ){
                                 FiltersOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */})
                             }
+                        }
+                        OverlayType.DELETE_PROMPT -> {
+                            DeleteOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() })
                         }
                         else -> Unit
                     }
