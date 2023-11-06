@@ -49,7 +49,7 @@ fun networkRequest(context: Context, callback: (result:SpellList) -> Unit){
     val controller = SpellController(context)
     val spellList = controller.getAllSpellsList()
     if(spellList != null){
-        controller.loadSpellList(spellList)
+        controller.loadEntireSpellList(spellList)
         //val filter = exampleFilter()
         //controller.searchSpellListWithFilter(spellList, filter)
         //callback(spellList)
