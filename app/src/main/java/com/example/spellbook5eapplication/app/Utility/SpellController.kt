@@ -15,11 +15,13 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
 import java.io.File
 
+import org.json.JSONObject
 class SpellController(private val context: Context) {
 
     private val api = API()
     private val jsonToSpell = JSON_to_Spell()
     private val search = Search()
+    private val localList = extractIndexListFromFile(context, "LocalJSONData/spells.json")
 
     /**@author Tobias s224271
      * @param spellName The index of the spell, that can be called to the api.
@@ -62,6 +64,7 @@ class SpellController(private val context: Context) {
             try {
                 val json = api.getListOfSpells()
                 if(json != null){
+                    println(localList)
                     saveJsonToFile(context, json, "LocalJSONData", "spells.json")
                     list = jsonToSpell.jsonToSpellList(json)
                 }
@@ -72,7 +75,6 @@ class SpellController(private val context: Context) {
         if(list != null) return list
         return null
     }
-
 
 
 
@@ -106,6 +108,33 @@ class SpellController(private val context: Context) {
      *
      * Uses the Search to search the spellList.
      */
+
+
+
+    fun extractIndexListFromFile(context: Context, fileName: String): List<String> {
+        val file = File(context.filesDir, fileName)
+        if (!file.exists()) {
+            println("File does not exist.")
+            return emptyList()
+        }
+
+        val jsonString = file.bufferedReader().use { it.readText() }
+        val jsonObject = JSONObject(jsonString)
+        val resultsArray = jsonObject.getJSONArray("results")
+
+        val indexList = mutableListOf<String>()
+        for (i in 0 until resultsArray.length()) {
+            val item = resultsArray.getJSONObject(i)
+            indexList.add(item.getString("index"))
+        }
+
+        return indexList
+    }
+
+    fun isStringInList(list: List<String>, value: String): Boolean {
+        return list.contains(value)
+    }
+
     fun searchSpellName(spellList : SpellList, searchString : String) : SpellList {
         return search.searchSpellNames(spellList, searchString)
     }
@@ -119,72 +148,102 @@ class SpellController(private val context: Context) {
         return search.searchSpellListWithFilter(spellList, filter)
     }
 
+    fun getJsonIfStringInList(value: String, basePath: String): String? {
+
+        val filePath = "$basePath/$value.json"
+        val file = File(filePath)
+        if (file.exists()) {
+            return file.readText(Charsets.UTF_8)
+        }
+        else{
+            println("FILE DOESNT EXIST BRO")
+        }
+        return null
+    }
+
     private suspend fun getJSONFromList(list : List<String>) : List<String?>{
         return coroutineScope {
             list.map { spellName ->
                 async {
-                    getJSON(spellName)
+                    getJson(spellName)
                 }
             }.awaitAll()
         }
     }
-    private suspend fun getJSON(index : String) : String? {
-        //Check local storage
-        //Return result if found locally
-        return api.getSpellFromApiWithRetry(index, 100);
-    }
-
     fun loadEntireSpellList(spellList : SpellList){
         val list = loadSpells(spellList.getIndexList())
         if(list.isNotEmpty()) spellList.setSpellInfoList(list)
     }
 
     fun loadNextFromSpellList(amount : Int, spellList: SpellList) : List<Spell_Info.SpellInfo?>? {
-        val current = spellList.getLoaded()+1;
-        if(spellList.getIndexList().size >= current) return null
-        val list : MutableList<String> = emptyList<String>().toMutableList()
+        val current = spellList.getLoaded() + 1;
+        if (spellList.getIndexList().size >= current) return null
+        val list: MutableList<String> = emptyList<String>().toMutableList()
 
-        if(spellList.getIndexList().size > current+amount){
-            for(i in current..(current+amount)){
+        if (spellList.getIndexList().size > current + amount) {
+            for (i in current..(current + amount)) {
                 list.add(spellList.getIndexList()[i])
             }
-            spellList.setLoaded(current+amount)
-        }
-        else{
+            spellList.setLoaded(current + amount)
+        } else {
             val to = spellList.getIndexList().size - 1
-            for(i in current..to){
+            for (i in current..to) {
                 list.add(spellList.getIndexList()[i])
             }
             spellList.setLoaded(to)
         }
         return loadSpells(list)
-
     }
-    private fun loadSpells(indexes : List<String>) : List<Spell_Info.SpellInfo> {
-        var spellInfoJson : List<String?>
-        runBlocking {
-            spellInfoJson = getJSONFromList(indexes)
-        }
-        if(spellInfoJson.isEmpty()) return emptyList();
-        val spellInfoList = mutableListOf<Spell_Info.SpellInfo>()
-        for(spell in spellInfoJson){
-            if(spell != null){
-                val spellInfo = spellInfoFromJSON(spell)
-                if(spellInfo != null) spellInfoList.add(spellInfo);
+        suspend fun getJson(index: String): String? {
+
+            val inList = isStringInList(localList, index)
+            println(inList)
+            println(localList)
+            println(index)
+            var json: String? = null
+
+            if (inList) {
+                json = getJsonIfStringInList(
+                    index,
+                    "/data/data/com.example.spellbook5eapplication/files/IndividualSpells"
+                )
+                println("NO API CALL")
+            } else {
+                json = api.getSpellFromApiWithRetry(index, 100)
+                //Test for saving every spell
+                println()
+                if(json != null) saveJsonToFile(context, json, "IndividualSpells", index+".json")
             }
+
+            return json
         }
-        return spellInfoList.toList();
-    }
-    fun spellInfoFromJSON(json : String) : Spell_Info.SpellInfo? {
-        val spellInfo = jsonToSpell.jsonToSpell(json)
-        if(spellInfo != null){
-            //Test for saving every spell
-            saveJsonToFile(context, json, "IndividualSpells", spellInfo.name + ".json")
-        }
-        return spellInfo;
-    }
 
 
+        private fun loadSpells(indexes: List<String>): List<Spell_Info.SpellInfo> {
+            var spellInfoJson: List<String?>
+            runBlocking {
+                spellInfoJson = getJSONFromList(indexes)
+            }
+            if (spellInfoJson.isEmpty()) return emptyList();
+            val spellInfoList = mutableListOf<Spell_Info.SpellInfo>()
+            for (spell in spellInfoJson) {
+                if (spell != null) {
+                    val spellInfo = spellInfoFromJSON(spell)
+                    if (spellInfo != null) spellInfoList.add(spellInfo);
+                }
+            }
+            return spellInfoList.toList();
+        }
+
+        fun spellInfoFromJSON(json: String): Spell_Info.SpellInfo? {
+            val spellInfo = jsonToSpell.jsonToSpell(json)
+            if (spellInfo != null) {
+
+            }
+            return spellInfo;
+        }
+
+    }
     /* The Four Previous Iterations of loadSpellList.
     Ended up using V3
     fun loadSpellListV1(spellList : SpellList){
@@ -300,4 +359,4 @@ class SpellController(private val context: Context) {
         }
     }
      */
-}
+
