@@ -101,16 +101,17 @@ class SpellController(private val context: Context) {
             println("Failed to save JSON to file: ${e.message}")
         }
     }
-    /**@author Tobias s224271
-     * @param spellList The list that should be searched
-     * @param searchString The keywords
-     * @return The SpellList in parameter, but with spells that does not apply with the search keyword removed.
+
+
+
+    /**@author Kenneth s221064
+     * @param context The context
+     * @param fileName the name of the file needed to be found
+     * @return List of Strings each being a spell index
      *
-     * Uses the Search to search the spellList.
+     * Used to get a list of what spells is stored on the local device.
+     *
      */
-
-
-
     fun extractIndexListFromFile(context: Context, fileName: String): List<String> {
         val file = File(context.filesDir, fileName)
         if (!file.exists()) {
@@ -130,11 +131,23 @@ class SpellController(private val context: Context) {
 
         return indexList
     }
-
+    /**@author Kenneth s221064
+     * @param list The list of indexes stored on the local device
+     * @param value The value we are checking if exists
+     * @return boolean value if exists
+     *
+     * Checks if the value is inside of the list.
+     */
     fun isStringInList(list: List<String>, value: String): Boolean {
         return list.contains(value)
     }
-
+    /**@author Tobias s224271
+     * @param spellList The list that should be searched
+     * @param searchString The keywords
+     * @return The SpellList in parameter, but with spells that does not apply with the search keyword removed.
+     *
+     * Uses the Search to search the spellList.
+     */
     fun searchSpellName(spellList : SpellList, searchString : String) : SpellList {
         return search.searchSpellNames(spellList, searchString)
     }
@@ -147,7 +160,16 @@ class SpellController(private val context: Context) {
     fun searchSpellListWithFilter(spellList : SpellList, filter: Filter) : SpellList {
         return search.searchSpellListWithFilter(spellList, filter)
     }
-
+    /**@author Kenneth s221064
+     * @param value Name of file
+     * @param basePath Path of directory for file
+     * @return json located at file location. Or null.
+     *
+     * creates the file path
+     * creates file from path
+     * if file exists we read the file and return it.
+     * if not we return null
+     */
     fun getJsonIfStringInList(value: String, basePath: String): String? {
 
         val filePath = "$basePath/$value.json"
@@ -161,6 +183,13 @@ class SpellController(private val context: Context) {
         return null
     }
 
+    /**@author Tobias s224271
+     * @param list List of String indexes of spells.
+     * @return List of JSON in the form of strings
+     *
+     * In a couroutineScope we ask for each spell and waits for all to be resieved before returning the list.
+     *
+     */
     private suspend fun getJSONFromList(list : List<String>) : List<String?>{
         return coroutineScope {
             list.map { spellName ->
@@ -170,11 +199,25 @@ class SpellController(private val context: Context) {
             }.awaitAll()
         }
     }
+    /**@author Tobias s224271
+     * @param spellList The list that should be loaded
+     *
+     * Loads all the spells in the spelllist at once, this can create some load times, so for pagination use loadNextFromSpellList instead.
+     */
     fun loadEntireSpellList(spellList : SpellList){
         val list = loadSpells(spellList.getIndexList())
-        if(list.isNotEmpty()) spellList.setSpellInfoList(list)
+        if(list.isNotEmpty()){
+            spellList.setSpellInfoList(list)
+            spellList.setLoaded(spellList.getIndexList().size)
+        }
     }
-
+    /**@author Tobias s224271
+     * @param amount The amount of spells we want to load
+     * @param spellList The Spelllist that needs to be loaded from
+     * @return List<Spell_Info.SpellInfo?> if there were spells to be loaded. If there were less than the amount given, it only returns the amount left. If none are left it returns null.
+     *
+     * Loads the next spells from the spelllist from the api. This is made to work with pagination.
+     */
     fun loadNextFromSpellList(amount : Int, spellList: SpellList) : List<Spell_Info.SpellInfo?>? {
         val current = spellList.getLoaded() + 1;
         if (spellList.getIndexList().size >= current) return null
@@ -194,56 +237,78 @@ class SpellController(private val context: Context) {
         }
         return loadSpells(list)
     }
-        suspend fun getJson(index: String): String? {
+    /**@author Tobias s224271, Kenneth s221064
+     * @param index the index of the spell to load a json for
+     * @return The String format of JSON or null if not found in locale, database or api.
+     *
+     * Checks if the file is in the local storage of the device.
+     * If it's there, it will be retrieved.
+     * If it's not there we call the api for the json instead.
+     * If nothing comes from the api either we return null.
+     *
+     * [FUTURE WORK]
+     * We also add the database, as another thing to try to fetch the data from, if it's a homebrew spell.
+     */
+    suspend fun getJson(index: String): String? {
 
-            val inList = isStringInList(localList, index)
-            println(inList)
-            println(localList)
-            println(index)
-            var json: String? = null
+        val inList = isStringInList(localList, index)
+        println(inList)
+        println(localList)
+        println(index)
+        var json: String? = null
 
-            if (inList) {
-                json = getJsonIfStringInList(
-                    index,
-                    "/data/data/com.example.spellbook5eapplication/files/IndividualSpells"
-                )
-                println("NO API CALL")
-            } else {
-                json = api.getSpellFromApiWithRetry(index, 100)
-                //Test for saving every spell
-                println()
-                if(json != null) saveJsonToFile(context, json, "IndividualSpells", index+".json")
-            }
-
-            return json
+        if (inList) {
+            json = getJsonIfStringInList(
+                index,
+                "/data/data/com.example.spellbook5eapplication/files/IndividualSpells"
+            )
+            println("NO API CALL")
+        } else {
+            json = api.getSpellFromApiWithRetry(index, 100)
+            //Test for saving every spell
+            println()
+            if(json != null) saveJsonToFile(context, json, "IndividualSpells", index+".json")
         }
 
-
-        private fun loadSpells(indexes: List<String>): List<Spell_Info.SpellInfo> {
-            var spellInfoJson: List<String?>
-            runBlocking {
-                spellInfoJson = getJSONFromList(indexes)
-            }
-            if (spellInfoJson.isEmpty()) return emptyList();
-            val spellInfoList = mutableListOf<Spell_Info.SpellInfo>()
-            for (spell in spellInfoJson) {
-                if (spell != null) {
-                    val spellInfo = spellInfoFromJSON(spell)
-                    if (spellInfo != null) spellInfoList.add(spellInfo);
-                }
-            }
-            return spellInfoList.toList();
-        }
-
-        fun spellInfoFromJSON(json: String): Spell_Info.SpellInfo? {
-            val spellInfo = jsonToSpell.jsonToSpell(json)
-            if (spellInfo != null) {
-
-            }
-            return spellInfo;
-        }
-
+        return json
     }
+
+    /**@author Tobias s224271
+     * @param indexes A list of string indexes that needs to be searched for and loaded
+     * @return A List of SpellInfo from of those spells named with indexes
+     *
+     * Creates a list for the string jsons
+     * Requests for the jsons using getJSONFromList() which checks local storage and api for jsons.
+     * Converts each json into a SpellInfo data class and inserts into list
+     * Returns the list
+     */
+    private fun loadSpells(indexes: List<String>): List<Spell_Info.SpellInfo> {
+        var spellInfoJson: List<String?>
+        runBlocking {
+            spellInfoJson = getJSONFromList(indexes)
+        }
+        if (spellInfoJson.isEmpty()) return emptyList();
+        val spellInfoList = mutableListOf<Spell_Info.SpellInfo>()
+        for (spell in spellInfoJson) {
+            if (spell != null) {
+                val spellInfo = spellInfoFromJSON(spell)
+                if (spellInfo != null) spellInfoList.add(spellInfo);
+            }
+        }
+        return spellInfoList.toList();
+    }
+
+    /**@author Tobias s224271
+     * @param json The String Json of a spell
+     * @return The SpellInfo data class
+     *
+     * Converts using the jsonToSpell class
+     */
+    fun spellInfoFromJSON(json: String): Spell_Info.SpellInfo? {
+        return jsonToSpell.jsonToSpell(json)
+    }
+
+}
     /* The Four Previous Iterations of loadSpellList.
     Ended up using V3
     fun loadSpellListV1(spellList : SpellList){
