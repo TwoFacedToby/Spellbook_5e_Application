@@ -32,6 +32,7 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.DeleteOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.NewSpellOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LocalLargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
@@ -121,10 +122,13 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
                 ){
+
                     ColouredButton("New Homebrew", modifier = Modifier, color = ButtonDefaults.buttonColors(containerColor = colorResource(
                         id =R.color.green_button
                     ))){
-                        println("Button clicked")
+                        globalOverlayState.showOverlay(
+                            OverlayType.MAKE_SPELL,
+                        )
                     }
                 }
 
@@ -156,6 +160,15 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                         }
                         OverlayType.DELETE_PROMPT -> {
                             DeleteOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() })
+                        }
+                        OverlayType.MAKE_SPELL -> {
+                            CustomOverlay(
+                                globalOverlayState = globalOverlayState,
+                                overlayType = OverlayType.MAKE_SPELL,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            ) {
+                                NewSpellOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */ })
+                            }
                         }
                         else -> Unit
                     }

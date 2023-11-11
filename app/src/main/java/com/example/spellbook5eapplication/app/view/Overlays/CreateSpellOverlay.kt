@@ -22,6 +22,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -36,77 +37,83 @@ import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
-import com.example.spellbook5eapplication.app.viewmodel.FilterItem
-import com.example.spellbook5eapplication.app.viewmodel.artificer
-import com.example.spellbook5eapplication.app.viewmodel.bard
-import com.example.spellbook5eapplication.app.viewmodel.charisma
-import com.example.spellbook5eapplication.app.viewmodel.cleric
-import com.example.spellbook5eapplication.app.viewmodel.constitution
-import com.example.spellbook5eapplication.app.viewmodel.dexterity
-import com.example.spellbook5eapplication.app.viewmodel.druid
-import com.example.spellbook5eapplication.app.viewmodel.intelligence
-import com.example.spellbook5eapplication.app.viewmodel.level0
-import com.example.spellbook5eapplication.app.viewmodel.level1
-import com.example.spellbook5eapplication.app.viewmodel.level2
-import com.example.spellbook5eapplication.app.viewmodel.level3
-import com.example.spellbook5eapplication.app.viewmodel.level4
-import com.example.spellbook5eapplication.app.viewmodel.level5
-import com.example.spellbook5eapplication.app.viewmodel.level6
-import com.example.spellbook5eapplication.app.viewmodel.level7
-import com.example.spellbook5eapplication.app.viewmodel.level8
-import com.example.spellbook5eapplication.app.viewmodel.level9
-import com.example.spellbook5eapplication.app.viewmodel.matrial
-import com.example.spellbook5eapplication.app.viewmodel.noConcentration
-import com.example.spellbook5eapplication.app.viewmodel.noRitual
-import com.example.spellbook5eapplication.app.viewmodel.semantic
-import com.example.spellbook5eapplication.app.viewmodel.strength
-import com.example.spellbook5eapplication.app.viewmodel.verbal
-import com.example.spellbook5eapplication.app.viewmodel.wisdom
-import com.example.spellbook5eapplication.app.viewmodel.yesConcentration
-import com.example.spellbook5eapplication.app.viewmodel.yesRitual
+import com.example.spellbook5eapplication.app.viewmodel.MakeItem
+import com.example.spellbook5eapplication.app.viewmodel.mHighRange
+import com.example.spellbook5eapplication.app.viewmodel.martificer
+import com.example.spellbook5eapplication.app.viewmodel.mbard
+import com.example.spellbook5eapplication.app.viewmodel.mcharisma
+import com.example.spellbook5eapplication.app.viewmodel.mcleric
+import com.example.spellbook5eapplication.app.viewmodel.mconstitution
+import com.example.spellbook5eapplication.app.viewmodel.mdexterity
+import com.example.spellbook5eapplication.app.viewmodel.mdruid
+import com.example.spellbook5eapplication.app.viewmodel.mintelligence
+import com.example.spellbook5eapplication.app.viewmodel.mlevel0
+import com.example.spellbook5eapplication.app.viewmodel.mlevel1
+import com.example.spellbook5eapplication.app.viewmodel.mlevel2
+import com.example.spellbook5eapplication.app.viewmodel.mlevel3
+import com.example.spellbook5eapplication.app.viewmodel.mlevel4
+import com.example.spellbook5eapplication.app.viewmodel.mlevel5
+import com.example.spellbook5eapplication.app.viewmodel.mlevel6
+import com.example.spellbook5eapplication.app.viewmodel.mlevel7
+import com.example.spellbook5eapplication.app.viewmodel.mlevel8
+import com.example.spellbook5eapplication.app.viewmodel.mlevel9
+import com.example.spellbook5eapplication.app.viewmodel.mlowRange
+import com.example.spellbook5eapplication.app.viewmodel.mmatrial
+import com.example.spellbook5eapplication.app.viewmodel.mmediumRange
+import com.example.spellbook5eapplication.app.viewmodel.mnoConcentration
+import com.example.spellbook5eapplication.app.viewmodel.mnoRange
+import com.example.spellbook5eapplication.app.viewmodel.mnoRitual
+import com.example.spellbook5eapplication.app.viewmodel.msemantic
+import com.example.spellbook5eapplication.app.viewmodel.mstrength
+import com.example.spellbook5eapplication.app.viewmodel.mverbal
+import com.example.spellbook5eapplication.app.viewmodel.mwisdom
+import com.example.spellbook5eapplication.app.viewmodel.myesConcentration
+import com.example.spellbook5eapplication.app.viewmodel.myesRitual
 
 @Composable
 fun NewSpellOverlay(
     onDismissRequest: () -> Unit,
-    onFilterSelected: (FilterItem) -> Unit
+    onFilterSelected: (MakeItem) -> Unit
 ) {
-    // This may need to be mutable and remember
-    val name: String
+    var name: MutableState<String>
+
+    var description: MutableState<String>
 
     val spelllevel = remember {
         mutableStateListOf(
-            level0, level1, level2, level3, level4, level5, level6, level7, level8, level9
+            mlevel0, mlevel1, mlevel2, mlevel3, mlevel4, mlevel5, mlevel6, mlevel7, mlevel8, mlevel9
         )
     }
 
     val concentration = remember {
         mutableStateListOf(
-            yesConcentration, noConcentration
+            myesConcentration, mnoConcentration
         )
     }
     val ritual = remember {
         mutableStateListOf(
-            yesRitual, noRitual
+            myesRitual, mnoRitual
         )
     }
 
     val components = remember {
         mutableStateListOf(
-            verbal, semantic, matrial
+            mverbal, msemantic, mmatrial
         )
     }
 
     val saveReq = remember {
         mutableStateListOf(
-            strength, dexterity, constitution, intelligence, wisdom, charisma,
+            mstrength, mdexterity, mconstitution, mintelligence, mwisdom, mcharisma,
         )
     }
-    val classes = remember {
-        mutableStateListOf(
-            artificer, bard, cleric, druid,
 
-            )
+    val range = remember {
+        mutableStateListOf(
+            mnoRange, mlowRange, mmediumRange, mHighRange,
+        )
     }
+
 
     Column(
         modifier = Modifier
@@ -151,7 +158,8 @@ fun NewSpellOverlay(
                 item {
                     UserInputField(
                         label = "name",
-                        onInputChanged = { input -> println("User input: $input") },
+                        //Should connect with name
+                        onInputChanged = { input -> println("Name is: $input\n") },
                         modifier = Modifier
                             .size(width = 220.dp, height = 48.dp), singleLine = true
                     )
@@ -171,7 +179,7 @@ fun NewSpellOverlay(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             rowLevels.forEach { level ->
-                                FilterButton(
+                                CreateButton(
                                     modifier = Modifier.size(55.dp),
                                     contentPaddingValues = PaddingValues(1.dp),
                                     filter = level,
@@ -197,7 +205,7 @@ fun NewSpellOverlay(
                         )
                         Row {
                             concentration.forEach(){ concentration ->
-                                FilterButton(
+                                CreateButton(
                                     modifier = Modifier.size(46.dp),
                                     contentPaddingValues = PaddingValues(1.dp),
                                     filter = concentration,
@@ -218,7 +226,7 @@ fun NewSpellOverlay(
                         )
                         Row {
                             ritual.forEach(){ ritual ->
-                                FilterButton(
+                                CreateButton(
                                     modifier = Modifier.size(46.dp),
                                     contentPaddingValues = PaddingValues(1.dp),
                                     filter = ritual,
@@ -247,7 +255,7 @@ fun NewSpellOverlay(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             components.forEach() { components ->
-                                FilterButton(
+                                CreateButton(
                                     modifier = Modifier.size(width = 100.dp, height = 40.dp),
                                     contentPaddingValues = PaddingValues(1.dp),
                                     filter = components,
@@ -275,7 +283,7 @@ fun NewSpellOverlay(
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 rowLevels.forEach { level ->
-                                    FilterButton(
+                                    CreateButton(
                                         modifier = Modifier.size(width = 100.dp, height = 40.dp),
                                         filter = level,
                                         contentPaddingValues = PaddingValues(1.dp),
@@ -286,27 +294,59 @@ fun NewSpellOverlay(
                         }
                     }
                 }
-                item {Spacer(modifier = Modifier.height(5.dp))}
+
+                item {Spacer(modifier = Modifier.height(5.dp)) }
                 item {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "Spell list",
+                            text = "Range",
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
 
-                        classes.chunked(2).forEach { rowLevels ->
+                        range.chunked(3).forEach { rowLevels ->
                             Row(
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
                                 rowLevels.forEach { level ->
                                     CreateButton(
-                                        modifier = Modifier.size(width = 145.dp, height = 40.dp),
+                                        modifier = Modifier.size(width = 100.dp, height = 40.dp),
                                         filter = level,
+                                        contentPaddingValues = PaddingValues(1.dp),
+                                        onFilterSelected = { onFilterSelected(level) }
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                item {Spacer(modifier = Modifier.height(5.dp)) }
+                item {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Range",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        saveReq.chunked(3).forEach { rowLevels ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceEvenly
+                            ) {
+                                rowLevels.forEach { level ->
+                                    CreateButton(
+                                        modifier = Modifier.size(width = 100.dp, height = 40.dp),
+                                        filter = level,
+                                        contentPaddingValues = PaddingValues(1.dp),
                                         onFilterSelected = { onFilterSelected(level) }
                                     )
                                 }
@@ -325,7 +365,8 @@ fun NewSpellOverlay(
                 item {
                     UserInputField(
                         label = "",
-                        onInputChanged = { input -> println("User input: $input") },
+                        //Possible should connect this to description string
+                        onInputChanged = { input -> println("The description is: $input\n") },
                         modifier = Modifier
                             .size(width = 300.dp, height = (48 * 5).dp), singleLine = false
                     )
@@ -372,8 +413,8 @@ fun NewSpellOverlay(
 fun CreateButton(
     modifier: Modifier,
     contentPaddingValues: PaddingValues? = null,
-    filter: FilterItem,
-    onFilterSelected: (FilterItem) -> Unit) {
+    filter: MakeItem,
+    onFilterSelected: (MakeItem) -> Unit) {
     if(contentPaddingValues == null) {
         Button(
             modifier = modifier,
