@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.DeleteOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.EraseOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.NewSpellOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
@@ -125,19 +126,25 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
 
                     ColouredButton("New Homebrew", modifier = Modifier, color = ButtonDefaults.buttonColors(containerColor = colorResource(
                         id =R.color.green_button
-                    ))){
+                    )), onClick ={
                         globalOverlayState.showOverlay(
                             OverlayType.MAKE_SPELL,
                         )
-                    }
+                    })
                 }
 
                 // Overlay management
                 for (overlayType in globalOverlayState.getOverlayStack()) {
                     when (overlayType) {
+
                         OverlayType.LOCAL_LARGE_SPELLCARD -> {
-                            LocalLargeSpellCardOverlay(globalOverlayState) { globalOverlayState.dismissOverlay() }
+                            LocalLargeSpellCardOverlay(
+                                globalOverlayState = globalOverlayState,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }) {
+
+                            }
                         }
+
                         OverlayType.ADD_TO_SPELLBOOK -> {
                             CustomOverlay(
                                 globalOverlayState = globalOverlayState,
@@ -158,17 +165,27 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                                 FiltersOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */})
                             }
                         }
+
                         OverlayType.DELETE_PROMPT -> {
                             DeleteOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() })
                         }
+
                         OverlayType.MAKE_SPELL -> {
                             CustomOverlay(
                                 globalOverlayState = globalOverlayState,
                                 overlayType = OverlayType.MAKE_SPELL,
                                 onDismissRequest = { globalOverlayState.dismissOverlay() }
                             ) {
-                                NewSpellOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */ })
+                                NewSpellOverlay(onDismissRequest = {
+                                    globalOverlayState.showOverlay(
+                                        OverlayType.ERASE_PROMPT
+                                    )
+                                }, onFilterSelected = {/* TODO */ })
                             }
+                        }
+
+                        OverlayType.ERASE_PROMPT -> {
+                            EraseOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() })
                         }
                         else -> Unit
                     }

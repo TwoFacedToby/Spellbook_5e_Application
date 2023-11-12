@@ -40,6 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.view.Overlays.EraseOverlay
 import com.example.spellbook5eapplication.app.view.screens.BrewScreen
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
@@ -48,7 +49,8 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 @Composable
 fun LocalLargeSpellCardOverlay(
     globalOverlayState: GlobalOverlayState,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    onDeleteRequest: () -> Unit
 )
 {
     Box(modifier = Modifier
@@ -220,10 +222,14 @@ fun PreviewLocalSpellCard() {
 
     val globalOverlayState = GlobalOverlayState()
 
-    val DismisRequest = null;
+    val onDel = null
+
+    val DismisRequest = null
 
     LocalLargeSpellCardOverlay(
         globalOverlayState = globalOverlayState,
-        onDismissRequest = { DismisRequest }
+        onDeleteRequest = { onDel },
+        onDismissRequest = { DismisRequest },
+
     )
 }
