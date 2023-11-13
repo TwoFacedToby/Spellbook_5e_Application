@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.spellbook5eapplication.app.view.MainScreen
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -34,23 +35,9 @@ class MainActivity : ComponentActivity() {
         SpellController.setContext(applicationContext)
 
         spellbookManager = SpellbookManager()
-
-        // Mock some Spellbook data
-        addMockSpellbooks()
-        addMockSpellsToSpellbooks()
-
-        // Save the Spellbooks to file
-        saveSpellbooks()
-
         setContent {
             Spellbook5eApplicationTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
+                MainScreen()
             }
         }
         scope.launch {
@@ -92,25 +79,9 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-fun exampleFilter() : Filter {
-    val filter = Filter()
-    filter.setSpellName("Fire")
-    return filter
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Spellbook5eApplicationTheme {
-        Greeting("Android")
+    fun exampleFilter() : Filter {
+        val filter = Filter()
+        filter.setSpellName("Fire")
+        return filter
     }
 }
