@@ -96,7 +96,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
 
                 //List of spells
                 LazyColumn(
-                    modifier = Modifier.height(600.dp),
+                    modifier = Modifier.height(400.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     item {
@@ -141,17 +141,12 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                     when (overlayType) {
 
                         OverlayType.LOCAL_LARGE_SPELLCARD -> {
-                            CustomOverlay(
-                                globalOverlayState = globalOverlayState,
-                                overlayType = OverlayType.LOCAL_LARGE_SPELLCARD,
-                                onDismissRequest = { globalOverlayState.dismissOverlay() }
-                            ){
                             LocalLargeSpellCardOverlay(
                                 globalOverlayState = globalOverlayState,
                                 onDismissRequest = { globalOverlayState.dismissOverlay() },
                                 //onDeleteRequest = { globalOverlayState.showOverlay( OverlayType.DELETE_PROMPT ) })
 
-                            )}}
+                            )}
 
                         OverlayType.ADD_TO_SPELLBOOK -> {
                             CustomOverlay(
@@ -190,9 +185,11 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                                 onDismissRequest = { globalOverlayState.dismissOverlay() }
                             ) {
                                 NewSpellOverlay(onDismissRequest = {
-                                    globalOverlayState.showOverlay(
-                                        OverlayType.ERASE_PROMPT
-                                    )
+                                    globalOverlayState.dismissOverlay()
+
+                                    //globalOverlayState.showOverlay(
+                                     //   OverlayType.ERASE_PROMPT
+                                   // )
                                 }, onFilterSelected = {/* TODO */ })
                             }
                         }

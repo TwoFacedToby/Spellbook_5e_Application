@@ -28,6 +28,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,8 +44,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.view.Overlays.DeleteOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.EraseOverlay
 import com.example.spellbook5eapplication.app.view.screens.BrewScreen
+import com.example.spellbook5eapplication.app.view.utilities.CreateDialog
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
@@ -53,6 +59,8 @@ fun LocalLargeSpellCardOverlay(
     //onDeleteRequest: () -> Unit
 )
 {
+    var showDialog by remember { mutableStateOf(false) }
+
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black.copy(alpha = 0.5f))) {
@@ -104,12 +112,16 @@ fun LocalLargeSpellCardOverlay(
 
                         //Newly added button
                         IconButton(
-                            onClick = { globalOverlayState.showOverlay(OverlayType.DELETE_PROMPT) }) {
+                            onClick = { showDialog = true }) {
                             Icon(
                                 imageVector = Icons.Outlined.Delete,
                                 contentDescription = "Delete spell from local device",
                                 tint = colorResource(id = R.color.spellcard_button)
                             )
+                        }
+
+                        if (showDialog) {
+                            DeleteOverlay(onDismissRequest = { showDialog = false })
                         }
 
                         IconButton(

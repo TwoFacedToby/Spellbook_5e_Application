@@ -50,7 +50,7 @@ fun DeleteOverlay(onDismissRequest: () -> Unit) {
     {
         Box(
             modifier = Modifier
-                .size(width = 350.dp, height = 100.dp)
+                .size(width = 250.dp, height = 150.dp)
                 .background(
                     color = colorResource(id = R.color.main_color),
                     shape = RoundedCornerShape(15.dp)
@@ -78,7 +78,7 @@ fun DeleteOverlay(onDismissRequest: () -> Unit) {
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
 
                     ColouredButton(
@@ -91,8 +91,6 @@ fun DeleteOverlay(onDismissRequest: () -> Unit) {
                         println("Button dismiss clicked")
                         onDismissRequest()
                     }
-
-                    Spacer(modifier = Modifier.width(30.dp))
 
                     ColouredButton(
                         "Delete", modifier = Modifier, color = ButtonDefaults.buttonColors(
