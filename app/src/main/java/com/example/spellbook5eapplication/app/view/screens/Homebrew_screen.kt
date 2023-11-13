@@ -138,11 +138,16 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                     when (overlayType) {
 
                         OverlayType.LOCAL_LARGE_SPELLCARD -> {
+                            CustomOverlay(
+                                globalOverlayState = globalOverlayState,
+                                overlayType = OverlayType.LOCAL_LARGE_SPELLCARD,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            ){
                             LocalLargeSpellCardOverlay(
                                 globalOverlayState = globalOverlayState,
                                 onDismissRequest = { globalOverlayState.dismissOverlay() }) {
 
-                            }
+                            }}
                         }
 
                         OverlayType.ADD_TO_SPELLBOOK -> {
@@ -167,8 +172,13 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                         }
 
                         OverlayType.DELETE_PROMPT -> {
+                            CustomOverlay(
+                                globalOverlayState = globalOverlayState,
+                                overlayType = OverlayType.DELETE_PROMPT,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            ){
                             DeleteOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() })
-                        }
+                        }}
 
                         OverlayType.MAKE_SPELL -> {
                             CustomOverlay(
@@ -185,8 +195,13 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                         }
 
                         OverlayType.ERASE_PROMPT -> {
+                            CustomOverlay(
+                                globalOverlayState = globalOverlayState,
+                                overlayType = OverlayType.ERASE_PROMPT,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            ){
                             EraseOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() })
-                        }
+                        }}
                         else -> Unit
                     }
 
