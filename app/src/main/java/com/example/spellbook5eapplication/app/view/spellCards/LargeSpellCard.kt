@@ -38,12 +38,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 
 
 @Composable
 fun SpellCardOverlay(
     onToggleSpellbookOverlay: () -> Unit,
-    onDismissRequest: () -> Unit)
+    onDismissRequest: () -> Unit,
+    spell : Spell_Info.SpellInfo
+)
 {
         Box(modifier = Modifier
             .fillMaxSize()
@@ -66,8 +69,10 @@ fun SpellCardOverlay(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
+                        var spellName = "Name Here"
+                        if(spell.name != null) spellName = "${spell.name}"
                         Text(
-                            text = "Spell name here",
+                            text = spellName,
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
                             modifier = Modifier.padding(5.dp, 0.dp),
@@ -146,7 +151,7 @@ fun SpellCardOverlay(
                                 )
                             }
 
-                            SpellInfo()
+                            SpellInfo(spell)
                         }
 
                         Column(

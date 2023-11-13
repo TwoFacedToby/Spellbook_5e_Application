@@ -33,9 +33,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 
 @Composable
-fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit) {
+fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit, spell : Spell_Info.SpellInfo) {
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -74,8 +75,10 @@ fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit) {
                 Column(
                     modifier = Modifier.width(145.dp)
                 ) {
+                    var spellName = "UNDEFINED"
+                    if(spell.name != null) spellName = spell.name
                     Text(
-                        text = "Spell name here",
+                        text = spellName,
                         fontWeight = FontWeight.Bold,
                         fontSize = 14.sp,
                         modifier = Modifier.padding(5.dp, 0.dp),
@@ -119,7 +122,7 @@ fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit) {
                 }
             }
 
-            SpellInfo()
+            SpellInfo(spell)
 
             Row(
                 modifier = Modifier
@@ -141,7 +144,7 @@ fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit) {
 }
 
 @Composable
-fun SpellInfo(){
+fun SpellInfo(spell : Spell_Info.SpellInfo){
     Row(
         modifier = Modifier
             .padding(top = 2.5.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
@@ -154,25 +157,42 @@ fun SpellInfo(){
             modifier = Modifier.padding(end = 10.dp)
         ) {
             Text(text = "Level:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            var spellLevel = ""
+            if(spell.level != null) spellLevel = "${spell.level}"
+            Text(text = spellLevel, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
             Text(text = "Range:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            var spellRange = ""
+            if(spell.range != null) spellRange = "${spell.range}"
+            Text(text = spellRange, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
         }
         Column(
             modifier = Modifier.padding(end = 10.dp)
         ) {
             Text(text = "School:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            var spellSchool = ""
+            if(spell.school != null) spellSchool = "${spell.school}"
+            Text(text = spellSchool, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
             Text(text = "Duration:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            var spellDuration = ""
+            if(spell.duration != null) spellDuration = "${spell.duration}"
+            Text(text = spellDuration, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
         }
         Column(
             modifier = Modifier.padding(end = 10.dp)
         ) {
             Text(text = "Casting Time:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            var spellCT = ""
+            if(spell.castingTime != null) spellCT = "${spell.castingTime}"
+            Text(text = spellCT, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
             Text(text = "Components:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            var spellComponents = ""
+            if(spell.components != null) {
+                for(index in 1..spell.components.size){
+                    if(index - 1 != 0) spellComponents += ", "
+                    spellComponents += spell.components[index-1]
+                }
+            }
+            Text(text = spellComponents, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
         }
     }
 }

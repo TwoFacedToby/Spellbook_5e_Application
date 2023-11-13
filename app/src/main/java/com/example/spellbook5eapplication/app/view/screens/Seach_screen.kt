@@ -22,10 +22,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.Overlays.SettingsOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.SpellBookOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCardOverlay
+import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
@@ -65,14 +69,16 @@ fun SearchScreen(){
                     Spacer(modifier = Modifier.width(5.dp))
                     FilterButton()
                 }
-                //TODO insert the lazy column for seacrh results
-                SpellCard(onDialogRequest = {showSpellcardOverlay = true}, onOverlayRequest = {showSpellbookOverlay = true})
-
+                //TODO insert the lazy column for search results
+                val exampleList = SpellController.getAllSpellsList()
+                if(exampleList != null) SpellQuery(filter = null, spellList = exampleList, onDialogRequest = {showSpellcardOverlay = true}, onOverlayRequest = {showSpellbookOverlay = true})
             }
+
+            val example = Spell_Info.SpellInfo(null, "Example name", null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null, null , null, null, null, null , null, null, null, null , null, null)
             if(showSpellcardOverlay){
                 SpellCardOverlay(
                     onToggleSpellbookOverlay = { showSpellbookOverlay = !showSpellbookOverlay },
-                    onDismissRequest = { showSpellcardOverlay = false })
+                    onDismissRequest = { showSpellcardOverlay = false }, example)
             }
             if(showSpellbookOverlay){
                 CustomOverlay(onDismissRequest = {showSpellbookOverlay = false}) {
