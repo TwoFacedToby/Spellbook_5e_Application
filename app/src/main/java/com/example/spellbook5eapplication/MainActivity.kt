@@ -14,7 +14,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Spellbook
-import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
@@ -56,11 +55,10 @@ class MainActivity : ComponentActivity() {
         }
         scope.launch {
             runBlocking {
-                networkRequest(this@MainActivity) { spellList ->
+                networkRequest() { spellList ->
                     spellList.printInfoToConsole()
                 }
             }
-
         }
     }
 
@@ -88,7 +86,7 @@ class MainActivity : ComponentActivity() {
         scope.launch {
             val spellList = SpellController.getAllSpellsList()
             if (spellList != null) {
-                SpellController.loadSpellList(spellList)
+                SpellController.loadEntireSpellList(spellList)
                 // Do something with the spell list, like updating the UI
                 callback(spellList)
             }

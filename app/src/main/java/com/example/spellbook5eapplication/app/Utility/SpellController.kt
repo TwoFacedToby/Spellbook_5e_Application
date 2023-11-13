@@ -33,7 +33,7 @@ object SpellController {
     private val api = API()
     private val jsonToSpell = JSON_to_Spell()
     private val search = Search()
-    private val localList = extractIndexListFromFile(context, "LocalJSONData/spells.json")
+    private val localList = extractIndexListFromFile("LocalJSONData/spells.json")
 
     /**@author Tobias s224271
      * @param spellName The index of the spell, that can be called to the api.
@@ -70,22 +70,28 @@ object SpellController {
      * inserts the list into the SpellList
      *
      */
-    fun getAllSpellsList() : SpellList?{
-        var list : SpellList? = null
+    fun getAllSpellsList(): SpellList? {
+        var list: SpellList? = null
+        val appContext = getContext() // Retrieve the context or null if it's not available
+        if (appContext == null) {
+            println("Context is not available.")
+            return null
+        }
+
         runBlocking {
             try {
                 val json = api.getListOfSpells()
-                if(json != null){
+                if (json != null) {
                     println(localList)
-                    saveJsonToFile(context, json, "LocalJSONData", "spells.json")
+                    saveJsonToFile(json, "LocalJSONData", "spells.json")
                     list = jsonToSpell.jsonToSpellList(json)
                 }
             } catch (e: Exception) {
                 println("An error occurred: ${e.message}")
             }
         }
-        if(list != null) return list
-        return null
+
+        return list
     }
 
     /**
@@ -123,7 +129,9 @@ object SpellController {
      * Used to get a list of what spells is stored on the local device.
      *
      */
-    fun extractIndexListFromFile(context: Context, fileName: String): List<String> {
+    fun extractIndexListFromFile(fileName: String): List<String> {
+        val context = getContext() ?: return emptyList() // Get the context or return if null
+
         val file = File(context.filesDir, fileName)
         if (!file.exists()) {
             println("File does not exist.")
@@ -278,7 +286,7 @@ object SpellController {
             json = api.getSpellFromApiWithRetry(index, 100)
             //Test for saving every spell
             println()
-            if(json != null) saveJsonToFile(context, json, "IndividualSpells", index+".json")
+            if(json != null) saveJsonToFile(json, "IndividualSpells", index+".json")
         }
 
         return json
@@ -318,5 +326,7 @@ object SpellController {
     fun spellInfoFromJSON(json: String): Spell_Info.SpellInfo? {
         return jsonToSpell.jsonToSpell(json)
     }
+
+
 
 }
