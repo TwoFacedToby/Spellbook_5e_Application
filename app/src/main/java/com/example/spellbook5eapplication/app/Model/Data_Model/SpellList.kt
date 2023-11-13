@@ -3,7 +3,14 @@ package com.example.spellbook5eapplication.app.Model.Data_Model
 class SpellList {
     private var indexList: List<String> = emptyList()
     private var spellInfoList: List<Spell_Info.SpellInfo> = emptyList()
+    private var loaded = 0;
 
+    fun getLoaded() : Int{
+        return loaded
+    }
+    fun setLoaded(loaded : Int){
+        this.loaded = loaded
+    }
     fun setIndexList(names: List<String>) {
         indexList = names
     }

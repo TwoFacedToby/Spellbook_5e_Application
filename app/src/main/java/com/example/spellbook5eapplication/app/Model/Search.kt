@@ -35,6 +35,12 @@ class Search {
         matchLists(spellList)
         return spellList
     }
+    /**@author Tobias s224271
+     * @param spellList The list that should be matched
+     *
+     * Because the searchSpellNames function only searches for names, we also need to reduce the spellInfoList, for this we just make sure they contain the same spells.
+     * It just makes sure we can search spells without needing to also reduce the spellInfoList as we want those two to be split up.
+     */
     private fun matchLists(spellList : SpellList){
         if(spellList.getSpellInfoList().isEmpty()) return
         val names = spellList.getIndexList()
@@ -46,6 +52,16 @@ class Search {
         }
         spellList.setSpellInfoList(spells.toList())
     }
+    /**@author Tobias s224271
+     * @param spellList The list that should be searched
+     * @param filter The filter that decide what spells should be returned
+     *
+     * Checks a range of different variables, first if there has been set a filter for it, then afterward calls the filterSpells function.
+     * At each different type of variable the spellList is shortened, until at then end, only the spells that comply with all filters has gotten through.
+     * The order of variables goes to roughly what varaibles has the most different values, so we can get as many out as quickly as possible.
+     * Example: We search name first because that is the most likely to be different and shortens the search from going through up to 319 spells down to a rather small number.
+     */
+
     fun searchSpellListWithFilter(spellList: SpellList, filter : Filter) : SpellList {
         var changingSpellList = spellList
         if(filter.getSpellName() != "") changingSpellList = searchSpellNames(changingSpellList, filter.getSpellName())

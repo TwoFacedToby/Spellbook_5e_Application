@@ -12,9 +12,7 @@ import okhttp3.Response
 import java.net.UnknownHostException
 
 class API {
-    var percentage = 0 //A public variable that could be used to get how far the app has loaded, it's an integer between 0 and 100
-    private var spellsDone = 0 //Amount of spells loaded in current search, is used to calculate percentage
-    private var total = 1 //Total of spells asked to be loaded in current search, is used to calculate percentage
+
     private val client = OkHttpClient() //Our Client
 
     /**@author Tobias s224271
@@ -59,8 +57,6 @@ class API {
 
             retryCount++
         }
-        percentage = ((spellsDone++*1.0)/total*100).toInt()
-        println("${percentage}%")
         return result
     }
     /**@author Tobias s224271
@@ -95,9 +91,6 @@ class API {
      *
      */
     suspend fun getSpellsFromApi(spellNames: List<String>): List<String?> {
-        total = spellNames.size
-        spellsDone = 0
-        percentage = 0
         return coroutineScope {
             spellNames.map { spellName ->
                 async {
