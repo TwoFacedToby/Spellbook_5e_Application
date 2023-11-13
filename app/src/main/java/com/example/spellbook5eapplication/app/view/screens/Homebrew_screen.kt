@@ -49,10 +49,6 @@ import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 
 @Composable
 fun BrewScreen(globalOverlayState: GlobalOverlayState){
-
-    var showSpellbookOverlay by remember { mutableStateOf(false) }
-    var showSpellDialog by remember { mutableStateOf(false) }
-
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -81,8 +77,8 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                     UserInputField(
                         label = "Search",
                         singleLine = true,
-                        onInputChanged = {
-                                input -> println("User input: $input")
+                        onInputChanged = { input ->
+                            println("User input: $input")
                         },
                         modifier = Modifier
                             .size(width = 220.dp, height = 48.dp),
@@ -102,37 +98,44 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                 LazyColumn(
                     modifier = Modifier.height(600.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    item { SpellCard(
-                        onFullSpellCardRequest = {
-                            globalOverlayState.showOverlay(
-                                OverlayType.LOCAL_LARGE_SPELLCARD,
-                            )
-                        },
-                        onAddToSpellbookRequest = {
-                            globalOverlayState.showOverlay(
-                                OverlayType.ADD_TO_SPELLBOOK,
-                            )
-                        }
-                    ) }
+                ) {
+                    item {
+                        SpellCard(
+                            onFullSpellCardRequest = {
+                                globalOverlayState.showOverlay(
+                                    OverlayType.LOCAL_LARGE_SPELLCARD,
+                                )
+                            },
+                            onAddToSpellbookRequest = {
+                                globalOverlayState.showOverlay(
+                                    OverlayType.ADD_TO_SPELLBOOK,
+                                )
+                            }
+                        )
+                    }
                 }
                 Spacer(modifier = Modifier.height(5.dp))
-                
+
                 //Button to create own spells
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center
-                ){
+                ) {
 
-                    ColouredButton("New Homebrew", modifier = Modifier, color = ButtonDefaults.buttonColors(containerColor = colorResource(
-                        id =R.color.green_button
-                    )), onClick ={
-                        globalOverlayState.showOverlay(
-                            OverlayType.MAKE_SPELL,
-                        )
-                    })
+                    ColouredButton("New Homebrew",
+                        modifier = Modifier,
+                        color = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(
+                                id = R.color.green_button
+                            )
+                        ),
+                        onClick = {
+                            globalOverlayState.showOverlay(
+                                OverlayType.MAKE_SPELL,
+                            )
+                        })
                 }
-
+            }
                 // Overlay management
                 for (overlayType in globalOverlayState.getOverlayStack()) {
                     when (overlayType) {
@@ -145,10 +148,10 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                             ){
                             LocalLargeSpellCardOverlay(
                                 globalOverlayState = globalOverlayState,
-                                onDismissRequest = { globalOverlayState.dismissOverlay() }) {
+                                onDismissRequest = { globalOverlayState.dismissOverlay() },
+                                //onDeleteRequest = { globalOverlayState.showOverlay( OverlayType.DELETE_PROMPT ) })
 
-                            }}
-                        }
+                            )}}
 
                         OverlayType.ADD_TO_SPELLBOOK -> {
                             CustomOverlay(
@@ -209,7 +212,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
             }
         }
     }
-}
+
 
 @Preview(showBackground = true)
 @Composable

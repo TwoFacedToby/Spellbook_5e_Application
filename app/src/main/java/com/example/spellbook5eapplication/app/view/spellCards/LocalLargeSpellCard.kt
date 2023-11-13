@@ -50,7 +50,7 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 fun LocalLargeSpellCardOverlay(
     globalOverlayState: GlobalOverlayState,
     onDismissRequest: () -> Unit,
-    onDeleteRequest: () -> Unit
+    //onDeleteRequest: () -> Unit
 )
 {
     Box(modifier = Modifier
@@ -228,7 +228,7 @@ fun PreviewLocalSpellCard() {
 
     LocalLargeSpellCardOverlay(
         globalOverlayState = globalOverlayState,
-        onDeleteRequest = { onDel },
+        //onDeleteRequest = { onDel },
         onDismissRequest = { DismisRequest },
 
     )

@@ -89,6 +89,7 @@ fun DeleteOverlay(onDismissRequest: () -> Unit) {
                         )
                     ) {
                         println("Button dismiss clicked")
+                        onDismissRequest()
                     }
 
                     Spacer(modifier = Modifier.width(30.dp))
