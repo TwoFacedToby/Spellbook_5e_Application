@@ -327,6 +327,20 @@ object SpellController {
         return jsonToSpell.jsonToSpell(json)
     }
 
+    fun readJsonFromFile(directoryName: String, fileName: String, context: Context): String? {
+        return try {
+            val file = File(context.filesDir, "$directoryName/$fileName")
+            if (file.exists()) {
+                file.readText()
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
 
 
 }
