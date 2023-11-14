@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -37,7 +40,9 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 
 @Composable
 fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit, spell : Spell_Info.SpellInfo) {
+    val images = SpellCardCreation(spell)
 
+    println("Creating card: ${spell.name}")
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
         shape = RoundedCornerShape(10.dp),
@@ -61,7 +66,7 @@ fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit, spell :
             )
             {
                 Image(
-                    painter = painterResource(id = R.drawable.abjuration),
+                    painter = painterResource(id = images.schoolID),
                     contentDescription = "Spell school",
                     modifier = Modifier
                         .size(35.dp, 35.dp)
@@ -89,19 +94,27 @@ fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit, spell :
                         thickness = 1.dp,
                         modifier = Modifier.padding(5.dp, 0.dp)
                     )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
+
+                    val lazyListState = rememberLazyListState()
+                    LazyRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .offset(4.dp, 0.dp),
+                        horizontalArrangement = Arrangement.Start,
+                        state = lazyListState
+
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.druid2),
-                            contentDescription = "Class",
-                            modifier = Modifier
-                                .size(16.dp, 16.dp)
-                                .padding(1.dp)
-                                .clip(RoundedCornerShape(2.dp))
-                                .shadow(elevation = 5.dp)
-                        )
+                        items(images.classImageIDs.size) { index ->
+                            Image(
+                                painter = painterResource(id = images.classImageIDs[index]),
+                                contentDescription = "Class",
+                                modifier = Modifier
+                                    .size(16.dp, 16.dp)
+                                    .padding(1.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .shadow(elevation = 5.dp)
+                            )
+                        }
                     }
                 }
                 IconButton(
@@ -170,7 +183,7 @@ fun SpellInfo(spell : Spell_Info.SpellInfo){
         ) {
             Text(text = "School:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellSchool = ""
-            if(spell.school != null) spellSchool = "${spell.school}"
+            if(spell.school?.name != null) spellSchool = "${spell.school.name}"
             Text(text = spellSchool, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
             Text(text = "Duration:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellDuration = ""

@@ -239,11 +239,11 @@ object SpellController {
      */
     fun loadNextFromSpellList(amount : Int, spellList: SpellList) : List<Spell_Info.SpellInfo?>? {
         val current = spellList.getLoaded() + 1;
-        if (spellList.getIndexList().size >= current) return null
+        if (spellList.getIndexList().size <= current) return null
         val list: MutableList<String> = emptyList<String>().toMutableList()
 
         if (spellList.getIndexList().size > current + amount) {
-            for (i in current..(current + amount)) {
+            for (i in current until current + amount) {
                 list.add(spellList.getIndexList()[i])
             }
             spellList.setLoaded(current + amount)
@@ -254,7 +254,9 @@ object SpellController {
             }
             spellList.setLoaded(to)
         }
-        return loadSpells(list)
+        val nextSpells = loadSpells(list)
+        spellList.setSpellInfoList(spellList.getSpellInfoList() + nextSpells)
+        return nextSpells
     }
     /**@author Tobias s224271, Kenneth s221064
      * @param index the index of the spell to load a json for
