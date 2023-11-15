@@ -22,12 +22,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
-import com.example.spellbook5eapplication.app.view.Overlays.SettingsOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.SpellBookOverlay
-import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
@@ -40,6 +38,14 @@ fun SearchScreen(){
 
     var showSpellbookOverlay by remember { mutableStateOf(false) }
     var showSpellcardOverlay by remember { mutableStateOf(false) }
+    val spellList = SpellController.getAllSpellsList()
+    val filter = null
+    //val filter = Filter()
+    //filter.setSpellName("Fire")
+    val nullSpell = Spell_Info.SpellInfo(null, "Example name", null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null, null , null, null, null, null , null, null, null, null , null, null)
+    var overlaySpell by remember { mutableStateOf(nullSpell) }
+
+
 
     Surface(
         modifier = Modifier
@@ -70,15 +76,26 @@ fun SearchScreen(){
                     FilterButton()
                 }
                 //TODO insert the lazy column for search results
-                val exampleList = SpellController.getAllSpellsList()
-                if(exampleList != null) SpellQuery(filter = null, spellList = exampleList, onDialogRequest = {showSpellcardOverlay = true}, onOverlayRequest = {showSpellbookOverlay = true})
+                fun showOverlay(){
+                    showSpellcardOverlay = true;
+                }
+
+                if(spellList != null) SpellQuery(
+                    filter = filter,
+                    spellList = spellList,
+                    onDialogRequest = { it ->
+                        overlaySpell = it
+                        showSpellcardOverlay = true
+                    }
+                ) {
+                    showSpellbookOverlay = true
+                }
             }
 
-            val example = Spell_Info.SpellInfo(null, "Example name", null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null, null , null, null, null, null , null, null, null, null , null, null)
             if(showSpellcardOverlay){
                 SpellCardOverlay(
                     onToggleSpellbookOverlay = { showSpellbookOverlay = !showSpellbookOverlay },
-                    onDismissRequest = { showSpellcardOverlay = false }, example)
+                    onDismissRequest = { showSpellcardOverlay = false }, overlaySpell)
             }
             if(showSpellbookOverlay){
                 CustomOverlay(onDismissRequest = {showSpellbookOverlay = false}) {

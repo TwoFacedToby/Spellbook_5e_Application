@@ -39,7 +39,7 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 
 @Composable
-fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit, spell : Spell_Info.SpellInfo) {
+fun SpellCard(onDialogRequest: (Spell_Info.SpellInfo) -> Unit, onOverlayRequest: () -> Unit, spell : Spell_Info.SpellInfo) {
     val images = SpellCardCreation(spell)
 
     println("Creating card: ${spell.name}")
@@ -144,7 +144,7 @@ fun SpellCard(onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit, spell :
             )
             {
                 Spacer(modifier = Modifier.width(228.dp))
-                IconButton(onClick = { onDialogRequest() }) {
+                IconButton(onClick = { onDialogRequest(spell) }) {
                     Icon(
                         imageVector = Icons.Outlined.KeyboardArrowDown,
                         contentDescription = "Expand button",

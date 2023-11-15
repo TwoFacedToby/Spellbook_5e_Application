@@ -8,13 +8,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -61,7 +64,7 @@ fun SpellCardOverlay(
                     .align(Alignment.Center)
                     .padding(10.dp)
             ) {
-                Column(modifier = Modifier.weight(1f)) {
+                Column(modifier = Modifier.weight(4f)) {
                     Row(
                         modifier = Modifier
                             .padding(top = 10.dp, bottom = 0.dp, end = 10.dp, start = 10.dp)
@@ -175,13 +178,53 @@ fun SpellCardOverlay(
                 Column(
                     modifier = Modifier
                         .padding(start = 10.dp, end = 10.dp, top = 10.dp)
-                        .weight(2f)
+                        .weight(10f)
+                        .fillMaxHeight()
                 ) {
                     Text(
                         text = "Spell description",
                         modifier = Modifier.padding(start = 10.dp),
                         color = colorResource(id = R.color.black)
                     )
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(top = 10.dp)
+                            .fillMaxHeight()
+
+
+                    ){
+                        val combinedDescriptions = (spell.description ?: emptyList()) + (spell.higherLevelDescription ?: emptyList())
+
+                        items(combinedDescriptions.size) { index ->
+                            if(spell.higherLevelDescription?.isNotEmpty() == true)
+                                if(combinedDescriptions[index] == spell.higherLevelDescription?.get(0)){
+                                    Text(
+                                        text = "At Higher Levels",
+                                        modifier = Modifier
+                                            .padding(start = 10.dp),
+                                        color = colorResource(id = R.color.black),
+                                        fontSize = 12.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            Text(
+                                text = combinedDescriptions[index],
+                                modifier = Modifier
+                                    .padding(start = 10.dp),
+                                color = colorResource(id = R.color.black),
+                                fontSize = 12.sp
+                            )
+                            Divider(
+                                color = Color.Transparent,
+                                thickness = 40.dp,
+                                modifier = Modifier.padding(5.dp, 0.dp)
+                            )
+                        }
+
+
+                    }
+
+
                 }
                 Column(
                     modifier = Modifier

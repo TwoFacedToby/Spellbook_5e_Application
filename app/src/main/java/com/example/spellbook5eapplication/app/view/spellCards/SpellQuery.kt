@@ -1,34 +1,14 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -38,17 +18,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
@@ -56,10 +29,13 @@ import com.example.spellbook5eapplication.app.Utility.SpellController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
+
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun SpellQuery(filter: Filter?, spellList: SpellList, onDialogRequest: () -> Unit, onOverlayRequest: () -> Unit) {
+fun SpellQuery(filter: Filter?, spellList: SpellList, onDialogRequest: (Spell_Info.SpellInfo) -> Unit, onOverlayRequest: () -> Unit) {
+
+    val bottomDistance = 4
+
     var showing: List<Spell_Info.SpellInfo?>? by remember { mutableStateOf(emptyList()) }
     var pagination = false
 
@@ -117,19 +93,20 @@ fun SpellQuery(filter: Filter?, spellList: SpellList, onDialogRequest: () -> Uni
                     items(showing!!.size) { spellIndex ->
                         showing!![spellIndex]?.let {
                             SpellCard(
-                                onDialogRequest = { onDialogRequest },
+                                onDialogRequest = { spellForOverlay ->
+                                    onDialogRequest(spellForOverlay)
+                                },
                                 onOverlayRequest = { onOverlayRequest },
                                 spell = it
                             )
                         }
+                        val distance = if(bottomDistance > showing!!.size) bottomDistance else 1
 
                         // Check if the user is close to the end of the list
-                        if (spellIndex == showing!!.size - 1 && !pagination) {
+                        if (spellIndex == showing!!.size - bottomDistance && !pagination) {
                             // Load more data when the user is close to the end
                             pagination = true
-                            // Call withContext within the coroutine scope
                             coroutineScope.launch {
-                                // Load more data and append it to the existing list
                                 val loadedData : List<Spell_Info.SpellInfo?>? = withContext(Dispatchers.IO) {
                                     SpellController.loadNextFromSpellList(10, spellList)
                                 }
