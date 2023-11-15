@@ -42,6 +42,7 @@ fun SearchScreen(){
     val filter = null
     //val filter = Filter()
     //filter.setSpellName("Fire")
+    //filter.addSchool(Filter.School.ABJURATION)
     val nullSpell = Spell_Info.SpellInfo(null, "Example name", null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null, null , null, null, null, null , null, null, null, null , null, null)
     var overlaySpell by remember { mutableStateOf(nullSpell) }
 

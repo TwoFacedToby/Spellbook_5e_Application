@@ -238,7 +238,8 @@ object SpellController {
      * Loads the next spells from the spelllist from the api. This is made to work with pagination.
      */
     fun loadNextFromSpellList(amount : Int, spellList: SpellList) : List<Spell_Info.SpellInfo?>? {
-        val current = spellList.getLoaded() + 1;
+
+        val current = if(spellList.getLoaded() == 0) 0 else spellList.getLoaded() + 1;
         if (spellList.getIndexList().size <= current) return null
         val list: MutableList<String> = emptyList<String>().toMutableList()
 
@@ -246,16 +247,15 @@ object SpellController {
             for (i in current until current + amount) {
                 list.add(spellList.getIndexList()[i])
             }
-            spellList.setLoaded(current + amount)
         } else {
             val to = spellList.getIndexList().size - 1
             for (i in current..to) {
                 list.add(spellList.getIndexList()[i])
             }
-            spellList.setLoaded(to)
         }
         val nextSpells = loadSpells(list)
         spellList.setSpellInfoList(spellList.getSpellInfoList() + nextSpells)
+        spellList.setLoaded(spellList.getLoaded() + nextSpells.size)
         return nextSpells
     }
     /**@author Tobias s224271, Kenneth s221064

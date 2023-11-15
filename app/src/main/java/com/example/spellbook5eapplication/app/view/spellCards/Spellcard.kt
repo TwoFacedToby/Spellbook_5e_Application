@@ -1,6 +1,7 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -49,6 +51,7 @@ fun SpellCard(onDialogRequest: (Spell_Info.SpellInfo) -> Unit, onOverlayRequest:
         colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.primary_white)),
         modifier = Modifier
             .padding(10.dp)
+
     ) {
         Column(
             modifier = Modifier
