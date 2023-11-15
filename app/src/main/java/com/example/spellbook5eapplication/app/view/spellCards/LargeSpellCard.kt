@@ -35,15 +35,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 
 @Composable
 fun LargeSpellCardOverlay(
+    info: Spell_Info.SpellInfo,
     globalOverlayState: GlobalOverlayState,
     onDismissRequest: () -> Unit
 )
@@ -70,7 +73,7 @@ fun LargeSpellCardOverlay(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Spell name here",
+                            text = info.name?:"",
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp,
                             modifier = Modifier.padding(5.dp, 0.dp)
@@ -133,10 +136,13 @@ fun LargeSpellCardOverlay(
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .padding(start = 10.dp, end = 10.dp),
+                                    .padding(start = 10.dp, end = 2.dp),
                                 horizontalArrangement = Arrangement.Start
                             ) {
                                 Spacer(modifier = Modifier.padding(start = 10.dp))
+                                info.classes?.forEach{ classes ->
+                                    ClassImage(className = classes.name)
+                                }
                                 Image(
                                     painter = painterResource(id = R.drawable.druid2),
                                     contentDescription = "Class",
@@ -147,15 +153,14 @@ fun LargeSpellCardOverlay(
                                         .shadow(elevation = 5.dp)
                                 )
                             }
-                            SpellInfo()
+                            SpellInfo(info)
                         }
 
                         Column(
                             modifier = Modifier.padding(end = 15.dp)
                         ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.abjuration),
-                                contentDescription = "Spell school",
+                            SchoolImage(
+                                info = info,
                                 modifier = Modifier
                                     .size(60.dp, 60.dp)
                                     .clip(RoundedCornerShape(2.dp))
@@ -174,7 +179,7 @@ fun LargeSpellCardOverlay(
                         .weight(2f)
                 ) {
                     Text(
-                        text = "Spell description",
+                        text = info.description?.joinToString(separator = "\n") ?: "No description available",
                         modifier = Modifier.padding(start = 10.dp)
                     )
                 }
@@ -200,3 +205,9 @@ fun LargeSpellCardOverlay(
             }
         }
     }
+
+@Preview
+@Composable
+fun LargeSpellCardPreview(){
+    LargeSpellCardOverlay()
+}

@@ -34,6 +34,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
@@ -72,7 +73,7 @@ fun CustomOverlay(
 
         LaunchedEffect(key1 = true) {
             offsetY.animateTo(
-                (screenHeight.toFloat() / 5),
+                targetValue = (screenHeight.toFloat() / 5),
                 animationSpec = spring(
                     dampingRatio = Spring.DampingRatioNoBouncy,
                     stiffness = Spring.StiffnessLow
@@ -96,7 +97,6 @@ fun CustomOverlay(
                         .padding(5.dp),
                     contentAlignment = Alignment.TopCenter
                 ) {
-                    Log.d("CustomOverlay", "Is content null?: ${content == null}") // Logging statement
                     if (content != null) {
                         content()
                     } else {

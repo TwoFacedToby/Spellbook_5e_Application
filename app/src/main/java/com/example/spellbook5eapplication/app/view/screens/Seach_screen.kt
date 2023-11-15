@@ -19,6 +19,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
@@ -29,9 +31,20 @@ import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.app.viewmodel.SpellViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 @Composable
-fun SearchScreen(globalOverlayState: GlobalOverlayState, filterViewModel: FilterViewModel){
+fun SearchScreen(
+    globalOverlayState: GlobalOverlayState,
+    filterViewModel: FilterViewModel,
+    spellViewModel: SpellViewModel
+){
+    var spells : List<Spell_Info.SpellInfo> = emptyList()
+    spellViewModel.networkRequest { spellList ->
+        spells = spellList.getSpellInfoList()
+    }
     Surface(
         modifier = Modifier
         .fillMaxSize()
@@ -77,26 +90,35 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState, filterViewModel: Filter
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
-                    item {
-                        SpellCard(
-                        onFullSpellCardRequest = {
-                            globalOverlayState.showOverlay(
-                                OverlayType.LARGE_SPELLCARD,
-                            )
-                        },
-                        onAddToSpellbookRequest = {
-                            globalOverlayState.showOverlay(
-                                OverlayType.ADD_TO_SPELLBOOK,
+                    spells.forEach { info ->
+                        item {
+                            SpellCard(
+                                info = info,
+                                onFullSpellCardRequest = {
+                                    globalOverlayState.showOverlay(
+                                        OverlayType.LARGE_SPELLCARD,
+                                        info
+                                    )
+                                },
+                                onAddToSpellbookRequest = {
+                                    globalOverlayState.showOverlay(
+                                        OverlayType.ADD_TO_SPELLBOOK,
+                                    )
+                                }
                             )
                         }
-                    )
                     }
                 }
             }
             for (overlayType in globalOverlayState.getOverlayStack()) {
                 when (overlayType) {
                     OverlayType.LARGE_SPELLCARD -> {
-                        LargeSpellCardOverlay(globalOverlayState) { globalOverlayState.dismissOverlay() }
+                        val spellInfo = globalOverlayState.selectedSpellInfo
+                        if (spellInfo != null) {
+                            LargeSpellCardOverlay(spellInfo, globalOverlayState) {
+                                globalOverlayState.dismissOverlay()
+                            }
+                        }
                     }
                     OverlayType.ADD_TO_SPELLBOOK -> {
                         CustomOverlay(

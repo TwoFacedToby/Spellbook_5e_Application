@@ -10,6 +10,7 @@ import com.example.spellbook5eapplication.app.view.bottomNavigation.BottomNaviga
 import com.example.spellbook5eapplication.app.view.topNavigation.TopBar
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.app.viewmodel.SpellViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -18,10 +19,11 @@ fun MainScreen(){
     val navController = rememberNavController()
     val globalOverlayState = GlobalOverlayState()
     val filterViewModel = FilterViewModel()
+    val spellViewModel = SpellViewModel()
     Scaffold(
         topBar = { TopBar(navController = navController, globalOverlayState)},
         bottomBar = { BottomBar(navController = navController, globalOverlayState) }
     ){
-        BottomNavigationGraph(navController = navController, globalOverlayState, filterViewModel)
+        BottomNavigationGraph(navController = navController, globalOverlayState, filterViewModel, spellViewModel)
     }
 }
