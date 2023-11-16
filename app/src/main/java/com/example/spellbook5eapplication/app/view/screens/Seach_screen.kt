@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,14 +30,17 @@ import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.Overlays.SpellBookOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
+import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
+import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
+import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 
 @Composable
-fun SearchScreen(){
-
+fun SearchScreen(globalOverlayState: GlobalOverlayState){
     var showSpellbookOverlay by remember { mutableStateOf(false) }
     var showSpellcardOverlay by remember { mutableStateOf(false) }
     val spellList = SpellController.getAllSpellsList()
@@ -72,45 +77,70 @@ fun SearchScreen(){
                     horizontalArrangement = Arrangement.Center
                 )
                 {
-                    UserInputField(label = "Search")
+                    UserInputField(
+                        label = "Search",
+                        singleLine = true,
+                        onInputChanged = {
+                                input -> println("User input: $input")
+                        },
+                        modifier = Modifier
+                            .size(width = 220.dp, height = 48.dp),
+                    )
                     Spacer(modifier = Modifier.width(5.dp))
-                    FilterButton()
+                    FilterButton(
+                        onShowFiltersRequest = {
+                        globalOverlayState.showOverlay(
+                            OverlayType.FILTER,
+                        )
+                    })
                 }
-                //TODO insert the lazy column for search results
-                fun showOverlay(){
-                    showSpellcardOverlay = true;
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ){
+                    item { SpellCard(
+                        onFullSpellCardRequest = {
+                            globalOverlayState.showOverlay(
+                                OverlayType.LARGE_SPELLCARD,
+                            )
+                        },
+                        onAddToSpellbookRequest = {
+                            globalOverlayState.showOverlay(
+                                OverlayType.ADD_TO_SPELLBOOK,
+                            )
+                        }
+                    ) }
                 }
-
-                if(spellList != null) SpellQuery(
-                    filter = filter,
-                    spellList = spellList,
-                    onDialogRequest = { it ->
-                        overlaySpell = it
-                        showSpellcardOverlay = true
+            }
+            for (overlayType in globalOverlayState.getOverlayStack()) {
+                when (overlayType) {
+                    OverlayType.LARGE_SPELLCARD -> {
+                        LargeSpellCardOverlay(globalOverlayState) { globalOverlayState.dismissOverlay() }
                     }
-                ) {
-                    showSpellbookOverlay = true
+                    OverlayType.ADD_TO_SPELLBOOK -> {
+                        CustomOverlay(
+                            globalOverlayState = globalOverlayState,
+                            overlayType = OverlayType.ADD_TO_SPELLBOOK,
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                        ) {
+                            AddToSpellBookOverlay(
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            )
+                        }
+                    }
+                    OverlayType.FILTER -> {
+                        CustomOverlay(
+                            globalOverlayState = globalOverlayState,
+                            overlayType = OverlayType.FILTER,
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                        ){
+                            FiltersOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */})
+                        }
+                    }
+                    else -> Unit
                 }
-            }
 
-            if(showSpellcardOverlay){
-                SpellCardOverlay(
-                    onToggleSpellbookOverlay = { showSpellbookOverlay = !showSpellbookOverlay },
-                    onDismissRequest = { showSpellcardOverlay = false }, overlaySpell)
-            }
-            if(showSpellbookOverlay){
-                CustomOverlay(onDismissRequest = {showSpellbookOverlay = false}) {
-                    SpellBookOverlay(onDismissRequest = {showSpellbookOverlay = false})
-                }
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SearchScreenreview() {
-    Spellbook5eApplicationTheme {
-        SearchScreen()
     }
 }

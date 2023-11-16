@@ -42,11 +42,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 
 @Composable
-fun SpellCardOverlay(
-    onToggleSpellbookOverlay: () -> Unit,
+fun LargeSpellCardOverlay(
+    globalOverlayState: GlobalOverlayState,
     onDismissRequest: () -> Unit,
     spell : Spell_Info.SpellInfo
 )
@@ -57,7 +59,7 @@ fun SpellCardOverlay(
             Card(
                 elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
                 shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.primary_white)),
+                colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.spellcard_color)),
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(600.dp)
@@ -87,11 +89,11 @@ fun SpellCardOverlay(
                             horizontalArrangement = Arrangement.End
                         ) {
                             IconButton(
-                                onClick = { onToggleSpellbookOverlay() }) {
+                                onClick = { globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
                                 Icon(
                                     imageVector = Icons.Outlined.Add,
                                     contentDescription = "Add to spellbook",
-                                    tint = colorResource(id = R.color.border_color_dark)
+                                    tint = colorResource(id = R.color.spellcard_button)
                                 )
                             }
 
@@ -99,7 +101,7 @@ fun SpellCardOverlay(
                                 Icon(
                                     imageVector = Icons.Outlined.FavoriteBorder,
                                     contentDescription = "Favorite button",
-                                    tint = colorResource(id = R.color.border_color_dark)
+                                    tint = colorResource(id = R.color.spellcard_button)
                                 )
                             }
 
@@ -108,7 +110,7 @@ fun SpellCardOverlay(
                                 Icon(
                                     imageVector = Icons.Outlined.Close,
                                     contentDescription = "Close",
-                                    tint = colorResource(id = R.color.border_color_dark)
+                                    tint = colorResource(id = R.color.spellcard_button)
                                 )
                             }
                         }
@@ -168,7 +170,7 @@ fun SpellCardOverlay(
                                     .clip(RoundedCornerShape(2.dp))
                                     .border(
                                         0.5.dp,
-                                        colorResource(id = R.color.secondary_dark),
+                                        colorResource(id = R.color.border_color),
                                         shape = RoundedCornerShape(2.dp)
                                     )
                             )
