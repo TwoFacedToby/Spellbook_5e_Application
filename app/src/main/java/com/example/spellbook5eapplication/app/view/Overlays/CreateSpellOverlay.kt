@@ -131,6 +131,8 @@ fun NewSpellOverlay(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
+        /*
         Divider(
             modifier = Modifier
                 .width(250.dp)
@@ -139,6 +141,7 @@ fun NewSpellOverlay(
                 .clickable { onDismissRequest() },
             color = colorResource(id = R.color.black).copy(alpha = 0.2F),
         )
+        */
         Spacer(modifier = Modifier.height(20.dp))
 
         Box(
@@ -308,64 +311,24 @@ fun NewSpellOverlay(
                     }
                 }
 
-                item {Spacer(modifier = Modifier.height(5.dp)) }
+                item {Spacer(modifier = Modifier.height(5.dp))}
+
+                //Range
+                item {Spacer(modifier = Modifier.height(5.dp))}
+                // Giving the spell a name, name is just printed at this moment
+                item {Text(
+                    text = "Range",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )}
                 item {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = "Range",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        range.chunked(3).forEach { rowLevels ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceEvenly
-                            ) {
-                                rowLevels.forEach { level ->
-                                    CreateButton(
-                                        modifier = Modifier.size(width = 100.dp, height = 40.dp),
-                                        filter = level,
-                                        contentPaddingValues = PaddingValues(1.dp),
-                                        onFilterSelected = { onFilterSelected(level) }
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
-
-                item {Spacer(modifier = Modifier.height(5.dp)) }
-                item {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = "Range",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        saveReq.chunked(3).forEach { rowLevels ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceEvenly
-                            ) {
-                                rowLevels.forEach { level ->
-                                    CreateButton(
-                                        modifier = Modifier.size(width = 100.dp, height = 40.dp),
-                                        filter = level,
-                                        contentPaddingValues = PaddingValues(1.dp),
-                                        onFilterSelected = { onFilterSelected(level) }
-                                    )
-                                }
-                            }
-                        }
-                    }
+                    UserInputField(
+                        label = "Self,melee or a distance",
+                        //Possible should connect this to description string
+                        onInputChanged = { input -> println("Range is :$input\n") },
+                        modifier = Modifier
+                            .size(width = 300.dp, height = 48.dp), singleLine = true
+                    )
                 }
 
                 item {Spacer(modifier = Modifier.height(5.dp))}
