@@ -91,6 +91,7 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                 SpellQuery(
                     filter = filter,
                     spellList = spellList!!,
+                    maxSize = true,
                     onFullSpellCardRequest = {
                         overlaySpell = it
                         globalOverlayState.showOverlay(

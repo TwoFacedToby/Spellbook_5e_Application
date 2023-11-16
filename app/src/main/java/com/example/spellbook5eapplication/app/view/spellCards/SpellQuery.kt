@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -41,6 +42,7 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 fun SpellQuery(
     filter: Filter?,
     spellList: SpellList,
+    maxSize: Boolean,
     onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
     onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit) {
 
@@ -88,10 +90,19 @@ fun SpellQuery(
 
     println("Showing: ${showing?.size}")
 
+    var modifierUsed: Modifier
+
+if(maxSize){
+    modifierUsed = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight()}
+    else{
+        modifierUsed = Modifier
+    .fillMaxWidth()
+    .height(500.dp)}
+
     Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
+        modifier = modifierUsed,
         contentAlignment = Alignment.TopCenter
     ) {
         if (showing?.isEmpty() == true) {
@@ -100,6 +111,8 @@ fun SpellQuery(
             LazyColumn(
                 state = lazyListState,
                 modifier = Modifier
+                    //Playing here
+                    //.height(500.dp)
                     .padding(horizontal = 10.dp)
                     .align(Alignment.TopCenter),
                 contentPadding = PaddingValues(bottom = 16.dp), // Add padding to the content
