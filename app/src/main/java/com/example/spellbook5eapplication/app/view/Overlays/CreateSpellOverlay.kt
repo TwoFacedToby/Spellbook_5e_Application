@@ -169,7 +169,10 @@ fun NewSpellOverlay(
                     UserInputField(
                         label = "name",
                         //Should connect with name
-                        onInputChanged = { input -> println("Name is: $input\n") },
+                        onInputChanged = {
+                                input -> println("Name is: $input\n")
+
+                        },
                         modifier = Modifier
                             .size(width = 220.dp, height = 48.dp), singleLine = true
                     )
@@ -366,6 +369,66 @@ fun NewSpellOverlay(
                 }
 
                 item {Spacer(modifier = Modifier.height(5.dp))}
+
+                //Duration
+                item {Spacer(modifier = Modifier.height(5.dp))}
+                // Giving the spell a name, name is just printed at this moment
+                item {Text(
+                    text = "Duration",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )}
+                item {
+                    UserInputField(
+                        label = "1,2 or other actions",
+                        //Possible should connect this to description string
+                        onInputChanged = { input -> println("Duration is :$input\n") },
+                        modifier = Modifier
+                            .size(width = 300.dp, height = 48.dp), singleLine = true
+                    )
+                }
+
+                item {Spacer(modifier = Modifier.height(5.dp))}
+
+                //School
+                item {Spacer(modifier = Modifier.height(5.dp))}
+                // Giving the spell a name, name is just printed at this moment
+                item {Text(
+                    text = "School",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )}
+                item {
+                    UserInputField(
+                        label = "What school is the spell from",
+                        //Possible should connect this to description string
+                        onInputChanged = { input -> println("School is: $input\n") },
+                        modifier = Modifier
+                            .size(width = 300.dp, height = 48.dp), singleLine = true
+                    )
+                }
+
+                item {Spacer(modifier = Modifier.height(5.dp))}
+
+                //Cast time
+                item {Spacer(modifier = Modifier.height(5.dp))}
+                // Giving the spell a name, name is just printed at this moment
+                item {Text(
+                    text = "Cast time",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )}
+                item {
+                    UserInputField(
+                        label = "Instantaneous, 1 min or what you imagine",
+                        //Possible should connect this to description string
+                        onInputChanged = { input -> println("The cast time is: $input\n") },
+                        modifier = Modifier
+                            .size(width = 300.dp, height = 48.dp), singleLine = true
+                    )
+                }
+
+                item {Spacer(modifier = Modifier.height(5.dp))}
                 // Giving the spell a name, name is just printed at this moment
                 item {Text(
                     text = "Describe your spell!",
@@ -378,9 +441,10 @@ fun NewSpellOverlay(
                         //Possible should connect this to description string
                         onInputChanged = { input -> println("The description is: $input\n") },
                         modifier = Modifier
-                            .size(width = 300.dp, height = (48 * 5).dp), singleLine = false
+                            .size(width = 300.dp, height = 240.dp), singleLine = false
                     )
                 }
+
                 item {Spacer(modifier = Modifier.height(5.dp))}
                 item {
                     Row(

@@ -55,7 +55,8 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
-                painter = painterResource(id = R.drawable.search_view_background),
+                //painter = painterResource(id = R.drawable.search_view_background),
+                painter = painterResource(id = R.drawable.home_brew_view_background),
                 contentDescription = "Search view background",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize(),

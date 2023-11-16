@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -76,16 +77,18 @@ fun UserInputField(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(start = 5.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.Top
                 )
                 {
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                     if (input.isEmpty())
                         Text(
                             text = label,
                             style = LocalTextStyle.current.copy(
                                 color = colorResource(id = R.color.border_color),
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
+                                fontSize = 15.sp
                             )
                         )
                     innerTextField()
