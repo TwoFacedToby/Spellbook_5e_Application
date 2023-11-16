@@ -157,7 +157,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                     }
                 )
 
-                //Spacer(modifier = Modifier.height(5.dp))
+                Spacer(modifier = Modifier.height(5.dp))
 
                 //Button to create own spells
 
