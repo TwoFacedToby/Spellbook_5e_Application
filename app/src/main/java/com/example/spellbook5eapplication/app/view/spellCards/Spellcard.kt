@@ -1,6 +1,7 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -11,9 +12,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -31,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -41,11 +46,15 @@ import com.example.spellbook5eapplication.R
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 
 @Composable
 fun SpellCard(
     onFullSpellCardRequest: () -> Unit,
-    onAddToSpellbookRequest: () -> Unit) {
+    onAddToSpellbookRequest: () -> Unit,
+    spell : Spell_Info.SpellInfo)
+{
+    val images = SpellCardCreation(spell)
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -74,7 +83,7 @@ fun SpellCard(
                     )
                     {
                         Image(
-                            painter = painterResource(id = R.drawable.abjuration),
+                            painter = painterResource(id = images.schoolID),
                             contentDescription = "Spell school",
                             modifier = Modifier
                                 .size(35.dp, 35.dp)
@@ -88,34 +97,45 @@ fun SpellCard(
                         Column(
                             modifier = Modifier.width(145.dp)
                         ) {
+                            var spellName = "UNDEFINED"
+                            if(spell.name != null) spellName = spell.name
                             Text(
-                                text = "Spell name here",
+                                text = spellName,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
+                                color = colorResource(id = R.color.black),
                                 modifier = Modifier.padding(5.dp, 0.dp)
+
                             )
                             Divider(
                                 color = colorResource(id = R.color.black),
                                 thickness = 1.dp,
                                 modifier = Modifier.padding(5.dp, 0.dp)
                             )
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.Center
+                            val lazyListState = rememberLazyListState()
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .offset(4.dp, 0.dp),
+                                horizontalArrangement = Arrangement.Start,
+                                state = lazyListState
+
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.druid2),
-                                    contentDescription = "Class",
-                                    modifier = Modifier
-                                        .size(16.dp, 16.dp)
-                                        .padding(1.dp)
-                                        .clip(RoundedCornerShape(2.dp))
-                                        .shadow(elevation = 5.dp)
-                                )
+                                items(images.classImageIDs.size) { index ->
+                                    Image(
+                                        painter = painterResource(id = images.classImageIDs[index]),
+                                        contentDescription = "Class",
+                                        modifier = Modifier
+                                            .size(16.dp, 16.dp)
+                                            .padding(1.dp)
+                                            .clip(RoundedCornerShape(2.dp))
+                                            .shadow(elevation = 5.dp)
+                                    )
+                                }
                             }
                         }
                     }
-                    SpellInfo()
+                    SpellInfo(spell)
                 }
                 Column(
                     modifier = Modifier.padding(top = 10.dp)
@@ -141,11 +161,11 @@ fun SpellCard(
                 }
             }
         }
-        }
     }
+}
 
 @Composable
-fun SpellInfo(){
+fun SpellInfo(spell : Spell_Info.SpellInfo){
     Row(
         modifier = Modifier
             .padding(top = 2.5.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
@@ -157,36 +177,44 @@ fun SpellInfo(){
         Column(
             modifier = Modifier.padding(end = 10.dp)
         ) {
-            Text(text = "Level:", fontSize = 10.sp, maxLines = 1)
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.spellcard_text))
-            Text(text = "Range:", fontSize = 10.sp, maxLines = 1)
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.spellcard_text))
+            Text(text = "Level:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            var spellLevel = ""
+            if(spell.level != null) spellLevel = "${spell.level}"
+            Text(text = spellLevel, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            Text(text = "Range:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            var spellRange = ""
+            if(spell.range != null) spellRange = "${spell.range}"
+            Text(text = spellRange, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
         }
         Column(
             modifier = Modifier.padding(end = 10.dp)
         ) {
-            Text(text = "School:", fontSize = 10.sp, maxLines = 1)
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.spellcard_text))
-            Text(text = "Duration:", fontSize = 10.sp, maxLines = 1)
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.spellcard_text))
+            Text(text = "School:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            var spellSchool = ""
+            if(spell.school?.name != null) spellSchool = "${spell.school.name}"
+            Text(text = spellSchool, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            Text(text = "Duration:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            var spellDuration = ""
+            if(spell.duration != null) spellDuration = "${spell.duration}"
+            Text(text = spellDuration, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
         }
         Column(
             modifier = Modifier.padding(end = 10.dp)
         ) {
-            Text(text = "Casting Time:", fontSize = 10.sp, maxLines = 1)
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.spellcard_text))
-            Text(text = "Components:", fontSize = 10.sp, maxLines = 1)
-            Text(text = "<text>", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.spellcard_text))
+            Text(text = "Casting Time:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            var spellCT = ""
+            if(spell.castingTime != null) spellCT = "${spell.castingTime}"
+            Text(text = spellCT, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            Text(text = "Components:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
+            var spellComponents = ""
+            if(spell.components != null) {
+                for(index in 1..spell.components.size){
+                    if(index - 1 != 0) spellComponents += ", "
+                    spellComponents += spell.components[index-1]
+                }
+            }
+            Text(text = spellComponents, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
         }
     }
 }
-
-@Preview
-@Composable
-fun PreviewSpellCard() {
-            SpellCard(
-                onFullSpellCardRequest = { /* TODO: Add action for when the full spell card is requested */ },
-                onAddToSpellbookRequest = { /* TODO: Add action for when adding to spellbook is requested */ }
-            )
-        }
 
