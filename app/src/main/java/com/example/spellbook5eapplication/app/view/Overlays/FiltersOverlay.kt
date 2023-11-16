@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.viewmodel.FilterItem
 import com.example.spellbook5eapplication.app.viewmodel.artificer
 import com.example.spellbook5eapplication.app.viewmodel.bard
@@ -65,11 +66,14 @@ import com.example.spellbook5eapplication.app.viewmodel.wisdom
 import com.example.spellbook5eapplication.app.viewmodel.yesConcentration
 import com.example.spellbook5eapplication.app.viewmodel.yesRitual
 
+
 @Composable
 fun FiltersOverlay(
     onDismissRequest: () -> Unit,
-    onFilterSelected: (FilterItem) -> Unit
+    onFilterSelected: (FilterItem) -> Unit,
+    applyFilter:(Filter) -> Unit
 ) {
+
     val spelllevel = remember {
         mutableStateListOf(
             level0, level1, level2, level3, level4, level5, level6, level7, level8, level9
@@ -137,6 +141,57 @@ fun FiltersOverlay(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp))
             {
+                item {Spacer(modifier = Modifier.height(5.dp))}
+                item {Button(
+                    onClick = {
+                        val filter = Filter()
+                        for(index in 0 until spelllevel.size){
+                            if(spelllevel[index].isSelected.value) filter.addLevel(index) else filter.removeLevel(index)
+                        }
+                        for(index in 0 until concentration.size){
+                            when(index){
+                                0 ->  if(concentration[index].isSelected.value) filter.addConcentration(true)
+                                1 ->  if(concentration[index].isSelected.value) filter.addConcentration(false)
+
+                            }
+                        }
+                        for(index in 0 until ritual.size){
+                            when(index){
+                                0 ->  if(ritual[index].isSelected.value) filter.addRitual(true)
+                                1 ->  if(ritual[index].isSelected.value) filter.addRitual(false)
+
+                            }
+                        }
+                        for(index in 0 until components.size){
+                            when(index){
+                                0 ->  if(components[index].isSelected.value) filter.addComponent(Filter.Component.VERBAL)
+                                1 ->  if(components[index].isSelected.value) filter.addComponent(Filter.Component.SOMATIC)
+                                2 ->  if(components[index].isSelected.value) filter.addComponent(Filter.Component.MATERIAL)
+                           }
+                        }
+                        /*for(index in 0 until saveReq.size){ Not a filter yet
+                            when(index){
+                                0 ->  if(saveReq[index].isSelected.value) filter.
+                            }
+                        }*/
+                        for(index in 0 until classes.size){
+                            when(index){
+                                0 ->  if(classes[index].isSelected.value) filter.addClass(Filter.Classes.ARTIFICER)
+                                1 ->  if(classes[index].isSelected.value) filter.addClass(Filter.Classes.BARD)
+                                2 ->  if(classes[index].isSelected.value) filter.addClass(Filter.Classes.CLERIC)
+                                3 ->  if(classes[index].isSelected.value) filter.addClass(Filter.Classes.DRUID)
+                            }
+                        }
+
+                        applyFilter(filter)
+
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ){
+                    Text(text = "Apply Filters",
+                        color = colorResource(id = R.color.white)
+                        )
+                }}
                 item {Spacer(modifier = Modifier.height(5.dp))}
                 item {Text(
                     text = "Spell Level",
@@ -356,11 +411,13 @@ fun FilterButton(
     }
 }
 
-
+/*
 @Preview
 @Composable
 fun FiltersOverlayPreview(){
     FiltersOverlay(
         onDismissRequest = { println("Dismiss button clicked") },
         onFilterSelected = { println("filter selected") })
+
 }
+*/

@@ -22,6 +22,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
@@ -38,7 +39,10 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 fun SearchScreen(globalOverlayState: GlobalOverlayState){
     val spellList = SpellController.getAllSpellsList()
 
-    val filter = null
+    val nullFilter : Filter? = null
+    var filter by remember { mutableStateOf(nullFilter)}
+
+
     //val filter = Filter()
     //filter.setSpellName("Fire")
     //filter.addSchool(Filter.School.ABJURATION)
@@ -147,7 +151,7 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                             overlayType = OverlayType.FILTER,
                             onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ){
-                            FiltersOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */})
+                            FiltersOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */} , applyFilter = {filter = it})
                         }
                     }
                     else -> Unit
