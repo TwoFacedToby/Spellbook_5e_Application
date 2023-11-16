@@ -96,7 +96,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
 
                 //List of spells
                 LazyColumn(
-                    modifier = Modifier.height(400.dp),
+                    modifier = Modifier.height(500.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     item {
@@ -194,6 +194,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                             }
                         }
 
+                        /*
                         OverlayType.ERASE_PROMPT -> {
                             CustomOverlay(
                                 globalOverlayState = globalOverlayState,
@@ -201,7 +202,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState){
                                 onDismissRequest = { globalOverlayState.dismissOverlay() }
                             ){
                             EraseOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() })
-                        }}
+                        }} */
                         else -> Unit
                     }
 

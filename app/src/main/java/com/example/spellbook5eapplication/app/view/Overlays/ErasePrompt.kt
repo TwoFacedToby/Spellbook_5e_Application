@@ -43,7 +43,7 @@ import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import kotlinx.coroutines.launch
 
 @Composable
-fun EraseOverlay(onDismissRequest: () -> Unit) {
+fun EraseOverlay(onDismissRequest: () -> Unit, onEraseRequest: () -> Unit) {
     Dialog(
         onDismissRequest = { /*TODO*/ }
     )
@@ -88,6 +88,7 @@ fun EraseOverlay(onDismissRequest: () -> Unit) {
                             )
                         )
                     ) {
+                        onDismissRequest()
                         println("Button dismiss clicked")
                     }
 
@@ -100,6 +101,8 @@ fun EraseOverlay(onDismissRequest: () -> Unit) {
                             )
                         )
                     ) {
+                        onEraseRequest()
+                        onDismissRequest()
                         println("Button delete clicked")
                     }
                 }
@@ -114,8 +117,9 @@ fun EraseOverlay(onDismissRequest: () -> Unit) {
 fun PreviewErasePromp() {
 
     val DismisRequest = null;
+    val EraseRequest = null
 
     EraseOverlay(
-        onDismissRequest = { DismisRequest }
+        onDismissRequest = { DismisRequest }, onEraseRequest = {EraseRequest}
     )
 }

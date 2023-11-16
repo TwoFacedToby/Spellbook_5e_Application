@@ -50,7 +50,7 @@ fun DeleteOverlay(onDismissRequest: () -> Unit) {
     {
         Box(
             modifier = Modifier
-                .size(width = 250.dp, height = 150.dp)
+                .size(width = 300.dp, height = 150.dp)
                 .background(
                     color = colorResource(id = R.color.main_color),
                     shape = RoundedCornerShape(15.dp)
@@ -70,6 +70,7 @@ fun DeleteOverlay(onDismissRequest: () -> Unit) {
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                     text = "Are you sure you want to delete this spell?",
+                    fontSize = 15.sp,
                     color = colorResource(id = R.color.white),
                     fontWeight = FontWeight.Bold
                 )
