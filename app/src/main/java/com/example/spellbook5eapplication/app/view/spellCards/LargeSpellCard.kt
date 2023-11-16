@@ -13,11 +13,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -53,6 +54,7 @@ fun LargeSpellCardOverlay(
     spell : Spell_Info.SpellInfo
 )
 {
+        val images = SpellCardCreation(spell)
         Box(modifier = Modifier
             .fillMaxSize()
             .background(Color.Black.copy(alpha = 0.5f))) {
@@ -138,23 +140,29 @@ fun LargeSpellCardOverlay(
                                 .padding(start = 10.dp, end = 10.dp)
                         )
                         {
-                            Row(
+                            val lazyListState = rememberLazyListState()
+                            LazyRow(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(start = 10.dp, end = 10.dp),
-                                horizontalArrangement = Arrangement.Start
+                                horizontalArrangement = Arrangement.Start,
+                                state = lazyListState
+
                             ) {
-                                Spacer(modifier = Modifier.padding(start = 10.dp))
-                                Image(
-                                    painter = painterResource(id = R.drawable.druid2),
-                                    contentDescription = "Class",
-                                    modifier = Modifier
-                                        .size(16.dp, 16.dp)
-                                        .padding(1.dp)
-                                        .clip(RoundedCornerShape(2.dp))
-                                        .shadow(elevation = 5.dp)
-                                )
+
+                                items(images.classImageIDs.size) { index ->
+                                    Image(
+                                        painter = painterResource(id = images.classImageIDs[index]),
+                                        contentDescription = "Class",
+                                        modifier = Modifier
+                                            .size(16.dp, 16.dp)
+                                            .padding(1.dp)
+                                            .clip(RoundedCornerShape(2.dp))
+                                            .shadow(elevation = 5.dp)
+                                    )
+                                }
                             }
+
 
                             SpellInfo(spell)
                         }
@@ -163,7 +171,7 @@ fun LargeSpellCardOverlay(
                             modifier = Modifier.padding(end = 15.dp)
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.abjuration),
+                                painter = painterResource(id = images.schoolID),
                                 contentDescription = "Spell school",
                                 modifier = Modifier
                                     .size(60.dp, 60.dp)
