@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,12 +21,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
@@ -41,7 +38,11 @@ const val pagination = true //Run app with pagination
 const val bottomDistance = 10 //How many spell cards from the bottom should the next 10 be loaded. (The lower it is, there more loading stops you will see, the higher it is the more spells you will load and might cause the app to be slower sometimes)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun SpellQuery(filter: Filter?, spellList: SpellList, onDialogRequest: (Spell_Info.SpellInfo) -> Unit, onOverlayRequest: () -> Unit) {
+fun SpellQuery(
+    filter: Filter?,
+    spellList: SpellList,
+    onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
+    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit) {
 
     var totalSpellsToLoad = spellList.getIndexList().size
     var showing: List<Spell_Info.SpellInfo?>? by remember { mutableStateOf(emptyList()) }
@@ -109,10 +110,12 @@ fun SpellQuery(filter: Filter?, spellList: SpellList, onDialogRequest: (Spell_In
                         showing!![spellIndex]?.let {
                             Box(modifier = Modifier.fillMaxWidth().padding(start = 20.dp)){//Centering is weird idk what to tell you
                                 SpellCard(
-                                    onDialogRequest = { spellForOverlay ->
-                                        onDialogRequest(spellForOverlay)
+                                    onFullSpellCardRequest = {
+                                        onFullSpellCardRequest(it)
                                     },
-                                    onOverlayRequest = { onOverlayRequest },
+                                    onAddToSpellbookRequest = {
+                                        onAddToSpellbookRequest(it)
+                                    },
                                     spell = it
                                 )
                             }

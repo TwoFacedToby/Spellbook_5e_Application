@@ -103,7 +103,9 @@ fun SpellCard(
                                 text = spellName,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 14.sp,
+                                color = colorResource(id = R.color.black),
                                 modifier = Modifier.padding(5.dp, 0.dp)
+
                             )
                             Divider(
                                 color = colorResource(id = R.color.black),
@@ -178,11 +180,11 @@ fun SpellInfo(spell : Spell_Info.SpellInfo){
             Text(text = "Level:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellLevel = ""
             if(spell.level != null) spellLevel = "${spell.level}"
-            Text(text = spellLevel, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            Text(text = spellLevel, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             Text(text = "Range:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellRange = ""
             if(spell.range != null) spellRange = "${spell.range}"
-            Text(text = spellRange, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            Text(text = spellRange, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
         }
         Column(
             modifier = Modifier.padding(end = 10.dp)
@@ -190,11 +192,11 @@ fun SpellInfo(spell : Spell_Info.SpellInfo){
             Text(text = "School:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellSchool = ""
             if(spell.school?.name != null) spellSchool = "${spell.school.name}"
-            Text(text = spellSchool, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            Text(text = spellSchool, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             Text(text = "Duration:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellDuration = ""
             if(spell.duration != null) spellDuration = "${spell.duration}"
-            Text(text = spellDuration, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            Text(text = spellDuration, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
         }
         Column(
             modifier = Modifier.padding(end = 10.dp)
@@ -202,7 +204,7 @@ fun SpellInfo(spell : Spell_Info.SpellInfo){
             Text(text = "Casting Time:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellCT = ""
             if(spell.castingTime != null) spellCT = "${spell.castingTime}"
-            Text(text = spellCT, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            Text(text = spellCT, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             Text(text = "Components:", fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellComponents = ""
             if(spell.components != null) {
@@ -211,7 +213,7 @@ fun SpellInfo(spell : Spell_Info.SpellInfo){
                     spellComponents += spell.components[index-1]
                 }
             }
-            Text(text = spellComponents, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.border_color_dark))
+            Text(text = spellComponents, fontSize = 10.sp, maxLines = 1, color = colorResource(id = R.color.black))
         }
     }
 }

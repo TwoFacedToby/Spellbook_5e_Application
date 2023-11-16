@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -21,29 +20,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
-import com.example.spellbook5eapplication.app.view.Overlays.SpellBookOverlay
-import com.example.spellbook5eapplication.app.view.spellCards.SpellCardOverlay
-import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
-import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
+import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
-import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 @Composable
 fun SearchScreen(globalOverlayState: GlobalOverlayState){
-    var showSpellbookOverlay by remember { mutableStateOf(false) }
-    var showSpellcardOverlay by remember { mutableStateOf(false) }
     val spellList = SpellController.getAllSpellsList()
+
     val filter = null
     //val filter = Filter()
     //filter.setSpellName("Fire")
@@ -94,7 +88,24 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                         )
                     })
                 }
-                LazyColumn(
+                SpellQuery(
+                    filter = filter,
+                    spellList = spellList!!,
+                    onFullSpellCardRequest = {
+                        overlaySpell = it
+                        globalOverlayState.showOverlay(
+                            OverlayType.LARGE_SPELLCARD,
+                        )
+                    },
+                    onAddToSpellbookRequest = {
+                        overlaySpell = it
+                        globalOverlayState.showOverlay(
+
+                            OverlayType.ADD_TO_SPELLBOOK,
+                        )
+                    }
+                )
+                /*LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ){
@@ -108,14 +119,16 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                             globalOverlayState.showOverlay(
                                 OverlayType.ADD_TO_SPELLBOOK,
                             )
-                        }
+
+                        },
+                        overlaySpell
                     ) }
-                }
+                }*/
             }
             for (overlayType in globalOverlayState.getOverlayStack()) {
                 when (overlayType) {
                     OverlayType.LARGE_SPELLCARD -> {
-                        LargeSpellCardOverlay(globalOverlayState) { globalOverlayState.dismissOverlay() }
+                        LargeSpellCardOverlay(globalOverlayState, { globalOverlayState.dismissOverlay() }, overlaySpell)
                     }
                     OverlayType.ADD_TO_SPELLBOOK -> {
                         CustomOverlay(

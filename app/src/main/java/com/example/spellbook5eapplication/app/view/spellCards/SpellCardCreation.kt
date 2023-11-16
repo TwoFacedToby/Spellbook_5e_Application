@@ -8,7 +8,7 @@ class SpellCardCreation(spell: Spell_Info.SpellInfo) {
 
 
     val classImageIDs : MutableList<Int> = emptyList<Int>().toMutableList()
-    var schoolID = 0
+    var schoolID = R.drawable.abjuration
 
     init {
         if(spell.classes != null) setClassImages(spell.classes)
