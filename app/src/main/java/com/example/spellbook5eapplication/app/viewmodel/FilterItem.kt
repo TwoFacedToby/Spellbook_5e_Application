@@ -5,36 +5,60 @@ import androidx.compose.runtime.mutableStateOf
 
 data class FilterItem(
     val label: String,  var isSelected: MutableState<Boolean>
-)
+) {
+    companion object {
 
-val level0 = FilterItem("0", mutableStateOf(false))
-val level1 = FilterItem("1", mutableStateOf(false))
-val level2 = FilterItem("2", mutableStateOf(false))
-val level3 = FilterItem("3", mutableStateOf(false))
-val level4 = FilterItem("4", mutableStateOf(false))
-val level5 = FilterItem("5", mutableStateOf(false))
-val level6 = FilterItem("6", mutableStateOf(false))
-val level7 = FilterItem("7", mutableStateOf(false))
-val level8 = FilterItem("8", mutableStateOf(false))
-val level9 = FilterItem("9", mutableStateOf(false))
+        val spellLevels = listOf(
+            FilterItem("0", mutableStateOf(false)),
+            FilterItem("1", mutableStateOf(false)),
+            FilterItem("2", mutableStateOf(false)),
+            FilterItem("3", mutableStateOf(false)),
+            FilterItem("4", mutableStateOf(false)),
+            FilterItem("5", mutableStateOf(false)),
+            FilterItem("6", mutableStateOf(false)),
+            FilterItem("7", mutableStateOf(false)),
+            FilterItem("8", mutableStateOf(false)),
+            FilterItem("9", mutableStateOf(false)),
+        )
 
-val verbal = FilterItem("Verbal", mutableStateOf(false))
-val semantic = FilterItem("Semantic", mutableStateOf(false))
-val matrial = FilterItem("Material", mutableStateOf(false))
-val strength = FilterItem("Strength", mutableStateOf(false))
-val dexterity = FilterItem("Dexterity", mutableStateOf(false))
-val constitution = FilterItem("Constitution", mutableStateOf(false))
-val charisma = FilterItem("Charisma", mutableStateOf(false))
-val wisdom = FilterItem("Wisdom", mutableStateOf(false))
-val intelligence = FilterItem("Intelligence", mutableStateOf(false))
+        val components = listOf(
+            FilterItem("Verbal", mutableStateOf(false)),
+            FilterItem("Semantic", mutableStateOf(false)),
+            FilterItem("Material", mutableStateOf(false)),
+        )
 
-val artificer = FilterItem("Artificer", mutableStateOf(false))
-val bard = FilterItem("Bard", mutableStateOf(false))
-val cleric = FilterItem("Cleric", mutableStateOf(false))
-val druid = FilterItem("Druid", mutableStateOf(false))
+        val saveReq = listOf(
+            FilterItem("Strength", mutableStateOf(false)),
+            FilterItem("Dexterity", mutableStateOf(false)),
+            FilterItem("Constitution", mutableStateOf(false)),
+            FilterItem("Charisma", mutableStateOf(false)),
+            FilterItem("Wisdom", mutableStateOf(false)),
+            FilterItem("Intelligence", mutableStateOf(false)),
+        )
 
-val yesConcentration = FilterItem("Yes", mutableStateOf(false))
-val noConcentration = FilterItem("No", mutableStateOf(false))
+        val classes = listOf(
+            FilterItem("Artificer", mutableStateOf(false)),
+            FilterItem("Bard", mutableStateOf(false)),
+            FilterItem("Cleric", mutableStateOf(false)),
+            FilterItem("Druid", mutableStateOf(false)),
+            FilterItem("Fighter", mutableStateOf(false)),
+            FilterItem("Monk", mutableStateOf(false)),
+            FilterItem("Paladin", mutableStateOf(false)),
+            FilterItem("Ranger", mutableStateOf(false)),
+            FilterItem("Rogue", mutableStateOf(false)),
+            FilterItem("Sorcerer", mutableStateOf(false)),
+            FilterItem("Warlock", mutableStateOf(false)),
+            FilterItem("Wizard", mutableStateOf(false)),
+        )
 
-val yesRitual = FilterItem("Yes", mutableStateOf(false))
-val noRitual = FilterItem("No", mutableStateOf(false))
+        val isConcentration = listOf(
+            FilterItem("Yes", mutableStateOf(false)),
+            FilterItem("No", mutableStateOf(false)),
+        )
+
+        val isRitual = listOf(
+            FilterItem("Yes", mutableStateOf(false)),
+            FilterItem("No", mutableStateOf(false)),
+        )
+    }
+}

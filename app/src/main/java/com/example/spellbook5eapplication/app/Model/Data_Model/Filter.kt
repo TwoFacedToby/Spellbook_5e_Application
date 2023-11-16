@@ -12,6 +12,7 @@ class Filter {
     private val level = mutableListOf<Int>()
     private val classes = mutableListOf<Classes>()
     private val concentration  = mutableListOf<Boolean>()
+    private val saveReq = mutableListOf<SaveReq>()
 
     fun setSpellName(name : String){
         this.spellName = name
@@ -30,6 +31,18 @@ class Filter {
     }
     fun getSchool() : List<School>{
         return this.school.toList()
+    }
+
+    fun addSaveReq(saveReq : SaveReq ){
+        if(!this.saveReq.contains(saveReq)) this.saveReq.add(saveReq)
+    }
+
+    fun removeSaveReq(saveReq: SaveReq){
+        if(!this.saveReq.contains(saveReq)) this.saveReq.remove(saveReq)
+    }
+
+    fun clearSaveReq(){
+        this.saveReq.clear()
     }
     fun addCastingTime(castingTime: Casting_Time){
         if(!this.castingTime.contains(castingTime)) this.castingTime.add(castingTime)
@@ -234,5 +247,14 @@ class Filter {
         SORCERER("Sorcerer"),
         WARLOCK("Warlock"),
         WIZARD("Wizard")
+    }
+
+    enum class SaveReq(val value: String){
+        STRENGTH("Strenght"),
+        CONSTITUTION("Constitution"),
+        DEXTERITY("Dexterity"),
+        WISDOM("Wisdom"),
+        INTELLIGENCE("Intelligence"),
+        CHARISMA("Charisma")
     }
 }

@@ -37,77 +37,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 import com.example.spellbook5eapplication.app.viewmodel.FilterItem
-import com.example.spellbook5eapplication.app.viewmodel.artificer
-import com.example.spellbook5eapplication.app.viewmodel.bard
-import com.example.spellbook5eapplication.app.viewmodel.charisma
-import com.example.spellbook5eapplication.app.viewmodel.cleric
-import com.example.spellbook5eapplication.app.viewmodel.constitution
-import com.example.spellbook5eapplication.app.viewmodel.dexterity
-import com.example.spellbook5eapplication.app.viewmodel.druid
-import com.example.spellbook5eapplication.app.viewmodel.intelligence
-import com.example.spellbook5eapplication.app.viewmodel.level0
-import com.example.spellbook5eapplication.app.viewmodel.level1
-import com.example.spellbook5eapplication.app.viewmodel.level2
-import com.example.spellbook5eapplication.app.viewmodel.level3
-import com.example.spellbook5eapplication.app.viewmodel.level4
-import com.example.spellbook5eapplication.app.viewmodel.level5
-import com.example.spellbook5eapplication.app.viewmodel.level6
-import com.example.spellbook5eapplication.app.viewmodel.level7
-import com.example.spellbook5eapplication.app.viewmodel.level8
-import com.example.spellbook5eapplication.app.viewmodel.level9
-import com.example.spellbook5eapplication.app.viewmodel.matrial
-import com.example.spellbook5eapplication.app.viewmodel.noConcentration
-import com.example.spellbook5eapplication.app.viewmodel.noRitual
-import com.example.spellbook5eapplication.app.viewmodel.semantic
-import com.example.spellbook5eapplication.app.viewmodel.strength
-import com.example.spellbook5eapplication.app.viewmodel.verbal
-import com.example.spellbook5eapplication.app.viewmodel.wisdom
-import com.example.spellbook5eapplication.app.viewmodel.yesConcentration
-import com.example.spellbook5eapplication.app.viewmodel.yesRitual
 
 
 @Composable
 fun FiltersOverlay(
     onDismissRequest: () -> Unit,
     onFilterSelected: (FilterItem) -> Unit,
-    applyFilter:(Filter) -> Unit
+    applyFilter: (Filter) -> Unit
 ) {
-
-    val spelllevel = remember {
-        mutableStateListOf(
-            level0, level1, level2, level3, level4, level5, level6, level7, level8, level9
-        )
-    }
-
-    val concentration = remember {
-        mutableStateListOf(
-            yesConcentration, noConcentration
-        )
-    }
-    val ritual = remember {
-        mutableStateListOf(
-            yesRitual, noRitual
-        )
-    }
-
-    val components = remember {
-        mutableStateListOf(
-            verbal, semantic, matrial
-        )
-    }
-
-    val saveReq = remember {
-        mutableStateListOf(
-            strength, dexterity, constitution, intelligence, wisdom, charisma,
-        )
-    }
-    val classes = remember {
-        mutableStateListOf(
-            artificer, bard, cleric, druid,
-
-            )
-    }
+    val spellLevel = remember { mutableStateListOf(*FilterItem.spellLevels.toTypedArray()) }
+    val components = remember { mutableStateListOf(*FilterItem.components.toTypedArray()) }
+    val saveReq = remember { mutableStateListOf(*FilterItem.saveReq.toTypedArray()) }
+    val classes = remember { mutableStateListOf(*FilterItem.classes.toTypedArray()) }
+    val concentration = remember { mutableStateListOf(*FilterItem.isConcentration.toTypedArray()) }
+    val ritual = remember { mutableStateListOf(*FilterItem.isRitual.toTypedArray()) }
 
     Column(
         modifier = Modifier
@@ -139,132 +84,98 @@ fun FiltersOverlay(
                 modifier = Modifier
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp))
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            )
             {
-                item {Spacer(modifier = Modifier.height(5.dp))}
-                item {Button(
-                    onClick = {
-                        val filter = Filter()
-                        for(index in 0 until spelllevel.size){
-                            if(spelllevel[index].isSelected.value) filter.addLevel(index) else filter.removeLevel(index)
+                item {
+                    Spacer(modifier = Modifier.height(5.dp))
+                }
+                item {
+                    ColouredButton(label = "Apply filters",
+                        modifier = Modifier.width(150.dp),
+                        color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
+                        onClick = { onApplyFiltersClicked(
+                            spellLevel, components, saveReq, classes, concentration, ritual, applyFilter)
+                            onDismissRequest()
                         }
-                        for(index in 0 until concentration.size){
-                            when(index){
-                                0 ->  if(concentration[index].isSelected.value) filter.addConcentration(true)
-                                1 ->  if(concentration[index].isSelected.value) filter.addConcentration(false)
-
+                    )
+                }
+                item { Spacer(modifier = Modifier.height(5.dp)) }
+                item {
+                    Text(
+                        text = "Spell Level",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+                spellLevel.chunked(5).forEach { rowLevels ->
+                    item {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceEvenly
+                        ) {
+                            rowLevels.forEach { level ->
+                                FilterButton(
+                                    modifier = Modifier.size(55.dp),
+                                    contentPaddingValues = PaddingValues(1.dp),
+                                    filter = level,
+                                    onFilterSelected = { onFilterSelected(level) }
+                                )
                             }
                         }
-                        for(index in 0 until ritual.size){
-                            when(index){
-                                0 ->  if(ritual[index].isSelected.value) filter.addRitual(true)
-                                1 ->  if(ritual[index].isSelected.value) filter.addRitual(false)
-
-                            }
-                        }
-                        for(index in 0 until components.size){
-                            when(index){
-                                0 ->  if(components[index].isSelected.value) filter.addComponent(Filter.Component.VERBAL)
-                                1 ->  if(components[index].isSelected.value) filter.addComponent(Filter.Component.SOMATIC)
-                                2 ->  if(components[index].isSelected.value) filter.addComponent(Filter.Component.MATERIAL)
-                           }
-                        }
-                        /*for(index in 0 until saveReq.size){ Not a filter yet
-                            when(index){
-                                0 ->  if(saveReq[index].isSelected.value) filter.
-                            }
-                        }*/
-                        for(index in 0 until classes.size){
-                            when(index){
-                                0 ->  if(classes[index].isSelected.value) filter.addClass(Filter.Classes.ARTIFICER)
-                                1 ->  if(classes[index].isSelected.value) filter.addClass(Filter.Classes.BARD)
-                                2 ->  if(classes[index].isSelected.value) filter.addClass(Filter.Classes.CLERIC)
-                                3 ->  if(classes[index].isSelected.value) filter.addClass(Filter.Classes.DRUID)
-                            }
-                        }
-
-                        applyFilter(filter)
-
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ){
-                    Text(text = "Apply Filters",
-                        color = colorResource(id = R.color.white)
-                        )
-                }}
-                item {Spacer(modifier = Modifier.height(5.dp))}
-                item {Text(
-                    text = "Spell Level",
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold
-                )}
-                    spelllevel.chunked(5).forEach { rowLevels ->
-                        item {
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceEvenly
-                            ) {
-                                rowLevels.forEach { level ->
+                    }
+                }
+                item { Spacer(modifier = Modifier.height(5.dp)) }
+                item {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "Concentration",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Row {
+                                concentration.forEach() { concentration ->
                                     FilterButton(
-                                        modifier = Modifier.size(55.dp),
+                                        modifier = Modifier.size(46.dp),
                                         contentPaddingValues = PaddingValues(1.dp),
-                                        filter = level,
-                                        onFilterSelected = { onFilterSelected(level) }
+                                        filter = concentration,
+                                        onFilterSelected = { onFilterSelected(concentration) }
                                     )
+                                    Spacer(modifier = Modifier.width(8.dp))
+                                }
+                            }
+                        }
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Text(
+                                text = "Ritual",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Row {
+                                ritual.forEach() { ritual ->
+                                    FilterButton(
+                                        modifier = Modifier.size(46.dp),
+                                        contentPaddingValues = PaddingValues(1.dp),
+                                        filter = ritual,
+                                        onFilterSelected = { onFilterSelected(ritual) }
+                                    )
+                                    Spacer(modifier = Modifier.width(8.dp))
                                 }
                             }
                         }
                     }
+                }
                 item { Spacer(modifier = Modifier.height(5.dp)) }
-                item {Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = "Concentration",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Row {
-                            concentration.forEach(){ concentration ->
-                                FilterButton(
-                                    modifier = Modifier.size(46.dp),
-                                    contentPaddingValues = PaddingValues(1.dp),
-                                    filter = concentration,
-                                    onFilterSelected = { onFilterSelected(concentration)}
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                            }
-                        }
-                    }
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        Text(
-                            text = "Ritual",
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Row {
-                            ritual.forEach(){ ritual ->
-                                FilterButton(
-                                    modifier = Modifier.size(46.dp),
-                                    contentPaddingValues = PaddingValues(1.dp),
-                                    filter = ritual,
-                                    onFilterSelected = { onFilterSelected(ritual)}
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
-                            }
-                        }
-                    }
-                }
-                }
-                item {Spacer(modifier = Modifier.height(5.dp))}
                 item {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -291,7 +202,7 @@ fun FiltersOverlay(
                         }
                     }
                 }
-                item {Spacer(modifier = Modifier.height(5.dp)) }
+                item { Spacer(modifier = Modifier.height(5.dp)) }
                 item {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -320,7 +231,7 @@ fun FiltersOverlay(
                         }
                     }
                 }
-                item {Spacer(modifier = Modifier.height(5.dp))}
+                item { Spacer(modifier = Modifier.height(5.dp)) }
                 item {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -358,8 +269,9 @@ fun FilterButton(
     modifier: Modifier,
     contentPaddingValues: PaddingValues? = null,
     filter: FilterItem,
-    onFilterSelected: (FilterItem) -> Unit) {
-    if(contentPaddingValues == null) {
+    onFilterSelected: (FilterItem) -> Unit
+) {
+    if (contentPaddingValues == null) {
         Button(
             modifier = modifier,
             onClick = {
@@ -410,6 +322,88 @@ fun FilterButton(
         }
     }
 }
+
+fun processList(items: List<FilterItem>, updateFilter: (Filter, String) -> Unit, filter: Filter, asBoolean: Boolean = false) {
+    items.forEach { item ->
+        if (item.isSelected.value) {
+            if (asBoolean) {
+                val booleanValue = item.label.equals("Yes", ignoreCase = true)
+                updateFilter(filter, booleanValue.toString())
+            } else {
+                updateFilter(filter, item.label)
+            }
+        }
+    }
+}
+
+fun onApplyFiltersClicked(
+    spellLevel: List<FilterItem>,
+    components: List<FilterItem>,
+    saveReq: List<FilterItem>,
+    classes: List<FilterItem>,
+    concentration: List<FilterItem>,
+    ritual: List<FilterItem>,
+    applyFilter: (Filter) -> Unit
+) {
+    val filter = Filter()
+
+    val updateSpellLevel: (Filter, String) -> Unit = { filter, value ->
+        val level = value.toInt()
+        filter.addLevel(level)
+    }
+
+    val updateComponents: (Filter, String) -> Unit = { filter, value ->
+        when (value) {
+            "Verbal" -> filter.addComponent(Filter.Component.VERBAL)
+            "Semantic" -> filter.addComponent(Filter.Component.SOMATIC)
+            "Material" -> filter.addComponent(Filter.Component.MATERIAL)
+        }
+    }
+
+    val updateSaveReq: (Filter, String) -> Unit = { filter, value ->
+        when (value) {
+            "Strength" -> filter.addSaveReq(Filter.SaveReq.STRENGTH)
+            "Dexterity" -> filter.addSaveReq(Filter.SaveReq.DEXTERITY)
+            "Constitution" -> filter.addSaveReq(Filter.SaveReq.CONSTITUTION)
+            "Wisdom" -> filter.addSaveReq(Filter.SaveReq.WISDOM)
+            "Intelligence" -> filter.addSaveReq(Filter.SaveReq.INTELLIGENCE)
+            "Charisma" -> filter.addSaveReq(Filter.SaveReq.CHARISMA)
+        }
+    }
+    val updateClasses: (Filter, String) -> Unit = { filter, value ->
+        when (value) {
+            "Artificer" -> filter.addClass(Filter.Classes.ARTIFICER)
+            "Barbarian" -> filter.addClass(Filter.Classes.BARBARIAN)
+            "Bard" -> filter.addClass(Filter.Classes.BARD)
+            "Cleric" -> filter.addClass(Filter.Classes.CLERIC)
+            "Druid" -> filter.addClass(Filter.Classes.DRUID)
+            "Fighter" -> filter.addClass(Filter.Classes.FIGHTER)
+            "Monk" -> filter.addClass(Filter.Classes.MONK)
+            "Paladin" -> filter.addClass(Filter.Classes.PALADIN)
+            "Ranger" -> filter.addClass(Filter.Classes.RANGER)
+            "Rogue" -> filter.addClass(Filter.Classes.ROGUE)
+            "Sorcerer" -> filter.addClass(Filter.Classes.SORCERER)
+            "Warlock" -> filter.addClass(Filter.Classes.WARLOCK)
+            "Wizard" -> filter.addClass(Filter.Classes.WIZARD)
+        }
+    }
+    val updateConcentration: (Filter, String) -> Unit = { filter, value ->
+        filter.addConcentration(value.toBoolean())
+    }
+    val updateRitual: (Filter, String) -> Unit = { filter, value ->
+        filter.addRitual(value.toBoolean())
+    }
+
+    processList(spellLevel, updateSpellLevel, filter)
+    processList(components, updateComponents, filter)
+    processList(saveReq, updateSaveReq, filter)
+    processList(classes, updateClasses, filter)
+    processList(concentration, updateConcentration, filter, true)
+    processList(ritual, updateRitual, filter, true)
+
+    applyFilter(filter)
+}
+
 
 /*
 @Preview
