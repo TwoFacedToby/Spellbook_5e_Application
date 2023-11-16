@@ -91,6 +91,9 @@ fun UserInputField(
                                 fontSize = 15.sp
                             )
                         )
+
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
                     innerTextField()
                 }
             }
