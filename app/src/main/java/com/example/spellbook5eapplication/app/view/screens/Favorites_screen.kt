@@ -57,15 +57,6 @@ fun FavoriteScreen(){
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                )
-                {
-                    UserInputField(label = "Search")
-                    Spacer(modifier = Modifier.width(5.dp))
-                    FilterButton()
-                }
                 //TODO insert the lazy column for seacrh results
                 SpellCard(onDialogRequest = {showSpellcardOverlay = true}, onOverlayRequest = {showSpellbookOverlay = true})
 
