@@ -21,19 +21,19 @@ class SpellCardCreation(spell: Spell_Info.SpellInfo) {
         for(c in classes){
             when (c.name) {
                 null -> println("null class")
-                "Artificer" -> classImageIDs.add(R.drawable.druid2)
-                "Barbarian" -> classImageIDs.add(R.drawable.druid2)
-                "Bard" -> classImageIDs.add(R.drawable.druid2)
-                "Cleric" -> classImageIDs.add(R.drawable.druid2)
-                "Druid" -> classImageIDs.add(R.drawable.druid2)
-                "Fighter" -> classImageIDs.add(R.drawable.druid2)
-                "Monk" -> classImageIDs.add(R.drawable.druid2)
-                "Paladin" ->classImageIDs.add(R.drawable.druid2)
-                "Ranger" -> classImageIDs.add(R.drawable.druid2)
-                "Rogue" -> classImageIDs.add(R.drawable.druid2)
-                "Sorcerer" -> classImageIDs.add(R.drawable.druid2)
-                "Warlock" -> classImageIDs.add(R.drawable.druid2)
-                "Wizard" -> classImageIDs.add(R.drawable.druid2)
+                "Artificer" -> classImageIDs.add(R.drawable.artificer)
+                "Barbarian" -> classImageIDs.add(R.drawable.barbarian)
+                "Bard" -> classImageIDs.add(R.drawable.bard)
+                "Cleric" -> classImageIDs.add(R.drawable.cleric)
+                "Druid" -> classImageIDs.add(R.drawable.druid)
+                "Fighter" -> classImageIDs.add(R.drawable.fighter)
+                "Monk" -> classImageIDs.add(R.drawable.monk)
+                "Paladin" ->classImageIDs.add(R.drawable.paladin)
+                "Ranger" -> classImageIDs.add(R.drawable.ranger)
+                "Rogue" -> classImageIDs.add(R.drawable.rouge)
+                "Sorcerer" -> classImageIDs.add(R.drawable.sorcerer)
+                "Warlock" -> classImageIDs.add(R.drawable.warlock)
+                "Wizard" -> classImageIDs.add(R.drawable.wizard)
             }
         }
     }
@@ -42,13 +42,13 @@ class SpellCardCreation(spell: Spell_Info.SpellInfo) {
         when(school.name){
             null -> println("null school")
             "Abjuration" -> schoolID = R.drawable.abjuration
-            "Conjuration" -> schoolID = R.drawable.abjuration
-            "Divination" -> schoolID = R.drawable.abjuration
-            "Enchantment" -> schoolID = R.drawable.abjuration
-            "Evocation" -> schoolID = R.drawable.abjuration
-            "Illusion" -> schoolID = R.drawable.abjuration
-            "Necromancy" -> schoolID = R.drawable.abjuration
-            "Transmutation" -> schoolID = R.drawable.abjuration
+            "Conjuration" -> schoolID = R.drawable.conjuration
+            "Divination" -> schoolID = R.drawable.divination
+            "Enchantment" -> schoolID = R.drawable.enchantment
+            "Evocation" -> schoolID = R.drawable.evocation
+            "Illusion" -> schoolID = R.drawable.illusion
+            "Necromancy" -> schoolID = R.drawable.necromancy
+            "Transmutation" -> schoolID = R.drawable.transmutation
         }
     }
 }
