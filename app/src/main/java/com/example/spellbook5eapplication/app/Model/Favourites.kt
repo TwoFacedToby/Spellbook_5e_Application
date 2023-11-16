@@ -26,23 +26,12 @@ class Favourites {
         }
     }
 
-    fun saveSpellbookToFile(spellBookName: String) {
+    fun saveFavouritesToFile(favourites: Favourites) {
         favouriteList?.let {
             val gson = Gson()
             val favouritesListGson = gson.toJson(it)
 
-            SpellController.saveJsonToFile(favouritesListGson, "Favourites", spellBookName + ".json")
+            SpellController.saveJsonToFile(favouritesListGson, "Favourites", "$favourites.json")
         }
-    }
-
-    fun loadSpellbookFromFile(spellBookName: String): Boolean {
-        val fileContent = SpellController.readJsonFromFile("Favourites", spellBookName + ".json")
-        fileContent?.let {
-            val gson = Gson()
-            val type = object : TypeToken<MutableList<String>>() {}.type
-            favouriteList = gson.fromJson(it, type)
-            return true
-        }
-        return false
     }
 }
