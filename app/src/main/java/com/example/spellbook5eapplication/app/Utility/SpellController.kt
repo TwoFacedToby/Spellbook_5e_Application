@@ -25,7 +25,7 @@ object SpellController {
         context = WeakReference(appContext.applicationContext)
     }
 
-    private fun getContext(): Context? {
+    fun getContext(): Context? {
         return context?.get()
     }
 

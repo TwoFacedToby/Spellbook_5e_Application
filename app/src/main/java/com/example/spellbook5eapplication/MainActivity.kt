@@ -32,6 +32,9 @@ class MainActivity : ComponentActivity() {
             Spellbook5eApplicationTheme {
                 MainScreen()
             }
+            addMockSpellbooks()
+            addMockSpellsToSpellbooks()
+            saveSpellbooks()
         }
         scope.launch {
             runBlocking {
