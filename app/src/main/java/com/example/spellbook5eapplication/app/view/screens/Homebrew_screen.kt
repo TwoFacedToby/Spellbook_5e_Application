@@ -37,6 +37,7 @@ import com.example.spellbook5eapplication.app.view.Overlays.DeleteOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.EraseOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.NewSpellOverlay
+import com.example.spellbook5eapplication.app.view.spellCards.HomeQuery
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LocalLargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
@@ -140,7 +141,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                         })
                 }
 
-                SpellQuery(
+                HomeQuery(
                     filter = filter,
                     spellList = spellList!!,
                     maxSize = false,
