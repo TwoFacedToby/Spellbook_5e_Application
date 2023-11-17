@@ -42,6 +42,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Utility.HomeBrewManager
+import com.example.spellbook5eapplication.app.Utility.SpellController
+import com.example.spellbook5eapplication.app.Utility.SpellController.saveHomeJSON
 import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.MakeItem
@@ -85,9 +89,17 @@ fun NewSpellOverlay(
 
     var showDialog by remember { mutableStateOf(false) }
 
-    var name: MutableState<String>
+    var name by remember { mutableStateOf("")}
 
-    var description: MutableState<String>
+    var description by remember { mutableStateOf("")}
+
+    var range by remember { mutableStateOf("")}
+
+    var school by remember { mutableStateOf("")}
+
+    var duration by remember { mutableStateOf("")}
+
+    var castTime by remember { mutableStateOf("")}
 
     val spelllevel = remember {
         mutableStateListOf(
@@ -118,11 +130,7 @@ fun NewSpellOverlay(
         )
     }
 
-    val range = remember {
-        mutableStateListOf(
-            mnoRange, mlowRange, mmediumRange, mHighRange,
-        )
-    }
+    var manager: HomeBrewManager = HomeBrewManager()
 
 
     Column(
@@ -173,7 +181,8 @@ fun NewSpellOverlay(
                         label = "name",
                         //Should connect with name
                         onInputChanged = {
-                                input -> println("Name is: $input\n")
+                                input ->
+                            run { name = input }
 
                         },
                         modifier = Modifier
@@ -325,7 +334,7 @@ fun NewSpellOverlay(
                     UserInputField(
                         label = "Self,melee or a distance",
                         //Possible should connect this to description string
-                        onInputChanged = { input -> println("Range is :$input\n") },
+                        onInputChanged = { input -> run { range = input } },
                         modifier = Modifier
                             .size(width = 300.dp, height = 48.dp), singleLine = true
                     )
@@ -345,7 +354,7 @@ fun NewSpellOverlay(
                     UserInputField(
                         label = "1,2 or other actions",
                         //Possible should connect this to description string
-                        onInputChanged = { input -> println("Duration is :$input\n") },
+                        onInputChanged = { input -> run { duration = input } },
                         modifier = Modifier
                             .size(width = 300.dp, height = 48.dp), singleLine = true
                     )
@@ -365,7 +374,7 @@ fun NewSpellOverlay(
                     UserInputField(
                         label = "What school is the spell from",
                         //Possible should connect this to description string
-                        onInputChanged = { input -> println("School is: $input\n") },
+                        onInputChanged = { input -> run { school = input } },
                         modifier = Modifier
                             .size(width = 300.dp, height = 48.dp), singleLine = true
                     )
@@ -385,7 +394,7 @@ fun NewSpellOverlay(
                     UserInputField(
                         label = "Instantaneous, 1 min or what you imagine",
                         //Possible should connect this to description string
-                        onInputChanged = { input -> println("The cast time is: $input\n") },
+                        onInputChanged = { input -> run { castTime = input } },
                         modifier = Modifier
                             .size(width = 300.dp, height = 48.dp), singleLine = true
                     )
@@ -402,7 +411,10 @@ fun NewSpellOverlay(
                     UserInputField(
                         label = "",
                         //Possible should connect this to description string
-                        onInputChanged = { input -> println("The description is: $input\n") },
+                        onInputChanged = {
+                                input ->
+                            run { description = input }
+                        },
                         modifier = Modifier
                             .size(width = 300.dp, height = 240.dp), singleLine = false
                     )
@@ -422,8 +434,20 @@ fun NewSpellOverlay(
                                 )
                             )
                         ) {
-                            //Create spell here, Im only printing now (,^ _ ^)
-                            println("Button delete clicked")
+                            val comp: List<String> = listOf("V", "", "M")
+                            // Use the parameters that you want to pass to createSpellJson
+                            val createdSpellJson = manager.createSpellJson(
+                                name = name,
+                                description = description,
+                                range = range,
+                                components = comp,
+                                ritual = ritual[0].isSelected.value, // Assuming the first ritual option is selected or not
+                                concentration = concentration[0].isSelected.value, // Assuming the first concentration option is selected or not
+                                duration = duration,
+                                casting_time = castTime,
+                                level = 2 // This is hardcoded for now
+                            )
+                            println("Spell created: $createdSpellJson")
                         }
 
                         Spacer(modifier = Modifier.width(30.dp))

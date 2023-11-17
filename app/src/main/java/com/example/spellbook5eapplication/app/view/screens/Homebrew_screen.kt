@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Utility.HomeBrewManager
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.DeleteOverlay
@@ -52,7 +53,8 @@ import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 
 @Composable
 fun BrewScreen(globalOverlayState: GlobalOverlayState) {
-    val spellList = SpellController.getAllSpellsList()
+    //val spellList = SpellController.getAllSpellsList()
+    val spellList = SpellController.retrieveHomeBrew()
 
     val filter = null
     //val filter = Filter()
