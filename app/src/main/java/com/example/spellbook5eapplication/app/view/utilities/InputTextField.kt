@@ -1,7 +1,11 @@
 package com.example.spellbook5eapplication.app.view.utilities
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -26,47 +30,67 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 
 @Composable
-fun UserInputField(label: String){
+fun UserInputField(
+    label: String,
+    onInputChanged: (String) -> Unit,
+    modifier : Modifier,
+    singleLine : Boolean
+){
     var input by remember { mutableStateOf("") }
+    //val coroutineScope = rememberCoroutineScope()
 
     BasicTextField(
         value = input,
-        onValueChange = { input = it },
-        modifier = Modifier.height(48.dp)
-            .width(250.dp)
-            .background(colorResource(id = R.color.border_color_dark), RoundedCornerShape(2.dp))
-            .padding(2.dp),
-        singleLine = true,
+        /*onValueChange = {
+            input = it
+            coroutineScope.launch {
+                delay(300)  // Wait for 300ms
+                if (input == it) {
+                    onInputChanged(it)
+                }
+            }
+        }*/
+        onValueChange = {
+            input = it
+            onInputChanged(it)
+        },
+        modifier = modifier,
+        singleLine = singleLine,
         cursorBrush = SolidColor(colorResource(id = R.color.white)),
         textStyle = LocalTextStyle.current.copy(color = colorResource(id = R.color.white)),
         decorationBox = {
                 innerTextField ->
-            Row(
-                modifier = Modifier.width(250.dp)
-                    . background(
-                colorResource(id = R.color.primary_dark),
-                    shape = RoundedCornerShape(2.dp)
-            )
-                .padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically)
-            {
-                if(input.isEmpty())
-                    Text(text = label,
-                        style = LocalTextStyle.current.copy(
-                            color = colorResource(id = R.color.border_color_dark),
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 12.sp)
-                    )
-                innerTextField()
+            Box(
+                modifier = Modifier
+                    .border(
+                        width = 2.dp,
+                        color = colorResource(id = R.color.border_color),
+                        shape = RoundedCornerShape(2.dp))
+                    .background(
+                        colorResource(id = R.color.main_color),
+                        shape = RoundedCornerShape(2.dp))
+                    .fillMaxWidth()
+            ) {
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 5.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                )
+                {
+                    if (input.isEmpty())
+                        Text(
+                            text = label,
+                            style = LocalTextStyle.current.copy(
+                                color = colorResource(id = R.color.border_color),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp
+                            )
+                        )
+                    innerTextField()
+                }
             }
         }
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun InputField() {
-    Spellbook5eApplicationTheme {
-        UserInputField("Search")
-    }
 }

@@ -18,7 +18,7 @@ import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
     // Define a CoroutineScope for launching coroutines
-    private val scope = CoroutineScope(Dispatchers.Main)
+    //private val scope = CoroutineScope(Dispatchers.Main)
     private lateinit var spellbookManager: SpellbookManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,13 +36,13 @@ class MainActivity : ComponentActivity() {
             addMockSpellsToSpellbooks()
             saveSpellbooks()
         }
-        scope.launch {
+        /*scope.launch {
             runBlocking {
                 networkRequest() { spellList ->
                     spellList.printInfoToConsole()
                 }
             }
-        }
+        }*/
     }
 
     private fun addMockSpellbooks() {
@@ -64,7 +64,7 @@ class MainActivity : ComponentActivity() {
             spellbookManager.saveSpellbookToFile(spellBookFileName)
         }
     }
-
+/*
     private fun networkRequest(callback: (result: SpellList) -> Unit) {
         scope.launch {
             val spellList = SpellController.getAllSpellsList()
@@ -80,4 +80,6 @@ class MainActivity : ComponentActivity() {
         filter.setSpellName("Fire")
         return filter
     }
+
+ */
 }
