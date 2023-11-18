@@ -10,6 +10,7 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
+import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +31,7 @@ class MainActivity : ComponentActivity() {
         spellbookManager = SpellbookManager()
         setContent {
             Spellbook5eApplicationTheme {
-                MainScreen()
+                MainScreen(SpellController, SpelllistLoader)
             }
             addMockSpellbooks()
             addMockSpellsToSpellbooks()
@@ -48,10 +49,13 @@ class MainActivity : ComponentActivity() {
     private fun addMockSpellbooks() {
         spellbookManager.addSpellbook(Spellbook("Wizard's Handbook"))
         spellbookManager.addSpellbook(Spellbook("Cleric's Compendium"))
+        spellbookManager.addSpellbook(Spellbook("Favourites"))
     }
 
     private fun addMockSpellsToSpellbooks(){
         spellbookManager.getSpellbook("Wizard's Handbook")?.addSpell("Fire Ball - of course")
+        spellbookManager.getSpellbook("Favourites")?.addSpell("aid")
+        spellbookManager.getSpellbook("Favourites")?.addSpell("alarm")
     }
 
     private fun saveSpellbooks() {

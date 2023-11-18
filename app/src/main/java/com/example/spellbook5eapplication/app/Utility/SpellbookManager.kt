@@ -1,5 +1,7 @@
 package com.example.spellbook5eapplication.app.Utility
 
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.google.gson.Gson
 import java.io.File
@@ -29,21 +31,15 @@ class SpellbookManager {
         }
     }
 
-    fun loadSpellbooksFromFile(filePath: String) {
-        val json = File(filePath).readText()
-        val loadedSpellbooks = Gson().fromJson(json, Array<Spellbook>::class.java).toList()
-        spellbooks.clear()
-        spellbooks.addAll(loadedSpellbooks)
-    }
-
     fun printAllSpellbooks() {
         spellbooks.forEach { spellbook ->
             println("Spellbook: ${spellbook.spellbookName}")
-            spellbook.getSpells().forEach { spell ->
+            spellbook.spells.forEach { spell ->
                 println("- $spell")
             }
         }
     }
+
 
     fun getAllSpellbooks(): List<Spellbook> {
         return spellbooks.toList()

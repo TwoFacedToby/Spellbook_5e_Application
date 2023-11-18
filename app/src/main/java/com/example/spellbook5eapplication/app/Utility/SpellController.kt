@@ -43,6 +43,9 @@ object SpellController {
      */
     fun getSpellFromName(spellName : String) : Spell_Info.SpellInfo? {
         var spell: Spell_Info.SpellInfo? = null
+        val url = "https://www.dnd5eapi.co/api/spells/$spellName"
+        println("Requesting spell data from URL: $url")
+
         runBlocking {
             try {
                 val deferredSpellInfo: Deferred<String?> = async(Dispatchers.IO) {
