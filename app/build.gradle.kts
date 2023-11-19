@@ -87,8 +87,8 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation( "info.cukes:cucumber-android:1.2.5@jar")
     androidTestImplementation( "info.cukes:cucumber-picocontainer:1.2.4")
-    androidTestImplementation("com.androidx.test.rules:1.0.2")
-    androidTestImplementation("com.androidx.test.runner:1.0.2")
+    ///androidTestImplementation("com.androidx.test.rules:1.0.2")
+    //androidTestImplementation("com.androidx.test.runner:1.0.2")
     androidTestImplementation("androidx.test.espresso:espresso-web:3.5.1")
 
 }
