@@ -4,10 +4,15 @@ plugins {
 }
 
 android {
+
     namespace = "com.example.spellbook5eapplication"
     compileSdk = 34
 
     defaultConfig {
+
+        testApplicationId = "com.example.spellbook5eapplication.test"
+        testInstrumentationRunner = "com.example.spellbook5eapplication.test.Instrumentation"
+
         applicationId = "com.example.spellbook5eapplication"
         minSdk = 24
         targetSdk = 33
@@ -47,9 +52,17 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+
 }
 
 dependencies {
+
+    androidTestImplementation("com.android.support.test.espresso:espresso-core:3.0.1")
+    androidTestImplementation("com.android.support:support-annotations:26.1.0")
+    androidTestImplementation("info.cukes:cucumber-android:1.2.5@jar")
+    androidTestImplementation("info.cukes:cucumber-picocontainer:1.2.4")
+
     implementation("androidx.appcompat:appcompat:1.3.1")
     implementation("com.google.android.material:material:1.4.0")
     implementation("androidx.compose.ui:ui:1.1.0-alpha01")
