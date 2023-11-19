@@ -1,5 +1,7 @@
 package com.example.spellbook5eapplication.androidTest.java;
 
+import static org.junit.Assert.assertEquals;
+
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList;
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info;
 import com.example.spellbook5eapplication.app.Utility.SpellController;
@@ -21,7 +23,7 @@ public class OpenSpellActivitySteps {
 
     @Then("I should see spell info")
     public void I_should_see_spell_info(){
-        equals(spell);
+        assertEquals(spell, Aid);
     }
 
 }
