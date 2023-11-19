@@ -18,9 +18,11 @@ android {
         vectorDrawables {
             useSupportLibrary = true
 
-            testApplicationId = "com.example.bdd.test"
-            testInstrumentationRunner = "com.example.bdd.test.Intrumentation"
         }
+
+
+        testApplicationId = "com.example.bdd.test"
+        testInstrumentationRunner = "com.example.bdd.test.Instrumentation"
     }
 
     buildTypes {
