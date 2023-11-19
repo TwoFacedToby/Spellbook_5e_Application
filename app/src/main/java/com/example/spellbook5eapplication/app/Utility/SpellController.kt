@@ -336,36 +336,30 @@ object SpellController {
         return jsonToSpell.jsonToSpell(json)
     }
 
-
-    /** @author Nicklas s224314
-     * @param a homebrew-spell to save on the phone.
-     *
-     * This function will save homebrews in a designated file
-     */
-    fun saveHomeBrew(spellInfo: Spell_Info, name: String) {
-        val json: String
-        json = jsonToSpell.spellToJson(spellInfo).toString()
-        val appContext = getContext()
-        if (appContext != null) {
-            try {
-                // Create the directory in the internal storage
-                val directory = File(appContext.filesDir, "HomeBrews")
-                if (!directory.exists()) {
-                    directory.mkdirs() // Make the directory if it does not exist
-                }
-                // Create the file within the new directory
-                val file = File(directory, name)
-                file.writeText(json) // Write the JSON string to the file
-
-                println("JSON saved to ${file.absolutePath}")
-            } catch (e: Exception) {
-                println("Failed to save JSON to file: ${e.message}")
-            }
-        }
-    }
-
     fun saveHomeJSON(json: String, name: String) {
         saveJsonToFile(json, "HomeBrews", name + ".json")
+    }
+
+    fun deleteHomeBrew(name: String) {
+        val appContext = SpellController.getContext()
+        if (appContext != null) {
+            try {
+                val directory = File(appContext.filesDir, "HomeBrews")
+                if (directory.exists()) {
+                    val file = File(directory, "$name.json")
+                    if (file.exists()) {
+                        file.delete()
+                        println("Spell deleted: $name")
+                    } else {
+                        println("Spell not found: $name")
+                    }
+                } else {
+                    println("HomeBrews directory does not exist")
+                }
+            } catch (e: Exception) {
+                println("Failed to delete spell: ${e.message}")
+            }
+        }
     }
 
     fun retrieveHomeBrew(): SpellList? {

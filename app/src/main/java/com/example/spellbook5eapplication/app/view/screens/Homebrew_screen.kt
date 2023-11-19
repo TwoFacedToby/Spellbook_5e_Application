@@ -97,6 +97,8 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
     )
     var overlaySpell by remember { mutableStateOf(nullSpell) }
 
+    var refreshState by remember { mutableStateOf(0) }
+
 
 
     Surface(
@@ -148,8 +150,9 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                     onFullSpellCardRequest = {
                         overlaySpell = it
                         globalOverlayState.showOverlay(
-                            OverlayType.LOCAL_LARGE_SPELLCARD,
+                            OverlayType.LOCAL_LARGE_SPELLCARD
                         )
+                        //{refreshTrigger++}
                     },
                     onAddToSpellbookRequest = {
                         overlaySpell = it
@@ -209,7 +212,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                         LocalLargeSpellCardOverlay(
                             globalOverlayState,
                             { globalOverlayState.dismissOverlay() },
-                            overlaySpell
+                            overlaySpell, onRefresh = { refreshState++ }
                         )
                     }
 
@@ -249,7 +252,8 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                                 //globalOverlayState.showOverlay(
                                 //   OverlayType.ERASE_PROMPT
                                 // )
-                            }, onFilterSelected = {/* TODO */ })
+                            }, onFilterSelected = {/* TODO */ },
+                                onRefresh = { refreshState++ })
                         }
                     }
 

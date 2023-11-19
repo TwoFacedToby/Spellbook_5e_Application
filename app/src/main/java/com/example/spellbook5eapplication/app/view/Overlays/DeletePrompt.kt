@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.spellCards.LocalLargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.utilities.CreateDialog
@@ -43,7 +44,7 @@ import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import kotlinx.coroutines.launch
 
 @Composable
-fun DeleteOverlay(onDismissRequest: () -> Unit) {
+fun DeleteOverlay(onDismissRequest: () -> Unit, name: String, onRefresh: () -> Unit) {
     Dialog(
         onDismissRequest = { /*TODO*/ }
     )
@@ -100,7 +101,10 @@ fun DeleteOverlay(onDismissRequest: () -> Unit) {
                             )
                         )
                     ) {
+                        SpellController.deleteHomeBrew(name = name)
+                        onRefresh()
                         println("Button delete clicked")
+                        onDismissRequest()
                     }
                 }
             }
@@ -116,6 +120,6 @@ fun PreviewLocalSpellCard() {
     val DismisRequest = null;
 
     DeleteOverlay(
-        onDismissRequest = { DismisRequest }
-    )
+        onDismissRequest = { DismisRequest }, name = "",
+    onRefresh = { })
 }

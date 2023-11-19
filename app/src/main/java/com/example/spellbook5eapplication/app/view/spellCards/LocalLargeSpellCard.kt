@@ -63,7 +63,8 @@ fun LocalLargeSpellCardOverlay(
 
     globalOverlayState: GlobalOverlayState,
     onDismissRequest: () -> Unit,
-    spell : Spell_Info.SpellInfo
+    spell : Spell_Info.SpellInfo,
+    onRefresh: () -> Unit
 )
 {
     val images = SpellCardCreation(spell)
@@ -131,7 +132,7 @@ fun LocalLargeSpellCardOverlay(
                         }
 
                         if (showDialog) {
-                            DeleteOverlay(onDismissRequest = { showDialog = false })
+                            DeleteOverlay(onDismissRequest = { showDialog = false }, name = spellName, onRefresh = onRefresh)
                         }
 
                         IconButton(
