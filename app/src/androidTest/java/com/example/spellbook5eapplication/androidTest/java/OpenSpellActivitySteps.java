@@ -1,29 +1,36 @@
 package com.example.spellbook5eapplication.androidTest.java;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList;
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info;
 import com.example.spellbook5eapplication.app.Utility.SpellController;
 
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class OpenSpellActivitySteps {
+    class Stepdefs {
+        private SpellList list;
+        private Spell_Info.SpellInfo actualAnswer = null;
 
-    Spell_Info.SpellInfo spell;
-    Spell_Info.SpellInfo Aid;
+        @Given("a spell list")
+        public void a_spell_list() {
+            list = SpellController.INSTANCE.getAllSpellsList();
+        }
 
-    @When("I press a spell")
-    public void I_press_a_spell(){
-        SpellList spells = SpellController.INSTANCE.getAllSpellsList();
-        spell = spells.getSpellInfoList().get(0);
-        Aid = spells.getSpellInfoList().get(0);
-    }
+        @When("I open it")
+        public void I_open_it() {
+            actualAnswer = list.getSpellInfoList().get(0);
+        }
 
-    @Then("I should see spell info")
-    public void I_should_see_spell_info(){
-        assertEquals(spell, Aid);
-    }
+        @Then("I should be told {string}")
+        public void i_should_be_told() {
+            assertNotNull(actualAnswer);
+            //assertEquals(!null, actualAnswer);
+            //assertEquals(expectedAnswer, actualAnswer);
+        }
+
 
 }
