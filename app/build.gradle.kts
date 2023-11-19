@@ -17,6 +17,9 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+
+            testApplicationId = "com.example.bdd.test"
+            testInstrumentationRunner = "com.example.bdd.test.Intrumentation"
         }
     }
 
@@ -81,4 +84,16 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation( "info.cukes:cucumber-android:1.2.5@jar")
+    androidTestImplementation( "info.cukes:cucumber-picocontainer:1.2.4")
+    androidTestImplementation("com.android.support.test.rules:1.0.2")
+    androidTestImplementation("com.android.support.test.runner:1.0.2")
+    androidTestImplementation("androidx.test.espresso:espresso-web:3.5.1")
+
 }
+
+//Cucumber
+//repositories {
+//    mavenCentral()
+//}
