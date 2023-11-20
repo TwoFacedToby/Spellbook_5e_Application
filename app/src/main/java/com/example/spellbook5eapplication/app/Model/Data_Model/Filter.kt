@@ -171,6 +171,20 @@ class Filter {
         return this.level.toList()
 
     }
+
+    fun reset(){
+        clearLevel()
+        clearClasses()
+        clearCastingTime()
+        clearComponent()
+        clearAreaOfEffect()
+        clearConcentration()
+        clearDamageType()
+        clearDuration()
+        clearRitual()
+        clearSaveReq()
+        clearSchool()
+    }
     enum class School(val value: String) {
         ABJURATION("Abjuration"),
         CONJURATION("Conjuration"),

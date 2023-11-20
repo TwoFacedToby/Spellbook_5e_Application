@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
@@ -39,13 +40,10 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 fun SearchScreen(globalOverlayState: GlobalOverlayState){
     val spellList = SpellController.getAllSpellsList()
 
-    val nullFilter : Filter? = null
-    var filter by remember { mutableStateOf(nullFilter)}
+    var filter by remember { mutableStateOf(Filter())}
+    println("Current filter: $filter")
+    println("Current filter level size: " + filter.getLevel().size)
 
-
-    //val filter = Filter()
-    //filter.setSpellName("Fire")
-    //filter.addSchool(Filter.School.ABJURATION)
     val nullSpell = Spell_Info.SpellInfo(null, "Example name", null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null, null , null, null, null, null , null, null, null, null , null, null)
     var overlaySpell by remember { mutableStateOf(nullSpell) }
 
@@ -79,10 +77,14 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                         label = "Search",
                         singleLine = true,
                         onInputChanged = {
-                                input -> println("User input: $input")
+                                input ->
+                            filter = Filter()
+                            filter.setSpellName(input)
+                            println("User input: $input")
                         },
                         modifier = Modifier
                             .size(width = 220.dp, height = 48.dp),
+                        imeAction = ImeAction.Search
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     FilterButton(
@@ -92,6 +94,7 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                         )
                     })
                 }
+
                 SpellQuery(
                     filter = filter,
                     spellList = spellList!!,
@@ -109,25 +112,6 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                         )
                     }
                 )
-                /*LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ){
-                    item { SpellCard(
-                        onFullSpellCardRequest = {
-                            globalOverlayState.showOverlay(
-                                OverlayType.LARGE_SPELLCARD,
-                            )
-                        },
-                        onAddToSpellbookRequest = {
-                            globalOverlayState.showOverlay(
-                                OverlayType.ADD_TO_SPELLBOOK,
-                            )
-
-                        },
-                        overlaySpell
-                    ) }
-                }*/
             }
             for (overlayType in globalOverlayState.getOverlayStack()) {
                 when (overlayType) {
@@ -151,7 +135,14 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                             overlayType = OverlayType.FILTER,
                             onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ){
-                            FiltersOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() }, onFilterSelected = {/* TODO */} , applyFilter = {filter = it})
+                            FiltersOverlay(
+                                onDismissRequest = { globalOverlayState.dismissOverlay() },
+                                currentfilter = filter,
+                                createNewFilter = { Filter() },
+                                updateFilterState = { newFilter ->
+                                    filter = newFilter
+                                    println("Filter updated: $filter") }
+                            )
                         }
                     }
                     else -> Unit

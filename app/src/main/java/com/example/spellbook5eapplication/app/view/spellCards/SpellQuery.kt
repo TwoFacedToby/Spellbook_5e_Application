@@ -4,8 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,13 +35,15 @@ import kotlinx.coroutines.withContext
 const val amountToLoad = 10
 const val pagination = true //Run app with pagination
 const val bottomDistance = 10 //How many spell cards from the bottom should the next 10 be loaded. (The lower it is, there more loading stops you will see, the higher it is the more spells you will load and might cause the app to be slower sometimes)
+
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun SpellQuery(
     filter: Filter?,
     spellList: SpellList,
     onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
-    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit) {
+    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit
+) {
 
     var totalSpellsToLoad = spellList.getIndexList().size
     var showing: List<Spell_Info.SpellInfo?>? by remember { mutableStateOf(emptyList()) }
@@ -63,10 +64,12 @@ fun SpellQuery(
 
                 //With Pagination
                 val loadedData = withContext(Dispatchers.IO) {
-                    SpellController.loadNextFromSpellList(amountToLoad, spellList) // Loads data in a background thread.
+                    SpellController.loadNextFromSpellList(
+                        amountToLoad,
+                        spellList
+                    ) // Loads data in a background thread.
                 }
                 showing = loadedData // Update the UI with the loaded data.
-
 
 
             }
@@ -77,7 +80,10 @@ fun SpellQuery(
             coroutineScope.launch {
                 val loadedData = withContext(Dispatchers.IO) {
                     SpellController.loadEntireSpellList(spellList) // Loads data in a background thread.
-                    SpellController.searchSpellListWithFilter(spellList, filter) // Filter data in a background thread.
+                    SpellController.searchSpellListWithFilter(
+                        spellList,
+                        filter
+                    ) // Filter data in a background thread.
                 }
                 totalSpellsToLoad = loadedData.getSpellInfoList().size
                 showing = loadedData.getSpellInfoList() // Update the UI with the filtered data.
@@ -88,87 +94,72 @@ fun SpellQuery(
 
     println("Showing: ${showing?.size}")
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(),
-        contentAlignment = Alignment.TopCenter
-    ) {
-        if (showing?.isEmpty() == true) {
-            Text(text = "Loading", fontSize = 18.sp, color = Color.White)
-        } else {
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier
-                    .padding(horizontal = 10.dp)
-                    .align(Alignment.TopCenter),
-                contentPadding = PaddingValues(bottom = 16.dp), // Add padding to the content
-                verticalArrangement = Arrangement.spacedBy(8.dp), // Adjust spacing between items
-            ) {
-                if(showing != null){
-                    items(showing!!.size) { spellIndex ->
-                        showing!![spellIndex]?.let {
-                            Box(modifier = Modifier.fillMaxWidth().padding(start = 20.dp)){//Centering is weird idk what to tell you
-                                SpellCard(
-                                    onFullSpellCardRequest = {
-                                        onFullSpellCardRequest(it)
-                                    },
-                                    onAddToSpellbookRequest = {
-                                        onAddToSpellbookRequest(it)
-                                    },
-                                    spell = it
-                                )
-                            }
-
-                        }
+    if (showing?.isEmpty() == true) {
+        Text(text = "Loading", fontSize = 18.sp, color = Color.White)
+    } else {
+        LazyColumn(
+            state = lazyListState,
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp), // Adjust spacing between items
+        ) {
+            if (showing != null) {
+                items(showing!!.size) { spellIndex ->
+                    showing!![spellIndex]?.let {
+                        SpellCard(
+                            onFullSpellCardRequest = {
+                                onFullSpellCardRequest(it)
+                            },
+                            onAddToSpellbookRequest = {
+                                onAddToSpellbookRequest(it)
+                            },
+                            spell = it
+                        )
+                    }
 
 
+                    val distance =
+                        if (bottomDistance < showing!!.size) bottomDistance else amountToLoad - 1
 
-
-                        val distance = if(bottomDistance < showing!!.size) bottomDistance else amountToLoad-1
-
-                        // Check if the user is close to the end of the list
-                        if (spellIndex == showing!!.size - distance && pagination) {
-                            // Load more data when the user is close to the end
-                            coroutineScope.launch {
-                                val loadedData : List<Spell_Info.SpellInfo?>? = withContext(Dispatchers.IO) {
+                    // Check if the user is close to the end of the list
+                    if (spellIndex == showing!!.size - distance && pagination) {
+                        // Load more data when the user is close to the end
+                        coroutineScope.launch {
+                            val loadedData: List<Spell_Info.SpellInfo?>? =
+                                withContext(Dispatchers.IO) {
                                     SpellController.loadNextFromSpellList(amountToLoad, spellList)
                                 }
-                                if (loadedData != null) {
-                                    for(spell in loadedData){
-                                        showing = showing!! + spell
-                                    }
+                            if (loadedData != null) {
+                                for (spell in loadedData) {
+                                    showing = showing!! + spell
                                 }
                             }
                         }
                     }
-                    item {
+                }
+                item {
 
-                            Box(
+                    Box(
+                        modifier = Modifier
+                            .padding(bottom = 50.dp)
+                            .background(Color.Transparent)
+                            .fillMaxWidth()
+                        //.align(Alignment.Center)
+
+                    )
+                    {
+                        if (showing!!.size < totalSpellsToLoad - 1 && filter == null) {
+                            Text(
+                                text = "Loading ${showing!!.size} / ${totalSpellsToLoad - 1}",
+                                fontSize = 18.sp,
+                                color = Color.Black,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center,
                                 modifier = Modifier
-                                    .padding(bottom = 50.dp)
-                                    .background(Color.Transparent)
                                     .fillMaxWidth()
-                                    .align(Alignment.Center)
-
                             )
-                            {
-                                if(showing!!.size < totalSpellsToLoad - 1 && filter == null) {
-                                    Text(
-                                        text = "Loading ${showing!!.size} / ${totalSpellsToLoad - 1}",
-                                        fontSize = 18.sp,
-                                        color = Color.Black,
-                                        fontWeight = FontWeight.Bold,
-                                        textAlign = TextAlign.Center,
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                    )
-                                }
-                            }
-
-
-
-
+                        }
                     }
                 }
             }
