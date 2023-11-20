@@ -7,20 +7,19 @@ import org.junit.Assert
 
 class APITest {
 
-    @Given("I have successfully loaded spells from the API")
-    fun i_have_successfully_loaded_spells_from_the_API() {
-
-
+    @Given("I am ready to make an API request")
+    fun i_am_ready_to_make_an_api_request() {
+        // Code to set up API request
     }
 
-    @When("I inspect the loaded spell data")
-    fun i_inspect_the_loaded_spell_data() {
-
+    @When("I make the API request to fetch spells")
+    fun i_make_the_api_request_to_fetch_spells() {
+        // Code to execute the API request
     }
 
-    @Then("I should see details of the spells including names and descriptions")
-    fun i_should_see_details_of_the_spells_including_names_and_descriptions() {
-
+    @Then("I should receive a valid response with spell data")
+    fun i_should_receive_a_valid_response_with_spell_data() {
+        // Code to verify the API response
     }
 
 
