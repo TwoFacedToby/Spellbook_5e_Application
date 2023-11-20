@@ -81,8 +81,9 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
-    testImplementation("io.cucumber:cucumber-java:7.14.0")
-    testImplementation("io.cucumber:cucumber-junit:7.14.0")
-    testImplementation("io.cucumber:cucumber-android:7.14.0") // for Android support
+    androidTestImplementation("io.cucumber:cucumber-java:7.14.0")
+    androidTestImplementation("io.cucumber:cucumber-junit:7.14.0")
+    androidTestImplementation("io.cucumber:cucumber-android:7.14.0")
+    androidTestImplementation("io.cucumber:cucumber-kotlin:7.14.0")
 
 }

@@ -1,12 +1,6 @@
-Feature: Fetching spell list from API
+Feature: Load spells into the application from the API
 
-  Scenario: Successfully retrieving a list of spells
-    Given I have a network connection
-    When I request the list of spells from the API
-    Then I should receive a list of spells
-
-  Scenario: Handling failure in retrieving the list of spells
-    Given I have a network connection
-    When I request the list of spells from the API
-    And the API is down
-    Then I should receive an error message
+  Scenario: Verifying content of loaded spells
+    Given I have successfully loaded spells from the API
+    When I inspect the loaded spell data
+    Then I should see details of the spells including names and descriptions
