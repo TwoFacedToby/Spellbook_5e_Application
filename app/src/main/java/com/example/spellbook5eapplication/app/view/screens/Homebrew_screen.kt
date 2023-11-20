@@ -99,6 +99,8 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
 
     var refreshState by remember { mutableStateOf(0) }
 
+    var showSpells by remember { mutableStateOf(true) }
+
 
 
     Surface(
@@ -212,7 +214,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                         LocalLargeSpellCardOverlay(
                             globalOverlayState,
                             { globalOverlayState.dismissOverlay() },
-                            overlaySpell, onRefresh = { refreshState++ }
+                            overlaySpell
                         )
                     }
 
@@ -252,8 +254,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                                 //globalOverlayState.showOverlay(
                                 //   OverlayType.ERASE_PROMPT
                                 // )
-                            }, onFilterSelected = {/* TODO */ },
-                                onRefresh = { refreshState++ })
+                            }, onFilterSelected = {/* TODO */ })
                         }
                     }
 

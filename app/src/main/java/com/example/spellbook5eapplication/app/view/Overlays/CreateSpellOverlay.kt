@@ -84,8 +84,7 @@ import com.example.spellbook5eapplication.app.viewmodel.myesRitual
 @Composable
 fun NewSpellOverlay(
     onDismissRequest: () -> Unit,
-    onFilterSelected: (MakeItem) -> Unit,
-    onRefresh: () -> Unit
+    onFilterSelected: (MakeItem) -> Unit
 ) {
 
     var showDialog by remember { mutableStateOf(false) }
@@ -449,7 +448,6 @@ fun NewSpellOverlay(
                                 level = 2 // This is hardcoded for now
                             )
                             println("Spell created: $createdSpellJson")
-                            onRefresh()
                         }
 
                         Spacer(modifier = Modifier.width(30.dp))
@@ -540,6 +538,5 @@ fun CreateButton(
 fun CreateOverlayPreview(){
     NewSpellOverlay(
         onDismissRequest = { println("Dismiss button clicked") },
-        onFilterSelected = { println("filter selected") },
-                onRefresh= { })
+        onFilterSelected = { println("filter selected") })
 }

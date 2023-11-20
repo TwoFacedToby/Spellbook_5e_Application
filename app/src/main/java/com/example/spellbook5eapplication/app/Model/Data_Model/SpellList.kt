@@ -2,9 +2,9 @@ package com.example.spellbook5eapplication.app.Model.Data_Model
 
 class SpellList {
 
-    private var indexList: MutableList<String> = mutableListOf()
-    private var spellInfoList: MutableList<Spell_Info.SpellInfo> = mutableListOf()
-    private var loaded = 0
+    private var indexList: List<String> = emptyList()
+    private var spellInfoList: List<Spell_Info.SpellInfo> = emptyList()
+    private var loaded = 0;
 
     fun getLoaded(): Int {
         return loaded
@@ -14,19 +14,23 @@ class SpellList {
         this.loaded = loaded
     }
 
+
     fun setIndexList(names: List<String>) {
-        indexList = names.toMutableList()
+        indexList = names
     }
 
-    fun getIndexList(): MutableList<String> { // Change return type to MutableList
+
+    fun getIndexList(): List<String> {
         return indexList
     }
 
     fun setSpellInfoList(spellInfo: List<Spell_Info.SpellInfo>) {
-        spellInfoList = spellInfo.toMutableList()
+        spellInfoList = spellInfo
     }
 
-    fun getSpellInfoList(): MutableList<Spell_Info.SpellInfo> { // Change return type to MutableList
+
+
+    fun getSpellInfoList(): List<Spell_Info.SpellInfo> {
         return spellInfoList
     }
      /*

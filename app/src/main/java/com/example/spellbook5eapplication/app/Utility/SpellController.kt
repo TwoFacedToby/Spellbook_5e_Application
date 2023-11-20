@@ -346,7 +346,7 @@ object SpellController {
             try {
                 val directory = File(appContext.filesDir, "HomeBrews")
                 if (directory.exists()) {
-                    val file = File(directory, "$name.json")
+                    val file = File(directory, "HB_$name.json")
                     if (file.exists()) {
                         file.delete()
                         println("Spell deleted: $name")
@@ -366,6 +366,8 @@ object SpellController {
         val spells = SpellList()
         val directoryPath = "/data/user/0/com.example.spellbook5eapplication/files/HomeBrews/"
         val directory = File(directoryPath)
+        var tempList = spells.getIndexList().toMutableList()
+        var list = mutableListOf<Spell_Info.SpellInfo>()
 
         if (directory.exists() && directory.isDirectory) {
             val files = directory.listFiles { file -> file.isFile && file.extension == "json" }
@@ -375,47 +377,22 @@ object SpellController {
                         val json = file.readText()
                         val spell = jsonToSpell.jsonToSpell(json)
                         if (spell != null) {
-                            spell.index?.let { spells.getIndexList().add(it) }
-                            spells.getSpellInfoList().add(spell)
+                            tempList.add(spell.index!!)
+                            list.add(spell)
                         }
                         println("JSON read successfully from ${file.absolutePath}")
                     } catch (e: Exception) {
                         println("Error reading JSON file ${file.absolutePath}: ${e.message}")
                     }
                 }
+                spells.setIndexList(tempList.toList())
+                spells.setSpellInfoList(list)
             }
         } else {
             println("Directory does not exist: $directoryPath")
         }
 
         return spells
-
-        /*
-        val spells = SpellList()
-        var list: SpellList? = null
-        val directoryPath = "/data/user/0/com.example.spellbook5eapplication/files/HomeBrews/"
-        val directory = File(directoryPath)
-
-        if (directory.exists() && directory.isDirectory) {
-            val files = directory.listFiles { file -> file.isFile && file.extension == "json" }
-            if (files != null) {
-                for (file in files) {
-                    try {
-                        val json = file.readText()
-                        list = spells
-                        //list = jsonToSpell.jsonToSpellList(json)
-                        println("JSON read successfully from ${file.absolutePath}")
-                    } catch (e: Exception) {
-                        println("Error reading JSON file ${file.absolutePath}: ${e.message}")
-                    }
-                }
-            }
-        } else {
-            println("Directory does not exist: $directoryPath")
-        }
-
-        return list
-         */
     }
-
 }
+
