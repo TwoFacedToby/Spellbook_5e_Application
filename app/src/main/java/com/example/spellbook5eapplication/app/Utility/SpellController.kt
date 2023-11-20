@@ -280,12 +280,12 @@ object SpellController {
      */
     suspend fun getJson(index: String): JSON? {
 
-        val inList = isStringInList(localList, index)
+        val inList = isStringInList(getAllSpellsList()!!.getIndexList(), index)
         println(inList)
         println(localList)
         println(index)
-        val json : JSON
-
+        var json : JSON
+        var boolseye : Boolean = false
         if (inList) {
             val jsonString = getJsonIfStringInList(
                 index,
@@ -298,11 +298,13 @@ object SpellController {
             }
 
         }
+        else boolseye = true
         val jsonString = api.getSpellFromApiWithRetry(index, 100)
         //Test for saving every spell
         if(jsonString != null) {
             saveJsonToFile(jsonString, "IndividualSpells", index+".json")
             json = JSON(jsonString, "api")
+            if(boolseye) json = JSON(jsonString, "debug")
             return json
         }
 

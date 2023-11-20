@@ -48,6 +48,7 @@ fun SpellCard(
     var cardColor = R.color.spellcard_color
     if(spell.patron == "api") cardColor = R.color.red_button
     else if(spell.patron == "local") cardColor = R.color.green_button
+    else if(spell.patron == "debug") cardColor = androidx.appcompat.R.color.material_blue_grey_800
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
