@@ -157,6 +157,9 @@ class Filter {
     fun getIsConcentration(): List<Boolean> {
         return this.concentration.toList()
     }
+    fun getSaveReq() : List<SaveReq> {
+        return saveReq.toList()
+    }
     fun addLevel(level : Int){
         if (!this.level.contains(level)) this.level.add(level)
     }
@@ -184,6 +187,22 @@ class Filter {
         clearRitual()
         clearSaveReq()
         clearSchool()
+    }
+    fun count() : Int{
+        var amount = 0
+        amount += getLevel().size
+        amount += getClasses().size
+        amount += getCastingTime().size
+        amount += getComponent().size
+        amount += getAreaOfEffect().size
+        amount += getIsConcentration().size
+        amount += getDamageType().size
+        amount += getDuration().size
+        amount += getIsRitual().size
+        amount += getSaveReq().size
+        amount += getDuration().size
+        if(getSpellName() != "") amount++
+        return amount
     }
     enum class School(val value: String) {
         ABJURATION("Abjuration"),
