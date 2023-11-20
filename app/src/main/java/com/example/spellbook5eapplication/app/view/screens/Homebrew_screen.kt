@@ -97,14 +97,6 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
     )
     var overlaySpell by remember { mutableStateOf(nullSpell) }
 
-    var showSpells by remember { mutableStateOf(true) }
-
-    fun refresh(){
-        showSpells = false
-        showSpells = true
-    }
-
-
 
     Surface(
         modifier = Modifier
@@ -167,7 +159,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                             OverlayType.ADD_TO_SPELLBOOK,
                         )
                     }
-                )}
+                )
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -191,6 +183,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                             )
                         })
                 }
+            }
 
                 /*LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -250,11 +243,11 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                         CustomOverlay(
                             globalOverlayState = globalOverlayState,
                             overlayType = OverlayType.MAKE_SPELL,
-                            onDismissRequest = { globalOverlayState.dismissOverlay(); spellList = SpellController.retrieveHomeBrew() }
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ) {
                             NewSpellOverlay(onDismissRequest = {
-                                globalOverlayState.dismissOverlay();
-                                refresh()
+                                globalOverlayState.dismissOverlay(); spellList = SpellController.retrieveHomeBrew()
+
 
                                 //globalOverlayState.showOverlay(
                                 //   OverlayType.ERASE_PROMPT
