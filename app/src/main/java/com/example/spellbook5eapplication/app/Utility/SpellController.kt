@@ -34,7 +34,12 @@ object SpellController {
     private val api = API()
     private val jsonToSpell = JSON_to_Spell()
     private val search = Search()
-    private val localList = extractIndexListFromFile("LocalJSONData/spells.json")
+    private var localList = emptyList<String>()
+
+    fun getLocalList() : List<String>{
+        if(localList.isEmpty()) localList = extractIndexListFromFile("LocalJSONData/spells.json")
+        return localList
+    }
 
     /**@author Tobias s224271
      * @param spellName The index of the spell, that can be called to the api.
@@ -88,9 +93,9 @@ object SpellController {
                     list = jsonToSpell.jsonToSpellList(json)
                 }
                 else{
-                    if(!localList.isNullOrEmpty()){
+                    if(!getLocalList().isNullOrEmpty()){
                         val spellList = SpellList()
-                        spellList.setIndexList(localList)
+                        spellList.setIndexList(getLocalList())
                         list = spellList
                     }
                 }
@@ -282,7 +287,7 @@ object SpellController {
 
         val inList = isStringInList(getAllSpellsList()!!.getIndexList(), index)
         println(inList)
-        println(localList)
+        println(getLocalList())
         println(index)
         var json : JSON
         var boolseye : Boolean = false
