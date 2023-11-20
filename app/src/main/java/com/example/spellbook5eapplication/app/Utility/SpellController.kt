@@ -337,7 +337,7 @@ object SpellController {
     }
 
     fun saveHomeJSON(json: String, name: String) {
-        saveJsonToFile(json, "HomeBrews", name + ".json")
+        saveJsonToFile(json, "HomeBrews", "HB_" + name + ".json")
     }
 
     fun deleteHomeBrew(name: String) {
