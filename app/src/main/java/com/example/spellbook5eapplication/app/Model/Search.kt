@@ -1,8 +1,10 @@
 package com.example.spellbook5eapplication.app.Model
 
+import androidx.compose.ui.text.toLowerCase
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import java.lang.Character.toLowerCase
 import java.util.Locale
 
 class Search {
@@ -21,7 +23,7 @@ class Search {
      */
     fun searchSpellNames(spellList : SpellList, searchString : String) : SpellList {
         val namesList = spellList.getIndexList()
-        val keywords = searchString.split("-")
+        val keywords = searchString.split(" ")
         val matches = mutableListOf<String>()
         for(name in namesList){
             for(keyword in keywords){
@@ -272,19 +274,20 @@ class Search {
         private var spell : String = ""
         private var spellInfo : Spell_Info.SpellInfo? = null
         private var name : List<String> = emptyList()
-        private var fits : Int = 0
 
         private var noFits : Int = 0
         fun get(spell : String, info : Spell_Info.SpellInfo, keywords: List<String>) : Relevance {
             this.spellInfo = info
             this.spell = spell
             this.name = spell.split("-")
+
             for(keyword in keywords){
+                if(name.contains(keyword.lowercase()) && name.size > 1) noFits -= 20
                 for(n in name){
                     for(index in keyword.indices){
 
                         if(n.length > index){
-                            if(keyword[index] == n[index]) fits++
+                            if(keyword[index] == n[index])
                             else noFits++
                         }
                         else noFits++
@@ -292,14 +295,10 @@ class Search {
                 }
 
             }
-            println("$spell -  fits: $fits   noFits: $noFits")
             return this
 
         }
 
-        fun getFits() : Int{
-            return fits
-        }
         fun getNoFits() : Int{
             return noFits
         }
