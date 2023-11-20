@@ -8,7 +8,7 @@
     import java.io.File
 
 
-    class Favourites {
+    object Favourites {
         val favouritesSpellbook = SpellController.extractIndexListFromFile("Spellbooks/Favourites.json").toMutableList()
 
         fun addFavourite(spellname : String) {
@@ -26,7 +26,7 @@
 
 
 
-        fun saveFavouritesAsSpellbook(favouriteList: List<String>){
+        fun saveFavouritesAsSpellbook(){
             SpellbookManager().saveSpellbookToFile("Favourites")
         }
     }

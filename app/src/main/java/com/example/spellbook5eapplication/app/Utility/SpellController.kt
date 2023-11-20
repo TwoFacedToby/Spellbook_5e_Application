@@ -143,16 +143,31 @@ object SpellController {
 
         val jsonString = file.bufferedReader().use { it.readText() }
         val jsonObject = JSONObject(jsonString)
-        val resultsArray = jsonObject.getJSONArray("results")
 
-        val indexList = mutableListOf<String>()
-        for (i in 0 until resultsArray.length()) {
-            val item = resultsArray.getJSONObject(i)
-            indexList.add(item.getString("index"))
+        // Check if the JSON object has the "results" key for spells
+        if (jsonObject.has("results")) {
+            val resultsArray = jsonObject.getJSONArray("results")
+            val indexList = mutableListOf<String>()
+            for (i in 0 until resultsArray.length()) {
+                val item = resultsArray.getJSONObject(i)
+                indexList.add(item.getString("index"))
+            }
+            return indexList
         }
-
-        return indexList
+        // Check if the JSON object has the "spells" key for spellbooks
+        else if (jsonObject.has("spells")) {
+            val spellsArray = jsonObject.getJSONArray("spells")
+            val spellsList = mutableListOf<String>()
+            for (i in 0 until spellsArray.length()) {
+                spellsList.add(spellsArray.getString(i))
+            }
+            return spellsList
+        } else {
+            println("Unexpected JSON format.")
+            return emptyList()
+        }
     }
+
     /**@author Kenneth s221064
      * @param list The list of indexes stored on the local device
      * @param value The value we are checking if exists

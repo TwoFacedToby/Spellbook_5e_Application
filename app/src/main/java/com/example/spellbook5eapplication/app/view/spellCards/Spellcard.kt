@@ -47,12 +47,16 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.Favourites
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun SpellCard(
     onFullSpellCardRequest: () -> Unit,
     onAddToSpellbookRequest: () -> Unit,
     spell : Spell_Info.SpellInfo)
+
 {
     val images = SpellCardCreation(spell)
 
@@ -150,7 +154,15 @@ fun SpellCard(
                         )
                     }
 
-                    IconButton(onClick = { /*TODO*/ }) {
+                    IconButton(onClick = {
+                        spell.name?.let { spellName ->
+                            Favourites.addFavourite(spellName)
+                            // Now save the updated favourites list in a co-routine to avoid freezing
+                            CoroutineScope(Dispatchers.IO).launch {
+                                Favourites.saveFavouritesAsSpellbook()
+                            }
+                        }
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.FavoriteBorder,
                             contentDescription = "Favorite button",

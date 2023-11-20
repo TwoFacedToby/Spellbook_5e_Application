@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.Favourites
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
@@ -33,6 +34,9 @@ import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistLoader, globalOverlayState: GlobalOverlayState) {
@@ -110,7 +114,7 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                         modifier = Modifier
                             .size(width = 220.dp, height = 48.dp),
                     )
-                    Spacer(modifier = Modifier.width(5.dp))
+                    Spacer(modifier = Modifier.width(2.dp))
                     FilterButton(
                         onShowFiltersRequest = {
                             globalOverlayState.showOverlay(
@@ -126,47 +130,51 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                         globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
                     },
                     onAddToSpellbookRequest = { spell ->
-                        //TODO add functiionality
-                    }
+                        // You can use the favourites instance here
+                        Favourites.addFavourite(spell.name ?: "")
+                        CoroutineScope(Dispatchers.IO).launch {
+                            Favourites.saveFavouritesAsSpellbook()
+                        }
+                    },
                 )
-            }
 
-            // Iterate through the overlay stack and handle each overlay type
-            for (overlayType in globalOverlayState.getOverlayStack()) {
-                when (overlayType) {
-                    OverlayType.LARGE_SPELLCARD -> {
-                        LargeSpellCardOverlay(
-                            globalOverlayState,
-                            { globalOverlayState.dismissOverlay() },
-                            overlaySpell
-                        )
-                    }
-
-                    OverlayType.ADD_TO_SPELLBOOK -> {
-                        CustomOverlay(
-                            globalOverlayState = globalOverlayState,
-                            overlayType = OverlayType.ADD_TO_SPELLBOOK,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
-                        ) {
-                            AddToSpellBookOverlay(
-                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                // Iterate through the overlay stack and handle each overlay type
+                for (overlayType in globalOverlayState.getOverlayStack()) {
+                    when (overlayType) {
+                        OverlayType.LARGE_SPELLCARD -> {
+                            LargeSpellCardOverlay(
+                                globalOverlayState,
+                                { globalOverlayState.dismissOverlay() },
+                                overlaySpell
                             )
                         }
-                    }
 
-                    OverlayType.FILTER -> {
-                        CustomOverlay(
-                            globalOverlayState = globalOverlayState,
-                            overlayType = OverlayType.FILTER,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
-                        ) {
-                            FiltersOverlay(
-                                onDismissRequest = { globalOverlayState.dismissOverlay() },
-                                onFilterSelected = {/* TODO */ })
+                        OverlayType.ADD_TO_SPELLBOOK -> {
+                            CustomOverlay(
+                                globalOverlayState = globalOverlayState,
+                                overlayType = OverlayType.ADD_TO_SPELLBOOK,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            ) {
+                                AddToSpellBookOverlay(
+                                    onDismissRequest = { globalOverlayState.dismissOverlay() }
+                                )
+                            }
                         }
-                    }
 
-                    else -> Unit
+                        OverlayType.FILTER -> {
+                            CustomOverlay(
+                                globalOverlayState = globalOverlayState,
+                                overlayType = OverlayType.FILTER,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            ) {
+                                FiltersOverlay(
+                                    onDismissRequest = { globalOverlayState.dismissOverlay() },
+                                    onFilterSelected = {/* TODO */ })
+                            }
+                        }
+
+                        else -> Unit
+                    }
                 }
             }
         }

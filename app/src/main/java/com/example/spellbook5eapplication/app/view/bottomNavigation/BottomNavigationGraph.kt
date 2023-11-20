@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.spellbook5eapplication.app.Model.Favourites
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.screens.HomebrewScreen
@@ -17,7 +18,7 @@ fun BottomNavigationGraph(
     navController: NavHostController,
     globalOverlayState: GlobalOverlayState,
     spellController: SpellController,
-    spellListLoader: SpelllistLoader
+    spellListLoader: SpelllistLoader,
 ) {
     NavHost(navController = navController, startDestination = Screens.Search.route){
         composable(route = Screens.Search.route){
