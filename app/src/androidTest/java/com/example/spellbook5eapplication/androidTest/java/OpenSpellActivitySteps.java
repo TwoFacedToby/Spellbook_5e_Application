@@ -25,8 +25,8 @@ import cucumber.api.java.en.When;
             actualAnswer = list.getSpellInfoList().get(0);
         }
 
-        @Then("I should be told {string}")
-        public void i_should_be_told() {
+        @Then("I should have at least one spell")
+        public void I_should_have_at_least_one_spell() {
             assertNotNull(actualAnswer);
             //assertEquals(!null, actualAnswer);
             //assertEquals(expectedAnswer, actualAnswer);
