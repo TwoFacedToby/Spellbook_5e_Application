@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Divider
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -69,13 +72,13 @@ fun SpellQuery(
     }
     else{
 
-        var totalSpellsToLoad = spellList.getIndexList().size
-        var showing: List<Spell_Info.SpellInfo?>? by remember { mutableStateOf(emptyList()) }
+    var totalSpellsToLoad = spellList.getIndexList().size
+    var showing: List<Spell_Info.SpellInfo?>? by remember { mutableStateOf(emptyList()) }
 
 
-        val lazyListState = rememberLazyListState()
+    val lazyListState = rememberLazyListState()
 
-        val coroutineScope = rememberCoroutineScope() // Create a coroutine scope
+    val coroutineScope = rememberCoroutineScope() // Create a coroutine scope
 
         LaunchedEffect(filter) {
             // You can check if the data is already loaded, and if not, load it asynchronously.
@@ -83,8 +86,8 @@ fun SpellQuery(
                 // Display a loading indicator or placeholder while loading.
                 showing = emptyList() // Show loading indicator or placeholder.
 
-                // Call withContext within the coroutine scope
-                coroutineScope.launch {
+            // Call withContext within the coroutine scope
+            coroutineScope.launch {
 
                     //With Pagination
                     val loadedData = withContext(Dispatchers.IO) {
@@ -190,5 +193,4 @@ fun SpellQuery(
             }
         }
     }
-
 }
