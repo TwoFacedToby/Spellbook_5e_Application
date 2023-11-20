@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -102,8 +103,8 @@ if(maxSize){
         .fillMaxHeight()}
     else{
         modifierUsed = Modifier
-    .fillMaxWidth()
-    .height(500.dp)}
+            .fillMaxWidth()
+            .height(500.dp)}
 
     Box(
         modifier = modifierUsed,
@@ -125,7 +126,9 @@ if(maxSize){
                 if(showing != null){
                     items(showing!!.size) { spellIndex ->
                         showing!![spellIndex]?.let {
-                            Box(modifier = Modifier.fillMaxWidth().padding(start = 20.dp)){//Centering is weird idk what to tell you
+                            Box(modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 20.dp)){//Centering is weird idk what to tell you
                                 SpellCard(
                                     onFullSpellCardRequest = {
                                         onFullSpellCardRequest(it)

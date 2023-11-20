@@ -55,7 +55,7 @@ import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 @Composable
 fun BrewScreen(globalOverlayState: GlobalOverlayState) {
     //val spellList = SpellController.getAllSpellsList()
-    val spellList = SpellController.retrieveHomeBrew()
+    var spellList = SpellController.retrieveHomeBrew()
 
     val filter = null
     //val filter = Filter()
@@ -97,9 +97,12 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
     )
     var overlaySpell by remember { mutableStateOf(nullSpell) }
 
-    var refreshState by remember { mutableStateOf(0) }
-
     var showSpells by remember { mutableStateOf(true) }
+
+    fun refresh(){
+        showSpells = false
+        showSpells = true
+    }
 
 
 
@@ -145,6 +148,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                         })
                 }
 
+
                 HomeQuery(
                     filter = filter,
                     spellList = spellList!!,
@@ -163,7 +167,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                             OverlayType.ADD_TO_SPELLBOOK,
                         )
                     }
-                )
+                )}
 
                 Spacer(modifier = Modifier.height(5.dp))
 
@@ -213,7 +217,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                     OverlayType.LOCAL_LARGE_SPELLCARD -> {
                         LocalLargeSpellCardOverlay(
                             globalOverlayState,
-                            { globalOverlayState.dismissOverlay() },
+                            { globalOverlayState.dismissOverlay(); spellList = SpellController.retrieveHomeBrew() },
                             overlaySpell
                         )
                     }
@@ -246,10 +250,11 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                         CustomOverlay(
                             globalOverlayState = globalOverlayState,
                             overlayType = OverlayType.MAKE_SPELL,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            onDismissRequest = { globalOverlayState.dismissOverlay(); spellList = SpellController.retrieveHomeBrew() }
                         ) {
                             NewSpellOverlay(onDismissRequest = {
-                                globalOverlayState.dismissOverlay()
+                                globalOverlayState.dismissOverlay();
+                                refresh()
 
                                 //globalOverlayState.showOverlay(
                                 //   OverlayType.ERASE_PROMPT
@@ -264,7 +269,9 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
             }
         }
     }
-}
+
+
+
 
     // old
     /*
