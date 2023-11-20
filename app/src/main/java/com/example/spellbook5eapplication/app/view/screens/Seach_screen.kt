@@ -36,7 +36,8 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 @Composable
 fun SearchScreen(globalOverlayState: GlobalOverlayState){
-    val spellList = SpellController.getAllSpellsList()
+    val wholeSpellList = SpellController.getAllSpellsList();
+    var spellList by remember { mutableStateOf(wholeSpellList?.getCopy())}
 
     val filter = null
     //val filter = Filter()

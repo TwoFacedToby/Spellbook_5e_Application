@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.Model
 
+import com.example.spellbook5eapplication.app.Model.Data_Model.JSON
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.google.gson.Gson
@@ -7,14 +8,15 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 
 class JSON_to_Spell {
-    fun jsonToSpell(json : String) : Spell_Info.SpellInfo? {
+    fun jsonToSpell(json : JSON) : Spell_Info.SpellInfo? {
         val gson = Gson()
-        val spell = gson.fromJson(json, Spell_Info.SpellInfo::class.java)
+        val spell = gson.fromJson(json.getJSONString(), Spell_Info.SpellInfo::class.java)
         if(spell.description?.isEmpty() != false) return null
-        spell.url = json
+        spell.url = json.getJSONString()
+        spell.patron = json.getType()
         return spell
     }
-    fun jsonToSpellList(json : String) : SpellList?{
+    fun jsonToSpellList(json : String) : SpellList {
         val spells = SpellList()
         spells.setIndexList(extractIndexesFromJson(json))
         return spells

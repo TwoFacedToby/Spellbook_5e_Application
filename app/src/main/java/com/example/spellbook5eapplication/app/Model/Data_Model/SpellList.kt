@@ -47,4 +47,19 @@ class SpellList {
         println("Printed ${spellInfoList.size} spells")
 
     }
+    fun getCopy() : SpellList{
+        val copy = SpellList();
+        copy.loaded = loaded;
+        val indexes = emptyList<String>().toMutableList()
+        val spellInfos = emptyList<Spell_Info.SpellInfo>().toMutableList()
+        for(spell in indexList){
+            indexes.add(spell)
+        }
+        for(spell in spellInfoList){
+            spellInfos.add(spell)
+        }
+        copy.setIndexList(indexes)
+        copy.setSpellInfoList(spellInfos)
+        return copy;
+    }
 }
