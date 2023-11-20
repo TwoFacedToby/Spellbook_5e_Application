@@ -1,0 +1,98 @@
+apply plugin: 'com.android.application'
+apply plugin: 'jacoco'
+apply plugin: "kotlin-android"
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+
+ext {
+    composeCompilerVersion = '1.5.3'
+    composeVersion = '1.5.1'
+    composeMaterialVersion = composeVersion
+}
+
+
+// ==================================================================
+// Android configuration
+// ==================================================================
+
+addAndroidConfig()
+
+android {
+
+    namespace = "cucumber.cukeulator"
+
+    defaultConfig {
+        minSdkVersion 21
+        multiDexEnabled true
+        applicationId "cucumber.cukeulator"
+        testApplicationId "cucumber.cukeulator.test"
+        testInstrumentationRunner "cucumber.cukeulator.test.CukeulatorAndroidJUnitRunner"
+        //testInstrumentationRunnerArguments = [
+        // cucumberUseAndroidJUnitRunner: getProperty("cucumberUseAndroidJUnitRunner"),
+        // uncomment this to clear app data before each test when running with orchestrator
+        // clearPackageData: 'true'
+        //]
+    }
+
+    buildFeatures {
+        // Enables Jetpack Compose for this module
+        compose true
+        viewBinding = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion composeCompilerVersion
+    }
+
+    compileOptions {
+        // Flag to enable support for the new language APIs
+        coreLibraryDesugaringEnabled true
+    }
+
+    packagingOptions {
+        exclude 'LICENSE.txt'
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+
+    testOptions {
+        animationsDisabled findProperty("disableAnimations") == "true"
+//        uncomment this to run tests with orchestrator
+//        execution 'ANDROIDX_TEST_ORCHESTRATOR'
+    }
+
+}
+
+// ==================================================================
+// Project dependencies
+// ==================================================================
+
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.activity:activity-compose:1.7.2'
+    implementation "com.google.accompanist:accompanist-themeadapter-appcompat:0.28.0"
+    implementation "androidx.compose.ui:ui-tooling:$composeVersion"
+    implementation "androidx.compose.runtime:runtime:$composeVersion"
+    implementation "androidx.compose.material:material:$composeMaterialVersion"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:core:1.5.0'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeVersion"
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
+
+    androidTestUtil 'androidx.test:orchestrator:1.4.2'
+
+    androidTestImplementation project(":cucumber-android")
+    androidTestImplementation project(":cucumber-android-hilt")
+
+    //desugaring
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"
+
+}
