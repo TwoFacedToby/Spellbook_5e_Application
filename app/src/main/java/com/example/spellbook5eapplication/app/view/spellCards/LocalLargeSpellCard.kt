@@ -131,7 +131,7 @@ fun LocalLargeSpellCardOverlay(
                         }
 
                         if (showDialog) {
-                            DeleteOverlay(onDismissRequest = { showDialog = false }, name = spellName)
+                            DeleteOverlay(onDismissRequest = { showDialog = false }, name = spellName, closeSpell = {onDismissRequest()})
                         }
 
                         IconButton(

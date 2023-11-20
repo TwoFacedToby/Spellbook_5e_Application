@@ -44,7 +44,7 @@ import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import kotlinx.coroutines.launch
 
 @Composable
-fun DeleteOverlay(onDismissRequest: () -> Unit, name: String) {
+fun DeleteOverlay(onDismissRequest: () -> Unit, name: String, closeSpell: () -> Unit) {
     Dialog(
         onDismissRequest = { /*TODO*/ }
     )
@@ -104,6 +104,7 @@ fun DeleteOverlay(onDismissRequest: () -> Unit, name: String) {
                         SpellController.deleteHomeBrew(name = name)
                         println("Button delete clicked")
                         onDismissRequest()
+                        closeSpell()
                     }
                 }
             }
@@ -119,5 +120,6 @@ fun PreviewLocalSpellCard() {
     val DismisRequest = null;
 
     DeleteOverlay(
-        onDismissRequest = { DismisRequest }, name = "")
+        onDismissRequest = { DismisRequest }, name = "",
+        closeSpell = {null})
 }

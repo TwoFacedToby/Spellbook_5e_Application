@@ -448,6 +448,7 @@ fun NewSpellOverlay(
                                 level = 2 // This is hardcoded for now
                             )
                             println("Spell created: $createdSpellJson")
+                            onDismissRequest()
                         }
 
                         Spacer(modifier = Modifier.width(30.dp))
