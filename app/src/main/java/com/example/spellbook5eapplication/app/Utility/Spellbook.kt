@@ -1,13 +1,20 @@
 package com.example.spellbook5eapplication.app.Model
 
+import com.example.spellbook5eapplication.app.Utility.SpellbookManager
+
 class Spellbook(var spellbookName: String) {
     val spells: MutableList<String> = mutableListOf()
 
-    fun addSpell(spellName: String) {
-        spells.add(spellName)
+    fun addSpellToFavourites(spellName: String) {
+        if (!spells.contains(spellName)) {
+            spells.add(spellName)
+        }
     }
+
+
 
     fun removeSpell(spellName: String) {
         spells.remove(spellName)
     }
+
 }

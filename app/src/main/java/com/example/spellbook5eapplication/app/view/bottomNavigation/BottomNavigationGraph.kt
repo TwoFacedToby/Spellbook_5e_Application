@@ -1,6 +1,7 @@
 package com.example.spellbook5eapplication.app.view.bottomNavigation
 
 import FavoriteScreen
+import SpellbooksScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,7 +11,6 @@ import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.screens.HomebrewScreen
 import com.example.spellbook5eapplication.app.view.screens.SearchScreen
-import com.example.spellbook5eapplication.app.view.screens.SpellbooksScreen
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 
 @Composable
@@ -28,7 +28,7 @@ fun BottomNavigationGraph(
             FavoriteScreen(spellController, spellListLoader, globalOverlayState)
         }
         composable(route = Screens.Spellbooks.route){
-            SpellbooksScreen()
+            SpellbooksScreen(spellController, spellListLoader, globalOverlayState)
         }
         composable(route = Screens.Homebrew.route){
             HomebrewScreen()

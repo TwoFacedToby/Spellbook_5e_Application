@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.Card
@@ -30,6 +31,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,6 +54,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Favourites
+import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
@@ -153,18 +160,35 @@ fun SpellCard(
                             modifier = Modifier.size(35.dp)
                         )
                     }
-
+                    val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
+                    var favouriteImage by remember { mutableStateOf(defaultFavouriteImage) }
+                    var isFavourite = SpellbookManager.getSpellbook("Favourites")?.spells?.contains(spell.index)
                     IconButton(onClick = {
-                        spell.name?.let { spellName ->
-                            Favourites.addFavourite(spellName)
-                            // Now save the updated favourites list in a co-routine to avoid freezing
+                        spell.index?.let { spellIndex ->
+                            val favouritesSpellbook = SpellbookManager.getSpellbook("Favourites")
+                            if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
+                                // Remove spell from favorites
+                                favouritesSpellbook.removeSpell(spellIndex)
+                                favouriteImage = defaultFavouriteImage
+                            } else {
+                                // Add spell to favorites
+                                favouritesSpellbook?.addSpellToFavourites(spellIndex)
+                                favouriteImage = Icons.Outlined.Favorite // Change this to the filled heart icon
+                            }
+                            // Save the updated favorites list
                             CoroutineScope(Dispatchers.IO).launch {
-                                Favourites.saveFavouritesAsSpellbook()
+                                SpellbookManager.saveSpellbookToFile("Favourites")
+                                println("Favorites updated")
                             }
                         }
                     }) {
+
+                        if(SpellbookManager.getSpellbook("Favourites")?.spells?.contains(spell.index) == true)
+                        {
+                            favouriteImage = Icons.Outlined.Favorite
+                        }
                         Icon(
-                            imageVector = Icons.Outlined.FavoriteBorder,
+                            imageVector = favouriteImage,
                             contentDescription = "Favorite button",
                             tint = colorResource(id = R.color.spellcard_button),
                             modifier = Modifier.size(35.dp)

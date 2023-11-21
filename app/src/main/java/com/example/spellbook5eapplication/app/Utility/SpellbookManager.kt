@@ -6,7 +6,7 @@ import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.google.gson.Gson
 import java.io.File
 
-class SpellbookManager {
+object SpellbookManager {
     private val spellbooks: MutableList<Spellbook> = mutableListOf()
 
     fun addSpellbook(spellbook: Spellbook) {
@@ -42,6 +42,7 @@ class SpellbookManager {
 
 
     fun getAllSpellbooks(): List<Spellbook> {
+        println(spellbooks.toList())
         return spellbooks.toList()
     }
 }

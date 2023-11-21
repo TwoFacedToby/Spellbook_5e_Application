@@ -79,7 +79,7 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
 
     // Load the favourites SpellList
     val favouritesSpellList =
-        remember { spellListLoader.loadFavouritesAsSpellList(spellController) }
+        remember { spellListLoader.loadFavouritesAsSpellList() }
 
     Surface(
         modifier = Modifier
@@ -129,14 +129,12 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                         overlaySpell = spell
                         globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
                     },
-                    onAddToSpellbookRequest = { spell ->
-                        // You can use the favourites instance here
-                        Favourites.addFavourite(spell.name ?: "")
-                        CoroutineScope(Dispatchers.IO).launch {
-                            Favourites.saveFavouritesAsSpellbook()
-                        }
-                    },
-                )
+                ) { spell ->
+                    Favourites.addFavourite(spell.name ?: "")
+                    CoroutineScope(Dispatchers.IO).launch {
+                        Favourites.saveFavouritesAsSpellbook()
+                    }
+                }
 
                 // Iterate through the overlay stack and handle each overlay type
                 for (overlayType in globalOverlayState.getOverlayStack()) {

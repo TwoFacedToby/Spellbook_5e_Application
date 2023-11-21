@@ -32,12 +32,34 @@ object SpelllistLoader {
         return spellList
     }
 
+    fun loadSpellbooks() {
+        val directoryPath = "/data/data/com.example.spellbook5eapplication/files/Spellbooks"
+        val directory = File(directoryPath)
+
+        if (directory.exists() && directory.isDirectory) {
+            val files = directory.listFiles { file -> file.isFile && file.extension == "json" }
+            files?.forEach { file ->
+                try {
+                    val json = file.readText()
+                    val spellbook = Gson().fromJson(json, Spellbook::class.java)
+                    if (spellbook != null) {
+                        if (SpellbookManager.getSpellbook(spellbook.spellbookName) == null) {
+                            SpellbookManager.addSpellbook(spellbook)
+                        }
+                    }
+                } catch (e: Exception) {
+                    // Handle exceptions
+                }
+            }
+        }
+    }
+
     /**
      * Load the "Favourites" spellbook from its JSON file and convert it to a SpellList.
      * @param spellController The SpellController instance to use for loading spell details.
      * @return A SpellList containing the favourite spells.
      */
-    fun loadFavouritesAsSpellList(spellController: SpellController): SpellList {
+    fun loadFavouritesAsSpellList(): SpellList {
         val filePath =
             "/data/data/com.example.spellbook5eapplication/files/Spellbooks/Favourites.json"
         val file = File(filePath)
@@ -50,7 +72,7 @@ object SpelllistLoader {
 
                 if (favourites != null) {
                     val spellInfoList = favourites.spells.mapNotNull { spellName ->
-                        spellController.getSpellFromName(spellName)
+                        SpellController.getSpellFromName(spellName)
                     }
 
                     val spellList = SpellList()
@@ -64,7 +86,7 @@ object SpelllistLoader {
                 println("Favourites JSON file is empty.")
             }
         } else {
-            println("Favourites JSON file does not exist.")
+            SpellbookManager.addSpellbook(Spellbook("Favourites"))
         }
 
         return SpellList() // Return an empty SpellList if there were any issues

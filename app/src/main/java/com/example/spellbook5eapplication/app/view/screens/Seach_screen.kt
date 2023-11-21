@@ -96,15 +96,14 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                         globalOverlayState.showOverlay(
                             OverlayType.LARGE_SPELLCARD,
                         )
-                    },
-                    onAddToSpellbookRequest = {
-                        overlaySpell = it
-                        globalOverlayState.showOverlay(
-
-                            OverlayType.ADD_TO_SPELLBOOK,
-                        )
                     }
-                )
+                ) {
+                    overlaySpell = it
+                    globalOverlayState.showOverlay(
+
+                        OverlayType.ADD_TO_SPELLBOOK,
+                    )
+                }
                 /*LazyColumn(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
