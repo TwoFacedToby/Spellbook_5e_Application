@@ -71,14 +71,14 @@ fun SpellQuery(
         }
     }
     else{
+        var isLoading by remember { mutableStateOf(false)}
+        var totalSpellsToLoad = spellList.getIndexList().size
+        var showing: List<Spell_Info.SpellInfo?>? by remember { mutableStateOf(emptyList()) }
 
-    var totalSpellsToLoad = spellList.getIndexList().size
-    var showing: List<Spell_Info.SpellInfo?>? by remember { mutableStateOf(emptyList()) }
 
+        val lazyListState = rememberLazyListState()
 
-    val lazyListState = rememberLazyListState()
-
-    val coroutineScope = rememberCoroutineScope() // Create a coroutine scope
+        val coroutineScope = rememberCoroutineScope() // Create a coroutine scope
 
         LaunchedEffect(filter) {
             // You can check if the data is already loaded, and if not, load it asynchronously.
@@ -86,9 +86,9 @@ fun SpellQuery(
                 // Display a loading indicator or placeholder while loading.
                 showing = emptyList() // Show loading indicator or placeholder.
 
-            // Call withContext within the coroutine scope
-            coroutineScope.launch {
-
+                // Call withContext within the coroutine scope
+                coroutineScope.launch {
+                    isLoading = true;
                     //With Pagination
                     val loadedData = withContext(Dispatchers.IO) {
                         SpellController.loadNextFromSpellList(
@@ -98,13 +98,14 @@ fun SpellQuery(
                     }
                     showing = loadedData // Update the UI with the loaded data.
 
-
+                    isLoading = false
                 }
             } else if (filter.count() > 0 && spellList.getLoaded() != spellList.getIndexList().size) {
                 showing = emptyList() // Show loading indicator or placeholder.
 
                 // Call withContext within the coroutine scope
                 coroutineScope.launch {
+                    isLoading = true
                     val loadedData = withContext(Dispatchers.IO) {
                         SpellController.loadEntireSpellList(spellList) // Loads data in a background thread.
                         SpellController.searchSpellListWithFilter(
@@ -114,6 +115,7 @@ fun SpellQuery(
                     }
                     totalSpellsToLoad = loadedData.getSpellInfoList().size
                     showing = loadedData.getSpellInfoList() // Update the UI with the filtered data.
+                    isLoading = false
 
                 }
             }
@@ -122,7 +124,18 @@ fun SpellQuery(
         println("Showing: ${showing?.size}")
 
         if (showing?.isEmpty() == true) {
-            Text(text = "Loading", fontSize = 18.sp, color = Color.White)
+            if(isLoading){
+                Divider(color = Color.Transparent, modifier = Modifier.padding(top = 40.dp))
+                Text(text = "Loading", fontSize = 18.sp, color = Color.White)
+            }
+            else if(filter.count() > 0){
+                Divider(color = Color.Transparent, modifier = Modifier.padding(top = 40.dp))
+                Text(text = "Could Not Find Spells Matching Filter", fontSize = 18.sp, color = Color.White)
+            }
+            else{
+                Divider(color = Color.Transparent, modifier = Modifier.padding(top = 40.dp))
+                Text(text = "We Couldn't Find Any Spells", fontSize = 18.sp, color = Color.White)
+            }
         } else {
             LazyColumn(
                 state = lazyListState,

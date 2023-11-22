@@ -312,8 +312,8 @@ object SpellController {
             if(boolseye) json = JSON(jsonString, "debug")
             return json
         }
-
-        return null
+        else json = JSON("", "missing")
+        return json
     }
 
     /**@author Tobias s224271

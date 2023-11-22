@@ -9,6 +9,11 @@ import com.google.gson.JsonParser
 
 class JSON_to_Spell {
     fun jsonToSpell(json : JSON) : Spell_Info.SpellInfo? {
+        if(json.getType() == "missing"){
+            val nullSpell = Spell_Info.SpellInfo(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
+            nullSpell.patron = json.getType()
+            return nullSpell
+        }
         val gson = Gson()
         val spell = gson.fromJson(json.getJSONString(), Spell_Info.SpellInfo::class.java)
         if(spell.description?.isEmpty() != false) return null
