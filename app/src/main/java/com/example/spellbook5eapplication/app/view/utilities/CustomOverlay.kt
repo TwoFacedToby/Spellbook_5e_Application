@@ -88,7 +88,6 @@ fun CustomOverlay(
             ) {
                 Log.d("CustomOverlay", "Is content null?: ${content == null}") // Logging statement
                 if (content != null) {
-                    Text(text = swipeableState.currentValue.toString())
                     content()
                 } else {
                     DefaultContent(onDismissRequest)
