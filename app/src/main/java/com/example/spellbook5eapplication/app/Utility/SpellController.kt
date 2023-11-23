@@ -77,7 +77,7 @@ object SpellController {
      * inserts the list into the SpellList
      *
      */
-    fun getAllSpellsList(): SpellList? {
+    suspend fun getAllSpellsList(): SpellList? {
         var list: SpellList? = null
         val appContext = getContext() // Retrieve the context or null if it's not available
         if (appContext == null) {
@@ -86,7 +86,7 @@ object SpellController {
         }
 
 
-        runBlocking {
+
             try {
                 val json = api.getListOfSpells()
                 if (json != null) {
@@ -103,7 +103,7 @@ object SpellController {
             } catch (e: Exception) {
                 println("An error occurred: ${e.message}")
             }
-        }
+
 
         return list
     }
