@@ -35,14 +35,27 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.spellbook5eapplication.app.Utility.SpellController
+import com.example.spellbook5eapplication.app.Utility.SpellbookViewModel
+import com.example.spellbook5eapplication.app.Utility.SpellbookViewModelFactory
+import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.utilities.CreateDialog
+
+
+
 
 @Composable
 fun AddToSpellBookOverlay(
     onDismissRequest: () -> Unit,
-    listOfStrings : List<String>? = null
 ) {
+    //Initializing viewModel to make the app recompose when a new spellbook is selected.
+    val viewModel: SpellbookViewModel = viewModel(
+        factory = SpellbookViewModelFactory(SpellController, SpelllistLoader)
+    )
+
+    val spellbooks = viewModel.spellbooks
     var showDialog by remember { mutableStateOf(false) }
     Column(
         modifier = Modifier
@@ -70,16 +83,17 @@ fun AddToSpellBookOverlay(
 
         OverlayBox(
             content = {
-                if (listOfStrings != null) {
-                    items(listOfStrings) { string ->
+                if (spellbooks != null) {
+                    items(spellbooks) { string ->
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             Text(
-                                text = string,
-                                modifier = Modifier.padding(15.dp)
+                                text = string.spellbookName,
+                                modifier = Modifier.padding(15.dp),
+                                color = colorResource(id = R.color.white)
                             )
                             IconButton(
                                 onClick = { /* TODO */ }
