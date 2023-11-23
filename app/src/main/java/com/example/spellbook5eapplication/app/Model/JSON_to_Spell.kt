@@ -49,4 +49,10 @@ class JSON_to_Spell {
         return emptyList()
     }
 
+    fun spellToJson(spell : Spell_Info) : String? {
+        val gson = Gson()
+        val json = gson.toJson(spell)
+        return json
+    }
+
 }
