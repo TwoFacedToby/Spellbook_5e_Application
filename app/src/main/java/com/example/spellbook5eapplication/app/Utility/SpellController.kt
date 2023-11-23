@@ -77,7 +77,7 @@ object SpellController {
      * inserts the list into the SpellList
      *
      */
-    fun getAllSpellsList(): SpellList? {
+    suspend fun getAllSpellsList(): SpellList? {
         var list: SpellList? = null
         val appContext = getContext() // Retrieve the context or null if it's not available
         if (appContext == null) {
@@ -85,26 +85,22 @@ object SpellController {
             return null
         }
 
-
-        runBlocking {
-            try {
-                val json = api.getListOfSpells()
-                if (json != null) {
-                    saveJsonToFile(json, "LocalJSONData", "spells.json")
-                    list = jsonToSpell.jsonToSpellList(json)
-                }
-                else{
-                    if(!getLocalList().isNullOrEmpty()){
-                        val spellList = SpellList()
-                        spellList.setIndexList(getLocalList())
-                        list = spellList
-                    }
-                }
-            } catch (e: Exception) {
-                println("An error occurred: ${e.message}")
+        try {
+            val json = api.getListOfSpells()
+            if (json != null) {
+                saveJsonToFile(json, "LocalJSONData", "spells.json")
+                list = jsonToSpell.jsonToSpellList(json)
             }
+            else{
+                if(!getLocalList().isNullOrEmpty()){
+                    val spellList = SpellList()
+                    spellList.setIndexList(getLocalList())
+                    list = spellList
+                }
+            }
+        } catch (e: Exception) {
+            println("An error occurred: ${e.message}")
         }
-
         return list
     }
 

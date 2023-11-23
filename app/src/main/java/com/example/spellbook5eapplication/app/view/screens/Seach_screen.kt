@@ -30,6 +30,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
@@ -41,11 +42,14 @@ import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun SearchScreen(globalOverlayState: GlobalOverlayState){
-    val spellList = SpellController.getAllSpellsList()
-
+    val spellList : SpellList?
+    runBlocking {
+        spellList = SpellController.getAllSpellsList()
+    }
     var filter by remember { mutableStateOf(Filter())}
     println("Current filter: $filter")
     println("Current filter level size: " + filter.getLevel().size)
