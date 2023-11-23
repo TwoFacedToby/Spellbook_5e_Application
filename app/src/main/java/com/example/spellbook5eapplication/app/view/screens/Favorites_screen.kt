@@ -154,6 +154,7 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                                 onDismissRequest = { globalOverlayState.dismissOverlay() }
                             ) {
                                 AddToSpellBookOverlay(
+                                    spellInfo = nullSpell,
                                     onDismissRequest = { globalOverlayState.dismissOverlay() }
                                 )
                             }

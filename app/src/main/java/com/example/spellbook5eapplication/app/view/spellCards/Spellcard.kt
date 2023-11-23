@@ -1,15 +1,11 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -23,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
@@ -31,7 +26,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,20 +34,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
-import com.example.spellbook5eapplication.app.Model.Favourites
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -61,7 +49,7 @@ import kotlinx.coroutines.Dispatchers
 @Composable
 fun SpellCard(
     onFullSpellCardRequest: () -> Unit,
-    onAddToSpellbookRequest: () -> Unit,
+    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
     spell : Spell_Info.SpellInfo)
 
 {
@@ -152,7 +140,7 @@ fun SpellCard(
                     modifier = Modifier.padding(top = 10.dp)
                 ) {
                     IconButton(
-                        onClick = { onAddToSpellbookRequest() }) {
+                        onClick = { onAddToSpellbookRequest(spell) }) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
                             contentDescription = "Add to spellbook",
@@ -172,7 +160,7 @@ fun SpellCard(
                                 favouriteImage = defaultFavouriteImage
                             } else {
                                 // Add spell to favorites
-                                favouritesSpellbook?.addSpellToFavourites(spellIndex)
+                                favouritesSpellbook?.addSpellToSpellbook(spellIndex)
                                 favouriteImage = Icons.Outlined.Favorite // Change this to the filled heart icon
                             }
                             // Save the updated favorites list

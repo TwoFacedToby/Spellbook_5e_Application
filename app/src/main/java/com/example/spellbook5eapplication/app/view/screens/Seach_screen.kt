@@ -136,6 +136,7 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                             onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ) {
                             AddToSpellBookOverlay(
+                                spellInfo = overlaySpell,
                                 onDismissRequest = { globalOverlayState.dismissOverlay() }
                             )
                         }

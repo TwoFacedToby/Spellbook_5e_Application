@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -120,7 +119,7 @@ fun LargeSpellCardOverlay(
                                         favouriteImage = defaultFavouriteImage
                                     } else {
                                         // Add spell to favorites
-                                        favouritesSpellbook?.addSpellToFavourites(spellIndex)
+                                        favouritesSpellbook?.addSpellToSpellbook(spellIndex)
                                         favouriteImage = Icons.Outlined.Favorite // Change this to the filled heart icon
                                     }
                                     // Save the updated favorites list

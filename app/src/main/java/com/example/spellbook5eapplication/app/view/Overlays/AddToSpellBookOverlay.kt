@@ -36,27 +36,35 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
+import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.SpellbookViewModel
 import com.example.spellbook5eapplication.app.Utility.SpellbookViewModelFactory
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.utilities.CreateDialog
-
-
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.rememberCoroutineScope
 
 
 @Composable
 fun AddToSpellBookOverlay(
     onDismissRequest: () -> Unit,
+    spellInfo: Spell_Info.SpellInfo
 ) {
     //Initializing viewModel to make the app recompose when a new spellbook is selected.
     val viewModel: SpellbookViewModel = viewModel(
         factory = SpellbookViewModelFactory(SpellController, SpelllistLoader)
     )
 
+    val context = LocalContext.current
     val spellbooks = viewModel.spellbooks
     var showDialog by remember { mutableStateOf(false) }
+
+
     Column(
         modifier = Modifier
             .padding(top = 8.dp, start = 15.dp, end = 15.dp)
@@ -81,6 +89,7 @@ fun AddToSpellBookOverlay(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+
         OverlayBox(
             content = {
                 if (spellbooks != null) {
@@ -96,7 +105,21 @@ fun AddToSpellBookOverlay(
                                 color = colorResource(id = R.color.white)
                             )
                             IconButton(
-                                onClick = { /* TODO */ }
+                                onClick = { // Replace 'YourTag' with an appropriate tag for your log messages
+                                    println("Spellbook clicked: ${string.spellbookName}")
+                                    val chosenSpellBook = SpellbookManager.getSpellbook(string.spellbookName)
+                                    if (chosenSpellBook != null) {
+                                        var wasAdded = SpellbookManager.getSpellbook(chosenSpellBook.spellbookName)?.spells?.add(spellInfo.index!!)
+
+
+                                        if(wasAdded!!){
+                                            SpellbookManager.saveSpellbookToFile(chosenSpellBook.spellbookName)
+                                            Toast.makeText(context, "Added to ${chosenSpellBook.spellbookName}", Toast.LENGTH_SHORT).show()
+                                        }
+                                    }
+                                    println("Added spell ${spellInfo.index} to spellbook ${string.spellbookName}")
+                                }
+
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.Add,
@@ -126,13 +149,14 @@ fun AddToSpellBookOverlay(
             modifier = Modifier,
             color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
             onClick = { showDialog = true})
-
         if (showDialog) {
             CreateDialog(onDismissRequest = { showDialog = false })
+
         }
     }
 }
 
+/*
 @Preview
 @Composable
 fun SpellBookOverlayPreview(){
@@ -140,3 +164,5 @@ fun SpellBookOverlayPreview(){
         println("Dismiss button clicked")
     })
 }
+
+ */
