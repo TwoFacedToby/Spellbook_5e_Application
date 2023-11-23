@@ -124,6 +124,10 @@ fun NewSpellOverlay(
         )
     }
 
+
+    var selectedComponents by remember { mutableStateOf(emptyList<String>()) }
+
+
     val saveReq = remember {
         mutableStateListOf(
             mstrength, mdexterity, mconstitution, mintelligence, mwisdom, mcharisma,
@@ -279,14 +283,80 @@ fun NewSpellOverlay(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
+
+                            components.forEach { component ->
+                                val isSelected = selectedComponents.contains(component.label[0].toString())
+
+                                Button(
+                                    modifier = Modifier.size(width = 100.dp, height = 40.dp),
+                                    contentPadding = PaddingValues(1.dp),
+                                    onClick = {
+                                        selectedComponents = if (isSelected) {
+                                            selectedComponents - component.label[0].toString()
+                                        } else {
+                                            selectedComponents + component.label[0].toString()
+                                        }
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = if (isSelected) colorResource(id = R.color.selected_button)
+                                        else colorResource(id = R.color.unselected_button)
+                                    ),
+                                    border = BorderStroke(
+                                        width = 2.dp,
+                                        color = colorResource(id = R.color.border_color)
+                                    ),
+                                    shape = RoundedCornerShape(5.dp),
+                                ) {
+                                    Text(
+                                        text = component.label,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White
+                                    )
+                                }
+                            }
+
+                            /*
                             components.forEach() { components ->
+                                var isSelected = mutableStateOf(false)
+                            Button(modifier = Modifier.size(width = 100.dp, height = 40.dp),
+                                contentPadding = PaddingValues(1.dp),
+                                onClick = {
+                                    if(!isSelected.value){
+                                        comps.add(components.label[0].toString())
+                                    }
+                                    else{
+                                        comps.remove(components.label[0].toString())
+                                    }
+                                    isSelected.value = !isSelected.value
+                                },
+                                colors = ButtonDefaults.buttonColors(
+                                    containerColor = if (isSelected.value) colorResource(id = R.color.selected_button)
+                                    else colorResource(id = R.color.unselected_button)
+                                ),
+                                border = BorderStroke(
+                                    width = 2.dp,
+                                    color = colorResource(id = R.color.border_color)
+                                ),
+                                shape = RoundedCornerShape(5.dp),
+                            ) {
+                                Text(
+                                    text = components.label,
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            }
+
+                            /*
                                 CreateButton(
                                     modifier = Modifier.size(width = 100.dp, height = 40.dp),
                                     contentPaddingValues = PaddingValues(1.dp),
                                     filter = components,
                                     onFilterSelected = { onFilterSelected(components) }
                                 )
-                            }
+                                */
+                            }*/
                         }
                     }
                 }
@@ -434,13 +504,13 @@ fun NewSpellOverlay(
                                 )
                             )
                         ) {
-                            val comp: List<String> = listOf("V", "", "M")
+                            //val comp: List<String> = listOf("V", "", "M")
                             // Use the parameters that you want to pass to createSpellJson
                             val createdSpellJson = manager.createSpellJson(
                                 name = name,
                                 description = description,
                                 range = range,
-                                components = comp,
+                                components = selectedComponents,
                                 ritual = ritual[0].isSelected.value, // Assuming the first ritual option is selected or not
                                 concentration = concentration[0].isSelected.value, // Assuming the first concentration option is selected or not
                                 duration = duration,
