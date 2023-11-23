@@ -52,6 +52,7 @@ class HomeBrewManager {
             concentration,
             casting_time,
             level,
+            //The rest of the aspect are all hardcoded for now
             "ranged",
             Damage(
                 DamageType("acid", "Acid", "/api/damage-types/acid"),

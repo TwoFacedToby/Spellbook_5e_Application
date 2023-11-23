@@ -145,6 +145,7 @@ if(maxSize){
 
 
 
+/*
                         val distance = if(bottomDistanceH < showing!!.size) bottomDistanceH else amountToLoadH-1
 
                         // Check if the user is close to the end of the list
@@ -161,6 +162,7 @@ if(maxSize){
                                 }
                             }
                         }
+                        */
                     }
                     item {
 

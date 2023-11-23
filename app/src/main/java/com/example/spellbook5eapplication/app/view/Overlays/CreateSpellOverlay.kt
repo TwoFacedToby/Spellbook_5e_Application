@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -191,7 +192,8 @@ fun NewSpellOverlay(
 
                         },
                         modifier = Modifier
-                            .size(width = 220.dp, height = 48.dp), singleLine = true
+                            .size(width = 220.dp, height = 48.dp), singleLine = true,
+                        imeAction = ImeAction.Default
                     )
                 }
                 item {Spacer(modifier = Modifier.height(5.dp))}
@@ -438,7 +440,8 @@ fun NewSpellOverlay(
                         //Possible should connect this to description string
                         onInputChanged = { input -> run { range = input } },
                         modifier = Modifier
-                            .size(width = 300.dp, height = 48.dp), singleLine = true
+                            .size(width = 300.dp, height = 48.dp), singleLine = true,
+                        imeAction = ImeAction.Default
                     )
                 }
 
@@ -458,7 +461,8 @@ fun NewSpellOverlay(
                         //Possible should connect this to description string
                         onInputChanged = { input -> run { duration = input } },
                         modifier = Modifier
-                            .size(width = 300.dp, height = 48.dp), singleLine = true
+                            .size(width = 300.dp, height = 48.dp), singleLine = true,
+                        imeAction = ImeAction.Default
                     )
                 }
                 /*
@@ -499,7 +503,8 @@ fun NewSpellOverlay(
                         //Possible should connect this to description string
                         onInputChanged = { input -> run { castTime = input } },
                         modifier = Modifier
-                            .size(width = 300.dp, height = 48.dp), singleLine = true
+                            .size(width = 300.dp, height = 48.dp), singleLine = true,
+                        imeAction = ImeAction.Default
                     )
                 }
 
@@ -519,7 +524,8 @@ fun NewSpellOverlay(
                             run { description = input }
                         },
                         modifier = Modifier
-                            .size(width = 300.dp, height = 240.dp), singleLine = false
+                            .size(width = 300.dp, height = 240.dp), singleLine = false,
+                        imeAction = ImeAction.Default
                     )
                 }
 

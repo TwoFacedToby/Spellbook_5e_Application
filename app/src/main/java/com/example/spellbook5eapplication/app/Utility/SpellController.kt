@@ -8,6 +8,7 @@ import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
 import com.example.spellbook5eapplication.app.Model.Search
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.google.gson.Gson
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -351,6 +352,70 @@ object SpellController {
         return jsonToSpell.jsonToSpell(json)
     }
 
+    fun saveHomeJSON(json: String, name: String) {
+        saveJsonToFile(json, "HomeBrews", "HB_" + name + ".json")
+    }
+
+    fun deleteHomeBrew(name: String) {
+        val appContext = SpellController.getContext()
+        if (appContext != null) {
+            try {
+                val directory = File(appContext.filesDir, "HomeBrews")
+                if (directory.exists()) {
+                    val file = File(directory, "HB_$name.json")
+                    if (file.exists()) {
+                        file.delete()
+                        println("Spell deleted: $name")
+                    } else {
+                        println("Spell not found: $name")
+                    }
+                } else {
+                    println("HomeBrews directory does not exist")
+                }
+            } catch (e: Exception) {
+                println("Failed to delete spell: ${e.message}")
+            }
+        }
+    }
+
+    fun retrieveHomeBrew(): SpellList? {
+        val spells = SpellList()
+        val directoryPath = "/data/user/0/com.example.spellbook5eapplication/files/HomeBrews/"
+        val directory = File(directoryPath)
+        var tempList = spells.getIndexList().toMutableList()
+        var list = mutableListOf<Spell_Info.SpellInfo>()
+
+        if (directory.exists() && directory.isDirectory) {
+            val files = directory.listFiles { file -> file.isFile && file.extension == "json" }
+            if (files != null) {
+                for (file in files) {
+                    try {
+
+                        //NEW
+
+
+                        val jsonString = file.readText()
+                        // idk if this fix it
+                        val json = JSON(jsonString, "Spell")
+                        val spell = jsonToSpell.jsonToSpell(json)
+                        if (spell != null) {
+                            tempList.add(spell.index!!)
+                            list.add(spell)
+                        }
+                        println("JSON read successfully from ${file.absolutePath}")
+                    } catch (e: Exception) {
+                        println("Error reading JSON file ${file.absolutePath}: ${e.message}")
+                    }
+                }
+                spells.setIndexList(tempList.toList())
+                spells.setSpellInfoList(list)
+            }
+        } else {
+            println("Directory does not exist: $directoryPath")
+        }
+
+        return spells
+    }
 
 
 }

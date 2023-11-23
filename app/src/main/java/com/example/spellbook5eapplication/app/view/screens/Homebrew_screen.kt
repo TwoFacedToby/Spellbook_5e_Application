@@ -26,9 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.HomeBrewManager
 import com.example.spellbook5eapplication.app.Utility.SpellController
@@ -124,12 +126,13 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                 {
                     UserInputField(
                         label = "Search",
-                        singleLine = true,
                         onInputChanged = { input ->
                             println("User input: $input")
                         },
                         modifier = Modifier
                             .size(width = 220.dp, height = 48.dp),
+                    singleLine = true,
+                        imeAction = ImeAction.Search
                     )
                     Spacer(modifier = Modifier.width(5.dp))
                     FilterButton(
@@ -228,6 +231,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                     }
 
                     OverlayType.FILTER -> {
+                        /*
                         CustomOverlay(
                             globalOverlayState = globalOverlayState,
                             overlayType = OverlayType.FILTER,
@@ -235,8 +239,11 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                         ) {
                             FiltersOverlay(
                                 onDismissRequest = { globalOverlayState.dismissOverlay() },
-                                onFilterSelected = {/* TODO */ })
+                                currentfilter = {/* TODO */ },
+                                createNewFilter = {/* TODO */ }
+
                         }
+                        */
                     }
 
                     OverlayType.MAKE_SPELL -> {

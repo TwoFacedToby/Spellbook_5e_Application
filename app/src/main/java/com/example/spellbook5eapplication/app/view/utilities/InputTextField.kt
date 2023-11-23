@@ -46,7 +46,7 @@ fun UserInputField(
     onInputChanged: (String) -> Unit,
     modifier : Modifier,
     singleLine : Boolean,
-    imeAction: ImeAction,
+    imeAction: ImeAction
 ){
     var input by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -54,7 +54,11 @@ fun UserInputField(
 
     BasicTextField(
         value = input,
-        onValueChange = { input = it},
+        onValueChange = { input = it
+            if(!singleLine){
+                onInputChanged(it)
+            }
+                        },
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = imeAction
         ),
@@ -63,7 +67,10 @@ fun UserInputField(
                 onInputChanged(input)
                 keyboardController?.hide() // Hide the keyboard
             },
-            onDone = {/* TODO */},
+            onDone = {
+                onInputChanged(input)
+                keyboardController?.hide() // Hide the keyboard
+            },
 
         ),
         /*onValueChange = {
