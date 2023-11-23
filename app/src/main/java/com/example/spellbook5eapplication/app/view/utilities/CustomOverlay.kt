@@ -50,7 +50,6 @@ fun CustomOverlay(
     onDismissRequest: () -> Unit,
     content: @Composable (() -> Unit)? = null
 ) {
-    var isVisible = false
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val overlayHeight = (screenHeight / 5) * 4
     val swipeableState = rememberSwipeableState(initialValue = 0)
