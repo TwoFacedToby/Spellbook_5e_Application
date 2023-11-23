@@ -391,6 +391,7 @@ fun NewSpellOverlay(
                         }
                     }
                 }
+                /*
                 item {Spacer(modifier = Modifier.height(5.dp)) }
                 item {
                     Column(
@@ -420,7 +421,7 @@ fun NewSpellOverlay(
                         }
                     }
                 }
-
+                */
                 item {Spacer(modifier = Modifier.height(5.dp))}
 
                 //Range
@@ -460,12 +461,12 @@ fun NewSpellOverlay(
                             .size(width = 300.dp, height = 48.dp), singleLine = true
                     )
                 }
-
+                /*
                 item {Spacer(modifier = Modifier.height(5.dp))}
 
                 //School
                 item {Spacer(modifier = Modifier.height(5.dp))}
-                // Giving the spell a name, name is just printed at this moment
+
                 item {Text(
                     text = "School",
                     color = Color.White,
@@ -481,6 +482,7 @@ fun NewSpellOverlay(
                     )
                 }
 
+                 */
                 item {Spacer(modifier = Modifier.height(5.dp))}
 
                 //Cast time
