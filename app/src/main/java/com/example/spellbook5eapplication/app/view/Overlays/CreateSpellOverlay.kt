@@ -127,6 +127,7 @@ fun NewSpellOverlay(
 
     var selectedComponents by remember { mutableStateOf(emptyList<String>()) }
 
+    var selectedLevel by remember {mutableStateOf(0)}
 
     val saveReq = remember {
         mutableStateListOf(
@@ -208,6 +209,35 @@ fun NewSpellOverlay(
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             rowLevels.forEach { level ->
+                                val isSelected = (selectedLevel == (level.label.toInt()))
+
+                                Button(
+                                    modifier = Modifier.size(width = 55.dp, height = 55.dp),
+                                    contentPadding = PaddingValues(1.dp),
+                                    onClick = {
+                                            selectedLevel = level.label.toInt()
+                                    },
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = if (isSelected) colorResource(id = R.color.selected_button)
+                                        else colorResource(id = R.color.unselected_button)
+                                    ),
+                                    border = BorderStroke(
+                                        width = 2.dp,
+                                        color = colorResource(id = R.color.border_color)
+                                    ),
+                                    shape = RoundedCornerShape(5.dp),
+                                ) {
+                                    Text(
+                                        text = level.label,
+                                        fontSize = 14.sp,
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color.White
+                                    )
+                                }
+                            }
+
+                            /*
+                            rowLevels.forEach { level ->
                                 CreateButton(
                                     modifier = Modifier.size(55.dp),
                                     contentPaddingValues = PaddingValues(1.dp),
@@ -215,6 +245,7 @@ fun NewSpellOverlay(
                                     onFilterSelected = { onFilterSelected(level) }
                                 )
                             }
+                            */
                         }
                     }
                 }
@@ -515,7 +546,7 @@ fun NewSpellOverlay(
                                 concentration = concentration[0].isSelected.value, // Assuming the first concentration option is selected or not
                                 duration = duration,
                                 casting_time = castTime,
-                                level = 2 // This is hardcoded for now
+                                level = selectedLevel
                             )
                             println("Spell created: $createdSpellJson")
                             onDismissRequest()
