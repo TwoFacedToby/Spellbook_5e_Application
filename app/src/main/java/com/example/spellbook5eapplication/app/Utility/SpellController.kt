@@ -47,17 +47,14 @@ object SpellController {
      *
      * Starts the request for getting spell info from the API. This function might take a while to return, so make sure you run it on another thread than main.
      */
-    /*fun getSpellFromName(spellName : String) : Spell_Info.SpellInfo? {
+    fun getSpellFromName(spellName : String) : Spell_Info.SpellInfo? {
         var spell: Spell_Info.SpellInfo? = null
         val url = "https://www.dnd5eapi.co/api/spells/$spellName"
         println("Requesting spell data from URL: $url")
 
         runBlocking {
             try {
-                val deferredSpellInfo: Deferred<String?> = async(Dispatchers.IO) {
-                    api.getSpellFromApi(spellName)
-                }
-                val spellInfo: String? = deferredSpellInfo.await()
+                val spellInfo: JSON? = getJson(spellName)
                 if (spellInfo != null) {
                     spell = jsonToSpell.jsonToSpell(spellInfo)
                 } else {
@@ -69,7 +66,7 @@ object SpellController {
         }
         if(spell != null) return spell
         return null
-    }*/
+    }
     /**@author Tobias s224271
      * @return A spellList with a list of all spells.
      *
