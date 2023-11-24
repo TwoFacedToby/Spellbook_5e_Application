@@ -1,8 +1,10 @@
 package com.example.spellbook5eapplication.app.Model
 
+import androidx.compose.ui.text.toLowerCase
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import java.lang.Character.toLowerCase
 import java.util.Locale
 
 class Search {
@@ -33,7 +35,7 @@ class Search {
         }
         spellList.setIndexList(matches.toList())
         matchLists(spellList)
-        return spellList
+        return sortSpellsDueToKeywordRelevance(keywords, spellList)
     }
     /**@author Tobias s224271
      * @param spellList The list that should be matched
@@ -241,6 +243,74 @@ class Search {
 
     private fun lower(value : String?) : String? {
         return value?.lowercase(Locale.ROOT)
+    }
+
+
+    private fun sortSpellsDueToKeywordRelevance(keywords : List<String>, spellList : SpellList) : SpellList {
+        var indexes = spellList.getIndexList().toMutableList()
+        var infos = spellList.getSpellInfoList().toMutableList()
+        val relevances : MutableList<Relevance> = emptyList<Relevance>().toMutableList()
+
+        for(i in indexes.indices){
+            val relevance = Relevance()
+            relevances.add(relevance.get(indexes[i], infos[i], keywords))
+        }
+        val sorted = relevances.sortedBy { it.getNoFits() }
+
+        indexes.clear()
+        infos.clear()
+        for(item in sorted){
+            indexes.add(item.getSpell())
+            infos.add(item.getInfo()!!)
+        }
+
+        spellList.setIndexList(indexes)
+        spellList.setSpellInfoList(infos)
+
+        return spellList
+    }
+
+    class Relevance (){
+        private var spell : String = ""
+        private var spellInfo : Spell_Info.SpellInfo? = null
+        private var name : List<String> = emptyList()
+
+        private var noFits : Int = 0
+        fun get(spell : String, info : Spell_Info.SpellInfo, keywords: List<String>) : Relevance {
+            this.spellInfo = info
+            this.spell = spell
+            this.name = spell.split("-")
+
+            for(keyword in keywords){
+                if(name.contains(keyword.lowercase()) && name.size > 1) noFits -= 20
+                for(n in name){
+                    for(index in keyword.indices){
+
+                        if(n.length > index){
+                            if(keyword[index] == n[index])
+                            else noFits++
+                        }
+                        else noFits++
+                    }
+                }
+
+            }
+            return this
+
+        }
+
+        fun getNoFits() : Int{
+            return noFits
+        }
+        fun getSpell() : String{
+            return spell
+        }
+        fun getInfo() : Spell_Info.SpellInfo? {
+            return spellInfo
+        }
+
+
+
     }
 
 }

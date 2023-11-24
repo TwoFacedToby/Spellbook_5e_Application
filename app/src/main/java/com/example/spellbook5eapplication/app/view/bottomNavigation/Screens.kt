@@ -39,7 +39,7 @@ sealed class Screens(
                 Favorite.route -> Favorite.title
                 Spellbooks.route -> Spellbooks.title
                 Homebrew.route -> Homebrew.title
-                else -> "test screen"
+                else -> ""
             }
         }
     }

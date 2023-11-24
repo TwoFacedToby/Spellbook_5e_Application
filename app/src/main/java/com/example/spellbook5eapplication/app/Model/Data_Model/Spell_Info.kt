@@ -31,7 +31,7 @@ class Spell_Info {
         @SerializedName("circle") val circle: String?,
         @SerializedName("domain") val domain: String?,
         @SerializedName("eldritch_invocations") val eldritchInvocations: String?,
-        @SerializedName("patron") val patron: String?,
+        @SerializedName("patron") var patron: String?,
         @SerializedName("oaths") val oaths: String?,
         @SerializedName("sorcerous_origins") val sorcerousOrigins: String?,
         @SerializedName("otherworldly_patrons") val otherworldlyPatrons: String?
