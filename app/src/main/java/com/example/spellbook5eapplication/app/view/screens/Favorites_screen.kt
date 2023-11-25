@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,6 +24,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Favourites
 import com.example.spellbook5eapplication.app.Utility.SpellController
@@ -39,6 +41,7 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Composable
 fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistLoader, globalOverlayState: GlobalOverlayState) {
@@ -80,8 +83,16 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
     var overlaySpell by remember { mutableStateOf(nullSpell) }
 
     // Load the favourites SpellList
-    val favouritesSpellList =
-        remember { spellListLoader.loadFavouritesAsSpellList() }
+    /*val favouritesSpellList =
+        remember { spellListLoader.loadFavouritesAsSpellList() }*/
+
+    val favouritesSpellListState = remember { mutableStateOf<SpellList?>(null) }
+
+    LaunchedEffect(key1 = Unit) {
+        favouritesSpellListState.value = withContext(Dispatchers.IO) {
+            spellListLoader.loadFavouritesAsSpellList()
+        }
+    }
 
     var filter by remember { mutableStateOf(Filter())}
 
@@ -130,63 +141,75 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                             )
                         })
                 }
-                SpellQuery(
-                    filter = filter,
-                    spellList = favouritesSpellList,
-                    onFullSpellCardRequest = { spell ->
-                        overlaySpell = spell
-                        globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
-                    },
-                ) { spell ->
+                favouritesSpellListState.value?.let { favoritesSpellList ->
+                    println("SpellQuery recomposing with filter: $filter")
+                    SpellQuery(
+                        filter = filter,
+                        spellList = favoritesSpellList,
+                        onFullSpellCardRequest = { spell ->
+                            overlaySpell = spell
+                            globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+                        },
+                        onAddToSpellbookRequest = {
+                            overlaySpell = it
+                            globalOverlayState.showOverlay(
+                                OverlayType.ADD_TO_SPELLBOOK,
+                            )
+                        }
+                    )
+                }/*{ spell ->
                     Favourites.addFavourite(spell.name ?: "")
                     CoroutineScope(Dispatchers.IO).launch {
                         Favourites.saveFavouritesAsSpellbook()
                     }
-                }
+                }*/
+            }
+            // Iterate through the overlay stack and handle each overlay type
+            for (overlayType in globalOverlayState.getOverlayStack()) {
+                println("Current Overlay Type: $overlayType")
+                when (overlayType) {
+                    OverlayType.LARGE_SPELLCARD -> {
+                        println("LARGE_SPELLCARD overlay triggered")
+                        LargeSpellCardOverlay(
+                            globalOverlayState,
+                            { globalOverlayState.dismissOverlay() },
+                            overlaySpell
+                        )
+                    }
 
-                // Iterate through the overlay stack and handle each overlay type
-                for (overlayType in globalOverlayState.getOverlayStack()) {
-                    when (overlayType) {
-                        OverlayType.LARGE_SPELLCARD -> {
-                            LargeSpellCardOverlay(
-                                globalOverlayState,
-                                { globalOverlayState.dismissOverlay() },
-                                overlaySpell
+                    OverlayType.ADD_TO_SPELLBOOK -> {
+                        println("ADD_TO_SPELLBOOK overlay triggered")
+                        CustomOverlay(
+                            globalOverlayState = globalOverlayState,
+                            overlayType = OverlayType.ADD_TO_SPELLBOOK,
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                        ) {
+                            AddToSpellBookOverlay(
+                                spellInfo = overlaySpell,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
                             )
                         }
-
-                        OverlayType.ADD_TO_SPELLBOOK -> {
-                            CustomOverlay(
-                                globalOverlayState = globalOverlayState,
-                                overlayType = OverlayType.ADD_TO_SPELLBOOK,
-                                onDismissRequest = { globalOverlayState.dismissOverlay() }
-                            ) {
-                                AddToSpellBookOverlay(
-                                    spellInfo = overlaySpell,
-                                    onDismissRequest = { globalOverlayState.dismissOverlay() }
-                                )
-                            }
-                        }
-
-                        OverlayType.FILTER -> {
-                            CustomOverlay(
-                                globalOverlayState = globalOverlayState,
-                                overlayType = OverlayType.FILTER,
-                                onDismissRequest = { globalOverlayState.dismissOverlay() }
-                            ){
-                                FiltersOverlay(
-                                    onDismissRequest = { globalOverlayState.dismissOverlay() },
-                                    currentfilter = filter,
-                                    createNewFilter = { Filter() },
-                                    updateFilterState = { newFilter ->
-                                        filter = newFilter
-                                        println("Filter updated: $filter") }
-                                )
-                            }
-                        }
-
-                        else -> Unit
                     }
+
+                    OverlayType.FILTER -> {
+                        println("FILTER overlay triggered")
+                        CustomOverlay(
+                            globalOverlayState = globalOverlayState,
+                            overlayType = OverlayType.FILTER,
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                        ){
+                            FiltersOverlay(
+                                onDismissRequest = { globalOverlayState.dismissOverlay() },
+                                currentfilter = filter,
+                                createNewFilter = { Filter() },
+                                updateFilterState = { newFilter ->
+                                    filter = newFilter
+                                    println("New filter applied: $newFilter") }
+                            )
+                        }
+                    }
+
+                    else -> println("Unhandled Overlay Type: $overlayType")
                 }
             }
         }
