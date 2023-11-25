@@ -22,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -65,7 +66,8 @@ fun CreateDialog(
                     modifier = Modifier
                         .height(40.dp)
                         .width(200.dp),
-                    singleLine = true
+                    singleLine = true,
+                    imeAction = ImeAction.Done
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(modifier = Modifier.fillMaxWidth(),

@@ -12,6 +12,7 @@ class Filter {
     private val level = mutableListOf<Int>()
     private val classes = mutableListOf<Classes>()
     private val concentration  = mutableListOf<Boolean>()
+    private val saveReq = mutableListOf<SaveReq>()
 
     fun setSpellName(name : String){
         this.spellName = name
@@ -30,6 +31,18 @@ class Filter {
     }
     fun getSchool() : List<School>{
         return this.school.toList()
+    }
+
+    fun addSaveReq(saveReq : SaveReq ){
+        if(!this.saveReq.contains(saveReq)) this.saveReq.add(saveReq)
+    }
+
+    fun removeSaveReq(saveReq: SaveReq){
+        if(!this.saveReq.contains(saveReq)) this.saveReq.remove(saveReq)
+    }
+
+    fun clearSaveReq(){
+        this.saveReq.clear()
     }
     fun addCastingTime(castingTime: Casting_Time){
         if(!this.castingTime.contains(castingTime)) this.castingTime.add(castingTime)
@@ -144,6 +157,9 @@ class Filter {
     fun getIsConcentration(): List<Boolean> {
         return this.concentration.toList()
     }
+    fun getSaveReq() : List<SaveReq> {
+        return saveReq.toList()
+    }
     fun addLevel(level : Int){
         if (!this.level.contains(level)) this.level.add(level)
     }
@@ -157,6 +173,36 @@ class Filter {
     fun getLevel(): List<Int> {
         return this.level.toList()
 
+    }
+
+    fun reset(){
+        clearLevel()
+        clearClasses()
+        clearCastingTime()
+        clearComponent()
+        clearAreaOfEffect()
+        clearConcentration()
+        clearDamageType()
+        clearDuration()
+        clearRitual()
+        clearSaveReq()
+        clearSchool()
+    }
+    fun count() : Int{
+        var amount = 0
+        amount += getLevel().size
+        amount += getClasses().size
+        amount += getCastingTime().size
+        amount += getComponent().size
+        amount += getAreaOfEffect().size
+        amount += getIsConcentration().size
+        amount += getDamageType().size
+        amount += getDuration().size
+        amount += getIsRitual().size
+        amount += getSaveReq().size
+        amount += getDuration().size
+        if(getSpellName() != "") amount++
+        return amount
     }
     enum class School(val value: String) {
         ABJURATION("Abjuration"),
@@ -234,5 +280,14 @@ class Filter {
         SORCERER("Sorcerer"),
         WARLOCK("Warlock"),
         WIZARD("Wizard")
+    }
+
+    enum class SaveReq(val value: String){
+        STRENGTH("Strenght"),
+        CONSTITUTION("Constitution"),
+        DEXTERITY("Dexterity"),
+        WISDOM("Wisdom"),
+        INTELLIGENCE("Intelligence"),
+        CHARISMA("Charisma")
     }
 }

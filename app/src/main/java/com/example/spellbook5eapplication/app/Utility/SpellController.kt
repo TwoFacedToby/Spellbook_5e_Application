@@ -3,10 +3,12 @@ package com.example.spellbook5eapplication.app.Utility
 import android.content.Context
 import com.example.spellbook5eapplication.app.Model.API
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.JSON
 import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
 import com.example.spellbook5eapplication.app.Model.Search
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.google.gson.Gson
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -25,7 +27,7 @@ object SpellController {
         context = WeakReference(appContext.applicationContext)
     }
 
-    fun getContext(): Context? {
+    private fun getContext(): Context? {
         return context?.get()
     }
 
@@ -33,7 +35,12 @@ object SpellController {
     private val api = API()
     private val jsonToSpell = JSON_to_Spell()
     private val search = Search()
-    private val localList = extractIndexListFromFile("LocalJSONData/spells.json")
+    private var localList = emptyList<String>()
+
+    fun getLocalList() : List<String>{
+        if(localList.isEmpty()) localList = extractIndexListFromFile("LocalJSONData/spells.json")
+        return localList
+    }
 
     /**@author Tobias s224271
      * @param spellName The index of the spell, that can be called to the api.
@@ -41,11 +48,8 @@ object SpellController {
      *
      * Starts the request for getting spell info from the API. This function might take a while to return, so make sure you run it on another thread than main.
      */
-    fun getSpellFromName(spellName : String) : Spell_Info.SpellInfo? {
+    /*fun getSpellFromName(spellName : String) : Spell_Info.SpellInfo? {
         var spell: Spell_Info.SpellInfo? = null
-        val url = "https://www.dnd5eapi.co/api/spells/$spellName"
-        println("Requesting spell data from URL: $url")
-
         runBlocking {
             try {
                 val deferredSpellInfo: Deferred<String?> = async(Dispatchers.IO) {
@@ -63,7 +67,7 @@ object SpellController {
         }
         if(spell != null) return spell
         return null
-    }
+    }*/
     /**@author Tobias s224271
      * @return A spellList with a list of all spells.
      *
@@ -73,7 +77,7 @@ object SpellController {
      * inserts the list into the SpellList
      *
      */
-    fun getAllSpellsList(): SpellList? {
+    suspend fun getAllSpellsList(): SpellList? {
         var list: SpellList? = null
         val appContext = getContext() // Retrieve the context or null if it's not available
         if (appContext == null) {
@@ -81,18 +85,25 @@ object SpellController {
             return null
         }
 
-        runBlocking {
+
+
             try {
                 val json = api.getListOfSpells()
                 if (json != null) {
-                    println(localList)
                     saveJsonToFile(json, "LocalJSONData", "spells.json")
                     list = jsonToSpell.jsonToSpellList(json)
+                }
+                else{
+                    if(!getLocalList().isNullOrEmpty()){
+                        val spellList = SpellList()
+                        spellList.setIndexList(getLocalList())
+                        list = spellList
+                    }
                 }
             } catch (e: Exception) {
                 println("An error occurred: ${e.message}")
             }
-        }
+
 
         return list
     }
@@ -227,7 +238,7 @@ object SpellController {
      * In a couroutineScope we ask for each spell and waits for all to be resieved before returning the list.
      *
      */
-    private suspend fun getJSONFromList(list : List<String>) : List<String?>{
+    private suspend fun getJSONFromList(list : List<String>) : List<JSON?>{
         return coroutineScope {
             list.map { spellName ->
                 async {
@@ -288,27 +299,36 @@ object SpellController {
      * [FUTURE WORK]
      * We also add the database, as another thing to try to fetch the data from, if it's a homebrew spell.
      */
-    suspend fun getJson(index: String): String? {
+    suspend fun getJson(index: String): JSON? {
 
-        val inList = isStringInList(localList, index)
+        val inList = isStringInList(getAllSpellsList()!!.getIndexList(), index)
         println(inList)
-        println(localList)
+        println(getLocalList())
         println(index)
-        var json: String? = null
-
+        var json : JSON
+        var boolseye : Boolean = false
         if (inList) {
-            json = getJsonIfStringInList(
+            val jsonString = getJsonIfStringInList(
                 index,
                 "/data/data/com.example.spellbook5eapplication/files/IndividualSpells"
             )
-            println("NO API CALL")
-        } else {
-            json = api.getSpellFromApiWithRetry(index, 100)
-            //Test for saving every spell
-            println()
-            if(json != null) saveJsonToFile(json, "IndividualSpells", index+".json")
-        }
+            if(jsonString != null){
+                json = JSON(jsonString, "local")
+                println("NO API CALL")
+                return json
+            }
 
+        }
+        else boolseye = true
+        val jsonString = api.getSpellFromApiWithRetry(index, 100)
+        //Test for saving every spell
+        if(jsonString != null) {
+            saveJsonToFile(jsonString, "IndividualSpells", index+".json")
+            json = JSON(jsonString, "api")
+            if(boolseye) json = JSON(jsonString, "debug")
+            return json
+        }
+        else json = JSON("", "missing")
         return json
     }
 
@@ -322,7 +342,7 @@ object SpellController {
      * Returns the list
      */
     private fun loadSpells(indexes: List<String>): List<Spell_Info.SpellInfo> {
-        var spellInfoJson: List<String?>
+        var spellInfoJson: List<JSON?>
         runBlocking {
             spellInfoJson = getJSONFromList(indexes)
         }
@@ -343,7 +363,7 @@ object SpellController {
      *
      * Converts using the jsonToSpell class
      */
-    fun spellInfoFromJSON(json: String): Spell_Info.SpellInfo? {
+    fun spellInfoFromJSON(json: JSON): Spell_Info.SpellInfo? {
         return jsonToSpell.jsonToSpell(json)
     }
 
@@ -361,6 +381,70 @@ object SpellController {
         }
     }
 
+    fun saveHomeJSON(json: String, name: String) {
+        saveJsonToFile(json, "HomeBrews", "HB_" + name + ".json")
+    }
+
+    fun deleteHomeBrew(name: String) {
+        val appContext = SpellController.getContext()
+        if (appContext != null) {
+            try {
+                val directory = File(appContext.filesDir, "HomeBrews")
+                if (directory.exists()) {
+                    val file = File(directory, "HB_$name.json")
+                    if (file.exists()) {
+                        file.delete()
+                        println("Spell deleted: $name")
+                    } else {
+                        println("Spell not found: $name")
+                    }
+                } else {
+                    println("HomeBrews directory does not exist")
+                }
+            } catch (e: Exception) {
+                println("Failed to delete spell: ${e.message}")
+            }
+        }
+    }
+
+    fun retrieveHomeBrew(): SpellList? {
+        val spells = SpellList()
+        val directoryPath = "/data/user/0/com.example.spellbook5eapplication/files/HomeBrews/"
+        val directory = File(directoryPath)
+        var tempList = spells.getIndexList().toMutableList()
+        var list = mutableListOf<Spell_Info.SpellInfo>()
+
+        if (directory.exists() && directory.isDirectory) {
+            val files = directory.listFiles { file -> file.isFile && file.extension == "json" }
+            if (files != null) {
+                for (file in files) {
+                    try {
+
+                        //NEW
+
+
+                        val jsonString = file.readText()
+                        // idk if this fix it
+                        val json = JSON(jsonString, "Spell")
+                        val spell = jsonToSpell.jsonToSpell(json)
+                        if (spell != null) {
+                            tempList.add(spell.index!!)
+                            list.add(spell)
+                        }
+                        println("JSON read successfully from ${file.absolutePath}")
+                    } catch (e: Exception) {
+                        println("Error reading JSON file ${file.absolutePath}: ${e.message}")
+                    }
+                }
+                spells.setIndexList(tempList.toList())
+                spells.setSpellInfoList(list)
+            }
+        } else {
+            println("Directory does not exist: $directoryPath")
+        }
+
+        return spells
+    }
 
 
 }
