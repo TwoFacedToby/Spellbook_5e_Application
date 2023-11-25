@@ -35,6 +35,7 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.updateFilterWithSearchName
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
@@ -88,8 +89,7 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                         singleLine = true,
                         onInputChanged = {
                                 input ->
-                            filter = Filter()
-                            filter.setSpellName(input)
+                            filter = updateFilterWithSearchName(filter, input)
                             println("User input: $input")
                         },
                         modifier = Modifier
