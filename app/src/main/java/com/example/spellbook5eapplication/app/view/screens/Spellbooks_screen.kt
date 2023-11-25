@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Spellbook
@@ -94,6 +95,8 @@ fun SpellbooksScreen(
     var overlaySpell by remember { mutableStateOf(nullSpell) }
     val spellList by viewModel.spellList
 
+    var filter by remember { mutableStateOf(Filter())}
+
     // State for showing the dialog
     var showDialog by remember { mutableStateOf(false) }
     // State for the new spellbook name
@@ -150,7 +153,7 @@ fun SpellbooksScreen(
                 }
 
                 SpellQuery(
-                    filter = null,
+                    filter = filter,
                     spellList = spellList,
                     onFullSpellCardRequest = { spellInfo ->
                         overlaySpell = spellInfo

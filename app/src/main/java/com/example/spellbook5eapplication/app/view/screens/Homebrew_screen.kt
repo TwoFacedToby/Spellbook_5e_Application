@@ -225,6 +225,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                             onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ) {
                             AddToSpellBookOverlay(
+                                spellInfo = overlaySpell,
                                 onDismissRequest = { globalOverlayState.dismissOverlay() }
                             )
                         }

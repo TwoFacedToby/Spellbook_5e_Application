@@ -6,15 +6,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Divider
 import androidx.compose.material.Divider
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
@@ -50,7 +50,7 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 @Composable
 fun SpellQuery(
     filter: Filter,
-    spellList: SpellList,
+    spellList: SpellList?,
     onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
     onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit
 ) {

@@ -19,8 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Favourites
 import com.example.spellbook5eapplication.app.Utility.SpellController
@@ -81,6 +83,8 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
     val favouritesSpellList =
         remember { spellListLoader.loadFavouritesAsSpellList() }
 
+    var filter by remember { mutableStateOf(Filter())}
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -108,13 +112,17 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                     UserInputField(
                         label = "Search",
                         singleLine = true,
-                        onInputChanged = { input ->
+                        onInputChanged = {
+                                input ->
+                            filter = Filter()
+                            filter.setSpellName(input)
                             println("User input: $input")
                         },
                         modifier = Modifier
                             .size(width = 220.dp, height = 48.dp),
+                        imeAction = ImeAction.Search
                     )
-                    Spacer(modifier = Modifier.width(2.dp))
+                    Spacer(modifier = Modifier.width(5.dp))
                     FilterButton(
                         onShowFiltersRequest = {
                             globalOverlayState.showOverlay(
@@ -123,7 +131,7 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                         })
                 }
                 SpellQuery(
-                    filter = null,
+                    filter = filter,
                     spellList = favouritesSpellList,
                     onFullSpellCardRequest = { spell ->
                         overlaySpell = spell
@@ -154,7 +162,7 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                                 onDismissRequest = { globalOverlayState.dismissOverlay() }
                             ) {
                                 AddToSpellBookOverlay(
-                                    spellInfo = nullSpell,
+                                    spellInfo = overlaySpell,
                                     onDismissRequest = { globalOverlayState.dismissOverlay() }
                                 )
                             }
@@ -165,10 +173,15 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                                 globalOverlayState = globalOverlayState,
                                 overlayType = OverlayType.FILTER,
                                 onDismissRequest = { globalOverlayState.dismissOverlay() }
-                            ) {
+                            ){
                                 FiltersOverlay(
                                     onDismissRequest = { globalOverlayState.dismissOverlay() },
-                                    onFilterSelected = {/* TODO */ })
+                                    currentfilter = filter,
+                                    createNewFilter = { Filter() },
+                                    updateFilterState = { newFilter ->
+                                        filter = newFilter
+                                        println("Filter updated: $filter") }
+                                )
                             }
                         }
 

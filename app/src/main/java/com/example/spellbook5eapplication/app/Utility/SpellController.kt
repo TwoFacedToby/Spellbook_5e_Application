@@ -5,7 +5,6 @@ import com.example.spellbook5eapplication.app.Model.API
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.JSON
 import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
-import com.example.spellbook5eapplication.app.Model.Search
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.google.gson.Gson
@@ -48,14 +47,11 @@ object SpellController {
      *
      * Starts the request for getting spell info from the API. This function might take a while to return, so make sure you run it on another thread than main.
      */
-    /*fun getSpellFromName(spellName : String) : Spell_Info.SpellInfo? {
+    fun getSpellFromName(spellName : String) : Spell_Info.SpellInfo? {
         var spell: Spell_Info.SpellInfo? = null
         runBlocking {
             try {
-                val deferredSpellInfo: Deferred<String?> = async(Dispatchers.IO) {
-                    api.getSpellFromApi(spellName)
-                }
-                val spellInfo: String? = deferredSpellInfo.await()
+                val spellInfo: JSON? = getJson(spellName)
                 if (spellInfo != null) {
                     spell = jsonToSpell.jsonToSpell(spellInfo)
                 } else {
@@ -67,7 +63,7 @@ object SpellController {
         }
         if(spell != null) return spell
         return null
-    }*/
+    }
     /**@author Tobias s224271
      * @return A spellList with a list of all spells.
      *

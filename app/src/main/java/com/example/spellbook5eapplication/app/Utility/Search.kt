@@ -1,4 +1,4 @@
-package com.example.spellbook5eapplication.app.Model
+package com.example.spellbook5eapplication.app.Utility
 
 import androidx.compose.ui.text.toLowerCase
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
