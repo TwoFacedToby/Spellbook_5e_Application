@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,7 +25,6 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
-import com.example.spellbook5eapplication.app.Model.Favourites
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
@@ -39,10 +37,7 @@ import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistLoader, globalOverlayState: GlobalOverlayState) {
@@ -86,16 +81,17 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
     // Load the favourites SpellList
     /*val favouritesSpellList =
         remember { spellListLoader.loadFavouritesAsSpellList() }*/
+    val emptySpellList : SpellList = SpellList()
 
-    val favouritesSpellListState = remember { mutableStateOf<SpellList?>(null) }
-
-    LaunchedEffect(key1 = Unit) {
-        favouritesSpellListState.value = withContext(Dispatchers.IO) {
-            spellListLoader.loadFavouritesAsSpellList()
-        }
+    var favouriteSpellList by remember { mutableStateOf(emptySpellList) }
+    runBlocking {
+        favouriteSpellList = spellListLoader.loadFavouritesAsSpellList()
     }
 
+
     var filter by remember { mutableStateOf(Filter())}
+    println("Current filter: $filter")
+    println("Current filter level size: " + filter.getLevel().size)
 
     Surface(
         modifier = Modifier
@@ -141,23 +137,27 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                             )
                         })
                 }
-                favouritesSpellListState.value?.let { favoritesSpellList ->
+
+                SpellQuery(
+                    filter = filter,
+                    spellList = favouriteSpellList,
+                    onFullSpellCardRequest = { spell ->
+                        overlaySpell = spell
+                        globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+                    },
+                    onAddToSpellbookRequest = {
+                        overlaySpell = it
+                        globalOverlayState.showOverlay(
+                            OverlayType.ADD_TO_SPELLBOOK,
+                        )
+                    }
+                )
+
+                /*favouritesSpellListState.value?.let { favoritesSpellList ->
                     println("SpellQuery recomposing with filter: $filter")
-                    SpellQuery(
-                        filter = filter,
-                        spellList = favoritesSpellList,
-                        onFullSpellCardRequest = { spell ->
-                            overlaySpell = spell
-                            globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
-                        },
-                        onAddToSpellbookRequest = {
-                            overlaySpell = it
-                            globalOverlayState.showOverlay(
-                                OverlayType.ADD_TO_SPELLBOOK,
-                            )
-                        }
-                    )
-                }/*{ spell ->
+
+                }*/
+            /*{ spell ->
                     Favourites.addFavourite(spell.name ?: "")
                     CoroutineScope(Dispatchers.IO).launch {
                         Favourites.saveFavouritesAsSpellbook()
