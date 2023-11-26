@@ -96,7 +96,6 @@ fun CustomOverlay(
                         .padding(5.dp),
                     contentAlignment = Alignment.TopCenter
                 ) {
-                    Log.d("CustomOverlay", "Is content null?: ${content == null}") // Logging statement
                     if (content != null) {
                         content()
                     } else {

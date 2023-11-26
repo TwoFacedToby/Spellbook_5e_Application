@@ -102,7 +102,7 @@ fun UserInputField(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(start = 5.dp),
-                    verticalAlignment = Alignment.Top
+                    verticalAlignment = Alignment.CenterVertically
                 )
                 {
                     Spacer(modifier = Modifier.width(4.dp))

@@ -478,3 +478,32 @@ fun onResetAllFiltersClicked(
         filterItem.isSelected.value = false
     }
 }
+
+fun updateFilterWithSearchName(currentFilter: Filter, searchName: String): Filter {
+    val newFilter = Filter()
+    newFilter.setSpellName(searchName)
+
+    currentFilter.getLevel().forEach{level ->
+        newFilter.addLevel(level)
+    }
+    currentFilter.getComponent().forEach{component ->
+        newFilter.addComponent(component)
+    }
+
+    currentFilter.getSaveReq().forEach { saveReq ->
+        newFilter.addSaveReq(saveReq)
+    }
+
+    currentFilter.getClasses().forEach { classes ->
+        newFilter.addClass(classes)
+    }
+    currentFilter.getIsConcentration().forEach{
+        newFilter.addConcentration(it)
+    }
+
+    currentFilter.getIsRitual().forEach{
+        newFilter.addRitual(it)
+    }
+
+    return newFilter
+}

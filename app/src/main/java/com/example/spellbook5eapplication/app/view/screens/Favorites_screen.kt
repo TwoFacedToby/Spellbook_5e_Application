@@ -23,12 +23,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
-import com.example.spellbook5eapplication.app.Model.Favourites
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.updateFilterWithSearchName
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
@@ -36,9 +37,7 @@ import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @Composable
 fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistLoader, globalOverlayState: GlobalOverlayState) {
@@ -80,10 +79,19 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
     var overlaySpell by remember { mutableStateOf(nullSpell) }
 
     // Load the favourites SpellList
-    val favouritesSpellList =
-        remember { spellListLoader.loadFavouritesAsSpellList() }
+    /*val favouritesSpellList =
+        remember { spellListLoader.loadFavouritesAsSpellList() }*/
+    val emptySpellList : SpellList = SpellList()
+
+    var favouriteSpellList by remember { mutableStateOf(emptySpellList) }
+    runBlocking {
+        favouriteSpellList = spellListLoader.loadFavouritesAsSpellList()
+    }
+
 
     var filter by remember { mutableStateOf(Filter())}
+    println("Current filter: $filter")
+    println("Current filter level size: " + filter.getLevel().size)
 
     Surface(
         modifier = Modifier
@@ -114,8 +122,7 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                         singleLine = true,
                         onInputChanged = {
                                 input ->
-                            filter = Filter()
-                            filter.setSpellName(input)
+                            filter = updateFilterWithSearchName(filter, input)
                             println("User input: $input")
                         },
                         modifier = Modifier
@@ -130,63 +137,79 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                             )
                         })
                 }
+
                 SpellQuery(
                     filter = filter,
-                    spellList = favouritesSpellList,
+                    spellList = favouriteSpellList,
                     onFullSpellCardRequest = { spell ->
                         overlaySpell = spell
                         globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
                     },
-                ) { spell ->
+                    onAddToSpellbookRequest = {
+                        overlaySpell = it
+                        globalOverlayState.showOverlay(
+                            OverlayType.ADD_TO_SPELLBOOK,
+                        )
+                    }
+                )
+
+                /*favouritesSpellListState.value?.let { favoritesSpellList ->
+                    println("SpellQuery recomposing with filter: $filter")
+
+                }*/
+            /*{ spell ->
                     Favourites.addFavourite(spell.name ?: "")
                     CoroutineScope(Dispatchers.IO).launch {
                         Favourites.saveFavouritesAsSpellbook()
                     }
-                }
+                }*/
+            }
+            // Iterate through the overlay stack and handle each overlay type
+            for (overlayType in globalOverlayState.getOverlayStack()) {
+                println("Current Overlay Type: $overlayType")
+                when (overlayType) {
+                    OverlayType.LARGE_SPELLCARD -> {
+                        println("LARGE_SPELLCARD overlay triggered")
+                        LargeSpellCardOverlay(
+                            globalOverlayState,
+                            { globalOverlayState.dismissOverlay() },
+                            overlaySpell
+                        )
+                    }
 
-                // Iterate through the overlay stack and handle each overlay type
-                for (overlayType in globalOverlayState.getOverlayStack()) {
-                    when (overlayType) {
-                        OverlayType.LARGE_SPELLCARD -> {
-                            LargeSpellCardOverlay(
-                                globalOverlayState,
-                                { globalOverlayState.dismissOverlay() },
-                                overlaySpell
+                    OverlayType.ADD_TO_SPELLBOOK -> {
+                        println("ADD_TO_SPELLBOOK overlay triggered")
+                        CustomOverlay(
+                            globalOverlayState = globalOverlayState,
+                            overlayType = OverlayType.ADD_TO_SPELLBOOK,
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                        ) {
+                            AddToSpellBookOverlay(
+                                spellInfo = overlaySpell,
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
                             )
                         }
-
-                        OverlayType.ADD_TO_SPELLBOOK -> {
-                            CustomOverlay(
-                                globalOverlayState = globalOverlayState,
-                                overlayType = OverlayType.ADD_TO_SPELLBOOK,
-                                onDismissRequest = { globalOverlayState.dismissOverlay() }
-                            ) {
-                                AddToSpellBookOverlay(
-                                    spellInfo = overlaySpell,
-                                    onDismissRequest = { globalOverlayState.dismissOverlay() }
-                                )
-                            }
-                        }
-
-                        OverlayType.FILTER -> {
-                            CustomOverlay(
-                                globalOverlayState = globalOverlayState,
-                                overlayType = OverlayType.FILTER,
-                                onDismissRequest = { globalOverlayState.dismissOverlay() }
-                            ){
-                                FiltersOverlay(
-                                    onDismissRequest = { globalOverlayState.dismissOverlay() },
-                                    currentfilter = filter,
-                                    createNewFilter = { Filter() },
-                                    updateFilterState = { newFilter ->
-                                        filter = newFilter
-                                        println("Filter updated: $filter") }
-                                )
-                            }
-                        }
-
-                        else -> Unit
                     }
+
+                    OverlayType.FILTER -> {
+                        println("FILTER overlay triggered")
+                        CustomOverlay(
+                            globalOverlayState = globalOverlayState,
+                            overlayType = OverlayType.FILTER,
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                        ){
+                            FiltersOverlay(
+                                onDismissRequest = { globalOverlayState.dismissOverlay() },
+                                currentfilter = filter,
+                                createNewFilter = { Filter() },
+                                updateFilterState = { newFilter ->
+                                    filter = newFilter
+                                    println("New filter applied: $newFilter") }
+                            )
+                        }
+                    }
+
+                    else -> println("Unhandled Overlay Type: $overlayType")
                 }
             }
         }
