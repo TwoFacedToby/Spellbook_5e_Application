@@ -115,7 +115,7 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(start = 10.dp, top = 100.dp, end = 10.dp, bottom = 0.dp),
+                    .padding(start = 10.dp, top = 100.dp, end = 10.dp, bottom = 30.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
@@ -164,13 +164,13 @@ fun BrewScreen(globalOverlayState: GlobalOverlayState) {
                     }
                 )
 
-                Spacer(modifier = Modifier.height(5.dp))
+                //Spacer(modifier = Modifier.height(2.dp))
 
                 //Button to create own spells
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
+                    horizontalArrangement = Arrangement.Center,
                 ) {
 
                     ColouredButton("New Homebrew",

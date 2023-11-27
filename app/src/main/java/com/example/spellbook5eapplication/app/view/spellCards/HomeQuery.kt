@@ -104,7 +104,7 @@ if(maxSize){
     else{
         modifierUsed = Modifier
             .fillMaxWidth()
-            .height(500.dp)}
+            .height(450.dp)}
 
     Box(
         modifier = modifierUsed,
