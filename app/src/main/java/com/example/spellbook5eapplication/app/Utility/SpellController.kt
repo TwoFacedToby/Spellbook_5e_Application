@@ -179,7 +179,47 @@ object SpellController {
         }
     }
 
+    /**
+     * Renames a specified file within a given directory.
+     *
+     * This function finds the file in the specified directory within the application's internal storage
+     * and renames it to the new file name provided. If the file is successfully renamed, the function
+     * returns true, otherwise, it returns false. It also provides feedback via the console about the
+     * success or failure of the renaming process.
+     *
+     * @param directoryName The name of the directory where the file is located.
+     * @param currentFileName The current name of the file to be renamed.
+     * @param newFileName The new name for the file.
+     * @return Boolean indicating whether the file was successfully renamed.
+     * @author Kenneth Kaiser
+     */
+    fun renameFileInDirectory(directoryName: String, currentFileName: String, newFileName: String): Boolean {
+        val appContext = getContext()
+        if (appContext != null) {
+            try {
+                // Locate the current file in the specified directory
+                val currentFile = File(appContext.filesDir, "$directoryName/$currentFileName")
+                val newFile = File(appContext.filesDir, "$directoryName/$newFileName")
 
+                if (currentFile.exists()) {
+                    // Rename the file if it exists
+                    val isRenamed = currentFile.renameTo(newFile)
+
+                    if (isRenamed) {
+                        println("File renamed successfully: ${newFile.absolutePath}")
+                        return true
+                    } else {
+                        println("Failed to rename the file.")
+                    }
+                } else {
+                    println("File does not exist: ${currentFile.absolutePath}")
+                }
+            } catch (e: Exception) {
+                println("Error occurred while renaming the file: ${e.message}")
+            }
+        }
+        return false
+    }
 
     /**
      * Extracts and returns a list of spell indices from a specified JSON file stored in the application's
