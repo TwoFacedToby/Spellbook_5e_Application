@@ -105,8 +105,22 @@ object SpellController {
     }
 
     /**
-     * Author: Kenneth Kaiser
-     * Desc: Saves a json string on the PC in a specific folder
+     * Saves a given JSON string to a specified file within a directory on the internal storage.
+     *
+     * This function creates a new directory (if it doesn't already exist) within the application's
+     * internal storage directory, and then saves the JSON string into a file within that directory.
+     * It utilizes the application's context to access the internal file system. This is particularly
+     * useful for persisting data in a structured format (JSON) for later retrieval or processing.
+     *
+     * @param json The JSON string to be saved. This should be a well-formed JSON string.
+     * @param directoryName The name of the directory where the file will be saved.
+     *        The directory will be created in the app's internal storage if it doesn't exist.
+     * @param fileName The name of the file to save the JSON string in. If the file already exists,
+     *        it will be overwritten.
+     * @throws Exception If there is an error during the file writing process, an exception is thrown
+     *         with the relevant error message.
+     * @author Kenneth Kaiser
+     *
      */
     fun saveJsonToFile(json: String, directoryName: String, fileName: String) {
         val appContext = getContext()
@@ -131,13 +145,23 @@ object SpellController {
 
 
 
-    /**@author Kenneth s221064
-     * @param context The context
-     * @param fileName the name of the file needed to be found
-     * @return List of Strings each being a spell index
+    /**
+     * Extracts and returns a list of spell indices from a specified JSON file stored in the application's
+     * internal storage. This function is particularly useful for retrieving a collection of data items,
+     * such as spell indices, from a locally stored JSON file.
      *
-     * Used to get a list of what spells is stored on the local device.
+     * The function first checks for the existence of the file within the app's internal storage. If the
+     * file is found, it reads the JSON content and attempts to parse it to extract the required data.
+     * The JSON file is expected to contain either a "results" key with an array of objects each having
+     * an "index" field, or a "spells" key with an array of strings.
      *
+     * @param fileName The name of the file to read from. This file should be a JSON file and located in
+     *        the app's internal storage directory.
+     * @return A list of strings, each representing a spell index. If the file doesn't exist, or if the
+     *         JSON structure is not as expected, the function returns an empty list.
+     * @throws JSONException If there is an error parsing the JSON content of the file.
+     * @throws IOException If there is an error reading the file.
+     * @author Kenneth s221064
      */
     fun extractIndexListFromFile(fileName: String): List<String> {
         val context = getContext() ?: return emptyList() // Get the context or return if null
@@ -204,15 +228,21 @@ object SpellController {
     fun searchSpellListWithFilter(spellList : SpellList, filter: Filter) : SpellList {
         return search.searchSpellListWithFilter(spellList, filter)
     }
-    /**@author Kenneth s221064
-     * @param value Name of file
-     * @param basePath Path of directory for file
-     * @return json located at file location. Or null.
+    /**
+     * Attempts to read and return the content of a JSON file located in a specified directory.
+     * The function constructs the file path using the base path and the provided file name.
+     * It then checks for the existence of the file at this path. If the file exists, the function
+     * reads and returns its content as a string. Otherwise, it returns null.
      *
-     * creates the file path
-     * creates file from path
-     * if file exists we read the file and return it.
-     * if not we return null
+     * This function is useful for retrieving the contents of a JSON file when the file name is
+     * dynamically determined based on some input value. It can be particularly helpful in scenarios
+     * where the existence of the file needs to be checked before attempting to read its contents.
+     *
+     * @param value The name of the file (without the '.json' extension) to be searched for.
+     * @param basePath The path of the directory where the file is expected to be located.
+     * @return The content of the JSON file as a string if the file exists, or null if the file does not exist.
+     * @throws IOException If there is an error in reading the file.
+     * @author Kenneth s221064
      */
     fun getJsonIfStringInList(value: String, basePath: String): String? {
 
