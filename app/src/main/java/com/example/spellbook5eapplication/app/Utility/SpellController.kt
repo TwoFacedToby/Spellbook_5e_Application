@@ -143,6 +143,42 @@ object SpellController {
         }
     }
 
+    /**
+     * Deletes a specified file from a given directory.
+     *
+     * This function looks for the file in the specified directory within the application's internal storage.
+     * If the file is found, it is deleted. The function provides feedback via the console about the
+     * success or failure of the deletion process.
+     *
+     * @param directoryName The name of the directory where the file is located.
+     * @param fileName The name of the file to be deleted.
+     * @author Kenneth Kaiser
+     */
+    fun deleteFileFromDirectory(directoryName: String, fileName: String) {
+        val appContext = getContext()
+        if (appContext != null) {
+            try {
+                // Locate the file in the specified directory
+                val file = File(appContext.filesDir, "$directoryName/$fileName")
+
+                if (file.exists()) {
+                    // Delete the file if it exists
+                    val isDeleted = file.delete()
+
+                    if (isDeleted) {
+                        println("File deleted successfully: ${file.absolutePath}")
+                    } else {
+                        println("Failed to delete the file.")
+                    }
+                } else {
+                    println("File does not exist: ${file.absolutePath}")
+                }
+            } catch (e: Exception) {
+                println("Error occurred while deleting the file: ${e.message}")
+            }
+        }
+    }
+
 
 
     /**
