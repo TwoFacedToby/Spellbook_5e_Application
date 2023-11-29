@@ -77,6 +77,13 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    testImplementation("org.robolectric:robolectric:4.6.1")
+
+    // AndroidX Test dependencies
+    testImplementation("androidx.test:core:1.4.0")  // Use the latest version available
+    // You might also need the following dependencies depending on your testing setup
+    testImplementation("androidx.test.ext:junit:1.1.3")
+    testImplementation("androidx.test:runner:1.4.0")
 
 
     val nav_version = "2.7.4"
