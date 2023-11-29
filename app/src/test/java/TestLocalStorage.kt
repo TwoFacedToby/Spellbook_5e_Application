@@ -17,6 +17,19 @@ class TestLocalStorage {
 
     private val context: Context = ApplicationProvider.getApplicationContext()
 
+
+    /**
+     * Tests the deletion of a file from the device's storage.
+     *
+     * This test function performs a series of operations to validate the `deleteFileFromDirectory` method in the `SpellController` class.
+     * The process involves setting a context in the `SpellController`, saving a JSON file to a specified directory on the device,
+     * and then attempting to delete this file. The test asserts whether the file deletion was successful.
+     *
+     * The function includes several println statements for debugging purposes,
+     * which indicate the progress through the different stages of the test.
+     *
+     * @author Kenneth Kaiser
+     */
     @Test
     fun testDeleteFileFromDirectory() {
         // Assuming you have a setup in SpellController to use a passed context
