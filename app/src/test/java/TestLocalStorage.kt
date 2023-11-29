@@ -51,6 +51,17 @@ class TestLocalStorage {
         assertTrue(isDeleted)
     }
 
+    /**
+     * Tests the behavior of the deleteFileFromDirectory method when attempting to delete a non-existent file.
+     *
+     * The method attempts to delete a file that does not exist in the directory and checks that the method returns false, indicating
+     * no file was deleted. It is expected that the deleteFileFromDirectory method should handle this by not
+     * throwing an exception and instead return a false value.
+     *
+     * Prints to the console are included for debugging purposes to track the flow of the test execution and its outcome.
+     *
+     * @author Kenneth Kaiser
+     */
     @Test
     fun deleteFileFromDirectory_FileDoesNotExist_ReturnsFalse() {
         // Assuming the context has already been set in the setUp method
