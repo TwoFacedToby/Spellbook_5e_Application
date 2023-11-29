@@ -154,7 +154,7 @@ object SpellController {
      * @param fileName The name of the file to be deleted.
      * @author Kenneth Kaiser
      */
-    fun deleteFileFromDirectory(directoryName: String, fileName: String) {
+    fun deleteFileFromDirectory(directoryName: String, fileName: String): Boolean {
         val appContext = getContext()
         if (appContext != null) {
             try {
@@ -162,13 +162,13 @@ object SpellController {
                 val file = File(appContext.filesDir, "$directoryName/$fileName")
 
                 if (file.exists()) {
-                    // Delete the file if it exists
-                    val isDeleted = file.delete()
-
-                    if (isDeleted) {
-                        println("File deleted successfully: ${file.absolutePath}")
-                    } else {
-                        println("Failed to delete the file.")
+                    // Attempt to delete the file and return the result
+                    return file.delete().also { isDeleted ->
+                        if (isDeleted) {
+                            println("File deleted successfully: ${file.absolutePath}")
+                        } else {
+                            println("Failed to delete the file.")
+                        }
                     }
                 } else {
                     println("File does not exist: ${file.absolutePath}")
@@ -177,6 +177,7 @@ object SpellController {
                 println("Error occurred while deleting the file: ${e.message}")
             }
         }
+        return false
     }
 
     /**
