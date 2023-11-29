@@ -7,6 +7,6 @@ import io.cucumber.junit.Cucumber
 @RunWith(Cucumber::class)
 @CucumberOptions(
     features = ["features"],
-    glue = ["com.dtu.uemad.cucumbertest"]
+    glue = ["com.example.spellbook5eapplication"]
 )
 class CucumberTestOptions
