@@ -91,8 +91,8 @@ class SpellList {
 
         // Creating a few fake spells
         spells.add(Spell_Info.SpellInfo(
-            index = "Fireball",
-            name = "Light",
+            index = "fireball",
+            name = "Fireball",
             description = listOf("A bright light emerges."),
             higherLevelDescription = listOf("The light gets brighter."),
             range = "30 feet",
@@ -125,8 +125,8 @@ class SpellList {
             otherworldlyPatrons = null
         ))
         spells.add(Spell_Info.SpellInfo(
-            index = "Fire Shield",
-            name = "Light",
+            index = "fire-shield",
+            name = "Fire Shield",
             description = listOf("A bright light emerges."),
             higherLevelDescription = listOf("The light gets brighter."),
             range = "30 feet",
@@ -159,7 +159,7 @@ class SpellList {
             otherworldlyPatrons = null
         ))
         spells.add(Spell_Info.SpellInfo(
-            index = "Light",
+            index = "light",
             name = "Light",
             description = listOf("A bright light emerges."),
             higherLevelDescription = listOf("The light gets brighter."),
@@ -196,6 +196,8 @@ class SpellList {
 
         fakeSpellList.setSpellInfoList(spells.toList())
         fakeSpellList.setIndexList(spells.map { it.name!! })
+
+        println("Am I even being returned!? $fakeSpellList")
         return fakeSpellList
     }
 
