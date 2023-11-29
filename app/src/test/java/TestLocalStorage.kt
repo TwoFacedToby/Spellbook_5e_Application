@@ -77,6 +77,4 @@ class TestLocalStorage {
         assertFalse(isDeleted)
     }
 
-
-
 }
