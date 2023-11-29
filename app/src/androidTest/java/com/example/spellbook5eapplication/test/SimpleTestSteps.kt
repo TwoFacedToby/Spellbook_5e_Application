@@ -1,4 +1,4 @@
-package com.dtu.uemad.cucumbertest.test
+package com.example.spellbook5eapplication.test
 
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.When
