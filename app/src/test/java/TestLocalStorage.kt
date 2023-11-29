@@ -50,4 +50,7 @@ class TestLocalStorage {
         //Tests if the file was deleted
         assertTrue(isDeleted)
     }
+
+
+
 }
