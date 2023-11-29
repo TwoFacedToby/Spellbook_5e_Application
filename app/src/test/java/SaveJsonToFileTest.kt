@@ -8,6 +8,7 @@ import org.junit.runner.RunWith
 import org.junit.Assert.*
 import org.robolectric.RobolectricTestRunner
 import java.io.File
+import java.io.IOException
 
 
 /**
@@ -37,6 +38,7 @@ class SaveJsonToFileTest {
     private val testDirectoryName = "testDir"
     private val testFileName = "testFile.json"
     private val testJsonString = "{\"key\": \"value\"}"
+    private val invalidDirectoryName = "/invalid/testDir" // Invalid path
 
     @Before
     fun setUp() {

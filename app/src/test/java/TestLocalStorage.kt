@@ -51,6 +51,21 @@ class TestLocalStorage {
         assertTrue(isDeleted)
     }
 
+    @Test
+    fun deleteFileFromDirectory_FileDoesNotExist_ReturnsFalse() {
+        // Assuming the context has already been set in the setUp method
+        // Attempt to delete a file that does not exist
+        val doesNotExistFileName = "nonExistentFile.json"
+        val isDeleted = SpellController.deleteFileFromDirectory("testDir", doesNotExistFileName)
+
+        // Some prints for debugging
+        println("Attempting to delete a non-existent file.")
+        println(isDeleted)
+
+        // Test should pass if isDeleted is false, indicating no file was deleted because it didn't exist
+        assertFalse(isDeleted)
+    }
+
 
 
 }
