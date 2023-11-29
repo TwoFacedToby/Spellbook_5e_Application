@@ -7,6 +7,7 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -61,6 +62,11 @@ fun CustomOverlay(
             modifier = Modifier
                 .fillMaxSize()
                 .background(colorResource(id = R.color.black).copy(alpha = 0.2f))
+                .clickable(
+                    onClick = {
+                        onDismissRequest()
+                    }
+                )
                 .swipeable(
                     state = swipeableState,
                     anchors = anchors,
@@ -83,6 +89,7 @@ fun CustomOverlay(
                         colorResource(id = R.color.main_color),
                         shape = RoundedCornerShape(20.dp)
                     )
+                    .clickable { /*Consume the outer box click*/ }
                     .padding(5.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
