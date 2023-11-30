@@ -10,8 +10,6 @@ class Spellbook(var spellbookName: String) {
     }
 
 
-
-
     fun removeSpell(spellName: String) {
         spells.remove(spellName)
     }

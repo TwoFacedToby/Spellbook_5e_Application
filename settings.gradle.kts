@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Spellbook 5e Application"
 include(":app")
- 

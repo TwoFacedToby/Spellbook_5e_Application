@@ -14,7 +14,7 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.example.spellbook5eapplication.CucumberTestRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -76,13 +76,14 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    androidTestImplementation("io.cucumber:cucumber-android:7.14.0")
+    androidTestImplementation("io.cucumber:cucumber-picocontainer:7.14.1")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     testImplementation("org.robolectric:robolectric:4.9.2")
 
     // AndroidX Test dependencies
     testImplementation("androidx.test:core:1.4.0")  // Use the latest version available
-    // You might also need the following dependencies depending on your testing setup
     testImplementation("androidx.test.ext:junit:1.1.3")
     testImplementation("androidx.test:runner:1.4.0")
 
