@@ -1,7 +1,5 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
 
-import android.annotation.SuppressLint
-
 class SpellList {
 
     private var indexList: List<String> = emptyList()
@@ -195,7 +193,7 @@ class SpellList {
 
 
         fakeSpellList.setSpellInfoList(spells.toList())
-        fakeSpellList.setIndexList(spells.map { it.name!! })
+        fakeSpellList.setIndexList(spells.map { it.index!! })
 
         println("Am I even being returned!? $fakeSpellList")
         return fakeSpellList
