@@ -18,6 +18,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -26,12 +30,23 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Spellbook
+import com.example.spellbook5eapplication.app.Utility.SpellbookManager
+import com.example.spellbook5eapplication.app.Utility.SpellbookViewModel
+import com.example.spellbook5eapplication.app.Utility.SpellbookViewModelFactory
 
 @Composable
 fun CreateDialog(
     onDismissRequest: () -> Unit
 ){
+
+    //Initializing viewModel to make the app recompose when a new spellbook is selected.
+    val viewModel: SpellbookViewModel
+    var newSpellbookName by remember { mutableStateOf("") }
+
     Dialog(
         onDismissRequest = { /*TODO*/ }
     )
@@ -46,7 +61,8 @@ fun CreateDialog(
                 .border(
                     width = 2.dp,
                     color = colorResource(id = R.color.border_color),
-                    shape = RoundedCornerShape(15.dp))
+                    shape = RoundedCornerShape(15.dp)
+                )
         ){
             Column(
                 modifier = Modifier
@@ -62,7 +78,7 @@ fun CreateDialog(
                 )
                 UserInputField(
                     label = "Spellbook name",
-                    onInputChanged = { input -> println("User input: $input") },
+                    onInputChanged = { input -> newSpellbookName = input },
                     modifier = Modifier
                         .height(40.dp)
                         .width(200.dp),
@@ -81,7 +97,12 @@ fun CreateDialog(
                         label = "Create",
                         modifier = Modifier,
                         color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
-                        onClick = { /* TODO */ })
+                        onClick = {
+                            val newSpellbook = Spellbook(newSpellbookName)
+                            SpellbookManager.addSpellbook(newSpellbook)
+                            SpellbookManager.saveSpellbookToFile(newSpellbook.spellbookName)
+                            onDismissRequest()
+                        })
                 }
             }
         }
