@@ -89,7 +89,7 @@ fun CustomOverlay(
                         colorResource(id = R.color.main_color),
                         shape = RoundedCornerShape(20.dp)
                     )
-                    .clickable { /*Consume the outer box click*/ }
+                    .clickable { /*Leaving it empty so that it consume the outer box' click event*/ }
                     .padding(5.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
