@@ -185,6 +185,7 @@ fun SpellbooksScreen(
                             onClick = {
                                 // Add the new spellbook
                                 viewModel.createSpellbook(newSpellbookName)
+
                                 showDialog = false
                                 newSpellbookName = "" // Reset the name for the next use
                             },

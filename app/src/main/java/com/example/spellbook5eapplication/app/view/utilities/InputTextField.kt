@@ -48,21 +48,20 @@ fun UserInputField(
 
     BasicTextField(
         value = input,
-        onValueChange = { input = it
-            if(!singleLine){
-                onInputChanged(it)
-            }
-                        },
+        onValueChange = {
+            input = it
+            onInputChanged(it)
+        },
         keyboardOptions = KeyboardOptions.Default.copy(
             imeAction = imeAction
         ),
         keyboardActions = KeyboardActions(
             onSearch = {
-                onInputChanged(input)
+                //onInputChanged(input)
                 keyboardController?.hide() // Hide the keyboard
             },
             onDone = {
-                onInputChanged(input)
+                //onInputChanged(input)
                 keyboardController?.hide() // Hide the keyboard
             },
 

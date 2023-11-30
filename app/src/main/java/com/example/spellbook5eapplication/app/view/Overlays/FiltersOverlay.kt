@@ -67,11 +67,40 @@ fun FiltersOverlay(
                 .width(250.dp)
                 .height(15.dp)
                 .clip(shape = RoundedCornerShape(5.dp))
-                .clickable { onDismissRequest() },
+                /*.clickable { onDismissRequest() }*/,
             color = colorResource(id = R.color.black).copy(alpha = 0.2F),
         )
         Spacer(modifier = Modifier.height(20.dp))
-
+        Row{
+            ColouredButton(label = "Apply filters",
+                modifier = Modifier.width(150.dp),
+                color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
+                onClick = { onApplyFiltersClicked(
+                    spellLevel, components,
+                    saveReq, classes,
+                    concentration, ritual,
+                    currentfilter, createNewFilter,
+                    updateFilterState
+                )
+                    onDismissRequest()
+                }
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            ColouredButton(label = "Reset filters",
+                modifier = Modifier.width(150.dp),
+                color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
+                onClick = {
+                    onResetAllFiltersClicked(
+                        spellLevel, components,
+                        saveReq, classes,
+                        concentration, ritual)
+                    updateFilterState(Filter()
+                    )
+                    onDismissRequest()
+                }
+            )
+        }
+        Spacer(modifier = Modifier.height(5.dp))
         Box(
             modifier = Modifier
                 .height(500.dp)
@@ -92,7 +121,7 @@ fun FiltersOverlay(
                 item {
                     Spacer(modifier = Modifier.height(5.dp))
                 }
-                item {
+                /*item {
                     Row{
                         ColouredButton(label = "Apply filters",
                             modifier = Modifier.width(150.dp),
@@ -120,22 +149,8 @@ fun FiltersOverlay(
                             }
                         )
                     }
-                }
-                /*item {
-                    ColouredButton(label = "Apply filters",
-                        modifier = Modifier.width(150.dp),
-                        color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
-                        onClick = { onApplyFiltersClicked(
-                            spellLevel, components,
-                            saveReq, classes,
-                            concentration, ritual,
-                            currentfilter, createNewFilter,
-                            updateFilterState
-                        )
-                            onDismissRequest()
-                        }
-                   */
-                item { Spacer(modifier = Modifier.height(5.dp)) }
+                }*/
+                //item { Spacer(modifier = Modifier.height(5.dp)) }
                 item {
                     Text(
                         text = "Spell Level",
