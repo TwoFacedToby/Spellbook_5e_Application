@@ -1,6 +1,8 @@
 package com.example.spellbook5eapplication.app.view.bottomNavigation
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.List
+import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.List
@@ -24,7 +26,7 @@ sealed class Screens(
     object Spellbooks: Screens(
         route = "spell_books_screen",
         title = "Spell books",
-        icon = Icons.Outlined.List
+        icon = Icons.AutoMirrored.Outlined.MenuBook
     )
     object Homebrew: Screens(
         route = "homebrew_screen",

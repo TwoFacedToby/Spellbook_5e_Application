@@ -86,6 +86,8 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.1.3")
     testImplementation("androidx.test:runner:1.4.0")
 
+    implementation ("androidx.compose.material:material-icons-extended:1.6.0-beta01")
+
 
     val nav_version = "2.7.4"
 

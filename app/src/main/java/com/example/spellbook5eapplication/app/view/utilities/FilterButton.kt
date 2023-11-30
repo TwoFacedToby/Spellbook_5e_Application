@@ -5,7 +5,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ManageSearch
 import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.ManageSearch
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -34,7 +36,7 @@ fun FilterButton(onShowFiltersRequest: () -> Unit){
             id = R.color.white))
     )
     {
-        Icon(imageVector = Icons.Outlined.List, contentDescription = "")
+        Icon(imageVector = Icons.AutoMirrored.Outlined.ManageSearch, contentDescription = "")
     }
 }
 
