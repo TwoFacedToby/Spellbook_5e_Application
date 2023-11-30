@@ -134,7 +134,7 @@ class SpellList {
             duration = "1 hour",
             isConcentration = false,
             castingTime = "1 action",
-            level = 0,
+            level = 2,
             school = Spell_Info.SpellSchool("evocation", "Evocation", null),
             classes = listOf(Spell_Info.SpellClass("cleric", "Cleric", null)),
             subclasses = listOf(),
