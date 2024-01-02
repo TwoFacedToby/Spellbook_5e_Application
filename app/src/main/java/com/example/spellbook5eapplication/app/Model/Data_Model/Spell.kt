@@ -1,6 +1,11 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
 
 class Spell  {
+    var json : String = ""
+        get() = field
+        set(value) {
+            field = value
+        }
     var index: String = ""
         get() = field
         set(value) {
