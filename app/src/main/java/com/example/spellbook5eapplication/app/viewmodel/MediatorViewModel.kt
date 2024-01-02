@@ -4,6 +4,7 @@ class MediatorViewModel {
     private val observers = ArrayList<Observer>()
 
 
+
     private fun notifyChange(){
         observers.forEach {
             it.onChange()

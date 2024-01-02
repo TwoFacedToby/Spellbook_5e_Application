@@ -38,6 +38,7 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
+import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -54,6 +55,9 @@ fun SpellQuery(
     onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
     onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit
 ) {
+
+    val spellQueryViewModel = SpellQueryViewModel(spellList)
+
     if(spellList == null){
         Column(
 
@@ -72,7 +76,12 @@ fun SpellQuery(
     }
     else{
         var isLoading by remember { mutableStateOf(false)}
+
+
+
+        // Total spells loaded removed
         var totalSpellsToLoad = spellList.getIndexList().size
+
         var showing: List<Spell_Info.SpellInfo?>? by remember { mutableStateOf(emptyList()) }
 
 
@@ -168,6 +177,7 @@ fun SpellQuery(
                             coroutineScope.launch {
                                 val loadedData: List<Spell_Info.SpellInfo?>? =
                                     withContext(Dispatchers.IO) {
+
                                         SpellController.loadNextFromSpellList(amountToLoad, spellList)
                                     }
                                 if (loadedData != null) {
