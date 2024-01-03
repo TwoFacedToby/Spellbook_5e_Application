@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
+import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import kotlinx.coroutines.launch
 
 class SpellQueryViewModel : ViewModel() {
@@ -15,7 +16,11 @@ class SpellQueryViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
 
+
     private var spellList: SpellList? = null
+
+    private val _favorite = MutableLiveData<List<Spell_Info.SpellInfo?>>()
+    val favorite: LiveData<List<Spell_Info.SpellInfo?>> = _favorite
 
     init {
         loadSpellList()
@@ -51,6 +56,11 @@ class SpellQueryViewModel : ViewModel() {
                 _isLoading.postValue(false)
             }
         }
+    }
+
+    fun loadFavoriteSpells() {
+        val spellList = SpelllistLoader.loadFavouritesAsSpellList()
+        _favorite.postValue(spellList.getSpellInfoList())
     }
 
     fun canLoadMoreSpells(): Boolean {

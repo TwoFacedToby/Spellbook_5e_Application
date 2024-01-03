@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
@@ -43,7 +44,7 @@ import kotlinx.coroutines.runBlocking
 
 @Composable
 fun Basic_Screen(globalOverlayState: GlobalOverlayState,
-                 viewModel: SpellQueryViewModel,
+                 spellsLiveData: LiveData<List<Spell_Info.SpellInfo?>>,
                  enablePagination: Boolean){
     val spellList : SpellList?
     runBlocking {
@@ -105,7 +106,7 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState,
 
                 SpellQuery(
                     filter = filter,
-                    spellsLiveData = viewModel.spells,
+                    spellsLiveData = spellsLiveData,
                     onFullSpellCardRequest = {
                         overlaySpell = it
                         globalOverlayState.showOverlay(
