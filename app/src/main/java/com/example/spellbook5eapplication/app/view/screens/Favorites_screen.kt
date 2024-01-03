@@ -140,7 +140,7 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
 
                 SpellQuery(
                     filter = filter,
-                    spellList = favouriteSpellList,
+                    //spellList = favouriteSpellList,
                     onFullSpellCardRequest = { spell ->
                         overlaySpell = spell
                         globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)

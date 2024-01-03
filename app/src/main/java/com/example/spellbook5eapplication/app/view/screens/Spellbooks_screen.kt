@@ -154,7 +154,7 @@ fun SpellbooksScreen(
 
                 SpellQuery(
                     filter = filter,
-                    spellList = spellList,
+                    //spellList = spellList,
                     onFullSpellCardRequest = { spellInfo ->
                         overlaySpell = spellInfo
                         globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)

@@ -1,6 +1,8 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
+import SpellQueryViewModel
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +23,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -33,12 +36,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
-import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -51,169 +54,97 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 @Composable
 fun SpellQuery(
     filter: Filter,
-    spellList: SpellList?,
     onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
     onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit
 ) {
 
-    val spellQueryViewModel = SpellQueryViewModel(spellList)
+    val spellQueryViewModel: SpellQueryViewModel = viewModel()
 
-    if(spellList == null){
-        Column(
+    val spells by spellQueryViewModel.spells.observeAsState(emptyList())
+    val isLoading by spellQueryViewModel.isLoading.observeAsState(false)
 
-            modifier= Modifier
-                .width(260.dp)
-                .fillMaxHeight()
-        ){
-            Divider(
-                color = Color.Transparent,
-                modifier = Modifier.height(60.dp))
-            Text(
-                color = colorResource(id = R.color.black),
-                text = "You have no internet connection or downloaded content."
-            )
+    val lazyListState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
+    if (spells.isEmpty() && !isLoading) {
+        NoSpellsFoundMessage()
+    } else {
+        LazyColumn(
+            state = lazyListState,
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(spells.size) { index ->
+                spells[index]?.let {
+                    Log.d("SpellDebug", "Spell at index $index is of type: ${it::class.java}")
+                    SpellCard(
+                        onFullSpellCardRequest = { onFullSpellCardRequest(it) },
+                        onAddToSpellbookRequest = { onAddToSpellbookRequest(it) },
+                        spell = it
+                    )
+                }
+
+                /*if (index >= spells.size - bottomDistance && !isLoading) {
+                    coroutineScope.launch {
+                        println("DETTE HER")
+                        spellQueryViewModel.loadMoreSpells()
+                    }
+                }*/
+
+                val shouldLoadMore = index == spells.size - 1 &&
+                        spells.size >= bottomDistance &&
+                        !isLoading &&
+                        pagination &&
+                        spellQueryViewModel.canLoadMoreSpells()
+
+                if (shouldLoadMore) {
+                    coroutineScope.launch {
+                        spellQueryViewModel.loadMoreSpells()
+                    }
+                }
+
+            }
+
+            if (isLoading) {
+                item { LoadingIndicator() }
+            }
         }
     }
-    else{
-        var isLoading by remember { mutableStateOf(false)}
+}
 
+@Composable
+fun NoSpellsFoundMessage() {
+    Column(
+        modifier = Modifier
+            .width(260.dp)
+            .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Divider(
+            color = Color.Transparent,
+            modifier = Modifier.height(60.dp)
+        )
+        Text(
+            text = "Could not find spells matching filter or no internet connection.",
+            color = colorResource(id = R.color.black),
+            fontSize = 18.sp
+        )
+    }
+}
 
-
-        // Total spells loaded removed
-        var totalSpellsToLoad = spellList.getIndexList().size
-
-        var showing: List<Spell_Info.SpellInfo?>? by remember { mutableStateOf(emptyList()) }
-
-
-        val lazyListState = rememberLazyListState()
-
-        val coroutineScope = rememberCoroutineScope() // Create a coroutine scope
-
-        LaunchedEffect(filter) {
-            // You can check if the data is already loaded, and if not, load it asynchronously.
-            if (filter.count() == 0 && spellList.getLoaded() < amountToLoad) {
-                // Display a loading indicator or placeholder while loading.
-                showing = emptyList() // Show loading indicator or placeholder.
-
-                // Call withContext within the coroutine scope
-                coroutineScope.launch {
-                    isLoading = true;
-                    //With Pagination
-                    val loadedData = withContext(Dispatchers.IO) {
-                        SpellController.loadNextFromSpellList(
-                            amountToLoad,
-                            spellList
-                        ) // Loads data in a background thread.
-                    }
-                    showing = loadedData // Update the UI with the loaded data.
-
-                    isLoading = false
-                }
-            } else if (filter.count() > 0 && spellList.getLoaded() != spellList.getIndexList().size) {
-                showing = emptyList() // Show loading indicator or placeholder.
-
-                // Call withContext within the coroutine scope
-                coroutineScope.launch {
-                    isLoading = true
-                    val loadedData = withContext(Dispatchers.IO) {
-                        SpellController.loadEntireSpellList(spellList) // Loads data in a background thread.
-                        SpellController.searchSpellListWithFilter(
-                            spellList,
-                            filter
-                        ) // Filter data in a background thread.
-                    }
-                    totalSpellsToLoad = loadedData.getSpellInfoList().size
-                    showing = loadedData.getSpellInfoList() // Update the UI with the filtered data.
-                    isLoading = false
-
-                }
-            }
-        }
-
-        println("Showing: ${showing?.size}")
-
-        if (showing?.isEmpty() == true) {
-            if(isLoading){
-                Divider(color = Color.Transparent, modifier = Modifier.padding(top = 40.dp))
-                Text(text = "Loading", fontSize = 18.sp, color = Color.White)
-            }
-            else if(filter.count() > 0){
-                Divider(color = Color.Transparent, modifier = Modifier.padding(top = 40.dp))
-                Text(text = "Could Not Find Spells Matching Filter", fontSize = 18.sp, color = Color.White)
-            }
-            else{
-                Divider(color = Color.Transparent, modifier = Modifier.padding(top = 40.dp))
-                Text(text = "We Couldn't Find Any Spells", fontSize = 18.sp, color = Color.White)
-            }
-        } else {
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp), // Adjust spacing between items
-            ) {
-                if (showing != null) {
-                    items(showing!!.size) { spellIndex ->
-                        showing!![spellIndex]?.let {
-                            SpellCard(
-                                onFullSpellCardRequest = {
-                                    onFullSpellCardRequest(it)
-                                },
-                                onAddToSpellbookRequest = {
-                                    onAddToSpellbookRequest(it)
-                                },
-                                spell = it
-                            )
-                        }
-
-
-                        val distance =
-                            if (bottomDistance < showing!!.size) bottomDistance else amountToLoad - 1
-
-                        // Check if the user is close to the end of the list
-                        if (spellIndex == showing!!.size - distance && pagination) {
-                            // Load more data when the user is close to the end
-                            coroutineScope.launch {
-                                val loadedData: List<Spell_Info.SpellInfo?>? =
-                                    withContext(Dispatchers.IO) {
-
-                                        SpellController.loadNextFromSpellList(amountToLoad, spellList)
-                                    }
-                                if (loadedData != null) {
-                                    for (spell in loadedData) {
-                                        showing = showing!! + spell
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    item {
-
-                        Box(
-                            modifier = Modifier
-                                .padding(bottom = 50.dp)
-                                .background(Color.Transparent)
-                                .fillMaxWidth()
-                            //.align(Alignment.Center)
-
-                        )
-                        {
-                            if (showing!!.size < totalSpellsToLoad - 1 && filter.count() == 0) {
-                                Text(
-                                    text = "Loading ${showing!!.size} / ${totalSpellsToLoad - 1}",
-                                    fontSize = 18.sp,
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Bold,
-                                    textAlign = TextAlign.Center,
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-        }
+@Composable
+fun LoadingIndicator() {
+    Box(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Loading...",
+            fontSize = 18.sp,
+            color = Color.Black
+        )
     }
 }
