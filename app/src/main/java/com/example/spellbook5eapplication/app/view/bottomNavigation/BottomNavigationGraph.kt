@@ -15,6 +15,7 @@ import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.screens.Basic_Screen
 import com.example.spellbook5eapplication.app.view.screens.SearchScreen
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModelFactory
 
 @Composable
 fun BottomNavigationGraph(
@@ -26,14 +27,13 @@ fun BottomNavigationGraph(
     NavHost(navController = navController, startDestination = Screens.Search.route){
         composable(route = Screens.Search.route){
             //SearchScreen(globalOverlayState)
-            val spellQueryViewModel = viewModel<SpellQueryViewModel>()
-            Basic_Screen(globalOverlayState = globalOverlayState, spellQueryViewModel.spells, true)
+            val spellList = SpellQueryViewModelFactory.create(type = "ALL_SPELLS")
+            Basic_Screen(globalOverlayState = globalOverlayState, spellList, true)
         }
         composable(route = Screens.Favorite.route){
             //FavoriteScreen(spellController, spellListLoader, globalOverlayState)
-            val spellQueryViewModel = viewModel<SpellQueryViewModel>()
-            spellQueryViewModel.loadFavoriteSpells()
-            Basic_Screen(globalOverlayState = globalOverlayState, spellQueryViewModel.favorite, false)
+            val spellList = SpellQueryViewModelFactory.create(type = "FAVORITES")
+            Basic_Screen(globalOverlayState = globalOverlayState, spellList, false)
         }
         composable(route = Screens.Spellbooks.route){
             SpellbooksScreen(spellController, spellListLoader, globalOverlayState)

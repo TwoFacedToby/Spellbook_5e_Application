@@ -1,5 +1,3 @@
-import android.os.Debug
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,7 +8,8 @@ import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import kotlinx.coroutines.launch
 
-class SpellQueryViewModel : ViewModel() {
+class SpellQueryViewModel() : ViewModel() {
+
     private val _spells = MutableLiveData<List<Spell_Info.SpellInfo?>>()
     val spells: LiveData<List<Spell_Info.SpellInfo?>> = _spells
     private val _isLoading = MutableLiveData<Boolean>()
@@ -21,6 +20,15 @@ class SpellQueryViewModel : ViewModel() {
 
     private val _favorite = MutableLiveData<List<Spell_Info.SpellInfo?>>()
     val favorite: LiveData<List<Spell_Info.SpellInfo?>> = _favorite
+
+    fun getLiveData(type: String): LiveData<List<Spell_Info.SpellInfo?>> {
+        loadFavoriteSpells()
+        return when (type) {
+            "ALL_SPELLS" -> spells
+            "FAVORITES" -> favorite
+            else -> throw IllegalArgumentException("Invalid type")
+        }
+    }
 
     init {
         loadSpellList()
