@@ -42,7 +42,7 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistLoader, globalOverlayState: GlobalOverlayState) {
     // State to keep track of the currently selected spell
-    val nullSpell = Spell_Info.SpellInfo(
+    /*val nullSpell = Spell_Info.SpellInfo(
         null,
         "Example name",
         null,
@@ -213,5 +213,5 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                 }
             }
         }
-    }
+    }*/
 }

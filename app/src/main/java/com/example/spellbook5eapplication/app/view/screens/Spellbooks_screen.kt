@@ -47,7 +47,7 @@ fun SpellbooksScreen(
     spellListLoader: SpelllistLoader,
     globalOverlayState: GlobalOverlayState
 ) {
-    //Initializing viewModel to make the app recompose when a new spellbook is selected.
+    /*//Initializing viewModel to make the app recompose when a new spellbook is selected.
     val viewModel: SpellbookViewModel = viewModel(
         factory = SpellbookViewModelFactory(spellController, spellListLoader)
     )
@@ -197,5 +197,5 @@ fun SpellbooksScreen(
                 }
             }
         }
-    }
+    }*/
 }

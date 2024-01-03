@@ -1,4 +1,6 @@
 package com.example.spellbook5eapplication.app.view.screens
+
+import SpellQueryViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -40,8 +42,8 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.runBlocking
 
 @Composable
-fun SearchScreen(globalOverlayState: GlobalOverlayState){
-    /*val spellList : SpellList?
+fun Basic_Screen(globalOverlayState: GlobalOverlayState, viewModel: SpellQueryViewModel ){
+    val spellList : SpellList?
     runBlocking {
         spellList = SpellController.getAllSpellsList()
     }
@@ -56,7 +58,7 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
 
     Surface(
         modifier = Modifier
-        .fillMaxSize()
+            .fillMaxSize()
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Image(
@@ -93,15 +95,15 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                     Spacer(modifier = Modifier.width(5.dp))
                     FilterButton(
                         onShowFiltersRequest = {
-                        globalOverlayState.showOverlay(
-                            OverlayType.FILTER,
-                        )
-                    })
+                            globalOverlayState.showOverlay(
+                                OverlayType.FILTER,
+                            )
+                        })
                 }
 
                 SpellQuery(
                     filter = filter,
-                    //spellList = spellList,
+                    spellsLiveData = viewModel.spells,
                     onFullSpellCardRequest = {
                         overlaySpell = it
                         globalOverlayState.showOverlay(
@@ -155,5 +157,5 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
 
             }
         }
-    }*/
+    }
 }

@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
@@ -54,13 +55,18 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 @Composable
 fun SpellQuery(
     filter: Filter,
+    spellsLiveData: LiveData<List<Spell_Info.SpellInfo?>>,
     onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
     onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit
 ) {
 
     val spellQueryViewModel: SpellQueryViewModel = viewModel()
 
-    val spells by spellQueryViewModel.spells.observeAsState(emptyList())
+
+    //Back-up
+    //val spells by spellQueryViewModel.spells.observeAsState(emptyList())
+
+    val spells by spellsLiveData.observeAsState(emptyList())
     val isLoading by spellQueryViewModel.isLoading.observeAsState(false)
 
     val lazyListState = rememberLazyListState()
