@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -45,12 +46,15 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun Basic_Screen(globalOverlayState: GlobalOverlayState,
                  spellsLiveData: LiveData<List<Spell_Info.SpellInfo?>>,
-                 enablePagination: Boolean){
+                 enablePagination: Boolean,
+                 customContent: @Composable (() -> Unit)? = null){
     val spellList : SpellList?
     runBlocking {
         spellList = SpellController.getAllSpellsList()
     }
+
     var filter by remember { mutableStateOf(Filter())}
+
     println("Current filter: $filter")
     println("Current filter level size: " + filter.getLevel().size)
 
@@ -71,58 +75,33 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState,
                 modifier = Modifier.matchParentSize(),
                 alpha = 0.5F
             )
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 10.dp, top = 100.dp, end = 10.dp, bottom = 0.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            )
-            {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center
-                )
-                {
-                    UserInputField(
-                        label = "Search",
-                        singleLine = true,
-                        onInputChanged = {
-                                input ->
-                            filter = updateFilterWithSearchName(filter, input)
-                            println("User input: $input")
-                        },
-                        modifier = Modifier
-                            .size(width = 220.dp, height = 48.dp),
-                        imeAction = ImeAction.Search
-                    )
-                    Spacer(modifier = Modifier.width(5.dp))
-                    FilterButton(
-                        onShowFiltersRequest = {
-                            globalOverlayState.showOverlay(
-                                OverlayType.FILTER,
-                            )
-                        })
-                }
+            Column (modifier = Modifier.padding(top = 100.dp)) {
+                // TopBar with Search and Filters
+                SearchFilterBar(globalOverlayState)
 
+                // List of Spells, taking up all available space
                 SpellQuery(
                     filter = filter,
                     spellsLiveData = spellsLiveData,
                     onFullSpellCardRequest = {
                         overlaySpell = it
-                        globalOverlayState.showOverlay(
-                            OverlayType.LARGE_SPELLCARD,
-                        )
+                        globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
                     },
                     onAddToSpellbookRequest = {
                         overlaySpell = it
-                        globalOverlayState.showOverlay(
-
-                            OverlayType.ADD_TO_SPELLBOOK,
-                        )
+                        globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
                     },
                     enablePagination = enablePagination
                 )
             }
+            if (customContent != null) {
+                Box(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(56.dp))
+                {
+                    customContent()
+                }
+            }
+
+
             for (overlayType in globalOverlayState.getOverlayStack()) {
                 when (overlayType) {
                     OverlayType.LARGE_SPELLCARD -> {
@@ -160,6 +139,38 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState,
                 }
 
             }
+
         }
+
+    }
+}
+
+@Composable
+fun SearchFilterBar(globalOverlayState: GlobalOverlayState){
+    var filter by remember { mutableStateOf(Filter())}
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    )
+    {
+        UserInputField(
+            label = "Search",
+            singleLine = true,
+            onInputChanged = {
+                    input ->
+                filter = updateFilterWithSearchName(filter, input)
+                println("User input: $input")
+            },
+            modifier = Modifier.size(height = 24.dp, width =  120.dp),
+            imeAction = ImeAction.Search
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        FilterButton(
+            onShowFiltersRequest = {
+                globalOverlayState.showOverlay(
+                    OverlayType.FILTER,
+                )
+            })
     }
 }

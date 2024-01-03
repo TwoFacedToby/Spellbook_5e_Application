@@ -14,6 +14,7 @@ import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.screens.Basic_Screen
 import com.example.spellbook5eapplication.app.view.screens.SearchScreen
+import com.example.spellbook5eapplication.app.view.utilities.DynamicButtonFactory
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModelFactory
 
@@ -39,7 +40,13 @@ fun BottomNavigationGraph(
             SpellbooksScreen(spellController, spellListLoader, globalOverlayState)
         }
         composable(route = Screens.Homebrew.route){
-            BrewScreen(globalOverlayState)
+            val spellList = SpellQueryViewModelFactory.create(type = "FAVORITES")
+            Basic_Screen(globalOverlayState = globalOverlayState, spellsLiveData = spellList, false, customContent = {
+                DynamicButtonFactory(
+                    buttonType = "HOMEBREW",
+                    globalOverlayState = globalOverlayState
+                )
+            })
         }
     }
 }

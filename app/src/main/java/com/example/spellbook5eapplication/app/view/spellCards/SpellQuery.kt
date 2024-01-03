@@ -58,7 +58,8 @@ fun SpellQuery(
     spellsLiveData: LiveData<List<Spell_Info.SpellInfo?>>,
     onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
     onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
-    enablePagination: Boolean
+    enablePagination: Boolean,
+    modifier: Modifier = Modifier
 ) {
 
     val spellQueryViewModel: SpellQueryViewModel = viewModel()
@@ -76,9 +77,10 @@ fun SpellQuery(
     if (spells.isEmpty() && !isLoading) {
         NoSpellsFoundMessage()
     } else {
+
         LazyColumn(
             state = lazyListState,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
