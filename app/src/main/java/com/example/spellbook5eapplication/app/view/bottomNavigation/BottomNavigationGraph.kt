@@ -27,12 +27,12 @@ fun BottomNavigationGraph(
         composable(route = Screens.Search.route){
             //SearchScreen(globalOverlayState)
             val spellQueryViewModel = viewModel<SpellQueryViewModel>()
-            Basic_Screen(globalOverlayState = globalOverlayState, spellQueryViewModel)
+            Basic_Screen(globalOverlayState = globalOverlayState, spellQueryViewModel, true)
         }
         composable(route = Screens.Favorite.route){
             //FavoriteScreen(spellController, spellListLoader, globalOverlayState)
             val spellQueryViewModel = viewModel<SpellQueryViewModel>()
-            Basic_Screen(globalOverlayState = globalOverlayState, spellQueryViewModel)
+            Basic_Screen(globalOverlayState = globalOverlayState, spellQueryViewModel, true)
         }
         composable(route = Screens.Spellbooks.route){
             SpellbooksScreen(spellController, spellListLoader, globalOverlayState)

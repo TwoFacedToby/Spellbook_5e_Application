@@ -42,7 +42,9 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.runBlocking
 
 @Composable
-fun Basic_Screen(globalOverlayState: GlobalOverlayState, viewModel: SpellQueryViewModel ){
+fun Basic_Screen(globalOverlayState: GlobalOverlayState,
+                 viewModel: SpellQueryViewModel,
+                 enablePagination: Boolean){
     val spellList : SpellList?
     runBlocking {
         spellList = SpellController.getAllSpellsList()
@@ -116,7 +118,8 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState, viewModel: SpellQueryVi
 
                             OverlayType.ADD_TO_SPELLBOOK,
                         )
-                    }
+                    },
+                    enablePagination = enablePagination
                 )
             }
             for (overlayType in globalOverlayState.getOverlayStack()) {

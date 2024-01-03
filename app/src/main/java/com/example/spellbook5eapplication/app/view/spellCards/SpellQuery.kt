@@ -57,7 +57,8 @@ fun SpellQuery(
     filter: Filter,
     spellsLiveData: LiveData<List<Spell_Info.SpellInfo?>>,
     onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
-    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit
+    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
+    enablePagination: Boolean
 ) {
 
     val spellQueryViewModel: SpellQueryViewModel = viewModel()
@@ -98,21 +99,22 @@ fun SpellQuery(
                     }
                 }*/
 
-                val shouldLoadMore = index == spells.size - 1 &&
-                        spells.size >= bottomDistance &&
-                        !isLoading &&
-                        pagination &&
-                        spellQueryViewModel.canLoadMoreSpells()
+                // Handle pagination logic only if enabled
+                if (enablePagination) {
+                    val shouldLoadMore = index == spells.size - 1 &&
+                            !isLoading &&
+                            spellQueryViewModel.canLoadMoreSpells()
 
-                if (shouldLoadMore) {
-                    coroutineScope.launch {
-                        spellQueryViewModel.loadMoreSpells()
+                    if (shouldLoadMore) {
+                        coroutineScope.launch {
+                            spellQueryViewModel.loadMoreSpells()
+                        }
                     }
                 }
-
             }
 
-            if (isLoading) {
+            // Loading indicator only when pagination is enabled and isLoading is true
+            if (isLoading && enablePagination) {
                 item { LoadingIndicator() }
             }
         }
