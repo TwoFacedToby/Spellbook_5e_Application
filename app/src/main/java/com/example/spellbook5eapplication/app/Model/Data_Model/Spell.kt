@@ -1,128 +1,79 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
 
-class Spell  {
-    var json : String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
-    var index: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+import com.google.gson.annotations.SerializedName
 
-    var name: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+class Spell{
+data class SpellInfo(
 
-    var desc: List<String> = listOf()
-        get() = field
-        set(value) {
-            field = value
-        }
+    var json: String?,
 
-    var atHigherLevel: List<String> = listOf()
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("index")
+    var index: String?,
 
-    var range: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("name")
+    var name: String?,
 
-    var components: List<String> = listOf()
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("desc")
+    var desc: List<String>?,
 
-    var materials: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("higher_level")
+    var atHigherLevel: List<String>?,
 
-    var ritual: Boolean = false
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("range")
+    var range: String?,
 
-    var duration: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("components")
+    var components: List<String>?,
 
-    var concentration: Boolean = false
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("material")
+    var materials: String?,
 
+    @SerializedName("ritual")
+    var ritual: Boolean?,
 
-    var casting_time: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("duration")
+    var duration: String?,
 
-    var level: Int = 0
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("concentration")
+    var concentration: Boolean?,
 
-    var school: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("casting_time")
+    var casting_time: String?,
 
-    var classes: List<String> = listOf()
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("level")
+    var level: Int?,
 
-    var url: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("school")
+    var school: String?,
 
-    var attackType: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("classes")
+    var classes: List<String>?,
 
-    var damage: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("url")
+    var url: String?,
 
-    var dc: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("attack_type")
+    var attackType: String?,
 
-    var aoe: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
-    var homebrew: Boolean = false
-        get() = field
-        set(value) {
-            field = value
-        }
+    @SerializedName("damage")
+    var damage: String?,
+
+    @SerializedName("dc")
+    var dc: String?,
+
+    @SerializedName("area_of_effect")
+    var aoe: String?,
+
+    var homebrew: Boolean?)
+
+    data class SpellOverview(
+        @SerializedName("index") val index: String?,
+        @SerializedName("name") val name: String?,
+        @SerializedName("url") val url: String?
+    )
+
+    data class SpellsResponseOverview(
+        @SerializedName("count") val count: Int,
+        @SerializedName("results") val spells: List<Spell.SpellOverview>
+    )
 }

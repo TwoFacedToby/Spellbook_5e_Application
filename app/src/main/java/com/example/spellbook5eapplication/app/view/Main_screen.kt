@@ -11,6 +11,7 @@ import com.example.spellbook5eapplication.app.view.bottomNavigation.BottomBar
 import com.example.spellbook5eapplication.app.view.bottomNavigation.BottomNavigationGraph
 import com.example.spellbook5eapplication.app.view.topNavigation.TopBar
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import retrofit2.Retrofit
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)

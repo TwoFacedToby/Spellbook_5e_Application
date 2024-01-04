@@ -26,7 +26,7 @@ object SpelllistLoader {
 
         // Create and populate the SpellList
         val spellList = SpellList()
-        spellList.setIndexList(spellbook.spells) // Assuming the spells in Spellbook are just names
+        spellList.setIndexList(spellbook.spells)
         spellList.setSpellInfoList(spellInfoList)
 
         return spellList

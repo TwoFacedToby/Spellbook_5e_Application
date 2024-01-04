@@ -6,18 +6,18 @@ import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 
 class SpellFactory {
-    fun createSpellsFromJsons(jsons : List<String>) : List<Spell> {
-        val spells : MutableList<Spell> = mutableListOf()
+    fun createSpellsFromJsons(jsons : List<String>) : List<Spell.SpellInfo> {
+        val spells : MutableList<Spell.SpellInfo> = mutableListOf()
         for (json in jsons) {
             spells.add(createSpellFromJson(json))
         }
         return spells
     }
-    fun createSpellFromJson(jsonString: String): Spell {
+    fun createSpellFromJson(jsonString: String): Spell.SpellInfo {
         val gson = Gson()
         val jsonObject = gson.fromJson(jsonString, JsonObject::class.java)
 
-        val spell = Spell()
+        val spell = Spell.SpellInfo(null, null , null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
         spell.json = jsonString
 
         //TODO - Add all json variables as variables for spell.

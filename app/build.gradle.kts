@@ -70,6 +70,11 @@ dependencies {
     implementation( "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
     implementation("androidx.compose.foundation:foundation:[version]")
     implementation("androidx.compose.runtime:runtime-livedata:1.5.4")
+
+    //Retrofit:
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
