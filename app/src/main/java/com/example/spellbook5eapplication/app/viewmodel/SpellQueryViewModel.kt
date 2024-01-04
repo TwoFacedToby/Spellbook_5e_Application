@@ -21,11 +21,16 @@ class SpellQueryViewModel() : ViewModel() {
     private val _favorite = MutableLiveData<List<Spell_Info.SpellInfo?>>()
     val favorite: LiveData<List<Spell_Info.SpellInfo?>> = _favorite
 
+    private val _homebrew = MutableLiveData<List<Spell_Info.SpellInfo?>>()
+    val homebrew: LiveData<List<Spell_Info.SpellInfo?>> = _homebrew
+
     fun getLiveData(type: String): LiveData<List<Spell_Info.SpellInfo?>> {
         loadFavoriteSpells()
+        loadHomebrewList()
         return when (type) {
             "ALL_SPELLS" -> spells
             "FAVORITES" -> favorite
+            "HOMEBREW" -> homebrew
             else -> throw IllegalArgumentException("Invalid type")
         }
     }
@@ -69,6 +74,12 @@ class SpellQueryViewModel() : ViewModel() {
     fun loadFavoriteSpells() {
         val spellList = SpelllistLoader.loadFavouritesAsSpellList()
         _favorite.postValue(spellList.getSpellInfoList())
+    }
+
+    fun loadHomebrewList(){
+        val spellList = SpellController.retrieveHomeBrew()
+        _homebrew.postValue(spellList!!.getSpellInfoList())
+
     }
 
     fun canLoadMoreSpells(): Boolean {

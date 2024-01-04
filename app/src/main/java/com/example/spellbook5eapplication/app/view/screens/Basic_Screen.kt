@@ -34,6 +34,7 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.NewSpellOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.updateFilterWithSearchName
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
@@ -138,6 +139,21 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState,
                                     filter = newFilter
                                     println("Filter updated: $filter") }
                             )
+                        }
+                    }
+                    OverlayType.MAKE_SPELL -> {
+                        CustomOverlay(
+                            globalOverlayState = globalOverlayState,
+                            overlayType = OverlayType.MAKE_SPELL,
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                        ) {
+                            NewSpellOverlay(onDismissRequest = {
+                                globalOverlayState.dismissOverlay()
+
+                                //globalOverlayState.showOverlay(
+                                //   OverlayType.ERASE_PROMPT
+                                // )
+                            }, onFilterSelected = {/* TODO */ })
                         }
                     }
                     else -> Unit

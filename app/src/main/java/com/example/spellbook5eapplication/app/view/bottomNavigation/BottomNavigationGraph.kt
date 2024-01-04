@@ -40,7 +40,7 @@ fun BottomNavigationGraph(
             SpellbooksScreen(spellController, spellListLoader, globalOverlayState)
         }
         composable(route = Screens.Homebrew.route){
-            val spellList = SpellQueryViewModelFactory.create(type = "FAVORITES")
+            val spellList = SpellQueryViewModelFactory.create(type = "HOMEBREW")
             Basic_Screen(globalOverlayState = globalOverlayState, spellsLiveData = spellList, false, customContent = {
                 DynamicButtonFactory(
                     buttonType = "HOMEBREW",
