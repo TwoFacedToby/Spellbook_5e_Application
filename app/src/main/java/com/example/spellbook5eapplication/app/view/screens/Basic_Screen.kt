@@ -115,7 +115,8 @@ fun Basic_Screen(
             for (overlayType in GlobalOverlayState.getOverlayStack()) {
                 when (overlayType) {
                     OverlayType.LARGE_SPELLCARD -> {
-                        LargeSpellCardOverlay({ GlobalOverlayState.dismissOverlay() }, overlaySpell)
+                        //LargeSpellCardOverlay( { GlobalOverlayState.dismissOverlay() }, overlaySpell)
+                        //spellCardFactory.createLargeSpellCard(displayable)
                     }
                     OverlayType.ADD_TO_SPELLBOOK -> {
                         CustomOverlay(

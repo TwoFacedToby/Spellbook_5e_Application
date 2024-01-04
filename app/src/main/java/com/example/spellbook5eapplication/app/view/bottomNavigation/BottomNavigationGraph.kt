@@ -16,6 +16,7 @@ import com.example.spellbook5eapplication.app.view.screens.Basic_Screen
 import com.example.spellbook5eapplication.app.view.screens.SearchScreen
 import com.example.spellbook5eapplication.app.view.utilities.DefaultSpellCardFactory
 import com.example.spellbook5eapplication.app.view.utilities.DynamicButtonFactory
+import com.example.spellbook5eapplication.app.view.utilities.StandardButtonFactory
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModelFactory
 
@@ -26,7 +27,8 @@ fun BottomNavigationGraph(
     spellListLoader: SpelllistLoader,
 ) {
     NavHost(navController = navController, startDestination = Screens.Search.route){
-        val spellCardFactory = DefaultSpellCardFactory()
+        val buttonFactory = StandardButtonFactory()
+        val spellCardFactory = DefaultSpellCardFactory(buttonFactory)
         composable(route = Screens.Search.route){
             //SearchScreen(globalOverlayState)
             val spellList = SpellQueryViewModelFactory.create(type = "ALL_SPELLS")

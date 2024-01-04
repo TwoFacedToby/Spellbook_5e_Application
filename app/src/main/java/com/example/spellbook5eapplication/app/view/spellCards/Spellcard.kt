@@ -60,6 +60,9 @@ import kotlinx.coroutines.Dispatchers
 fun SpellCard(
     onFullSpellCardRequest: () -> Unit,
     onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
+    addButton: @Composable () -> Unit,
+    favoriteButton: @Composable () -> Unit,
+    onExpandAction: () -> Unit,
     spell : Spell_Info.SpellInfo)
 
 {
@@ -77,7 +80,7 @@ fun SpellCard(
         modifier = Modifier
             .height(150.dp)
             .padding(10.dp)
-            .clickable { onFullSpellCardRequest() }
+            .clickable { onExpandAction() }
     ) {
         Column(
             modifier = Modifier
@@ -156,7 +159,7 @@ fun SpellCard(
                 Column(
                     modifier = Modifier.padding(top = 10.dp)
                 ) {
-                    IconButton(
+                    /*IconButton(
                         onClick = { onAddToSpellbookRequest(spell) }) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
@@ -164,10 +167,14 @@ fun SpellCard(
                             tint = colorResource(id = R.color.spellcard_button),
                             modifier = Modifier.size(35.dp)
                         )
-                    }
+                    }*/
+
+                    addButton()
+
                     val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
                     var favouriteImage by remember { mutableStateOf(defaultFavouriteImage) }
                     var isFavourite = SpellbookManager.getSpellbook("Favourites")?.spells?.contains(spell.index)
+
                     IconButton(onClick = {
                         spell.index?.let { spellIndex ->
                             val favouritesSpellbook = SpellbookManager.getSpellbook("Favourites")

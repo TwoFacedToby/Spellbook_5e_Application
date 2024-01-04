@@ -129,7 +129,7 @@ if(maxSize){
                             Box(modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 20.dp)){//Centering is weird idk what to tell you
-                                SpellCard(
+                                /*SpellCard(
                                     onFullSpellCardRequest = {
                                         onFullSpellCardRequest(it)
                                     },
@@ -137,7 +137,7 @@ if(maxSize){
                                         onAddToSpellbookRequest(it)
                                     },
                                     spell = it
-                                )
+                                )*/
                             }
 
                         }
