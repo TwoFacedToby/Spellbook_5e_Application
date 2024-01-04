@@ -11,4 +11,5 @@ interface RetroFitAPI {
 
     @GET("spells/{index}")
     suspend fun getSpellInfo(): Response<Spell.SpellInfo>
+
 }
