@@ -36,7 +36,7 @@ class TestLocalStorage {
         // Assuming you have a setup in SpellController to use a passed context
         println("1")
         //Sets the context in spellcontroller
-        SpellController.setContext(context)
+        LocalDataLoader.setContext(context)
         println("2")
         //Saves the json file to the device
         LocalDataLoader.saveJson("{}", "testFile.json", LocalDataLoader.DataType.HOMEBREW)

@@ -46,7 +46,7 @@ class SaveJsonToFileTest {
         // Use Robolectric to get a mock Context
         context = ApplicationProvider.getApplicationContext()
         // Set the context in your SpellController or the class where saveJsonToFile is defined
-        SpellController.setContext(context)
+        LocalDataLoader.setContext(context)
     }
 
     @Test
