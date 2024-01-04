@@ -1,4 +1,5 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
+import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.google.gson.annotations.SerializedName
 class Spell_Info {
 
@@ -35,7 +36,7 @@ class Spell_Info {
         @SerializedName("oaths") val oaths: String?,
         @SerializedName("sorcerous_origins") val sorcerousOrigins: String?,
         @SerializedName("otherworldly_patrons") val otherworldlyPatrons: String?
-    )
+    ):Displayable
 
     data class SpellSchool(
         @SerializedName("index") val index: String?,

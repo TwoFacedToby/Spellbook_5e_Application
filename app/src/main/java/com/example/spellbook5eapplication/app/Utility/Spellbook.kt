@@ -1,6 +1,8 @@
 package com.example.spellbook5eapplication.app.Model
 
-class Spellbook(var spellbookName: String) {
+import com.example.spellbook5eapplication.app.Utility.Displayable
+
+class Spellbook(var spellbookName: String): Displayable {
     val spells: MutableList<String> = mutableListOf()
 
     fun addSpellToSpellbook(spellName: String) {
@@ -13,5 +15,10 @@ class Spellbook(var spellbookName: String) {
     fun removeSpell(spellName: String) {
         spells.remove(spellName)
     }
+
+    override fun toString(): String {
+        return "Spellbook(spellbookName='$spellbookName', spells=$spells)"
+    }
+
 
 }

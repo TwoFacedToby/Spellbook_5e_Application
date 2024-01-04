@@ -42,6 +42,8 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.Spellbook
+import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,7 +57,7 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 @Composable
 fun SpellQuery(
     filter: Filter,
-    spellsLiveData: LiveData<List<Spell_Info.SpellInfo?>>,
+    spellsLiveData: LiveData<List<Displayable?>>,
     onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
     onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
     enablePagination: Boolean,
@@ -87,19 +89,23 @@ fun SpellQuery(
             items(spells.size) { index ->
                 spells[index]?.let {
                     Log.d("SpellDebug", "Spell at index $index is of type: ${it::class.java}")
-                    SpellCard(
-                        onFullSpellCardRequest = { onFullSpellCardRequest(it) },
-                        onAddToSpellbookRequest = { onAddToSpellbookRequest(it) },
-                        spell = it
-                    )
-                }
+                    when (it) {
+                        is Spell_Info.SpellInfo -> {
+                            SpellCard(
+                                onFullSpellCardRequest = { onFullSpellCardRequest(it) },
+                                onAddToSpellbookRequest = { onAddToSpellbookRequest(it) },
+                                spell = it
+                            )
+                        }
+                        is Spellbook -> {
+                            // New logic for handling Spellbook
+                            Log.d("WEMADEIT", "We didnt actually make it")
+                        }
 
-                /*if (index >= spells.size - bottomDistance && !isLoading) {
-                    coroutineScope.launch {
-                        println("DETTE HER")
-                        spellQueryViewModel.loadMoreSpells()
+                        else -> {}
                     }
-                }*/
+
+                }
 
                 // Handle pagination logic only if enabled
                 if (enablePagination) {

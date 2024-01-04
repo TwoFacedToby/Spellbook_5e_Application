@@ -37,7 +37,7 @@ fun BottomNavigationGraph(
             Basic_Screen(globalOverlayState = globalOverlayState, spellList, false)
         }
         composable(route = Screens.Spellbooks.route){
-            val spellList = SpellQueryViewModelFactory.create(type = "HOMEBREW")
+            val spellList = SpellQueryViewModelFactory.create(type = "SPELLBOOK")
             Basic_Screen(globalOverlayState = globalOverlayState, spellsLiveData = spellList, false, customContent = {
                 DynamicButtonFactory(
                     buttonType = "SPELLBOOK",
