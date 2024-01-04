@@ -1,5 +1,6 @@
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import org.junit.After
 import org.junit.Before
@@ -50,11 +51,12 @@ class SaveJsonToFileTest {
 
     @Test
     fun saveJsonToFile_CreatesFileWithCorrectContent() {
+
         // Call the method to test
-        SpellController.saveJsonToFile(testJsonString, testDirectoryName, testFileName)
+        LocalDataLoader.saveJson(testJsonString, testFileName, LocalDataLoader.DataType.HOMEBREW)
 
         // Construct the expected file path
-        val expectedFilePath = File(context.filesDir, "$testDirectoryName/$testFileName")
+        val expectedFilePath = File(context.filesDir, "Homebrews/$testFileName")
 
         // Assert the file exists
         assertTrue(expectedFilePath.exists())

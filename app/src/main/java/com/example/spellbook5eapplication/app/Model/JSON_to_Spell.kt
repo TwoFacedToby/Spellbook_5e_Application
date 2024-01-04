@@ -8,17 +8,11 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 
 class JSON_to_Spell {
-    fun jsonToSpell(json : JSON) : Spell_Info.SpellInfo? {
-        if(json.getType() == "missing"){
-            val nullSpell = Spell_Info.SpellInfo(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null)
-            nullSpell.patron = json.getType()
-            return nullSpell
-        }
+    fun jsonToSpell(json : String) : Spell_Info.SpellInfo? {
         val gson = Gson()
-        val spell = gson.fromJson(json.getJSONString(), Spell_Info.SpellInfo::class.java)
+        val spell = gson.fromJson(json, Spell_Info.SpellInfo::class.java)
         if(spell.description?.isEmpty() != false) return null
-        spell.url = json.getJSONString()
-        spell.patron = json.getType()
+        spell.url = json
         return spell
     }
     fun jsonToSpellList(json : String) : SpellList {

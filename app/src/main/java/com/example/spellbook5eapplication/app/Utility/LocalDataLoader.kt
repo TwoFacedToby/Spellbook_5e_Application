@@ -14,11 +14,12 @@ object LocalDataLoader {
         context = WeakReference(appContext.applicationContext)
         baseDirectory = context!!.get()?.filesDir
     }
-    fun getIndexList(dataType : LocalData) : List<String>{
+    fun getIndexList(dataType : DataType) : List<String>{
+        if(dataType == DataType.HOMEBREW) return getIndexListFromDirectory("Homebrews")
+        if(dataType == DataType.SPELLBOOK) return getIndexListFromDirectory("Spellbooks")
         val fileName = when(dataType){
-            LocalData.INDIVIDUAL -> "LocalJSONData/individualSpells.json"
-            LocalData.HOMEBREW -> "LocalJSONData/homebrewSpells.json"
-            LocalData.FAVOURITES ->  "LocalJSONData/favouriteSpells.json"
+            DataType.INDIVIDUAL -> "LocalJSONData/individualSpells.json"
+            DataType.FAVOURITES ->  "Spellbooks/Favourites.json"
             else -> {""}
         }
         if(fileName == ""){
@@ -27,25 +28,45 @@ object LocalDataLoader {
         } //No such filename
         return getIndexListFromFileName(fileName)
     }
+    fun saveIndexList(dataType: DataType, list : List<String>){
+        val fileName = when(dataType){
+            DataType.INDIVIDUAL -> "LocalJSONData/individualSpells.json"
+            DataType.HOMEBREW -> "LocalJSONData/homebrewSpells.json"
+            DataType.FAVOURITES ->  "Spellbooks/Favourites.json"
+            else -> {""}
+        }
+        if(fileName == ""){
+            println("No file found")
+            return
+        } //No such filename
+
+    }
     fun getSpellBookIndexList(name : String) : List<String> {
         return getIndexListFromFileName("Spellbooks/$name")
     }
-    fun saveJson(json : String, fileName: String, dataType: LocalData) {
-        val directoryName = when(dataType){
-            LocalData.HOMEBREW -> "Homebrews"
-            LocalData.INDIVIDUAL -> "IndividualSpells"
-            else -> {""}
+    fun saveJson(json : String, fileName: String, dataType: DataType) {
+        if(dataType == DataType.SPELLBOOK) saveJsonToFile(json, "Spellbooks", fileName)
+        else
+        {
+            val directoryName = when(dataType){
+                DataType.HOMEBREW -> "Homebrews"
+                DataType.INDIVIDUAL -> "IndividualSpells"
+                DataType.LOCAL -> "LocalJSONData"
+                else -> {""}
+            }
+            if(directoryName == ""){
+                println("No such directory")
+                return
+            }
+            saveJsonToFile(json, directoryName, fileName)
         }
-        if(directoryName == ""){
-            println("No such directory")
-            return
-        }
-        saveJsonToFile(json, directoryName, fileName)
     }
-    fun getJson(fileName: String, dataType: LocalData) : String?{
+
+    fun getJson(fileName: String, dataType: DataType) : String?{
         val directoryName = when(dataType){
-            LocalData.HOMEBREW -> "Homebrews"
-            LocalData.INDIVIDUAL -> "IndividualSpells"
+            DataType.HOMEBREW -> "Homebrews"
+            DataType.INDIVIDUAL -> "IndividualSpells"
+            DataType.SPELLBOOK -> "Spellbooks"
             else -> {""}
         }
         if(directoryName == ""){
@@ -82,29 +103,28 @@ object LocalDataLoader {
         }
         return spellsList
     }
+    private fun getIndexListFromDirectory(directoryName: String) : List<String> {
+        val targetDirectory = File(baseDirectory, directoryName)
+
+        return if (targetDirectory.exists() && targetDirectory.isDirectory) {
+            targetDirectory.listFiles()?.map { it.name } ?: emptyList()
+        } else {
+            emptyList() // Or throw an exception if the directory does not exist
+        }
+    }
     private fun getLocalJson(fileName: String) : String? {
         val file = File(baseDirectory, fileName)
         if (file.exists()) {
             return file.readText(Charsets.UTF_8)
         }
-        else{
-            println("FILE DOESNT EXIST BRO")
-        }
         return null
     }
-
-    /**
-     * Deletes a specified file from a given directory.
-     *
-     * This function looks for the file in the specified directory within the application's internal storage.
-     * If the file is found, it is deleted. The function provides feedback via the console about the
-     * success or failure of the deletion process.
-     *
-     * @param directoryName The name of the directory where the file is located.
-     * @param fileName The name of the file to be deleted.
-     * @author Kenneth Kaiser
-     */
-    private fun deleteFileFromDirectory(directoryName: String, fileName: String): Boolean {
+    fun deleteFile(fileName: String, dataType : DataType): Boolean {
+        val directoryName = when(dataType){
+            DataType.HOMEBREW -> "Homebrews"
+            DataType.INDIVIDUAL -> "IndividualSpells"
+            else -> {""}
+        }
         try {
             // Locate the file in the specified directory
             val file = File(baseDirectory, "$directoryName/$fileName")
@@ -126,13 +146,13 @@ object LocalDataLoader {
             return false
         }
         return false
-
     }
-    enum class LocalData(val value: String) {
+    enum class DataType(val value: String) {
         INDIVIDUAL("IndividualSpells"),
         SPELLBOOK("Spellbooks"),
-        FAVOURITES("Favourites"), //TODO - insert homebrew here
-        HOMEBREW("Homebrews"), //TODO - insert homebrew here
+        FAVOURITES("Favourites"),
+        HOMEBREW("Homebrews"),
+        LOCAL("LocalJSONData"),
     }
 
 }

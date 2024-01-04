@@ -27,7 +27,7 @@ object SpellbookManager {
             val gson = Gson()
             val spellbookJson = gson.toJson(it)
 
-            SpellController.saveJsonToFile(spellbookJson, "Spellbooks", spellBookName + ".json")
+            LocalDataLoader.saveJson(spellbookJson, spellBookName, LocalDataLoader.DataType.SPELLBOOK)
         }
     }
 
