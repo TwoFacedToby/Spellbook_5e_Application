@@ -1,5 +1,7 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
 
+import com.example.spellbook5eapplication.R
+
 class Spell  {
     var json : String = ""
         get() = field
@@ -125,4 +127,16 @@ class Spell  {
         set(value) {
             field = value
         }
-}
+
+    var classImages: List<Int>? = listOf()
+        get() = field
+        set(value) {
+            field = value
+        }
+
+    var schoolImage: Int = R.drawable.abjuration
+        get() = field
+        set(value) {
+            field = value
+        }
+ }

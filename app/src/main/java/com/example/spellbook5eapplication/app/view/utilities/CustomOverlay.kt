@@ -46,45 +46,28 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CustomOverlay(
-    globalOverlayState: GlobalOverlayState,
     overlayType: OverlayType,
-    onDismissRequest: () -> Unit,
-    content: @Composable (() -> Unit)? = null
+    content: @Composable (() -> Unit)
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val overlayHeight = (screenHeight / 5) * 4
-    val swipeableState = rememberSwipeableState(initialValue = 0)
-    val sizePx = with(LocalDensity.current) { overlayHeight.toPx() }
-    val anchors = mapOf(0F to 0, sizePx to 1)
 
-    if(globalOverlayState.getTopOverlay() == overlayType) {
+    if(GlobalOverlayState.getTopOverlay() == overlayType) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(colorResource(id = R.color.black).copy(alpha = 0.2f))
                 .clickable(
                     onClick = {
-                        onDismissRequest()
+                        GlobalOverlayState.dismissOverlay()
                     }
                 )
-                .swipeable(
-                    state = swipeableState,
-                    anchors = anchors,
-                    orientation = Orientation.Vertical,
-                    thresholds = { _, _ -> FractionalThreshold(0.9f) }
-                )
         ) {
-            LaunchedEffect(swipeableState.currentValue) {
-                if (swipeableState.currentValue == 1) {
-                    onDismissRequest()
-                }
-            }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(overlayHeight)
                     .align(Alignment.BottomCenter)
-                    .offset(y = swipeableState.offset.value.dp)
                     .background(
                         colorResource(id = R.color.main_color),
                         shape = RoundedCornerShape(20.dp)
@@ -93,94 +76,8 @@ fun CustomOverlay(
                     .padding(5.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                Log.d("CustomOverlay", "Is content null?: ${content == null}") // Logging statement
-                if (content != null) {
-                    content()
-                } else {
-                    DefaultContent(onDismissRequest)
-                }
+                content()
             }
         }
     }
 }
-
-@Composable
-fun DefaultContent(onDismiss: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(text = "Hardcoded Title", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onDismiss) {
-            Text("Hardcoded Button Text")
-        }
-    }
-}
-
-
-
-/*@Composable
-fun CustomOverlay(
-    globalOverlayState: GlobalOverlayState,
-    overlayType: OverlayType,
-    onDismissRequest: () -> Unit,
-    content: @Composable (BoxScope.() -> Unit)? = null
-) {
-    if(globalOverlayState.getTopOverlay() == overlayType) {
-        val screenHeight = LocalConfiguration.current.screenHeightDp
-        val offsetY = remember { Animatable(screenHeight.toFloat()) }
-
-        val scope = rememberCoroutineScope()
-
-        val onDismiss: () -> Unit = {
-            scope.launch {
-                offsetY.animateTo(
-                    targetValue = screenHeight.toFloat(),
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessLow
-                    )
-                )
-                onDismissRequest()
-                globalOverlayState.dismissOverlay()
-            }
-        }
-
-        LaunchedEffect(key1 = true) {
-            offsetY.animateTo(
-                (screenHeight.toFloat() / 5),
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioNoBouncy,
-                    stiffness = Spring.StiffnessLow
-                )
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = R.color.black).copy(alpha = 0.2f))
-                .offset(y = offsetY.value.dp)
-        ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(screenHeight.dp)
-                        .background(
-                            colorResource(id = R.color.main_color),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                        .padding(5.dp),
-                    contentAlignment = Alignment.TopCenter
-                ) {
-                    if (content != null) {
-                        content()
-                    } else {
-                        DefaultContent(onDismiss)
-                    }
-                }
-        }
-    }
-}*/

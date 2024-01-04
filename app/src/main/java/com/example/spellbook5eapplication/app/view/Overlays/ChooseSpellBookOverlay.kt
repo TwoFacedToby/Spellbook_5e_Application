@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
@@ -28,12 +27,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
-import com.example.spellbook5eapplication.app.view.utilities.CreateDialog
+import com.example.spellbook5eapplication.app.view.utilities.CreateSpellBookDialog
 
 @Composable
 fun ChooseSpellBookOverlay(
     onDismissRequest: () -> Unit,
-    listOfStrings : List<String>? = null
+    listOfStrings : List<String>? = null,
+    cancelButtonComposable: @Composable () -> Unit,
+    createButtonComposable: @Composable () -> Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -43,6 +44,7 @@ fun ChooseSpellBookOverlay(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Divider(
             modifier = Modifier
                 .width(250.dp)
@@ -51,7 +53,9 @@ fun ChooseSpellBookOverlay(
                 .clickable { onDismissRequest() },
             color = colorResource(id = R.color.black).copy(alpha = 0.2F),
         )
+
         Spacer(modifier = Modifier.height(20.dp))
+
         Text(
             text = "Choose Spellbook",
             color = colorResource(id = R.color.white),
@@ -85,23 +89,22 @@ fun ChooseSpellBookOverlay(
                 }
             }
         )
+
         Spacer(modifier = Modifier.height(20.dp))
+
         ColouredButton(
             label = "Create new spellbook",
             modifier = Modifier,
             color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
-            onClick = { showDialog = true})
+            onClick = { showDialog = true}
+        )
 
-        if (showDialog) {
-            CreateDialog(onDismissRequest = { showDialog = false })
-        }
+        /*if (showDialog) {
+            CreateSpellBookDialog(
+                onDismissRequest = { showDialog = false },
+                cancelButtonComposable = cancelButtonComposable,
+                createButtonComposable = createButtonComposable
+                )
+        }*/
     }
-}
-
-@Preview
-@Composable
-fun ChooseSpellBookOverlayPreview(){
-    ChooseSpellBookOverlay(onDismissRequest = {
-        println("Dismiss button clicked")
-    })
 }

@@ -45,7 +45,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun EraseOverlay(onDismissRequest: () -> Unit, onEraseRequest: () -> Unit) {
     Dialog(
-        onDismissRequest = { /*TODO*/ }
+        onDismissRequest = { onDismissRequest() }
     )
     {
         Box(

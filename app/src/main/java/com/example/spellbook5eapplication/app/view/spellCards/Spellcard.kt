@@ -63,12 +63,8 @@ fun SpellCard(
     spell : Spell_Info.SpellInfo)
 
 {
-    val images = SpellCardCreation(spell)
-
-    var cardColor = R.color.spellcard_color
-    /*if(spell.patron == "api") cardColor = R.color.red_button
-    else if(spell.patron == "local") cardColor = R.color.green_button
-    else if(spell.patron == "debug") cardColor = androidx.appcompat.R.color.material_blue_grey_800*/
+    //val images = SpellCardCreation(spell)
+    val cardColor = R.color.spellcard_color
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -137,7 +133,7 @@ fun SpellCard(
                                 state = lazyListState
 
                             ) {
-                                items(images.classImageIDs.size) { index ->
+                                /*items(images.classImageIDs.size) { index ->
                                     Image(
                                         painter = painterResource(id = images.classImageIDs[index]),
                                         contentDescription = "Class",
@@ -147,7 +143,7 @@ fun SpellCard(
                                             .clip(RoundedCornerShape(2.dp))
                                             .shadow(elevation = 5.dp)
                                     )
-                                }
+                                }*/
                             }
                         }
                     }

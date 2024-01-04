@@ -1,9 +1,23 @@
 package com.example.spellbook5eapplication.app.viewmodel
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 
-class GlobalOverlayState {
+object GlobalOverlayState {
     private val overlayStack = mutableStateListOf<OverlayType>()
+    private var currentOverlaySpell by mutableStateOf<Spell?>(null)
 
+
+
+    fun setOverlaySpell(spell: Spell) {
+        currentOverlaySpell = spell
+    }
+
+    fun getOverlaySpell(): Spell? {
+        return currentOverlaySpell
+    }
 
     fun showOverlay(overlayType: OverlayType) {
         overlayStack.add(overlayType)
@@ -21,6 +35,12 @@ class GlobalOverlayState {
 
     fun getTopOverlay(): OverlayType? {
         return overlayStack.lastOrNull()
+    }
+
+    fun removeSpecificOverlay(overlayType: OverlayType) {
+        if(overlayStack.contains(overlayType)){
+            overlayStack.remove(overlayType)
+        }
     }
 
     fun getOverlayStack(): List<OverlayType> {

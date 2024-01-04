@@ -123,6 +123,7 @@ fun SearchScreen(globalOverlayState: GlobalOverlayState){
                     }
                 )
             }
+
             for (overlayType in globalOverlayState.getOverlayStack()) {
                 when (overlayType) {
                     OverlayType.LARGE_SPELLCARD -> {

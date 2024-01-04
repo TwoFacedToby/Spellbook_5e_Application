@@ -9,5 +9,5 @@ enum class OverlayType {
     PROFILE,
     ADD_TO_SPELLBOOK,
     FILTER,
-    MAKE_SPELL
+    MAKE_SPELL,
 }

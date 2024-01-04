@@ -2,7 +2,6 @@ package com.example.spellbook5eapplication.app.view.utilities
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,30 +26,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
-import com.example.spellbook5eapplication.app.Utility.SpellbookViewModel
-import com.example.spellbook5eapplication.app.Utility.SpellbookViewModelFactory
 
 @Composable
-fun CreateDialog(
+fun CreateSpellBookDialog(
     onDismissRequest: () -> Unit
 ){
-
-    //Initializing viewModel to make the app recompose when a new spellbook is selected.
-    val viewModel: SpellbookViewModel
     var newSpellbookName by remember { mutableStateOf("") }
 
     Dialog(
-        onDismissRequest = { /*TODO*/ }
+        onDismissRequest = { }
     )
     {
+
         Box(
             modifier = Modifier
                 .size(width = 250.dp, height = 150.dp)
@@ -70,12 +62,14 @@ fun CreateDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
+
                 Text(
                     modifier = Modifier.padding(top = 5.dp, bottom = 5.dp),
                     text = "Create new Spellbook",
                     color = colorResource(id = R.color.white),
                     fontWeight = FontWeight.Bold
                 )
+
                 UserInputField(
                     label = "Spellbook name",
                     onInputChanged = { input -> newSpellbookName = input },
@@ -85,14 +79,16 @@ fun CreateDialog(
                     singleLine = true,
                     imeAction = ImeAction.Done
                 )
+
                 Spacer(modifier = Modifier.height(10.dp))
+
                 Row(modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly) {
-                    ColouredButton(
-                        label = "Cancel",
-                        modifier = Modifier,
-                        color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
-                        onClick = { onDismissRequest() })
+
+                    //cancelButtonComposable()
+
+                    //createButtonComposable()
+
                     ColouredButton(
                         label = "Create",
                         modifier = Modifier,
@@ -102,17 +98,10 @@ fun CreateDialog(
                             SpellbookManager.addSpellbook(newSpellbook)
                             SpellbookManager.saveSpellbookToFile(newSpellbook.spellbookName)
                             onDismissRequest()
-                        })
+                        }
+                    )
                 }
             }
         }
-    }
-}
-
-@Preview
-@Composable
-fun CreateDialogPreview(){
-    CreateDialog {
-        println("onDismiss")
     }
 }
