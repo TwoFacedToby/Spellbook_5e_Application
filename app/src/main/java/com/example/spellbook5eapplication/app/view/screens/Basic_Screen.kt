@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -75,31 +76,35 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState,
                 modifier = Modifier.matchParentSize(),
                 alpha = 0.5F
             )
-            Column (modifier = Modifier.padding(top = 100.dp)) {
+            Column (modifier = Modifier.padding(top = 100.dp, bottom = 56.dp).matchParentSize()) {
                 // TopBar with Search and Filters
                 SearchFilterBar(globalOverlayState)
-
                 // List of Spells, taking up all available space
-                SpellQuery(
-                    filter = filter,
-                    spellsLiveData = spellsLiveData,
-                    onFullSpellCardRequest = {
-                        overlaySpell = it
-                        globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
-                    },
-                    onAddToSpellbookRequest = {
-                        overlaySpell = it
-                        globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
-                    },
-                    enablePagination = enablePagination
-                )
-            }
-            if (customContent != null) {
-                Box(modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth().padding(56.dp))
-                {
-                    customContent()
+                Box(modifier = Modifier.fillMaxHeight().weight(3f)){
+                    SpellQuery(
+                        filter = filter,
+                        spellsLiveData = spellsLiveData,
+                        onFullSpellCardRequest = {
+                            overlaySpell = it
+                            globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+                        },
+                        onAddToSpellbookRequest = {
+                            overlaySpell = it
+                            globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
+                        },
+                        enablePagination = enablePagination
+                    )
+                }
+
+                if (customContent != null) {
+                    Box(contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxWidth().weight(0.5f))
+                    {
+                        customContent()
+                    }
                 }
             }
+
 
 
             for (overlayType in globalOverlayState.getOverlayStack()) {
