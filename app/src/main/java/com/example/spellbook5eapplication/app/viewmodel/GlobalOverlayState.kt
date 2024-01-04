@@ -1,7 +1,7 @@
 package com.example.spellbook5eapplication.app.viewmodel
 import androidx.compose.runtime.mutableStateListOf
 
-class GlobalOverlayState {
+object GlobalOverlayState {
     private val overlayStack = mutableStateListOf<OverlayType>()
 
 

@@ -57,7 +57,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LargeSpellCardOverlay(
-    globalOverlayState: GlobalOverlayState,
     onDismissRequest: () -> Unit,
     spell : Spell_Info.SpellInfo
 )
@@ -99,7 +98,7 @@ fun LargeSpellCardOverlay(
                             horizontalArrangement = Arrangement.End
                         ) {
                             IconButton(
-                                onClick = { globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
+                                onClick = { GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
                                 Icon(
                                     imageVector = Icons.Outlined.Add,
                                     contentDescription = "Add to spellbook",

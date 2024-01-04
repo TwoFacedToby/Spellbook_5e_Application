@@ -59,9 +59,6 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 @Composable
 fun LocalLargeSpellCardOverlay(
-
-
-    globalOverlayState: GlobalOverlayState,
     onDismissRequest: () -> Unit,
     spell : Spell_Info.SpellInfo
 )
@@ -104,7 +101,7 @@ fun LocalLargeSpellCardOverlay(
                         horizontalArrangement = Arrangement.End
                     ) {
                         IconButton(
-                            onClick = { globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
+                            onClick = { GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
                             Icon(
                                 imageVector = Icons.Outlined.Add,
                                 contentDescription = "Add to spellbook",

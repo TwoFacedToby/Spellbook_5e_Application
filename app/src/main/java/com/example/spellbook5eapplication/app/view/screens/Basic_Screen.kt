@@ -47,7 +47,7 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.runBlocking
 
 @Composable
-fun Basic_Screen(globalOverlayState: GlobalOverlayState,
+fun Basic_Screen(
                  spellsLiveData: LiveData<List<Displayable?>>,
                  enablePagination: Boolean,
                  customContent: @Composable (() -> Unit)? = null){
@@ -80,7 +80,7 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState,
             )
             Column (modifier = Modifier.padding(top = 100.dp, bottom = 56.dp).matchParentSize()) {
                 // TopBar with Search and Filters
-                SearchFilterBar(globalOverlayState)
+                SearchFilterBar()
                 // List of Spells, taking up all available space
                 Box(modifier = Modifier.fillMaxHeight().weight(3f)){
                     SpellQuery(
@@ -88,11 +88,11 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState,
                         spellsLiveData = spellsLiveData,
                         onFullSpellCardRequest = {
                             overlaySpell = it
-                            globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+                            GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
                         },
                         onAddToSpellbookRequest = {
                             overlaySpell = it
-                            globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
+                            GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
                         },
                         enablePagination = enablePagination
                     )
@@ -109,31 +109,29 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState,
 
 
 
-            for (overlayType in globalOverlayState.getOverlayStack()) {
+            for (overlayType in GlobalOverlayState.getOverlayStack()) {
                 when (overlayType) {
                     OverlayType.LARGE_SPELLCARD -> {
-                        LargeSpellCardOverlay(globalOverlayState, { globalOverlayState.dismissOverlay() }, overlaySpell)
+                        LargeSpellCardOverlay({ GlobalOverlayState.dismissOverlay() }, overlaySpell)
                     }
                     OverlayType.ADD_TO_SPELLBOOK -> {
                         CustomOverlay(
-                            globalOverlayState = globalOverlayState,
                             overlayType = OverlayType.ADD_TO_SPELLBOOK,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
                         ) {
                             AddToSpellBookOverlay(
                                 spellInfo = overlaySpell,
-                                onDismissRequest = { globalOverlayState.dismissOverlay() }
+                                onDismissRequest = { GlobalOverlayState.dismissOverlay() }
                             )
                         }
                     }
                     OverlayType.FILTER -> {
                         CustomOverlay(
-                            globalOverlayState = globalOverlayState,
                             overlayType = OverlayType.FILTER,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
                         ){
                             FiltersOverlay(
-                                onDismissRequest = { globalOverlayState.dismissOverlay() },
+                                onDismissRequest = { GlobalOverlayState.dismissOverlay() },
                                 currentfilter = filter,
                                 createNewFilter = { Filter() },
                                 updateFilterState = { newFilter ->
@@ -144,12 +142,11 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState,
                     }
                     OverlayType.MAKE_SPELL -> {
                         CustomOverlay(
-                            globalOverlayState = globalOverlayState,
                             overlayType = OverlayType.MAKE_SPELL,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
+                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
                         ) {
                             NewSpellOverlay(onDismissRequest = {
-                                globalOverlayState.dismissOverlay()
+                                GlobalOverlayState.dismissOverlay()
 
                                 //globalOverlayState.showOverlay(
                                 //   OverlayType.ERASE_PROMPT
@@ -168,7 +165,7 @@ fun Basic_Screen(globalOverlayState: GlobalOverlayState,
 }
 
 @Composable
-fun SearchFilterBar(globalOverlayState: GlobalOverlayState){
+fun SearchFilterBar(){
     var filter by remember { mutableStateOf(Filter())}
 
     Row(
@@ -190,7 +187,7 @@ fun SearchFilterBar(globalOverlayState: GlobalOverlayState){
         Spacer(modifier = Modifier.width(5.dp))
         FilterButton(
             onShowFiltersRequest = {
-                globalOverlayState.showOverlay(
+                GlobalOverlayState.showOverlay(
                     OverlayType.FILTER,
                 )
             })

@@ -46,7 +46,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun CustomOverlay(
-    globalOverlayState: GlobalOverlayState,
     overlayType: OverlayType,
     onDismissRequest: () -> Unit,
     content: @Composable (() -> Unit)? = null
@@ -57,7 +56,7 @@ fun CustomOverlay(
     val sizePx = with(LocalDensity.current) { overlayHeight.toPx() }
     val anchors = mapOf(0F to 0, sizePx to 1)
 
-    if(globalOverlayState.getTopOverlay() == overlayType) {
+    if(GlobalOverlayState.getTopOverlay() == overlayType) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -119,68 +118,3 @@ fun DefaultContent(onDismiss: () -> Unit) {
         }
     }
 }
-
-
-
-/*@Composable
-fun CustomOverlay(
-    globalOverlayState: GlobalOverlayState,
-    overlayType: OverlayType,
-    onDismissRequest: () -> Unit,
-    content: @Composable (BoxScope.() -> Unit)? = null
-) {
-    if(globalOverlayState.getTopOverlay() == overlayType) {
-        val screenHeight = LocalConfiguration.current.screenHeightDp
-        val offsetY = remember { Animatable(screenHeight.toFloat()) }
-
-        val scope = rememberCoroutineScope()
-
-        val onDismiss: () -> Unit = {
-            scope.launch {
-                offsetY.animateTo(
-                    targetValue = screenHeight.toFloat(),
-                    animationSpec = spring(
-                        dampingRatio = Spring.DampingRatioNoBouncy,
-                        stiffness = Spring.StiffnessLow
-                    )
-                )
-                onDismissRequest()
-                globalOverlayState.dismissOverlay()
-            }
-        }
-
-        LaunchedEffect(key1 = true) {
-            offsetY.animateTo(
-                (screenHeight.toFloat() / 5),
-                animationSpec = spring(
-                    dampingRatio = Spring.DampingRatioNoBouncy,
-                    stiffness = Spring.StiffnessLow
-                )
-            )
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(id = R.color.black).copy(alpha = 0.2f))
-                .offset(y = offsetY.value.dp)
-        ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(screenHeight.dp)
-                        .background(
-                            colorResource(id = R.color.main_color),
-                            shape = RoundedCornerShape(20.dp)
-                        )
-                        .padding(5.dp),
-                    contentAlignment = Alignment.TopCenter
-                ) {
-                    if (content != null) {
-                        content()
-                    } else {
-                        DefaultContent(onDismiss)
-                    }
-                }
-        }
-    }
-}*/
