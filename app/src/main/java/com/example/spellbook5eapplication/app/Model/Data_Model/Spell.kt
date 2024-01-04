@@ -67,7 +67,7 @@ class Spell  {
         }
 
 
-    var casting_time: String = ""
+    var castingTime: String = ""
         get() = field
         set(value) {
             field = value
@@ -103,23 +103,6 @@ class Spell  {
             field = value
         }
 
-    var damage: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
-
-    var dc: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
-
-    var aoe: String = ""
-        get() = field
-        set(value) {
-            field = value
-        }
     var homebrew: Boolean = false
         get() = field
         set(value) {

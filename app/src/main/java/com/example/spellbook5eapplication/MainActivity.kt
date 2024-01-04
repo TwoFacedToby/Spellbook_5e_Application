@@ -4,11 +4,15 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import com.example.spellbook5eapplication.app.Model.DND5eAPI
 import com.example.spellbook5eapplication.app.view.MainScreen
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Favourites
+import com.example.spellbook5eapplication.app.Model.SpellFactory
 import com.example.spellbook5eapplication.app.Model.Spellbook
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
@@ -24,42 +28,37 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val factory = SpellFactory()
+        val api = DND5eAPI()
+
+        val json = api.getDnD5eSpell("acid-splash");
+        var spell : Spell
+        if(json != null)
+        {
+            spell = factory.createSpellFromJson(json)
+            println("name: ${spell.name}")
+            println("casting time: ${spell.castingTime}")
+            println("classes: ${spell.classes.toString()}")
+        }
+        else println("json was null")
+
+
+
+
+
+
         SpelllistLoader.loadSpellbooks()
 
 
         // Initialize SpellController with context
         SpellController.setContext(applicationContext)
+        LocalDataLoader.setContext(applicationContext)
         setContent {
             Spellbook5eApplicationTheme {
                 MainScreen(SpellController, SpelllistLoader)
             }
         }
-        /*scope.launch {
-            runBlocking {
-                networkRequest() { spellList ->
-                    spellList.printInfoToConsole()
-                }
-            }
-        }*/
     }
 
-
-/*
-    private fun networkRequest(callback: (result: SpellList) -> Unit) {
-        scope.launch {
-            val spellList = SpellController.getAllSpellsList()
-            if (spellList != null) {
-                SpellController.loadEntireSpellList(spellList)
-                // Do something with the spell list, like updating the UI
-                callback(spellList)
-            }
-        }
-    }
-    fun exampleFilter() : Filter {
-        val filter = Filter()
-        filter.setSpellName("Fire")
-        return filter
-    }
-
- */
 }

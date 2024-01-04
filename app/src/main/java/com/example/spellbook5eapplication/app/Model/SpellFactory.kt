@@ -2,6 +2,7 @@ package com.example.spellbook5eapplication.app.Model
 
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.google.gson.Gson
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
 
@@ -21,16 +22,29 @@ class SpellFactory {
         spell.json = jsonString
 
         //TODO - Add all json variables as variables for spell.
-        spell.index = jsonObject.get("json_index").asString //String example
-        spell.name = jsonObject.get("json_name").asString
+        spell.index = jsonObject.get("index").asString
+        spell.name = jsonObject.get("name").asString
+        spell.desc = gson.fromJson(jsonObject.get("desc"), object : TypeToken<List<String>>() {}.type)
+        spell.atHigherLevel = gson.fromJson(jsonObject.get("higher_level"), object : TypeToken<List<String>>() {}.type)
+        spell.range = jsonObject.get("range").asString
+        spell.components = gson.fromJson(jsonObject.get("components"), object : TypeToken<List<String>>() {}.type)
+        spell.materials = jsonObject.get("material").asString
+        spell.ritual = jsonObject.get("ritual").asBoolean
+        spell.duration = jsonObject.get("duration").asString
+        spell.concentration = jsonObject.get("concentration").asBoolean
+        spell.castingTime = jsonObject.get("casting_time").asString
+        spell.level = jsonObject.get("level").asInt
+        spell.attackType = jsonObject.getAsJsonObject("damage").get("attack_type").asString
+        spell.url = jsonObject.get("url").asString
 
-        val descListType = object : TypeToken<List<String>>() {}.type //Lists of String example
-        spell.desc = gson.fromJson(jsonObject.get("json_descList"), descListType)
+        // Extracting just the names from nested objects and arrays
+        spell.school = jsonObject.getAsJsonObject("school").get("name").asString
+        spell.classes = extractNames(jsonObject.getAsJsonArray("classes"))
 
-        spell.ritual = jsonObject.get("json_ritual").asBoolean //Boolean example
-
-        spell.level = jsonObject.get("json_level").asInt //Integer example
 
         return spell
+    }
+    private fun extractNames(jsonArray: JsonArray): List<String> {
+        return jsonArray.map { it.asJsonObject.get("name").asString }
     }
 }
