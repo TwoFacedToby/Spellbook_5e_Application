@@ -41,6 +41,7 @@ import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOver
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.utilities.FilterButton
+import com.example.spellbook5eapplication.app.view.utilities.SpellCardFactory
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
@@ -50,6 +51,7 @@ import kotlinx.coroutines.runBlocking
 fun Basic_Screen(
                  spellsLiveData: LiveData<List<Displayable?>>,
                  enablePagination: Boolean,
+                 spellCardFactory: SpellCardFactory,
                  customContent: @Composable (() -> Unit)? = null){
     val spellList : SpellList?
     runBlocking {
@@ -94,7 +96,8 @@ fun Basic_Screen(
                             overlaySpell = it
                             GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
                         },
-                        enablePagination = enablePagination
+                        enablePagination = enablePagination,
+                        spellCardFactory = spellCardFactory
                     )
                 }
 

@@ -45,6 +45,8 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.SpellController
+import com.example.spellbook5eapplication.app.view.utilities.DefaultSpellCardFactory
+import com.example.spellbook5eapplication.app.view.utilities.SpellCardFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -61,6 +63,7 @@ fun SpellQuery(
     onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
     onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
     enablePagination: Boolean,
+    spellCardFactory: SpellCardFactory,
     modifier: Modifier = Modifier
 ) {
 
@@ -91,11 +94,8 @@ fun SpellQuery(
                     Log.d("SpellDebug", "Spell at index $index is of type: ${it::class.java}")
                     when (it) {
                         is Spell_Info.SpellInfo -> {
-                            SpellCard(
-                                onFullSpellCardRequest = { onFullSpellCardRequest(it) },
-                                onAddToSpellbookRequest = { onAddToSpellbookRequest(it) },
-                                spell = it
-                            )
+                            val spellCardComposable = spellCardFactory.createSpellCard(it)
+                            spellCardComposable()
                         }
                         is Spellbook -> {
                             // New logic for handling Spellbook

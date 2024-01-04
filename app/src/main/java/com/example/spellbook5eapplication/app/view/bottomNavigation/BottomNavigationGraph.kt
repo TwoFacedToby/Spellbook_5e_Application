@@ -14,6 +14,7 @@ import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.screens.Basic_Screen
 import com.example.spellbook5eapplication.app.view.screens.SearchScreen
+import com.example.spellbook5eapplication.app.view.utilities.DefaultSpellCardFactory
 import com.example.spellbook5eapplication.app.view.utilities.DynamicButtonFactory
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModelFactory
@@ -25,28 +26,42 @@ fun BottomNavigationGraph(
     spellListLoader: SpelllistLoader,
 ) {
     NavHost(navController = navController, startDestination = Screens.Search.route){
+        val spellCardFactory = DefaultSpellCardFactory()
         composable(route = Screens.Search.route){
             //SearchScreen(globalOverlayState)
             val spellList = SpellQueryViewModelFactory.create(type = "ALL_SPELLS")
-            Basic_Screen(spellList, true)
+            Basic_Screen(
+                spellList,
+                true,
+                spellCardFactory
+            )
         }
         composable(route = Screens.Favorite.route){
             //FavoriteScreen(spellController, spellListLoader, globalOverlayState)
             val spellList = SpellQueryViewModelFactory.create(type = "FAVORITES")
-            Basic_Screen(spellList, false)
+            Basic_Screen(
+                spellList,
+                false,
+                spellCardFactory)
         }
         composable(route = Screens.Spellbooks.route){
             val spellList = SpellQueryViewModelFactory.create(type = "SPELLBOOK")
-            Basic_Screen(spellsLiveData = spellList, false, customContent = {
+            Basic_Screen(
+                spellsLiveData = spellList,
+                false,
+                spellCardFactory = spellCardFactory,
+                customContent = {
                 DynamicButtonFactory(
                     buttonType = "SPELLBOOK",
-
                 )
             })
         }
         composable(route = Screens.Homebrew.route){
             val spellList = SpellQueryViewModelFactory.create(type = "HOMEBREW")
-            Basic_Screen(spellsLiveData = spellList, false, customContent = {
+            Basic_Screen(
+                spellsLiveData = spellList,
+                false, spellCardFactory,
+                customContent = {
                 DynamicButtonFactory(
                     buttonType = "HOMEBREW",
                 )
