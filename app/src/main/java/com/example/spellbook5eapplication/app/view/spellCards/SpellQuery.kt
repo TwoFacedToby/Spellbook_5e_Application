@@ -100,6 +100,9 @@ fun SpellQuery(
                         is Spellbook -> {
                             // New logic for handling Spellbook
                             Log.d("WEMADEIT", "We didnt actually make it")
+                            SpellbookCard(
+                                spellbook = it
+                                )
                         }
 
                         else -> {}
