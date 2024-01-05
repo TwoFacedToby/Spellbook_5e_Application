@@ -113,7 +113,6 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
             OverlayType.LARGE_SPELLCARD ->  {
                 LargeSpellCardOverlay(GlobalOverlayState, { GlobalOverlayState.dismissOverlay() }, GlobalOverlayState.currentSpell!!)
             }
-            // Handle other overlay types
             else -> {}
         }
     }

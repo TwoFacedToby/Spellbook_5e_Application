@@ -46,10 +46,6 @@ fun SpellQuery(
 
     val spellQueryViewModel: SpellQueryViewModel = viewModel()
 
-
-    //Back-up
-    //val spells by spellQueryViewModel.spells.observeAsState(emptyList())
-
     val spells by spellsLiveData.observeAsState(emptyList())
     val isLoading by spellQueryViewModel.isLoading.observeAsState(false)
 
@@ -87,7 +83,7 @@ fun SpellQuery(
                 }
             }
 
-            // Loading indicator only when pagination is enabled and isLoading is true
+            // Loading indicator only when pagination is enabled
             if (isLoading && enablePagination) {
                 item { LoadingIndicator() }
             }

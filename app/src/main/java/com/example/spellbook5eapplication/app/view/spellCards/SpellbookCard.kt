@@ -21,8 +21,7 @@ import com.example.spellbook5eapplication.app.Utility.Displayable
 
 @Composable
 fun SpellbookCard(
-    spellbook: Spellbook, // Assuming Spellbook has a property `name`
-    //onSpellbookCardRequest: () -> Unit // Callback when the card is clicked
+    spellbook: Spellbook
 ) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -31,6 +30,7 @@ fun SpellbookCard(
         modifier = Modifier
             .height(150.dp)
             .padding(10.dp)
+            // TODO Clickable for spellbook-Cards
             //.clickable { onSpellbookCardRequest() }
     ) {
         Column(
@@ -45,7 +45,6 @@ fun SpellbookCard(
                 fontSize = 20.sp,
                 color = colorResource(id = R.color.black)
             )
-            // You can add more content here if needed, like a list of spell names, etc.
         }
     }
 }
