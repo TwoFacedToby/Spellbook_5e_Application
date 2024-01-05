@@ -1,5 +1,7 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
+import androidx.compose.runtime.Composable
 import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import com.google.gson.annotations.SerializedName
 class Spell_Info {
 
@@ -36,7 +38,19 @@ class Spell_Info {
         @SerializedName("oaths") val oaths: String?,
         @SerializedName("sorcerous_origins") val sorcerousOrigins: String?,
         @SerializedName("otherworldly_patrons") val otherworldlyPatrons: String?
-    ):Displayable
+    ):Displayable {
+        override fun renderComposable(
+            onFullSpellCardRequest: () -> Unit,
+            onAddToSpellbookRequest: (SpellInfo) -> Unit
+        ): @Composable () -> Unit {
+            return {
+                SpellCard(
+                    spell = this
+                )
+            }
+        }
+
+    }
 
     data class SpellSchool(
         @SerializedName("index") val index: String?,

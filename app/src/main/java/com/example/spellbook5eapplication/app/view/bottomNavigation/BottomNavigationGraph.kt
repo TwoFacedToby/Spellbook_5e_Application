@@ -21,7 +21,6 @@ import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModelFacto
 @Composable
 fun BottomNavigationGraph(
     navController: NavHostController,
-    globalOverlayState: GlobalOverlayState,
     spellController: SpellController,
     spellListLoader: SpelllistLoader,
 ) {
@@ -29,28 +28,28 @@ fun BottomNavigationGraph(
         composable(route = Screens.Search.route){
             //SearchScreen(globalOverlayState)
             val spellList = SpellQueryViewModelFactory.create(type = "ALL_SPELLS")
-            Basic_Screen(globalOverlayState = globalOverlayState, spellList, true)
+            Basic_Screen(spellList, true)
         }
         composable(route = Screens.Favorite.route){
             //FavoriteScreen(spellController, spellListLoader, globalOverlayState)
             val spellList = SpellQueryViewModelFactory.create(type = "FAVORITES")
-            Basic_Screen(globalOverlayState = globalOverlayState, spellList, false)
+            Basic_Screen(spellList, false)
         }
         composable(route = Screens.Spellbooks.route){
             val spellList = SpellQueryViewModelFactory.create(type = "SPELLBOOK")
-            Basic_Screen(globalOverlayState = globalOverlayState, spellsLiveData = spellList, false, customContent = {
+            Basic_Screen(spellsLiveData = spellList, false, customContent = {
                 DynamicButtonFactory(
                     buttonType = "SPELLBOOK",
-                    globalOverlayState = globalOverlayState
+                    globalOverlayState = GlobalOverlayState
                 )
             })
         }
         composable(route = Screens.Homebrew.route){
             val spellList = SpellQueryViewModelFactory.create(type = "HOMEBREW")
-            Basic_Screen(globalOverlayState = globalOverlayState, spellsLiveData = spellList, false, customContent = {
+            Basic_Screen(spellsLiveData = spellList, false, customContent = {
                 DynamicButtonFactory(
                     buttonType = "HOMEBREW",
-                    globalOverlayState = globalOverlayState
+                    globalOverlayState = GlobalOverlayState
                 )
             })
         }

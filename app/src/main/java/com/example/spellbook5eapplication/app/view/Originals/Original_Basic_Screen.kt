@@ -1,4 +1,4 @@
-package com.example.spellbook5eapplication.app.view.screens
+package com.example.spellbook5eapplication.app.view.Originals
 
 import SpellQueryViewModel
 import androidx.compose.foundation.Image
@@ -31,11 +31,9 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
-import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
-import com.example.spellbook5eapplication.app.view.Overlays.NewSpellOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.updateFilterWithSearchName
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
@@ -45,12 +43,15 @@ import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.runBlocking
-
 @Composable
-fun Basic_Screen(
-                 spellsLiveData: LiveData<List<Displayable?>>,
+fun Basic_Screen(globalOverlayState: GlobalOverlayState,
+                 spellsLiveData: LiveData<List<Spell_Info.SpellInfo?>>,
                  enablePagination: Boolean,
                  customContent: @Composable (() -> Unit)? = null){
+    val spellList : SpellList?
+    runBlocking {
+        spellList = SpellController.getAllSpellsList()
+    }
 
     var filter by remember { mutableStateOf(Filter())}
 
@@ -58,7 +59,6 @@ fun Basic_Screen(
     println("Current filter level size: " + filter.getLevel().size)
 
     val nullSpell = Spell_Info.SpellInfo(null, "Example name", null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null, null , null, null, null, null , null, null, null, null , null, null)
-    //GlobalOverlayState.currentSpell = nullSpell
     var overlaySpell by remember { mutableStateOf(nullSpell) }
 
 
@@ -75,27 +75,29 @@ fun Basic_Screen(
                 modifier = Modifier.matchParentSize(),
                 alpha = 0.5F
             )
-            Column (modifier = Modifier
-                .padding(top = 100.dp, bottom = 56.dp)
-                .matchParentSize()) {
+            Column (modifier = Modifier.padding(top = 100.dp, bottom = 56.dp).matchParentSize()) {
                 // TopBar with Search and Filters
-                SearchFilterBar(GlobalOverlayState)
+                SearchFilterBar(globalOverlayState)
                 // List of Spells, taking up all available space
-                Box(modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(3f)){
+                Box(modifier = Modifier.fillMaxHeight().weight(3f)){
                     SpellQuery(
                         filter = filter,
                         spellsLiveData = spellsLiveData,
+                        onFullSpellCardRequest = {
+                            overlaySpell = it
+                            globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+                        },
+                        onAddToSpellbookRequest = {
+                            overlaySpell = it
+                            globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
+                        },
                         enablePagination = enablePagination
                     )
                 }
 
                 if (customContent != null) {
                     Box(contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.5f))
+                        modifier = Modifier.fillMaxWidth().weight(0.5f))
                     {
                         customContent()
                     }
@@ -104,31 +106,31 @@ fun Basic_Screen(
 
 
 
-            /*for (overlayType in GlobalOverlayState.getOverlayStack()) {
+            for (overlayType in globalOverlayState.getOverlayStack()) {
                 when (overlayType) {
                     OverlayType.LARGE_SPELLCARD -> {
-                        LargeSpellCardOverlay(GlobalOverlayState, { GlobalOverlayState.dismissOverlay() }, overlaySpell)
+                        LargeSpellCardOverlay(globalOverlayState, { globalOverlayState.dismissOverlay() }, overlaySpell)
                     }
                     OverlayType.ADD_TO_SPELLBOOK -> {
                         CustomOverlay(
-                            globalOverlayState = GlobalOverlayState,
+                            globalOverlayState = globalOverlayState,
                             overlayType = OverlayType.ADD_TO_SPELLBOOK,
-                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ) {
                             AddToSpellBookOverlay(
                                 spellInfo = overlaySpell,
-                                onDismissRequest = { GlobalOverlayState.dismissOverlay() }
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
                             )
                         }
                     }
                     OverlayType.FILTER -> {
                         CustomOverlay(
-                            globalOverlayState = GlobalOverlayState,
+                            globalOverlayState = globalOverlayState,
                             overlayType = OverlayType.FILTER,
-                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ){
                             FiltersOverlay(
-                                onDismissRequest = { GlobalOverlayState.dismissOverlay() },
+                                onDismissRequest = { globalOverlayState.dismissOverlay() },
                                 currentfilter = filter,
                                 createNewFilter = { Filter() },
                                 updateFilterState = { newFilter ->
@@ -137,44 +139,15 @@ fun Basic_Screen(
                             )
                         }
                     }
-                    OverlayType.MAKE_SPELL -> {
-                        CustomOverlay(
-                            globalOverlayState = GlobalOverlayState,
-                            overlayType = OverlayType.MAKE_SPELL,
-                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
-                        ) {
-                            NewSpellOverlay(onDismissRequest = {
-                                GlobalOverlayState.dismissOverlay()
-
-                            }, onFilterSelected = {/* TODO */ })
-                        }
-                    }
                     else -> Unit
                 }
 
-            }*/
-
-            OverlayRenderer(overlayStack = GlobalOverlayState.getOverlayStack())
-
-
-        }
-
-    }
-}
-
-@Composable
-fun OverlayRenderer(overlayStack: List<OverlayType>) {
-    overlayStack.forEach { overlayType ->
-        when (overlayType) {
-            OverlayType.LARGE_SPELLCARD ->  {
-                LargeSpellCardOverlay(GlobalOverlayState, { GlobalOverlayState.dismissOverlay() }, GlobalOverlayState.currentSpell!!)
             }
-            // Handle other overlay types
-            else -> {}
+
         }
+
     }
 }
-
 
 @Composable
 fun SearchFilterBar(globalOverlayState: GlobalOverlayState){
@@ -199,9 +172,9 @@ fun SearchFilterBar(globalOverlayState: GlobalOverlayState){
         Spacer(modifier = Modifier.width(5.dp))
         FilterButton(
             onShowFiltersRequest = {
-                /*globalOverlayState.showOverlay(
+                globalOverlayState.showOverlay(
                     OverlayType.FILTER,
-                )*/
+                )
             })
     }
 }
