@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
@@ -25,7 +27,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,20 +42,22 @@ import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 
 @Composable
-fun CreateSpellOverlay(
+fun CreateSpellOverlay1(
     spell: Spell,
     previous: () -> Unit,
+    first: Boolean,
     next: () -> Unit,
-    input: String,
-    inputChange: (String) -> Unit,
-    singleLineInput: Boolean,
-    dropdown: List<String>,
-    dropName: String,
-    dropChange: (String) -> Unit
-
+    last: Boolean,
+    description: String,
+    userChoise: @Composable () -> Unit
 ){
     //Utilities
     var showDialog = false
+    var next by remember { mutableStateOf("Next") }
+    if(last){
+        next = "Create"
+    }
+
 
     //
 
@@ -61,138 +67,201 @@ fun CreateSpellOverlay(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
 
-        // Top navigation buttons
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
+        //Testing visual
+        Box(
+            modifier = Modifier
+                .height(500.dp)
+                .fillMaxWidth()
+                .background(
+                    color = colorResource(id = R.color.overlay_box_color),
+                    shape = RoundedCornerShape(20.dp)
+                ),
+            contentAlignment = Alignment.TopCenter
         ) {
-            ColouredButton(
-                label = "Previous",
-                modifier = Modifier,
-                color = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(
-                        id = R.color.selected_button
-                    )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            )
+            {
+
+                // Back to old
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                // Top navigation buttons
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+
+                    if(!first){
+
+                        ColouredButton(
+                            label = "Previous",
+                            modifier = Modifier,
+                            color = ButtonDefaults.buttonColors(
+                                containerColor = colorResource(
+                                    id = R.color.selected_button
+                                )
+                            )
+                        ) {
+                            previous()
+                        }}
+
+                    Spacer(modifier = Modifier.width(10.dp))
+
+                    ColouredButton(
+                        "Cancel", modifier = Modifier, color = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(
+                                id = R.color.red_button
+                            )
+                        )
+                    ) {
+                        showDialog = true
+                        println("Button Stop creation and delete when clicked")
+                    }
+                    if (showDialog) {
+                        // Might want a PromptFactory in here instead
+                        EraseOverlay(
+                            onDismissRequest = { showDialog = false },
+                            onEraseRequest = { /* TODO */ })
+                    }
+
+
+                    Spacer(modifier = Modifier.width(10.dp))
+
+
+                    // Button to move on
+                    ColouredButton(
+                        next, modifier = Modifier, color = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(
+                                id = R.color.green_button
+                            )
+                        )
+                    ) {
+                        next()
+                    }
+                }
+                //End of top navigation
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Ways for users to give input
+
+                userChoise()
+
+                // End of ways for users to give input
+
+                Spacer(Modifier.height(10.dp))
+
+                Text(
+                    text = description,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
                 )
-            ) {
-                previous()
-            }
 
-            Spacer(modifier = Modifier.width(10.dp))
-
-            ColouredButton(
-                "Cancel", modifier = Modifier, color = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(
-                        id = R.color.red_button
-                    )
-                )
-            ) {
-                showDialog = true
-                println("Button Stop creation and delete when clicked")
-            }
-            if (showDialog) {
-                // Might want a PromptFactory in here instead
-                EraseOverlay(
-                    onDismissRequest = { showDialog = false },
-                    onEraseRequest = { /* TODO */ })
-            }
-
-
-            Spacer(modifier = Modifier.width(10.dp))
-
-
-            // Button to move on
-            ColouredButton(
-                "Next", modifier = Modifier, color = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(
-                        id = R.color.green_button
-                    )
-                )
-            ) {
-                next()
             }
         }
-        //End of top navigation
-
-        Spacer(modifier = Modifier.height(10.dp))
-
-        // Ways for users to give input
-
-        UsersInputWays(input = input, inputChange, singleLineInput, dropdown, dropName, dropChange)
-
-        // End of ways for users to give input
-
     }
-
 
 }
 
 @Composable
-fun UsersInputWays(
+fun UsersInputNDrop1(
     input: String,
     inputChange: (String) -> Unit,
     singleLineInput: Boolean,
     dropdown: List<String>,
     dropName: String,
     dropChange: (String) -> Unit
-    ) {
+) {
 
     var expand by remember { mutableStateOf(false) }
-    var selectedDropdownItem by remember { mutableStateOf("") }
+    var current by remember { mutableStateOf(dropName) }
+    var selectedDropdownItem by remember { mutableStateOf(input) }
 
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
     ) {
 
-        // If input is present will a inputbar be made for the user
-        if (input != null) {
 
+        UserInputField(
+            label = "name",
+            //Should connect with name
+            onInputChanged = { input ->
+                run { inputChange(input) }
 
-            UserInputField(
-                label = "name",
-                //Should connect with name
-                onInputChanged = { input ->
-                    run { inputChange(input) }
+            },
+            modifier = Modifier
+                .size(width = 220.dp, height = 48.dp),
+            singleLine = singleLineInput,
+            imeAction = ImeAction.Default,
+            //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
+        )
 
-                },
-                modifier = Modifier
-                    .size(width = 220.dp, height = 48.dp), singleLine = singleLineInput,
-                imeAction = ImeAction.Default,
-                input = input
-            )
-
-        }
-
+    }
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
         //If a dropdownbar is needed (I am in great doubt if this will work)
-        if (!dropdown.isEmpty()) {
 
 
-            // Button to open dropdown
-            ColouredButton(
-                label = "Set $dropName",
-                modifier = Modifier,
-                color = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(
-                        id = R.color.selected_button
-                    )
+
+        // Button to open dropdown
+        ColouredButton(
+            label = "$current",
+            modifier = Modifier,
+            color = ButtonDefaults.buttonColors(
+                containerColor = colorResource(
+                    id = R.color.selected_button
                 )
             )
-            { expand = true }
+        )
+        { expand = true }
 
-            if (expand) {
+    }
+
+
+    Spacer(modifier = Modifier.height(5.dp))
+
+    if (expand) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .background(color = colorResource(id = R.color.overlay_box_color))
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 dropdown.forEach { item ->
                     Text(
                         text = item,
+                        color = colorResource(id = R.color.white),
+                        textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
                                 selectedDropdownItem = item
                                 dropChange(item)
+                                current = item
                                 expand = false
                             }
+                            .padding(vertical = 5.dp) // Size of each dropdown item
+                    )
+                    Divider(
+                        //color = R.color.selected_button,
+                        thickness = 1.dp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
                     )
                 }
             }
@@ -200,32 +269,191 @@ fun UsersInputWays(
     }
 }
 
+
+@Composable
+fun UsersInputOnly1(
+    input: String,
+    inputChange: (String) -> Unit,
+    singleLineInput: Boolean,
+) {
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+
+
+        UserInputField(
+            label = "name",
+            //Should connect with name
+            onInputChanged = { input ->
+                run { inputChange(input) }
+
+            },
+            modifier = Modifier
+                .size(width = 220.dp, height = 48.dp),
+            singleLine = singleLineInput,
+            imeAction = ImeAction.Default,
+            //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
+        )
+
+    }}
+
+
+
+@Composable
+fun UserDropOnly1(
+    dropdown: List<String>,
+    dropName: String,
+    dropChange: (String) -> Unit
+) {
+
+    var expand by remember { mutableStateOf(false) }
+    var current by remember { mutableStateOf(dropName) }
+    var selectedDropdownItem by remember { mutableStateOf("") }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
+
+
+        // Button to open dropdown
+        ColouredButton(
+            label = "$current",
+            modifier = Modifier,
+            color = ButtonDefaults.buttonColors(
+                containerColor = colorResource(
+                    id = R.color.selected_button
+                )
+            )
+        )
+        { expand = true }
+    }
+
+    Spacer(modifier = Modifier.height(5.dp))
+
+    if (expand) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .background(color = colorResource(id = R.color.overlay_box_color))
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                dropdown.forEach { item ->
+                    Text(
+                        text = item,
+                        color = colorResource(id = R.color.white),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                selectedDropdownItem = item
+                                dropChange(item)
+                                current = item
+                                expand = false
+                            }
+                            .padding(vertical = 5.dp) // Size of each dropdown item
+                    )
+                    Divider(
+                        //color = R.color.selected_button,
+                        thickness = 1.dp,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                    )
+                }}}}}
+
+
+
+// Preview moslty for testing
 @Preview
 @Composable
-fun previewCreatingPage() {
+fun previewCreatingPage1() {
 
     val spell = Spell().apply {
-        name = "Sample Spell"
+        name = "Test spell"
         level = 1
     }
 
-    val items = listOf("1", "2", "3")
+    val levels = listOf("1", "2", "3")
 
-    CreateSpellOverlay(
+// Test with of inputfield
+    /*
+        CreateSpellOverlay1(
+            spell = spell,
+            previous = { /*TODO*/ },
+            first = false,
+            next = { /*TODO*/ },
+            last = false,
+            description = "This is a test\n I hope this here will work",
+            userChoise = {
+                UsersInputOnly1(
+                    input = spell.name,
+                    inputChange = {
+                        spell.name = it
+                        println("Name set to ${spell.name}")
+                    },
+                    singleLineInput = true,
+                )
+            }
+        )
+    */
+
+    //Test of dropdown menu
+
+    CreateSpellOverlay1(
         spell = spell,
         previous = { /*TODO*/ },
+        first = false,
         next = { /*TODO*/ },
-        input = spell.name,
-        inputChange = {
-                input ->
-            run { spell.name = input
-            println("Name set to ${spell.name}") }},
-        singleLineInput = true,
-        dropdown = items,
-        dropName = "Level",
-        dropChange = {
-                input ->
-            run { spell.level = input.toInt()
-            println("Level set to ${spell.level}") }}
+        last = false,
+        description = "This is a test\n I hope this here will work",
+        userChoise = {
+            UserDropOnly1(
+                dropdown = levels,
+                dropName = "Levels",
+                dropChange = {
+                    spell.level = it.toInt()
+                    println("Level set to ${spell.level}")
+                }
+            )
+        }
     )
+
+
+
+// Test with both inputfield and dropdown menu
+    /*
+        CreateSpellOverlay1(
+            spell = spell,
+            previous = { /*TODO*/ },
+            first = false,
+            next = { /*TODO*/ },
+            last = false,
+            description = "This is a test\n I hope this here will work",
+            userChoise = {
+                UsersInputNDrop1(
+                    input = spell.name,
+                    inputChange = {
+                        spell.name = it
+                        println("Name set to ${spell.name}")
+                    },
+                    singleLineInput = true,
+                    dropdown = levels,
+                    dropName = "Levels",
+                    dropChange = {
+                        spell.level = it.toInt()
+                        println("Level set to ${spell.level}")
+                    }
+                )
+            }
+        )
+        */
+
+
 }

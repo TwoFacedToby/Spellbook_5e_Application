@@ -152,18 +152,7 @@ fun CreateSpellOverlay2(
 
                 // Ways for users to give input
 
-
                 userChoise()
-
-                /*  UsersInputWays(
-                    input = input,
-                    inputChange,
-                    singleLineInput,
-                    dropdown,
-                    dropName,
-                    dropChange
-                )
-                 */
 
                 // End of ways for users to give input
 
