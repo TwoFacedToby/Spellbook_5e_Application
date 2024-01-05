@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Spellbook
+import com.example.spellbook5eapplication.app.Utility.Displayable
 
 @Composable
 fun SpellbookCard(

@@ -1,4 +1,5 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
+import android.util.Log
 import androidx.compose.runtime.Composable
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
@@ -39,14 +40,16 @@ class Spell_Info {
         @SerializedName("sorcerous_origins") val sorcerousOrigins: String?,
         @SerializedName("otherworldly_patrons") val otherworldlyPatrons: String?
     ):Displayable {
-        override fun renderComposable(
-            onFullSpellCardRequest: () -> Unit,
-            onAddToSpellbookRequest: (SpellInfo) -> Unit
-        ): @Composable () -> Unit {
+        override fun renderCardComposable(spell: Displayable): @Composable () -> Unit {
             return {
-                SpellCard(
-                    spell = this
-                )
+
+                if (spell is SpellInfo) {
+                    // Render SpellCard if it's a Spell
+                    SpellCard(spell = spell)
+                } else {
+
+                    Log.d("Errors","Error: Item is not a Spell")
+                }
             }
         }
 

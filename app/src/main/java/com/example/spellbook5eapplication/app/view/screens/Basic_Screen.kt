@@ -54,13 +54,10 @@ fun Basic_Screen(
 
     var filter by remember { mutableStateOf(Filter())}
 
+
+    // Used for testing filter
     println("Current filter: $filter")
     println("Current filter level size: " + filter.getLevel().size)
-
-    val nullSpell = Spell_Info.SpellInfo(null, "Example name", null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null, null , null, null, null, null , null, null, null, null , null, null)
-    //GlobalOverlayState.currentSpell = nullSpell
-    var overlaySpell by remember { mutableStateOf(nullSpell) }
-
 
 
     Surface(
@@ -79,7 +76,9 @@ fun Basic_Screen(
                 .padding(top = 100.dp, bottom = 56.dp)
                 .matchParentSize()) {
                 // TopBar with Search and Filters
-                SearchFilterBar(GlobalOverlayState)
+                SearchFilterBar(filter = filter, onFilterChanged = { newFilter ->
+                    filter = newFilter
+                })
                 // List of Spells, taking up all available space
                 Box(modifier = Modifier
                     .fillMaxHeight()
@@ -101,10 +100,58 @@ fun Basic_Screen(
                     }
                 }
             }
+            OverlayRenderer(overlayStack = GlobalOverlayState.getOverlayStack())
+        }
+
+    }
+}
+
+@Composable
+fun OverlayRenderer(overlayStack: List<OverlayType>) {
+    overlayStack.forEach { overlayType ->
+        when (overlayType) {
+            OverlayType.LARGE_SPELLCARD ->  {
+                LargeSpellCardOverlay(GlobalOverlayState, { GlobalOverlayState.dismissOverlay() }, GlobalOverlayState.currentSpell!!)
+            }
+            // Handle other overlay types
+            else -> {}
+        }
+    }
+}
 
 
+@Composable
+fun SearchFilterBar(filter: Filter,
+                    onFilterChanged: (Filter) -> Unit){
+    var filter by remember { mutableStateOf(Filter())}
 
-            /*for (overlayType in GlobalOverlayState.getOverlayStack()) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    )
+    {
+        UserInputField(
+            label = "Search",
+            singleLine = true,
+            onInputChanged = { input ->
+                val updatedFilter = updateFilterWithSearchName(filter, input)
+                onFilterChanged(updatedFilter)
+            },
+            modifier = Modifier.size(height = 24.dp, width =  120.dp),
+            imeAction = ImeAction.Search
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        FilterButton(
+            onShowFiltersRequest = {
+                /*globalOverlayState.showOverlay(
+                    OverlayType.FILTER,
+                )*/
+            })
+    }
+}
+
+// Old way of doing Overlay State
+/*for (overlayType in GlobalOverlayState.getOverlayStack()) {
                 when (overlayType) {
                     OverlayType.LARGE_SPELLCARD -> {
                         LargeSpellCardOverlay(GlobalOverlayState, { GlobalOverlayState.dismissOverlay() }, overlaySpell)
@@ -153,55 +200,3 @@ fun Basic_Screen(
                 }
 
             }*/
-
-            OverlayRenderer(overlayStack = GlobalOverlayState.getOverlayStack())
-
-
-        }
-
-    }
-}
-
-@Composable
-fun OverlayRenderer(overlayStack: List<OverlayType>) {
-    overlayStack.forEach { overlayType ->
-        when (overlayType) {
-            OverlayType.LARGE_SPELLCARD ->  {
-                LargeSpellCardOverlay(GlobalOverlayState, { GlobalOverlayState.dismissOverlay() }, GlobalOverlayState.currentSpell!!)
-            }
-            // Handle other overlay types
-            else -> {}
-        }
-    }
-}
-
-
-@Composable
-fun SearchFilterBar(globalOverlayState: GlobalOverlayState){
-    var filter by remember { mutableStateOf(Filter())}
-
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center
-    )
-    {
-        UserInputField(
-            label = "Search",
-            singleLine = true,
-            onInputChanged = {
-                    input ->
-                filter = updateFilterWithSearchName(filter, input)
-                println("User input: $input")
-            },
-            modifier = Modifier.size(height = 24.dp, width =  120.dp),
-            imeAction = ImeAction.Search
-        )
-        Spacer(modifier = Modifier.width(5.dp))
-        FilterButton(
-            onShowFiltersRequest = {
-                /*globalOverlayState.showOverlay(
-                    OverlayType.FILTER,
-                )*/
-            })
-    }
-}
