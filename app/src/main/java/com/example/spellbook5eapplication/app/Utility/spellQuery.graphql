@@ -1,0 +1,8 @@
+query GetSpellDetails($ids: [ID!]!) {
+    spells(ids: $ids) {
+        id
+        name
+        description
+        //TODO ADD QUERY!
+    }
+}
