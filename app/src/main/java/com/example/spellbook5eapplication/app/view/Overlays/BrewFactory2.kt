@@ -44,23 +44,23 @@ import com.example.spellbook5eapplication.app.view.utilities.UserInputField
 @Composable
 fun CreateSpellOverlay2(
     spell: Spell,
-    previous: () -> Unit,
-    first: Boolean,
-    next: () -> Unit,
-    last: Boolean,
+    //previous: () -> Unit,
+    //first: Boolean,
+    //next: () -> Unit,
+    //last: Boolean,
     description: String,
     userChoise: @Composable () -> Unit
 ){
     //Utilities
     var showDialog = false
-    var next by remember { mutableStateOf("Next") }
-    if(last){
-        next = "Create"
-    }
+    //var next by remember { mutableStateOf("Next") }
+    //if(last){
+    //    next = "Create"
+    //}
 
 
     //
-
+    /*
     Column(
         modifier = Modifier
             .padding(top = 8.dp, start = 15.dp, end = 15.dp)
@@ -151,6 +151,7 @@ fun CreateSpellOverlay2(
                 Spacer(modifier = Modifier.height(10.dp))
 
                 // Ways for users to give input
+                */
 
                 userChoise()
 
@@ -165,10 +166,10 @@ fun CreateSpellOverlay2(
                 )
 
             }
-        }
-    }
+       // }
+    // }
 
-}
+// }
 
 @Composable
 fun UsersInputNDrop(

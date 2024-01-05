@@ -44,8 +44,7 @@ class HomeBrewInstantiator {
 
 
     @Composable
-    fun makeFromTopSpell() {
-
+    fun makeNewSpellFromTheTop() {
 
         val spell = Spell().apply {
             homebrew = true
@@ -104,7 +103,7 @@ class HomeBrewInstantiator {
                                     )
                                 )
                             ) {
-                                show = show.previous!!
+                                show = show.previousBrewPart()!!
                             }
                         }
 
@@ -130,18 +129,37 @@ class HomeBrewInstantiator {
 
                         Spacer(modifier = Modifier.width(10.dp))
 
-
+                        if (!last) {
                         // Button to move on
                         ColouredButton(
-                            next, modifier = Modifier, color = ButtonDefaults.buttonColors(
+                            "next", modifier = Modifier, color = ButtonDefaults.buttonColors(
                                 containerColor = colorResource(
                                     id = R.color.green_button
                                 )
                             )
                         ) {
-                            next()
+                            show = show.nextBrewPart()!!
+                        }
+                        }
+                        else{
+                            ColouredButton(
+                                "Finish", modifier = Modifier, color = ButtonDefaults.buttonColors(
+                                    containerColor = colorResource(
+                                        id = R.color.green_button
+                                    )
+                                )
+                            ) {
+                                //Save the spell on the device here
+                            }
                         }
                     }
+
+                    //End of top navigation
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    // The part dependent of what is being edited/created for the spell
+                    ShowBrewPart(show, spell)
                 }
             }
         }
@@ -170,10 +188,10 @@ class HomeBrewInstantiator {
     private fun Naming(spell: Spell) {
             CreateSpellOverlay2(
                 spell = spell,
-                previous = { /*TODO*/ },
-                first = true,
-                next = { Description(spell) },
-                last = false,
+                //previous = { /*TODO*/ },
+                //first = true,
+                //next = { Description(spell) },
+                //last = false,
                 description = "Give your spell a name\n Simply put what your spell will be reffered by",
                 userChoise = {
                     UsersInputOnly(
@@ -195,10 +213,10 @@ class HomeBrewInstantiator {
         return {
             CreateSpellOverlay2(
                 spell = spell,
-                previous = { Naming(spell) },
-                first = false,
-                next = { Description(spell) },
-                last = false,
+                //previous = { Naming(spell) },
+                //first = false,
+                //next = { Description(spell) },
+                //last = false,
                 description = "What level is the spell\n Level explains how powerfull a spell is, higher level more powerfull",
                 userChoise = {
                     UserDropOnly(
@@ -220,11 +238,11 @@ class HomeBrewInstantiator {
         return {
             CreateSpellOverlay2(
                 spell = spell,
-                previous = { Level(spell) },
-                first = false,
-                next = { println("We have now created the spell: ${spell.toString()}")
-                     },
-                last = true,
+                //previous = { Level(spell) },
+                //first = false,
+                //next = { println("We have now created the spell: ${spell.toString()}")
+                //     },
+                //last = true,
                 description = "Explain what the spell does\n What effect does it have, how is it used, anything can be put here",
                 userChoise = {
                     UsersInputOnly(
@@ -244,26 +262,65 @@ class HomeBrewInstantiator {
 
 
     // ENUM
-    enum class BrewParts( val previous: BrewParts?, val next: BrewParts?) {
-        NAME(null, DESCRIPTION),
-        DESCRIPTION(NAME,   LEVEL),
-        LEVEL(DESCRIPTION, HIGHLEVEL),
-        HIGHLEVEL(LEVEL, COMPONENTS),
-        COMPONENTS(HIGHLEVEL, MATERIAL),
-        MATERIAL(COMPONENTS, RITUAL),
-        RITUAL(MATERIAL, CONCENTRATION),
-        CONCENTRATION(RITUAL, RANGE),
-        RANGE(CONCENTRATION, DURATION),
-        DURATION(RANGE, CASTTIME),
-        CASTTIME(DURATION, CLASSES),
-        CLASSES(CASTTIME, ATTACKTYPE),
-        ATTACKTYPE(CLASSES, DAMAGE),
-        DAMAGE(ATTACKTYPE, DC),
-        DC(DAMAGE, AOE),
-        AOE(DC, null)
+    enum class BrewParts {
+        NAME,
+        DESCRIPTION,
+        LEVEL,
+        HIGHLEVEL,
+        COMPONENTS,
+        MATERIAL,
+        RITUAL,
+        CONCENTRATION,
+        RANGE,
+        DURATION,
+        CASTTIME,
+        CLASSES,
+        ATTACKTYPE,
+        DAMAGE,
+        DC,
+        AOE;
+
+
+        fun nextBrewPart(): BrewParts? = when (this) {
+            NAME -> DESCRIPTION
+            DESCRIPTION -> LEVEL
+            LEVEL -> HIGHLEVEL
+            HIGHLEVEL -> COMPONENTS
+            COMPONENTS -> MATERIAL
+            MATERIAL -> RITUAL
+            RITUAL -> CONCENTRATION
+            CONCENTRATION -> RANGE
+            RANGE -> DURATION
+            DURATION -> CASTTIME
+            CASTTIME -> CLASSES
+            CLASSES -> ATTACKTYPE
+            ATTACKTYPE -> DAMAGE
+            DAMAGE -> DC
+            DC -> AOE
+            AOE -> null
+        }
+
+        fun previousBrewPart(): BrewParts? = when (this) {
+            NAME -> null
+            DESCRIPTION -> NAME
+            LEVEL -> DESCRIPTION
+            HIGHLEVEL -> LEVEL
+            COMPONENTS -> HIGHLEVEL
+            MATERIAL -> COMPONENTS
+            RITUAL -> MATERIAL
+            CONCENTRATION -> RITUAL
+            RANGE -> CONCENTRATION
+            DURATION -> RANGE
+            CASTTIME -> DURATION
+            CLASSES -> CASTTIME
+            ATTACKTYPE -> CLASSES
+            DAMAGE -> ATTACKTYPE
+            DC -> DAMAGE
+            AOE -> DC
+        }
     }
 
-    // Define a function that decides what composable to show based on the BrewPart
+    // Use the spot in enum your in to get the right composable for editing/creating the spell
     @Composable
     fun ShowBrewPart(part: BrewParts, spell: Spell) {
         when (part) {
