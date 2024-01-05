@@ -1,6 +1,7 @@
 package com.example.spellbook5eapplication.app.view.screens
 
 import SpellQueryViewModel
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -36,32 +38,40 @@ import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.NewSpellOverlay
-import com.example.spellbook5eapplication.app.view.Overlays.updateFilterWithSearchName
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.SpellCardFactory
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
+import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.runBlocking
 
 @Composable
 fun Basic_Screen(
-                 spellsLiveData: LiveData<List<Displayable?>>,
-                 enablePagination: Boolean,
-                 spellCardFactory: SpellCardFactory,
-                 customContent: @Composable (() -> Unit)? = null){
+    spellsLiveData: LiveData<List<Displayable?>>,
+    enablePagination: Boolean,
+    spellCardFactory: SpellCardFactory,
+    customContent: @Composable (() -> Unit)? = null
+){
     val spellList : SpellList?
     runBlocking {
         spellList = SpellController.getAllSpellsList()
     }
 
-    var filter by remember { mutableStateOf(Filter())}
+    val filterViewModel = FilterViewModel()
+    val currentFilter by filterViewModel.currentFilter
 
-    println("Current filter: $filter")
-    println("Current filter level size: " + filter.getLevel().size)
+    // Log or simple UI element for debugging
+    Log.d("FilterUpdate", "Filter updated: $currentFilter")
+    Text("Current filter: $currentFilter")
+
+    //var filter by remember { mutableStateOf(Filter())}
+
+    //println("Current filter: $filter")
+    //println("Current filter level size: " + filter.getLevel().size)
 
     val nullSpell = Spell_Info.SpellInfo(null, "Example name", null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null, null , null, null, null, null , null, null, null, null , null, null)
     var overlaySpell by remember { mutableStateOf(nullSpell) }
@@ -82,11 +92,11 @@ fun Basic_Screen(
             )
             Column (modifier = Modifier.padding(top = 100.dp, bottom = 56.dp).matchParentSize()) {
                 // TopBar with Search and Filters
-                SearchFilterBar()
+                SearchFilterBar(filterViewModel)
                 // List of Spells, taking up all available space
                 Box(modifier = Modifier.fillMaxHeight().weight(3f)){
                     SpellQuery(
-                        filter = filter,
+                        filter = currentFilter,
                         spellsLiveData = spellsLiveData,
                         onFullSpellCardRequest = {
                             overlaySpell = it
@@ -136,11 +146,7 @@ fun Basic_Screen(
                         ){
                             FiltersOverlay(
                                 onDismissRequest = { GlobalOverlayState.dismissOverlay() },
-                                currentfilter = filter,
-                                createNewFilter = { Filter() },
-                                updateFilterState = { newFilter ->
-                                    filter = newFilter
-                                    println("Filter updated: $filter") }
+                                filterViewModel
                             )
                         }
                     }
@@ -151,10 +157,6 @@ fun Basic_Screen(
                         ) {
                             NewSpellOverlay(onDismissRequest = {
                                 GlobalOverlayState.dismissOverlay()
-
-                                //globalOverlayState.showOverlay(
-                                //   OverlayType.ERASE_PROMPT
-                                // )
                             }, onFilterSelected = {/* TODO */ })
                         }
                     }
@@ -169,9 +171,7 @@ fun Basic_Screen(
 }
 
 @Composable
-fun SearchFilterBar(){
-    var filter by remember { mutableStateOf(Filter())}
-
+fun SearchFilterBar(filterViewModel: FilterViewModel){
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.Center
@@ -182,7 +182,7 @@ fun SearchFilterBar(){
             singleLine = true,
             onInputChanged = {
                     input ->
-                filter = updateFilterWithSearchName(filter, input)
+                filterViewModel.updateFilterWithSearchName(input)
                 println("User input: $input")
             },
             modifier = Modifier.size(height = 24.dp, width =  120.dp),
@@ -194,6 +194,7 @@ fun SearchFilterBar(){
                 GlobalOverlayState.showOverlay(
                     OverlayType.FILTER,
                 )
-            })
+            }
+        )
     }
 }
