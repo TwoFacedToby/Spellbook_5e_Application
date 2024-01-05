@@ -80,9 +80,6 @@ object SpellController {
             println("Context is not available.")
             return null
         }
-
-
-
             try {
                 val json = api.getListOfSpells()
                 if (json != null) {
@@ -99,8 +96,6 @@ object SpellController {
             } catch (e: Exception) {
                 println("An error occurred: ${e.message}")
             }
-
-
         return list
     }
 

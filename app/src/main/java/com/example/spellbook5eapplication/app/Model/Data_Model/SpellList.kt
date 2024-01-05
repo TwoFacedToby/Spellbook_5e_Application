@@ -214,4 +214,10 @@ class SpellList {
         copy.setSpellInfoList(spellInfos)
         return copy;
     }
+
+    override fun toString(): String {
+        return "SpellList(indexList=$indexList, spellInfoList=$spellInfoList, loaded=$loaded)"
+    }
+
+
 }

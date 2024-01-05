@@ -1,9 +1,11 @@
 package com.example.spellbook5eapplication.app.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import okhttp3.internal.wait
 
 class FilterViewModel : ViewModel() {
     private val _currentFilter = mutableStateOf(Filter())
@@ -25,6 +27,8 @@ class FilterViewModel : ViewModel() {
         processList(classes) { value -> newFilter.addClass(mapClasses(value))}
         processList(concentration) { value -> newFilter.addConcentration(value.toBoolean())}
         processList(ritual) { value -> newFilter.addRitual(value.toBoolean())}
+
+        Log.d("FilterViewModel", "New filter: $newFilter")
         _currentFilter.value = newFilter
     }
 
@@ -75,7 +79,8 @@ class FilterViewModel : ViewModel() {
     }
 
     fun resetCurrentFilter() {
-        _currentFilter.value = Filter() // Reset to a new, blank Filter instance
+        _currentFilter.value = Filter()
+        Log.d("FilterViewModel", "After reset: ${currentFilter.toString()}")// Reset to a new, blank Filter instance
     }
 
     fun updateFilterWithSearchName(searchName: String) {
@@ -97,6 +102,7 @@ class FilterViewModel : ViewModel() {
         current.getIsRitual().forEach { newFilter.addRitual(it) }
         current.getSaveReq().forEach { newFilter.addSaveReq(it) }
 
+        Log.d("FilterViewModel", "After name added: $newFilter")
         _currentFilter.value = newFilter
     }
 }

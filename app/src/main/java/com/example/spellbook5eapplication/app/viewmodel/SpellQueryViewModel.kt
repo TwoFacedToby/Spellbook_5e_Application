@@ -1,7 +1,9 @@
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Spellbook
@@ -12,9 +14,6 @@ import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import kotlinx.coroutines.launch
 
 class SpellQueryViewModel() : ViewModel() {
-
-
-
 
     //Spell name list for API
     private var spellList: SpellList? = null
@@ -60,18 +59,21 @@ class SpellQueryViewModel() : ViewModel() {
         viewModelScope.launch {
             println("Kig her")
             spellList = SpellController.getAllSpellsList()
+            Log.d("SpellQueryViewModel", "init: ${spellList?.getIndexList()?.size}")
             loadInitialSpells()
         }
     }
 
     private fun loadInitialSpells() {
         viewModelScope.launch {
-            _isLoading.postValue(true)
-            val initialSpells = SpellController.loadNextFromSpellList(10, spellList!!)
-            // Convert each SpellInfo to Displayable
-            val displayableSpells = initialSpells?.map { it as Displayable }
-            _spells.postValue(displayableSpells)
-            _isLoading.postValue(false)
+            // Load initial spells only if the spell list is empty
+            if (_spells.value.isNullOrEmpty()) {
+                _isLoading.postValue(true)
+                val initialSpells = SpellController.loadNextFromSpellList(10, spellList!!)
+                val displayableSpells = initialSpells?.map { it as Displayable }
+                _spells.postValue(displayableSpells)
+                _isLoading.postValue(false)
+            }
         }
     }
 
@@ -90,26 +92,42 @@ class SpellQueryViewModel() : ViewModel() {
         }
     }
 
-    fun loadFavoriteSpells() {
+    private fun loadFavoriteSpells() {
         val spellList = SpelllistLoader.loadFavouritesAsSpellList()
         val displayableFavorites = spellList.getSpellInfoList().map { it as Displayable }
         _favorite.postValue(displayableFavorites)
     }
 
-    fun loadHomebrewList(){
+    private fun loadHomebrewList(){
         val spellList = SpellController.retrieveHomeBrew()
         val displayableHomebrews = spellList!!.getSpellInfoList().map { it as Displayable }
         _homebrew.postValue(displayableHomebrews)
     }
 
-    fun loadSpellBooks(){
+    private fun loadSpellBooks(){
         val spellBookList = SpellbookManager.getAllSpellbooks()
         _spellBooks.postValue(spellBookList)
     }
 
     fun canLoadMoreSpells(): Boolean {
-        return _spells.value?.size ?: 0 < spellList!!.getIndexList().size
+        return (_spells.value?.size ?: 0) < spellList!!.getIndexList().size
     }
 
     fun totalSpellsLoaded(): Int = spellList!!.getIndexList().size
+
+    fun loadSpellsBasedOnFilter(filter: Filter) {
+        Log.d("SpellQueryViewModel", "LoadSpellsBasedOnFilter start: ${filter.toString()}")
+        viewModelScope.launch {
+            _isLoading.postValue(true)
+
+            val filteredSpells = SpellController.searchSpellListWithFilter(spellList!!, filter)
+            Log.d("SpellQueryViewModel", "FilteredSpellList: $filteredSpells")
+
+            val initialSpells = SpellController.loadNextFromSpellList(10, filteredSpells)
+            val displayableSpells = initialSpells?.map { it as Displayable }
+            _spells.postValue(displayableSpells ?: emptyList())
+
+            _isLoading.postValue(false)
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.Utility
 
+import android.util.Log
 import androidx.compose.ui.text.toLowerCase
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
@@ -65,6 +66,7 @@ class Search {
      */
 
     fun searchSpellListWithFilter(spellList: SpellList, filter : Filter) : SpellList {
+        Log.d("Search", "RecievedList: $spellList")
         var changingSpellList = spellList
         if(filter.getSpellName() != "") changingSpellList = searchSpellNames(changingSpellList, filter.getSpellName())
         if(filter.getCastingTime().isNotEmpty()) filterSpells(spellList, "casting_time", filter)
@@ -77,6 +79,8 @@ class Search {
         if(filter.getLevel().isNotEmpty()) filterSpells(spellList, "level", filter)
         if(filter.getClasses().isNotEmpty()) filterSpells(spellList, "classes", filter)
         if(filter.getIsConcentration().isNotEmpty()) filterSpells(spellList, "concentration", filter)
+
+        Log.d("Search", "ReturnedSpellList: $changingSpellList")
         return changingSpellList
     }
 
@@ -95,7 +99,11 @@ class Search {
             "level" -> {
                 var index = 0
                 while(index < list.size){
-                    if(!filter.getLevel().contains(list[index].level)) list.remove(list[index])
+                    Log.d("Search", "${filter.getLevel()}")
+                    if(!filter.getLevel().contains(list[index].level)) {
+                        list.remove(list[index])
+                        Log.d("Search", "List after remove: $list")
+                    }
                     else{
                         index++
                     }
@@ -164,7 +172,7 @@ class Search {
                         }
                     }
                     if(!found) list.remove(list[index])
-                    else{
+                    else {
                         index++
                     }
                 }

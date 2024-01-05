@@ -62,16 +62,6 @@ fun Basic_Screen(
     }
 
     val filterViewModel = FilterViewModel()
-    val currentFilter by filterViewModel.currentFilter
-
-    // Log or simple UI element for debugging
-    Log.d("FilterUpdate", "Filter updated: $currentFilter")
-    Text("Current filter: $currentFilter")
-
-    //var filter by remember { mutableStateOf(Filter())}
-
-    //println("Current filter: $filter")
-    //println("Current filter level size: " + filter.getLevel().size)
 
     val nullSpell = Spell_Info.SpellInfo(null, "Example name", null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null , null, null, null, null , null, null, null, null , null, null, null, null , null, null)
     var overlaySpell by remember { mutableStateOf(nullSpell) }
@@ -96,16 +86,8 @@ fun Basic_Screen(
                 // List of Spells, taking up all available space
                 Box(modifier = Modifier.fillMaxHeight().weight(3f)){
                     SpellQuery(
-                        filter = currentFilter,
+                        filterViewModel = filterViewModel,
                         spellsLiveData = spellsLiveData,
-                        onFullSpellCardRequest = {
-                            overlaySpell = it
-                            GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
-                        },
-                        onAddToSpellbookRequest = {
-                            overlaySpell = it
-                            GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
-                        },
                         enablePagination = enablePagination,
                         spellCardFactory = spellCardFactory
                     )

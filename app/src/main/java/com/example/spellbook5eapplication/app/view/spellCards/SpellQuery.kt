@@ -47,6 +47,7 @@ import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.utilities.DefaultSpellCardFactory
 import com.example.spellbook5eapplication.app.view.utilities.SpellCardFactory
+import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -58,20 +59,23 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun SpellQuery(
-    filter: Filter,
+    filterViewModel: FilterViewModel,
     spellsLiveData: LiveData<List<Displayable?>>,
-    onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
-    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
     enablePagination: Boolean,
     spellCardFactory: SpellCardFactory,
-    modifier: Modifier = Modifier
 ) {
 
     val spellQueryViewModel: SpellQueryViewModel = viewModel()
+    val filter by filterViewModel.currentFilter
+    Log.d("SpellQuery", "observed filter: $filter")
 
 
     //Back-up
     //val spells by spellQueryViewModel.spells.observeAsState(emptyList())
+
+    LaunchedEffect(filter) {
+        spellQueryViewModel.loadSpellsBasedOnFilter(filter)
+    }
 
     val spells by spellsLiveData.observeAsState(emptyList())
     val isLoading by spellQueryViewModel.isLoading.observeAsState(false)
@@ -82,7 +86,6 @@ fun SpellQuery(
     if (spells.isEmpty() && !isLoading) {
         NoSpellsFoundMessage()
     } else {
-
         LazyColumn(
             state = lazyListState,
             modifier = Modifier.fillMaxWidth(),
