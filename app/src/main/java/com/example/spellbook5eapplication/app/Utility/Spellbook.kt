@@ -7,8 +7,8 @@ import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.view.spellCards.SpellbookCard
 
 class Spellbook(var spellbookName: String): Displayable {
-    val spells: MutableList<String> = mutableListOf()
 
+    val spells: MutableList<String> = mutableListOf()
 
     fun addSpellToSpellbook(spellName: String) {
         if (!spells.contains(spellName)) {
@@ -16,18 +16,13 @@ class Spellbook(var spellbookName: String): Displayable {
         }
     }
 
-
     fun removeSpell(spellName: String) {
         spells.remove(spellName)
     }
 
-
-
     override fun toString(): String {
         return "Spellbook(spellbookName='$spellbookName', spells=$spells)"
     }
-
-
 
     override fun renderCardComposable(spellBook: Displayable): @Composable () -> Unit {
         return {
@@ -36,12 +31,9 @@ class Spellbook(var spellbookName: String): Displayable {
                 // Render SpellbookCard if it's a Spellbook
                 SpellbookCard(spellbook = spellBook)
             } else {
-
                 Log.d("Errors","Error: Item is not a Spellbook")
             }
 
         }
     }
-
-
 }
