@@ -19,8 +19,8 @@ fun MainScreen(spellController: SpellController, spellListLoader: SpelllistLoade
     val navController = rememberNavController()
 
     Scaffold(
-        topBar = { TopBar(navController = navController, GlobalOverlayState)},
-        bottomBar = { BottomBar(navController = navController, GlobalOverlayState) }
+        topBar = { TopBar(navController = navController)},
+        bottomBar = { BottomBar(navController = navController) }
     ){
         BottomNavigationGraph(
             navController = navController,

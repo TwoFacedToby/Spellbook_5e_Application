@@ -1,6 +1,7 @@
 package com.example.spellbook5eapplication.app.view.screens
 
 import SpellQueryViewModel
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -15,6 +16,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -58,7 +60,7 @@ fun Basic_Screen(
     // Used for testing filter
     println("Current filter: $filter")
     println("Current filter level size: " + filter.getLevel().size)
-
+    //val filterViewModel = FilterViewModel()
 
     Surface(
         modifier = Modifier
@@ -76,15 +78,13 @@ fun Basic_Screen(
                 .padding(top = 100.dp, bottom = 56.dp)
                 .matchParentSize()) {
                 // TopBar with Search and Filters
-                SearchFilterBar(filter = filter, onFilterChanged = { newFilter ->
-                    filter = newFilter
-                })
+                SearchFilterBar(filterViewModel)
                 // List of Spells, taking up all available space
                 Box(modifier = Modifier
                     .fillMaxHeight()
                     .weight(3f)){
                     SpellQuery(
-                        filter = filter,
+                        filterViewModel = filterViewModel,
                         spellsLiveData = spellsLiveData,
                         enablePagination = enablePagination
                     )
@@ -159,11 +159,11 @@ fun SearchFilterBar(filter: Filter,
                         CustomOverlay(
                             globalOverlayState = GlobalOverlayState,
                             overlayType = OverlayType.ADD_TO_SPELLBOOK,
-                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ) {
                             AddToSpellBookOverlay(
                                 spellInfo = overlaySpell,
-                                onDismissRequest = { GlobalOverlayState.dismissOverlay() }
+                                onDismissRequest = { globalOverlayState.dismissOverlay() }
                             )
                         }
                     }
@@ -171,7 +171,7 @@ fun SearchFilterBar(filter: Filter,
                         CustomOverlay(
                             globalOverlayState = GlobalOverlayState,
                             overlayType = OverlayType.FILTER,
-                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ){
                             FiltersOverlay(
                                 onDismissRequest = { GlobalOverlayState.dismissOverlay() },
@@ -187,7 +187,7 @@ fun SearchFilterBar(filter: Filter,
                         CustomOverlay(
                             globalOverlayState = GlobalOverlayState,
                             overlayType = OverlayType.MAKE_SPELL,
-                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
+                            onDismissRequest = { globalOverlayState.dismissOverlay() }
                         ) {
                             NewSpellOverlay(onDismissRequest = {
                                 GlobalOverlayState.dismissOverlay()

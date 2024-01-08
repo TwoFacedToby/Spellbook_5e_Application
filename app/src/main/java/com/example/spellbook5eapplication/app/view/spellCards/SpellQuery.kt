@@ -38,13 +38,25 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun SpellQuery(
-    filter: Filter,
+    filterViewModel: FilterViewModel,
     spellsLiveData: LiveData<List<Displayable?>>,
+    onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
+    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
     enablePagination: Boolean,
     modifier: Modifier = Modifier
 ) {
 
     val spellQueryViewModel: SpellQueryViewModel = viewModel()
+    val filter by filterViewModel.currentFilter
+    Log.d("SpellQuery", "observed filter: $filter")
+
+
+    //Back-up
+    //val spells by spellQueryViewModel.spells.observeAsState(emptyList())
+
+    /*LaunchedEffect(filter) {
+        spellQueryViewModel.loadSpellsBasedOnFilter(filter)
+    }*/
 
     val spells by spellsLiveData.observeAsState(emptyList())
     val isLoading by spellQueryViewModel.isLoading.observeAsState(false)
@@ -64,9 +76,23 @@ fun SpellQuery(
         ) {
             items(spells.size) { index ->
                 spells[index]?.let {
-                    // Generalized approach for making items (Spells, Spellbooks, Quickplay classes)
-                    val compos = it.renderCardComposable(it)
-                    compos()
+                    Log.d("SpellDebug", "Spell at index $index is of type: ${it::class.java}")
+                    when (it) {
+                        is Spell_Info.SpellInfo -> {
+                            val spellCardComposable = spellCardFactory.createSpellCard(it)
+                            spellCardComposable()
+                        }
+                        is Spellbook -> {
+                            // New logic for handling Spellbook
+                            Log.d("WEMADEIT", "We didnt actually make it")
+                            SpellbookCard(
+                                spellbook = it
+                                )
+                        }
+
+                        else -> {}
+                    }
+
                 }
 
                 // Handle pagination logic only if enabled

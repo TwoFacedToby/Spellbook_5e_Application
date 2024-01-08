@@ -1,7 +1,5 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
-import android.os.Debug
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -55,18 +53,22 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
-import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
-import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun SpellCard(
+    onFullSpellCardRequest: () -> Unit,
+    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
     spell : Spell_Info.SpellInfo)
+
 {
     val images = SpellCardCreation(spell)
 
     var cardColor = R.color.spellcard_color
+    /*if(spell.patron == "api") cardColor = R.color.red_button
+    else if(spell.patron == "local") cardColor = R.color.green_button
+    else if(spell.patron == "debug") cardColor = androidx.appcompat.R.color.material_blue_grey_800*/
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -75,10 +77,7 @@ fun SpellCard(
         modifier = Modifier
             .height(150.dp)
             .padding(10.dp)
-            .clickable {
-                GlobalOverlayState.currentSpell = spell
-                // Show the overlay
-                GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD) }
+            .clickable { onFullSpellCardRequest() }
     ) {
         Column(
             modifier = Modifier

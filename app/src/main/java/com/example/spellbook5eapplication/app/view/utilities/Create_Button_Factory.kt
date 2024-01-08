@@ -10,7 +10,7 @@ import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 @Composable
-fun DynamicButtonFactory(buttonType: String, globalOverlayState: GlobalOverlayState) {
+fun DynamicButtonFactory(buttonType: String) {
     val buttonText = when (buttonType) {
         "HOMEBREW" -> "New Homebrew"
         "SPELLBOOK" -> "New Spellbook"
@@ -21,12 +21,12 @@ fun DynamicButtonFactory(buttonType: String, globalOverlayState: GlobalOverlaySt
         when (buttonType) {
             "HOMEBREW" -> {
                 Log.d("MINI", "It does come here")
-                globalOverlayState.showOverlay(
+                GlobalOverlayState.showOverlay(
                     OverlayType.MAKE_SPELL,
                 )
             }
             "SPELLBOOK" -> {
-                globalOverlayState.showOverlay(
+                GlobalOverlayState.showOverlay(
                     OverlayType.ADD_TO_SPELLBOOK,
                 )
             }

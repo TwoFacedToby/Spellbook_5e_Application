@@ -290,4 +290,20 @@ class Filter {
         INTELLIGENCE("Intelligence"),
         CHARISMA("Charisma")
     }
+
+    override fun toString(): String {
+        return "Filter(" +
+                "spellName='$spellName', " +
+                "school=$school, " +
+                "castingTime=$castingTime, " +
+                "aoe=$aoe, " +
+                "duration=$duration, " +
+                "components=$components, " +
+                "ritual=$ritual, " +
+                "damage=$damage, " +
+                "level=$level, " +
+                "classes=$classes, " +
+                "concentration=$concentration, " +
+                "saveReq=$saveReq)"
+    }
 }

@@ -21,7 +21,6 @@ import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 @Composable
 fun BottomBar(
     navController: NavHostController,
-    globalOverlayState: GlobalOverlayState,
 ){
     val bottomNavItems = listOf(
         Screens.Favorite,
@@ -41,7 +40,6 @@ fun BottomBar(
                 bottomNavItem = screen,
                 currentDestination = currentDestination,
                 navController = navController,
-                globalOverlayState = globalOverlayState
             )
         }
     }
@@ -52,13 +50,13 @@ fun RowScope.AddItem(
     bottomNavItem : Screens,
     currentDestination : NavDestination?,
     navController: NavHostController,
-    globalOverlayState: GlobalOverlayState)
+    )
 {
     BottomNavigationItem(
         selected = currentDestination?.hierarchy?.any { it.route == bottomNavItem.route } == true,
         onClick = {
-            if (globalOverlayState.getOverlayStack().isNotEmpty()) {
-                globalOverlayState.dismissOverlay()
+            if (GlobalOverlayState.getOverlayStack().isNotEmpty()) {
+                GlobalOverlayState.dismissOverlay()
             }
             navController.navigate(bottomNavItem.route) {
                 popUpTo(navController.graph.findStartDestination().id) {
