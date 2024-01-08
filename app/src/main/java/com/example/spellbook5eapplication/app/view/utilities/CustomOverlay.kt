@@ -47,7 +47,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun CustomOverlay(
     overlayType: OverlayType,
-    onDismissRequest: () -> Unit,
     content: @Composable (() -> Unit)? = null
 ) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -63,7 +62,7 @@ fun CustomOverlay(
                 .background(colorResource(id = R.color.black).copy(alpha = 0.2f))
                 .clickable(
                     onClick = {
-                        onDismissRequest()
+                        GlobalOverlayState.dismissOverlay()
                     }
                 )
                 .swipeable(
@@ -75,7 +74,7 @@ fun CustomOverlay(
         ) {
             LaunchedEffect(swipeableState.currentValue) {
                 if (swipeableState.currentValue == 1) {
-                    onDismissRequest()
+                    GlobalOverlayState.dismissOverlay()
                 }
             }
             Box(
@@ -96,7 +95,7 @@ fun CustomOverlay(
                 if (content != null) {
                     content()
                 } else {
-                    DefaultContent(onDismissRequest)
+                    DefaultContent()
                 }
             }
         }
@@ -104,7 +103,7 @@ fun CustomOverlay(
 }
 
 @Composable
-fun DefaultContent(onDismiss: () -> Unit) {
+fun DefaultContent() {
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -113,7 +112,7 @@ fun DefaultContent(onDismiss: () -> Unit) {
     ) {
         Text(text = "Hardcoded Title", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = onDismiss) {
+        Button(onClick = { GlobalOverlayState.dismissOverlay() }) {
             Text("Hardcoded Button Text")
         }
     }

@@ -219,7 +219,6 @@ fun BrewScreen() {
                     OverlayType.ADD_TO_SPELLBOOK -> {
                         CustomOverlay(
                             overlayType = OverlayType.ADD_TO_SPELLBOOK,
-                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
                         ) {
                             AddToSpellBookOverlay(
                                 spellInfo = overlaySpell,
@@ -247,7 +246,6 @@ fun BrewScreen() {
                     OverlayType.MAKE_SPELL -> {
                         CustomOverlay(
                             overlayType = OverlayType.MAKE_SPELL,
-                            onDismissRequest = { GlobalOverlayState.dismissOverlay() }
                         ) {
                             NewSpellOverlay(onDismissRequest = {
                                 GlobalOverlayState.dismissOverlay(); spellList = SpellController.retrieveHomeBrew()

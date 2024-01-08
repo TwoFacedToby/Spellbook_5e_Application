@@ -35,20 +35,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 import com.example.spellbook5eapplication.app.viewmodel.FilterItem
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 
 
 @Composable
 fun FiltersOverlay(
-    onDismissRequest: () -> Unit,
-    //currentfilter: Filter,
-    //createNewFilter: () -> Filter,
-    //updateFilterState: (Filter) -> Unit,
-    filterViewModel: FilterViewModel
 ) {
     val spellLevel = remember { mutableStateListOf(*FilterItem.spellLevels.toTypedArray()) }
     val components = remember { mutableStateListOf(*FilterItem.components.toTypedArray()) }
@@ -56,6 +53,8 @@ fun FiltersOverlay(
     val classes = remember { mutableStateListOf(*FilterItem.classes.toTypedArray()) }
     val concentration = remember { mutableStateListOf(*FilterItem.isConcentration.toTypedArray()) }
     val ritual = remember { mutableStateListOf(*FilterItem.isRitual.toTypedArray()) }
+
+    val filterViewModel: FilterViewModel = viewModel()
 
     Column(
         modifier = Modifier
@@ -83,7 +82,7 @@ fun FiltersOverlay(
                     concentration,
                     ritual
                 )
-                    onDismissRequest()
+                    GlobalOverlayState.dismissOverlay()
                 }
             )
             Spacer(modifier = Modifier.width(10.dp))
@@ -92,7 +91,7 @@ fun FiltersOverlay(
                 color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
                 onClick = {
                     filterViewModel.resetCurrentFilter()
-                    onDismissRequest()
+                    GlobalOverlayState.dismissOverlay()
                 }
             )
         }

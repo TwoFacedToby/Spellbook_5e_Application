@@ -24,8 +24,6 @@ fun MainScreen(spellController: SpellController, spellListLoader: SpelllistLoade
     ){
         BottomNavigationGraph(
             navController = navController,
-            spellController = spellController,
-            spellListLoader = spellListLoader
         )
     }
 }

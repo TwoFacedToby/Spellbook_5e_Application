@@ -57,11 +57,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LargeSpellCardOverlay(
-    onDismissRequest: () -> Unit,
-    addButton: @Composable () -> Unit,
-    deleteButton: @Composable () -> Unit,
-    favoriteButton: @Composable () -> Unit,
-    closeButton: @Composable () -> Unit,
     spell : Spell_Info.SpellInfo
 )
 {
@@ -101,16 +96,14 @@ fun LargeSpellCardOverlay(
                                 .wrapContentWidth(Alignment.End),
                             horizontalArrangement = Arrangement.End
                         ) {
-                            /*IconButton(
+                            IconButton(
                                 onClick = { GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
                                 Icon(
                                     imageVector = Icons.Outlined.Add,
                                     contentDescription = "Add to spellbook",
                                     tint = colorResource(id = R.color.spellcard_button)
                                 )
-                            }*/
-
-                            addButton()
+                            }
 
                             val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
                             var favouriteImage by remember { mutableStateOf(defaultFavouriteImage) }
@@ -146,16 +139,15 @@ fun LargeSpellCardOverlay(
                                     modifier = Modifier.size(35.dp)
                                 )
                             }
-                            /*
+
                             IconButton(
-                                onClick = { onDismissRequest() }) {
+                                onClick = { GlobalOverlayState.dismissOverlay() }){
                                 Icon(
                                     imageVector = Icons.Outlined.Close,
                                     contentDescription = "Close",
                                     tint = colorResource(id = R.color.spellcard_button)
                                 )
-                            }*/
-                            closeButton()
+                            }
                         }
                     }
                     Row(

@@ -87,12 +87,12 @@ fun TopBar(navController: NavController){
     }
     when (GlobalOverlayState.getTopOverlay()) {
         OverlayType.SETTINGS -> {
-            CustomOverlay(OverlayType.SETTINGS, onDismissRequest = { GlobalOverlayState.dismissOverlay() }) {
+            CustomOverlay(OverlayType.SETTINGS) {
                 SettingsOverlay(onDismissRequest = { GlobalOverlayState.dismissOverlay() })
             }
         }
         OverlayType.PROFILE -> {
-            CustomOverlay(OverlayType.PROFILE, onDismissRequest = { GlobalOverlayState.dismissOverlay() }) {
+            CustomOverlay(OverlayType.PROFILE) {
                 UserOverlay(onDismissRequest = { GlobalOverlayState.dismissOverlay() })
             }
         }

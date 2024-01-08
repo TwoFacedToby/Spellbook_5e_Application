@@ -2,6 +2,7 @@ package com.example.spellbook5eapplication.app.view.spellCards
 
 import SpellQueryViewModel
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.view.utilities.DefaultSpellCardFactory
+import com.example.spellbook5eapplication.app.view.utilities.SpellCardFactory
+import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import kotlinx.coroutines.launch
 
 const val amountToLoad = 10
@@ -38,15 +44,16 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun SpellQuery(
-    filterViewModel: FilterViewModel,
     spellsLiveData: LiveData<List<Displayable?>>,
-    onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
-    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
     enablePagination: Boolean,
     modifier: Modifier = Modifier
 ) {
 
     val spellQueryViewModel: SpellQueryViewModel = viewModel()
+    val filterViewModel: FilterViewModel = viewModel()
+
+    val spellCardFactory = DefaultSpellCardFactory()
+
     val filter by filterViewModel.currentFilter
     Log.d("SpellQuery", "observed filter: $filter")
 

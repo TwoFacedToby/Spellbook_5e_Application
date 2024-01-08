@@ -53,15 +53,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun SpellCard(
-    onFullSpellCardRequest: () -> Unit,
-    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
     spell : Spell_Info.SpellInfo)
-
 {
     val images = SpellCardCreation(spell)
 
@@ -77,7 +76,10 @@ fun SpellCard(
         modifier = Modifier
             .height(150.dp)
             .padding(10.dp)
-            .clickable { onFullSpellCardRequest() }
+            .clickable {
+                GlobalOverlayState.currentSpell = spell
+                GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+            }
     ) {
         Column(
             modifier = Modifier
@@ -157,7 +159,7 @@ fun SpellCard(
                     modifier = Modifier.padding(top = 10.dp)
                 ) {
                     IconButton(
-                        onClick = {  }) {
+                        onClick = { /*TODO*/ }) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
                             contentDescription = "Add to spellbook",

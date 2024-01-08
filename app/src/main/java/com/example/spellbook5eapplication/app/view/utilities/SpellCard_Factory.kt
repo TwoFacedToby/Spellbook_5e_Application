@@ -17,22 +17,14 @@ interface SpellCardFactory {
     ): @Composable () -> Unit
 }
 
-class DefaultSpellCardFactory(private val buttonFactory: ButtonFactory): SpellCardFactory {
+class DefaultSpellCardFactory(): SpellCardFactory {
     override fun createSpellCard(
         displayable: Displayable,
     ): @Composable () -> Unit {
 
-        val addButtonComposable = buttonFactory.createAddButton { onAddAction() }
-        val favoriteButtonComposable = buttonFactory.createFavoriteButton { onFavoriteAction() }
-
         return when (displayable) {
             is Spell_Info.SpellInfo -> {
                 { SpellCard(
-                    onAddToSpellbookRequest = {},
-                    onFullSpellCardRequest = {},
-                    addButton = addButtonComposable,
-                    favoriteButton = favoriteButtonComposable,
-                    onExpandAction = {},
                     spell = displayable
                 ) }
             }
@@ -44,45 +36,13 @@ class DefaultSpellCardFactory(private val buttonFactory: ButtonFactory): SpellCa
         displayable: Displayable,
     ): @Composable () -> Unit {
 
-        val addButtonComposable = buttonFactory.createAddButton { onAddAction() }
-        val favoriteButtonComposable = buttonFactory.createFavoriteButton { onFavoriteAction() }
-        val deleteButtonComposable = buttonFactory.createDeleteButton { onDeleteAction() }
-        val closeButtonComposable = buttonFactory.createCloseButton { onCloseAction() }
-
         return when (displayable) {
             is Spell_Info.SpellInfo -> {
                 { LargeSpellCardOverlay(
-                    onDismissRequest = {},
-                    addButton = addButtonComposable,
-                    deleteButton = deleteButtonComposable,
-                    favoriteButton = favoriteButtonComposable,
-                    closeButton = closeButtonComposable,
                     spell = displayable
                 ) }
             }
             else -> { {} }
         }
-    }
-
-    private fun onAddAction(){
-        GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
-    }
-
-    private fun onFavoriteAction(){
-        /*TODO*/
-    }
-
-    private fun onDeleteAction(){
-        /*
-        TODO
-         */
-    }
-
-    private fun onCloseAction(){
-        GlobalOverlayState.dismissOverlay()
-    }
-
-    private fun onExpandAction(){
-        GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
     }
 }

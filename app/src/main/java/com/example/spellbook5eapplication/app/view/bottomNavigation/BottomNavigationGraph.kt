@@ -21,8 +21,6 @@ import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModelFacto
 @Composable
 fun BottomNavigationGraph(
     navController: NavHostController,
-    spellController: SpellController,
-    spellListLoader: SpelllistLoader,
 ) {
     NavHost(navController = navController, startDestination = Screens.Search.route){
         composable(route = Screens.Search.route){
@@ -40,7 +38,6 @@ fun BottomNavigationGraph(
             Basic_Screen(spellsLiveData = spellList, false, customContent = {
                 DynamicButtonFactory(
                     buttonType = "SPELLBOOK",
-                    globalOverlayState = GlobalOverlayState
                 )
             })
         }
@@ -49,7 +46,6 @@ fun BottomNavigationGraph(
             Basic_Screen(spellsLiveData = spellList, false, customContent = {
                 DynamicButtonFactory(
                     buttonType = "HOMEBREW",
-                    globalOverlayState = GlobalOverlayState
                 )
             })
         }
