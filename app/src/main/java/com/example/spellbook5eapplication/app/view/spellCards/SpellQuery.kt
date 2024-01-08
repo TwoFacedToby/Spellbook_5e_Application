@@ -67,6 +67,8 @@ fun SpellQuery(
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
 
+    var doPagination = enablePagination && filter.count()==0
+
     LaunchedEffect(filter) {
         if(filter.count() != 0) {
             spellQueryViewModel.loadSpellsBasedOnFilter(filter)
@@ -89,6 +91,7 @@ fun SpellQuery(
                     when (it) {
                         is Spell_Info.SpellInfo -> {
                             val spellCardComposable = spellCardFactory.createSpellCard(it)
+
                             spellCardComposable()
                         }
                         is Spellbook -> {
@@ -105,7 +108,7 @@ fun SpellQuery(
                 }
 
                 // Handle pagination logic only if enabled
-                if (enablePagination && !isAllLoaded) {
+                if (doPagination) {
                     val shouldLoadMore = index == spells.size - 1 &&
                             !isLoading &&
                             spellQueryViewModel.canLoadMoreSpells()
@@ -119,7 +122,7 @@ fun SpellQuery(
             }
 
             // Loading indicator only when pagination is enabled
-            if (isLoading && enablePagination && !isAllLoaded) {
+            if (isLoading && enablePagination) {
                 item { LoadingIndicator() }
             }
         }
