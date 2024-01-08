@@ -77,9 +77,4 @@ class TestLocalStorage {
         // Test should pass if isDeleted is false, indicating no file was deleted because it didn't exist
         assertFalse(isDeleted)
     }
-
-
-
-
-
 }
