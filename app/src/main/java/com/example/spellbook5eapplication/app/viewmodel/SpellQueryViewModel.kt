@@ -1,3 +1,5 @@
+package com.example.spellbook5eapplication.app.viewmodel
+
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
@@ -5,8 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
-import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
@@ -59,7 +59,7 @@ class SpellQueryViewModel() : ViewModel() {
         viewModelScope.launch {
             println("Kig her")
             spellList = SpellController.getAllSpellsList()
-            Log.d("SpellQueryViewModel", "init: ${spellList?.getIndexList()?.size}")
+            Log.d("com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModel", "init: ${spellList?.getIndexList()?.size}")
             loadInitialSpells()
         }
     }
@@ -116,13 +116,13 @@ class SpellQueryViewModel() : ViewModel() {
     fun totalSpellsLoaded(): Int = spellList!!.getIndexList().size
 
     fun loadSpellsBasedOnFilter(filter: Filter) {
-        Log.d("SpellQueryViewModel", "LoadSpellsBasedOnFilter start: ${filter.toString()}")
+        Log.d("com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModel", "LoadSpellsBasedOnFilter start: ${filter.toString()}")
         viewModelScope.launch {
             _isLoading.postValue(true)
 
             SpellController.loadEntireSpellList(spellList!!)
             val filteredSpells = SpellController.searchSpellListWithFilter(spellList!!, filter)
-            Log.d("SpellQueryViewModel", "FilteredSpellList: $spellList")
+            Log.d("com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModel", "FilteredSpellList: $spellList")
 
             val displayableSpells = filteredSpells.getSpellInfoList().map { it }
             _spells.postValue(displayableSpells)
