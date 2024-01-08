@@ -133,7 +133,7 @@ object SpellController {
      * Converts each json into a SpellInfo data class and inserts into list
      * Returns the list
      */
-    private fun loadSpells(indexes: List<String>): List<Spell_Info.SpellInfo> {
+    fun loadSpells(indexes: List<String>): List<Spell_Info.SpellInfo> {
         var spellInfoJson: List<String?>
         runBlocking {
             spellInfoJson = getJsonsFromIndexes(indexes)

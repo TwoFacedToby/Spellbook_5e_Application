@@ -55,6 +55,7 @@ import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 
 @Composable
 fun BrewScreen() {
+    /*
     //val spellList = SpellController.getAllSpellsList()
     var spellList = SpellController.retrieveHomeBrew()
 
@@ -262,5 +263,5 @@ fun BrewScreen() {
                 }
 
             }
-        }
+        }*/
     }

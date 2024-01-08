@@ -8,6 +8,8 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
+import com.example.spellbook5eapplication.app.Utility.Search
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
@@ -99,8 +101,9 @@ class SpellQueryViewModel() : ViewModel() {
     }
 
     private fun loadHomebrewList(){
-        val spellList = SpellController.retrieveHomeBrew()
-        val displayableHomebrews = spellList!!.getSpellInfoList().map { it as Displayable }
+        val spellList = SpellList()
+        spellList.setIndexList(LocalDataLoader.getIndexList(LocalDataLoader.DataType.HOMEBREW))
+        val displayableHomebrews = spellList.getSpellInfoList().map { it as Displayable }
         _homebrew.postValue(displayableHomebrews)
     }
 
@@ -120,8 +123,10 @@ class SpellQueryViewModel() : ViewModel() {
         viewModelScope.launch {
             _isLoading.postValue(true)
 
-            SpellController.loadEntireSpellList(spellList!!)
-            val filteredSpells = SpellController.searchSpellListWithFilter(spellList!!, filter)
+            spellList!!.setSpellInfoList(SpellController.loadSpells(spellList!!.getIndexList()))
+            val search = Search()
+
+            val filteredSpells = search.searchSpellListWithFilter(spellList!!, filter)
             Log.d("SpellQueryViewModel", "FilteredSpellList: $spellList")
 
             val displayableSpells = filteredSpells.getSpellInfoList().map { it }
