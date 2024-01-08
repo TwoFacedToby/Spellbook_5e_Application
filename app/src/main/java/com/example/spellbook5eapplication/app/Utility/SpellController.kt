@@ -23,6 +23,7 @@ object SpellController {
             val json = api.getListOfSpells()
             if (json != null) {
                 list = jsonToSpell.jsonToSpellList(json)
+                println("Jsonlist: ${list.getIndexList().toString()}")
                 LocalDataLoader.saveIndexList(LocalDataLoader.DataType.INDIVIDUAL, list.getIndexList())
             }
             else{

@@ -50,7 +50,7 @@ object SpelllistLoader {
      * @return A SpellList containing the favourite spells.
      */
     fun loadFavouritesAsSpellList(): SpellList {
-        val json = LocalDataLoader.getJson("Favourites.json", LocalDataLoader.DataType.SPELLBOOK)
+        val json = LocalDataLoader.getJson("Favourites", LocalDataLoader.DataType.SPELLBOOK)
         if(json != null){
             val favourites = Gson().fromJson(json, Spellbook::class.java)
             if (favourites != null) {

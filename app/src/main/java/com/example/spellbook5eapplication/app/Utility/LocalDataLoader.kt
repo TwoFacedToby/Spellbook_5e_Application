@@ -20,29 +20,40 @@ object LocalDataLoader {
     fun getIndexList(dataType : DataType) : List<String>{
         if(dataType == DataType.HOMEBREW) return getIndexListFromDirectory("Homebrews")
         if(dataType == DataType.SPELLBOOK) return getIndexListFromDirectory("Spellbooks")
-        val fileName = when(dataType){
-            DataType.INDIVIDUAL -> "LocalJSONData/individualSpells"
-            DataType.FAVOURITES ->  "Spellbooks/Favourites"
-            else -> {""}
+        var fileName = ""
+        var directoryName = ""
+        when(dataType){
+            DataType.INDIVIDUAL -> {
+                fileName = "individualSpells"
+                directoryName = "LocalJSONData"
+            }
+            DataType.FAVOURITES ->  {
+                fileName = "Favourites"
+                directoryName = "Spellbooks"
+            }
+
+            else -> {return emptyList()}
         }
-        if(fileName == ""){
-            println("No file found")
-            return emptyList()
-        } //No such filename
-        return getIndexListFromFileName(fileName)
+        return getIndexListFromFileName(directoryName = directoryName, name = fileName)
     }
     fun saveIndexList(dataType: DataType, list : List<String>){
-        val fileName = when(dataType){
-            DataType.INDIVIDUAL -> "individualSpells"
-            DataType.HOMEBREW -> "homebrewSpells"
-            DataType.FAVOURITES ->  "Favourites"
-            else -> {""}
+        var directoryName = ""
+        var fileName = ""
+        when(dataType){
+            DataType.INDIVIDUAL -> {
+                directoryName = "LocalJSONData"
+                fileName = "individualSpells"
+            }
+            DataType.HOMEBREW -> {
+                directoryName = "LocalJSONData"
+                fileName = "homebrewSpells"
+            }
+            DataType.FAVOURITES -> {
+                directoryName = "Spellbooks"
+                fileName = "Favourites"
+            }
+            else -> {return}
         }
-        if(fileName == ""){
-            println("No file found")
-            return
-        } //No such filename
-        //TODO - Write saving code
 
         val indexListObject = Spellbook(fileName)
         list.forEach{
@@ -50,10 +61,10 @@ object LocalDataLoader {
         }
         val gson = Gson()
         val json = gson.toJson(indexListObject)
-        saveJson(json, fileName, dataType)
+        saveJsonToFile(json, directoryName, fileName)
     }
     fun getSpellBookIndexList(name : String) : List<String> {
-        return getIndexListFromFileName("Spellbooks/$name")
+        return getIndexListFromFileName("Spellbooks", name)
     }
     fun saveJson(json : String, fileName: String, dataType: DataType) {
         if(dataType == DataType.SPELLBOOK) saveJsonToFile(json, "Spellbooks", fileName)
@@ -73,9 +84,11 @@ object LocalDataLoader {
         }
     }
     fun updateIndividualSpellList(spellName : String){
+        println("Inserting $spellName")
         val indexList = getIndexList(DataType.INDIVIDUAL).toMutableList()
         if(indexList.contains(spellName)) return
         indexList.add(spellName)
+        println(indexList.toString())
         saveIndexList(DataType.INDIVIDUAL, indexList.toList())
     }
 
@@ -104,10 +117,19 @@ object LocalDataLoader {
             println("Failed to save JSON to file: ${e.message}")
         }
     }
-    private fun getIndexListFromFileName(name : String) : List<String>{
-        val file = File(baseDirectory, "$name.json")
+    private fun createEmptySpellbook(directoryName: String, fileName: String){
+        println("Created file $fileName")
+        val file = File(baseDirectory, "$directoryName/$fileName.json")
+        val emptySpellbook = Spellbook(fileName)
+        val gson = Gson()
+        val json = gson.toJson(emptySpellbook)
+        file.writeText(json)
+    }
+    private fun getIndexListFromFileName(directoryName: String, name: String) : List<String>{
+        val file = File(baseDirectory, "$directoryName/$name.json")
         if (!file.exists()) {
             println("File does not exist: $name")
+            createEmptySpellbook(directoryName, name)
             return emptyList()
         } //No such file
         val jsonString = file.bufferedReader().use { it.readText() }
@@ -138,10 +160,11 @@ object LocalDataLoader {
         }
     }
     private fun getLocalJson(fileName: String) : String? {
-        val file = File(baseDirectory, fileName)
+        val file = File(baseDirectory, "$fileName.json")
         if (file.exists()) {
             return file.readText(Charsets.UTF_8)
         }
+        println("File $fileName not found")
         return null
     }
     fun deleteFile(fileName: String, dataType : DataType): Boolean {
