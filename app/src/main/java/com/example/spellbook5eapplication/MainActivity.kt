@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                 Log.e(TAG, "Spellbook test: $it")
             }
 
-            // Now that you have all indices, fetch spell details
+            // Fetch the details for all spells
             viewModel.getSpellsDetails(indices)
         })
 
