@@ -22,8 +22,8 @@ object SpellController {
         try {
             val json = api.getListOfSpells()
             if (json != null) {
-                LocalDataLoader.saveJson(json, "individualSpells", LocalDataLoader.DataType.LOCAL)
                 list = jsonToSpell.jsonToSpellList(json)
+                LocalDataLoader.saveIndexList(LocalDataLoader.DataType.INDIVIDUAL, list.getIndexList())
             }
             else{
                 val localList = LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL)
@@ -116,7 +116,7 @@ object SpellController {
         str = LocalDataLoader.getJson(index, LocalDataLoader.DataType.INDIVIDUAL) //Try to find in saved data
         if(str != null) return str //Return if found
         str = api.getSpellFromApiWithRetry(index, 10) //Try to find in api
-        if(str != null) LocalDataLoader.saveJson(str, "$index.json",LocalDataLoader.DataType.INDIVIDUAL) //Save to device for later use if found
+        if(str != null) LocalDataLoader.saveJson(str, index, LocalDataLoader.DataType.INDIVIDUAL) //Save to device for later use if found
         return str //Return either json string or null if not found
     }
     /**@author Tobias s224271

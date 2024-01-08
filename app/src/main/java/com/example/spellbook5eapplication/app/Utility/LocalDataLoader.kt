@@ -1,6 +1,9 @@
 package com.example.spellbook5eapplication.app.Utility
 
 import android.content.Context
+import com.example.spellbook5eapplication.app.Model.Spellbook
+import com.google.gson.Gson
+import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
 import java.lang.ref.WeakReference
@@ -30,16 +33,24 @@ object LocalDataLoader {
     }
     fun saveIndexList(dataType: DataType, list : List<String>){
         val fileName = when(dataType){
-            DataType.INDIVIDUAL -> "LocalJSONData/individualSpells.json"
-            DataType.HOMEBREW -> "LocalJSONData/homebrewSpells.json"
-            DataType.FAVOURITES ->  "Spellbooks/Favourites.json"
+            DataType.INDIVIDUAL -> "individualSpells"
+            DataType.HOMEBREW -> "homebrewSpells"
+            DataType.FAVOURITES ->  "Favourites"
             else -> {""}
         }
         if(fileName == ""){
             println("No file found")
             return
         } //No such filename
+        //TODO - Write saving code
 
+        val indexListObject = Spellbook(fileName)
+        list.forEach{
+            indexListObject.addSpellToSpellbook(it)
+        }
+        val gson = Gson()
+        val json = gson.toJson(indexListObject)
+        saveJson(json, fileName, dataType)
     }
     fun getSpellBookIndexList(name : String) : List<String> {
         return getIndexListFromFileName("Spellbooks/$name")
@@ -81,14 +92,14 @@ object LocalDataLoader {
             if (!directory.exists()) {
                 directory.mkdirs() // Make the directory if it does not exist
             }
-            val file = File(directory, fileName)
+            val file = File(directory, "$fileName.json")
             file.writeText(json)
         } catch (e: Exception) {
             println("Failed to save JSON to file: ${e.message}")
         }
     }
     private fun getIndexListFromFileName(name : String) : List<String>{
-        val file = File(baseDirectory, name)
+        val file = File(baseDirectory, "$name.json")
         if (!file.exists()) {
             println("File does not exist.")
             return emptyList()
@@ -96,7 +107,15 @@ object LocalDataLoader {
         val jsonString = file.bufferedReader().use { it.readText() }
         val jsonObject = JSONObject(jsonString)
 
-        val spellsArray = jsonObject.getJSONArray("spells")
+        val spellsArray : JSONArray = try {
+            jsonObject.getJSONArray("spells")
+        }
+        catch (e : Exception)
+        {
+            println("no spells variable in json $name")
+            null
+        } ?: return emptyList()
+
         val spellsList = mutableListOf<String>()
         for (i in 0 until spellsArray.length()) {
             spellsList.add(spellsArray.getString(i))

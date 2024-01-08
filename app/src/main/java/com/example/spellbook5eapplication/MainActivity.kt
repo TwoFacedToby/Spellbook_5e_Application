@@ -11,6 +11,7 @@ import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : ComponentActivity() {
     // Define a CoroutineScope for launching coroutines
@@ -44,6 +45,8 @@ class MainActivity : ComponentActivity() {
         // Initialize SpellController with context
         LocalDataLoader.setContext(applicationContext)
         LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL)
+        runBlocking {  SpellController.getAllSpellsList()  }
+
         setContent {
             Spellbook5eApplicationTheme {
                 MainScreen(SpellController, SpelllistLoader)
