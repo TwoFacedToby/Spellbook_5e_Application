@@ -76,7 +76,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     //GraphQL API:
-    implementation("com.apollographql.apollo:apollo-runtime:2.x.x")
+    implementation("com.apollographql.apollo:apollo-runtime:2.5.14")
 
     //Test and Debug:
     testImplementation("junit:junit:4.13.2")

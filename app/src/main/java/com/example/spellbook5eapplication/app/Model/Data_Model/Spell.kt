@@ -47,7 +47,7 @@ data class SpellInfo(
     var school: SpellSchool?,
 
     @SerializedName("classes")
-    var classes: SpellClasses?,
+    var classes: List<SpellClasses>?,
 
     @SerializedName("url")
     var url: String?,
@@ -69,7 +69,7 @@ data class SpellInfo(
     data class SpellNames(
         @SerializedName("index") val index: String?,
         @SerializedName("name") val name: String?,
-        @SerializedName("url") val url: String?
+        val url: String?
     )
 
     data class SpellsResponseOverview(
@@ -84,18 +84,21 @@ data class SpellInfo(
     data class SpellDamageType(
         @SerializedName("index") val index: String?,
         @SerializedName("name") val name: String?,
-        @SerializedName("url") val url: String?
     )
 
     data class SpellSchool(
         @SerializedName("index") val index: String?,
         @SerializedName("name") val name: String?,
-        @SerializedName("url") val url: String?
     )
 
     data class SpellClasses(
         @SerializedName("index") val index: String?,
         @SerializedName("name") val name: String?,
-        @SerializedName("url") val url: String?
     )
+
+    data class SpellClass(
+        @SerializedName("index") val index: String?,
+        @SerializedName("name") val name: String?
+    )
+
 }

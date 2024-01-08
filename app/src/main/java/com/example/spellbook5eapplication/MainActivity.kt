@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.app.view.MainScreen
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
@@ -18,6 +20,7 @@ import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
+import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModelFactory
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,26 +37,44 @@ class MainActivity : ComponentActivity() {
     // Define a CoroutineScope for launching coroutines
     //private val scope = CoroutineScope(Dispatchers.Main)
     private lateinit var viewModel: SpellsViewModel
+    private val TAG: String = "API_RESPONSE_NEW"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         SpelllistLoader.loadSpellbooks()
 
-        viewModel = ViewModelProvider(this).get(SpellsViewModel::class.java)
-        viewModel.getSpells()
-
-
-        // Initialize SpellController with context
+        // Set the context for the SpellController
         SpellController.setContext(applicationContext)
+
+        val factory = SpellsViewModelFactory(applicationContext)
+        viewModel = ViewModelProvider(this, factory)[SpellsViewModel::class.java]
+
+        // Observe the spellsOverview LiveData for changes
+        viewModel.spellsOverview.observe(this, Observer { spellNames ->
+            // This list will contain the indices of all spells
+            val indices = spellNames.mapNotNull { it.index }
+            spellNames.forEach {
+                Log.e(TAG, "Spellbook test: $it")
+            }
+
+            // Now that you have all indices, fetch spell details
+            viewModel.getSpellsDetails(indices)
+        })
+
+        viewModel.spellDetails.observe(this, Observer { spellDetails ->
+            spellDetails.forEach { spellDetail ->
+                Log.e(TAG, "Spell detail: ${spellDetail.name}")
+            }
+        })
+
+        viewModel.fetchAllSpellNames()
+
+
         setContent {
             Spellbook5eApplicationTheme {
                 MainScreen(SpellController, SpelllistLoader)
-
             }
         }
-
     }
-
-
 }
