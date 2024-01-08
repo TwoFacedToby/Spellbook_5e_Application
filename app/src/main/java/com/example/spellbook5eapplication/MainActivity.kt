@@ -20,31 +20,16 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val factory = SpellFactory()
-        val api = DND5eAPI()
-
-        val json = api.getDnD5eSpell("acid-splash");
-        var spell : Spell
-        if(json != null)
-        {
-            spell = factory.createSpellFromJson(json)
-            println("name: ${spell.name}")
-            println("casting time: ${spell.castingTime}")
-            println("classes: ${spell.classes.toString()}")
-        }
-        else println("json was null")
-
-
-
-
-
-
         SpelllistLoader.loadSpellbooks()
 
 
         // Initialize SpellController with context
         LocalDataLoader.setContext(applicationContext)
-        LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL)
+        val list = LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL)
+        println("Printing local list")
+        for (s in list) {
+            println(s)
+        }
         runBlocking {  SpellController.getAllSpellsList()  }
 
         setContent {

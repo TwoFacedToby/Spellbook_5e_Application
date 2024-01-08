@@ -115,6 +115,7 @@ object SpellController {
         if(str != null) return str //Return if found
         str = LocalDataLoader.getJson(index, LocalDataLoader.DataType.INDIVIDUAL) //Try to find in saved data
         if(str != null) return str //Return if found
+        println("Checking api")
         str = api.getSpellFromApiWithRetry(index, 10) //Try to find in api
         if(str != null) LocalDataLoader.saveJson(str, index, LocalDataLoader.DataType.INDIVIDUAL) //Save to device for later use if found
         return str //Return either json string or null if not found

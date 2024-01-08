@@ -21,8 +21,8 @@ object LocalDataLoader {
         if(dataType == DataType.HOMEBREW) return getIndexListFromDirectory("Homebrews")
         if(dataType == DataType.SPELLBOOK) return getIndexListFromDirectory("Spellbooks")
         val fileName = when(dataType){
-            DataType.INDIVIDUAL -> "LocalJSONData/individualSpells.json"
-            DataType.FAVOURITES ->  "Spellbooks/Favourites.json"
+            DataType.INDIVIDUAL -> "LocalJSONData/individualSpells"
+            DataType.FAVOURITES ->  "Spellbooks/Favourites"
             else -> {""}
         }
         if(fileName == ""){
@@ -101,7 +101,7 @@ object LocalDataLoader {
     private fun getIndexListFromFileName(name : String) : List<String>{
         val file = File(baseDirectory, "$name.json")
         if (!file.exists()) {
-            println("File does not exist.")
+            println("File does not exist: $name")
             return emptyList()
         } //No such file
         val jsonString = file.bufferedReader().use { it.readText() }
