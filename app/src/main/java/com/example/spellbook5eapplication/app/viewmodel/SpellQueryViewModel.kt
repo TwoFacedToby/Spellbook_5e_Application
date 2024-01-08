@@ -120,12 +120,12 @@ class SpellQueryViewModel() : ViewModel() {
         viewModelScope.launch {
             _isLoading.postValue(true)
 
+            SpellController.loadEntireSpellList(spellList!!)
             val filteredSpells = SpellController.searchSpellListWithFilter(spellList!!, filter)
             Log.d("SpellQueryViewModel", "FilteredSpellList: $spellList")
 
-            val initialSpells = SpellController.loadNextFromSpellList(10, filteredSpells)
-            val displayableSpells = initialSpells?.map { it as Displayable }
-            _spells.postValue(displayableSpells ?: emptyList())
+            val displayableSpells = filteredSpells.getSpellInfoList().map { it }
+            _spells.postValue(displayableSpells)
 
             _isLoading.postValue(false)
         }

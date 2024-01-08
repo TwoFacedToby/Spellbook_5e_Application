@@ -62,15 +62,17 @@ fun SpellQuery(
     //Back-up
     //val spells by spellQueryViewModel.spells.observeAsState(emptyList())
 
-    LaunchedEffect(filter) {
-        spellQueryViewModel.loadSpellsBasedOnFilter(filter)
-    }
-
     val spells by spellsLiveData.observeAsState(emptyList())
     val isLoading by spellQueryViewModel.isLoading.observeAsState(false)
 
     val lazyListState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+
+    LaunchedEffect(filter) {
+        if(filter.count() != 0) {
+            spellQueryViewModel.loadSpellsBasedOnFilter(filter)
+        }
+    }
 
     if (spells.isEmpty() && !isLoading) {
         NoSpellsFoundMessage()
