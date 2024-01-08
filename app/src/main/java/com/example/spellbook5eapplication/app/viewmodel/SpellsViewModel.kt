@@ -18,8 +18,12 @@ import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import android.content.Context
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
 import java.io.IOException
+import java.util.concurrent.TimeUnit
+import kotlin.math.pow
 
 class SpellsViewModel(private val context: Context) : ViewModel() {
     private val _spells = MutableLiveData<List<Spell.SpellNames>>()
@@ -32,6 +36,7 @@ class SpellsViewModel(private val context: Context) : ViewModel() {
     private val _spellDetails = MutableLiveData<List<Spell.SpellInfo>>()
     val spellDetails: LiveData<List<Spell.SpellInfo>> = _spellDetails
     private val _isLoading = MutableLiveData<Boolean>()
+    private val failedIndices = mutableListOf<String>()
     val isLoading: LiveData<Boolean> = _isLoading
 
     init {
@@ -86,34 +91,67 @@ class SpellsViewModel(private val context: Context) : ViewModel() {
         }
     }
 
-    fun getSpellsDetails(indices: List<String>) {
+    suspend fun getSpellDetails(indice: String): String {
+        val graphQLQuery = loadGraphQLQueryFromFile()
+        val variablesMap = mapOf("index" to indice)
+        val requestBody = GraphQLRequestBody(query = graphQLQuery, variables = variablesMap)
+
+        return try {
+            val response = graphql.performGraphQLQuery(requestBody)
+            if (response.isSuccessful) {
+                // Return the raw JSON string
+                response.body()?.toString() ?: ""
+            } else {
+                Log.e(TAG, "Failed to fetch details for index $indice: ${response.errorBody()?.string()}")
+                ""
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error fetching details for index $indice", e)
+            ""
+        }
+    }
+
+    /**
+     * Retry fetching details for the spells that failed in the first attempt, without slowing the actual responses down.
+     * @param failedIndices List of indices for which the first attempt failed
+     * @param graphQLQuery The GraphQL query to fetch spell details
+     * @param gson Gson object to parse JSON
+     * @return List of SpellInfo objects
+     *
+     */
+    fun retryFailedSpellDetails(failedIndices: MutableList<String>, retryAttempt: Int = 0) {
         viewModelScope.launch(Dispatchers.IO) {
             val graphQLQuery = loadGraphQLQueryFromFile()
             val gson = Gson()
-            val spellDetailsList = mutableListOf<Spell.SpellInfo>()
+            val maxRetries = 3
+            val baseDelay = 700L // Start with 0.7 seconds delay.
+            val maxDelay = 6000L // Maximum delay = 6 seconds
+            val delayTime = (baseDelay * (2.0.pow(retryAttempt.toDouble()))).toLong().coerceAtMost(maxDelay) // Exponential backoff
+
+            // Delay before the next retry attempt.
+            delay(delayTime)
 
             // Fetch details for each index concurrently
-            val spellsDeferred = indices.map { index ->
+            val spellsDeferred = failedIndices.map { index ->
                 async {
                     val variablesMap = mapOf("index" to index)
-                    val requestBody =
-                        GraphQLRequestBody(query = graphQLQuery, variables = variablesMap)
+                    val requestBody = GraphQLRequestBody(query = graphQLQuery, variables = variablesMap)
                     try {
                         val response = graphql.performGraphQLQuery(requestBody)
                         if (response.isSuccessful) {
                             // Parse the JSON response into SpellInfo objects
-                            val spellInfoJson =
-                                response.body()?.getAsJsonObject("data")?.getAsJsonObject("spell")
-                            spellInfoJson?.let {
+                            response.body()?.getAsJsonObject("data")?.getAsJsonObject("spell")?.let {
                                 gson.fromJson(it, Spell.SpellInfo::class.java)
+                            }?.also {
+                                // Update the LiveData object on the main thread.
+                                withContext(Dispatchers.Main) {
+                                    val currentList = _spellDetails.value.orEmpty().toMutableList()
+                                    currentList.add(it)
+                                    _spellDetails.value = currentList
+                                }
                             }
                         } else {
-                            Log.e(
-                                TAG,
-                                "Failed to fetch details for index $index: ${
-                                    response.errorBody()?.string()
-                                }"
-                            )
+                            Log.e(TAG, "Failed to fetch details for index $index: ${response.errorBody()?.string()}")
                             null
                         }
                     } catch (e: Exception) {
@@ -124,13 +162,18 @@ class SpellsViewModel(private val context: Context) : ViewModel() {
             }
 
             // Await all the concurrent calls to finish
-            spellsDeferred.awaitAll().filterNotNull().let { fetchedSpellDetails ->
-                spellDetailsList.addAll(fetchedSpellDetails)
+            spellsDeferred.awaitAll().filterNotNull().also { fetchedSpellDetails ->
+                if (fetchedSpellDetails.isNotEmpty()) {
+                    // Remove successfully fetched indices from the failed list
+                    failedIndices.removeAll(fetchedSpellDetails.map { it.index })
+                }
             }
 
-            // Post the fetched spell details to LiveData
-            withContext(Dispatchers.Main) {
-                _spellDetails.value = spellDetailsList
+            // If there are still failed indices, and we have not reached the max retries, try again.
+            if (failedIndices.isNotEmpty() && retryAttempt < maxRetries) {
+                retryFailedSpellDetails(failedIndices, retryAttempt + 1)
+            } else if (retryAttempt >= maxRetries) {
+                Log.e(TAG, "Failed to fetch details for indices, aborting after 3 retries: ${failedIndices.joinToString()}")
             }
         }
     }

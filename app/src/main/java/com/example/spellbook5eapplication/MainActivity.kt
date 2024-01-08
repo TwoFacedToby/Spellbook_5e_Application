@@ -55,8 +55,12 @@ class MainActivity : ComponentActivity() {
             // This list will contain the indices of all spells
             val indices = spellNames.mapNotNull { it.index }
             spellNames.forEach {
-                Log.e(TAG, "Spellbook test: $it")
+                Log.e(TAG, indices.toString())
+
             }
+
+
+
 
             // Fetch the details for all spells
             viewModel.getSpellsDetails(indices)
