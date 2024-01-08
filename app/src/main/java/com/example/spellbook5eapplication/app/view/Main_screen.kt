@@ -17,16 +17,13 @@ import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 @Composable
 fun MainScreen(spellController: SpellController, spellListLoader: SpelllistLoader){
     val navController = rememberNavController()
-    val globalOverlayState = GlobalOverlayState()
+
     Scaffold(
-        topBar = { TopBar(navController = navController, globalOverlayState)},
-        bottomBar = { BottomBar(navController = navController, globalOverlayState) }
+        topBar = { TopBar(navController = navController)},
+        bottomBar = { BottomBar(navController = navController) }
     ){
         BottomNavigationGraph(
             navController = navController,
-            globalOverlayState = globalOverlayState,
-            spellController = spellController,
-            spellListLoader = spellListLoader
         )
     }
 }

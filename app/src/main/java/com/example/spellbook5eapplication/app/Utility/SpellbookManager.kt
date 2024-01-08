@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.Utility
 
+import android.util.Log
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Spellbook
@@ -42,7 +43,7 @@ object SpellbookManager {
 
 
     fun getAllSpellbooks(): List<Spellbook> {
-        println(spellbooks.toList())
+        Log.d("LOLO", spellbooks.toList().toString())
         return spellbooks.toList()
     }
 }

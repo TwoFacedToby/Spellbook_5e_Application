@@ -1,4 +1,4 @@
-package com.example.spellbook5eapplication.app.view.spellCards
+package com.example.spellbook5eapplication.app.view.Originals
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -53,14 +53,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
-import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
-import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.app.view.spellCards.SpellCardCreation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun SpellCard(
+    onFullSpellCardRequest: () -> Unit,
+    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
     spell : Spell_Info.SpellInfo)
+
 {
     val images = SpellCardCreation(spell)
 
@@ -76,10 +78,7 @@ fun SpellCard(
         modifier = Modifier
             .height(150.dp)
             .padding(10.dp)
-            .clickable {
-                GlobalOverlayState.currentSpell = spell
-                GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
-            }
+            .clickable { onFullSpellCardRequest() }
     ) {
         Column(
             modifier = Modifier
@@ -159,7 +158,7 @@ fun SpellCard(
                     modifier = Modifier.padding(top = 10.dp)
                 ) {
                     IconButton(
-                        onClick = { /*TODO*/ }) {
+                        onClick = { onAddToSpellbookRequest(spell) }) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
                             contentDescription = "Add to spellbook",

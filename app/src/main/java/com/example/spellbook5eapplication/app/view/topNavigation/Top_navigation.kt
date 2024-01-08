@@ -30,7 +30,7 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController: NavController, globalOverlayState: GlobalOverlayState){
+fun TopBar(navController: NavController){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val currentTitle = Screens.titleForRoute(currentRoute)
@@ -46,13 +46,13 @@ fun TopBar(navController: NavController, globalOverlayState: GlobalOverlayState)
             },
             navigationIcon = {
                 IconButton(onClick = {
-                    globalOverlayState.dismissAllOverlays()
-                    globalOverlayState.showOverlay(OverlayType.SETTINGS) }
+                    GlobalOverlayState.dismissAllOverlays()
+                    GlobalOverlayState.showOverlay(OverlayType.SETTINGS) }
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Settings,
                         contentDescription = "Settings button",
-                        tint = if (globalOverlayState.isOverlayVisible(OverlayType.SETTINGS)) {
+                        tint = if (GlobalOverlayState.isOverlayVisible(OverlayType.SETTINGS)) {
                             colorResource(id = R.color.white)
                         } else {
                             colorResource(id = R.color.unselected_icon)
@@ -64,13 +64,13 @@ fun TopBar(navController: NavController, globalOverlayState: GlobalOverlayState)
             actions = {
                 IconButton(
                     onClick = {
-                        globalOverlayState.dismissAllOverlays()
-                        globalOverlayState.showOverlay(OverlayType.PROFILE)
+                        GlobalOverlayState.dismissAllOverlays()
+                        GlobalOverlayState.showOverlay(OverlayType.PROFILE)
                     }) {
                     Icon(
                         imageVector = Icons.Outlined.Person,
                         contentDescription = "Profile button",
-                        tint = if (globalOverlayState.isOverlayVisible(OverlayType.PROFILE)) {
+                        tint = if (GlobalOverlayState.isOverlayVisible(OverlayType.PROFILE)) {
                             colorResource(id = R.color.white)
                         } else {
                             colorResource(id = R.color.unselected_icon)
@@ -85,15 +85,15 @@ fun TopBar(navController: NavController, globalOverlayState: GlobalOverlayState)
             )
         )
     }
-    when (globalOverlayState.getTopOverlay()) {
+    when (GlobalOverlayState.getTopOverlay()) {
         OverlayType.SETTINGS -> {
-            CustomOverlay(globalOverlayState, OverlayType.SETTINGS, onDismissRequest = { globalOverlayState.dismissOverlay() }) {
-                SettingsOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() })
+            CustomOverlay(OverlayType.SETTINGS) {
+                SettingsOverlay(onDismissRequest = { GlobalOverlayState.dismissOverlay() })
             }
         }
         OverlayType.PROFILE -> {
-            CustomOverlay(globalOverlayState, OverlayType.PROFILE, onDismissRequest = { globalOverlayState.dismissOverlay() }) {
-                UserOverlay(onDismissRequest = { globalOverlayState.dismissOverlay() })
+            CustomOverlay(OverlayType.PROFILE) {
+                UserOverlay(onDismissRequest = { GlobalOverlayState.dismissOverlay() })
             }
         }
         else -> Unit // Do nothing

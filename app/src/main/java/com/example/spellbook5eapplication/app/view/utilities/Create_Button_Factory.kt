@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view.utilities
 
+import android.util.Log
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,7 +10,7 @@ import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 @Composable
-fun DynamicButtonFactory(buttonType: String, globalOverlayState: GlobalOverlayState) {
+fun DynamicButtonFactory(buttonType: String) {
     val buttonText = when (buttonType) {
         "HOMEBREW" -> "New Homebrew"
         "SPELLBOOK" -> "New Spellbook"
@@ -19,12 +20,13 @@ fun DynamicButtonFactory(buttonType: String, globalOverlayState: GlobalOverlaySt
     val buttonOnClick = {
         when (buttonType) {
             "HOMEBREW" -> {
-                globalOverlayState.showOverlay(
+                Log.d("MINI", "It does come here")
+                GlobalOverlayState.showOverlay(
                     OverlayType.MAKE_SPELL,
                 )
             }
             "SPELLBOOK" -> {
-                globalOverlayState.showOverlay(
+                GlobalOverlayState.showOverlay(
                     OverlayType.ADD_TO_SPELLBOOK,
                 )
             }
