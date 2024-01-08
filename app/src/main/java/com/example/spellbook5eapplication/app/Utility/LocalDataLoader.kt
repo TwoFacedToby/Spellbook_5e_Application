@@ -72,6 +72,12 @@ object LocalDataLoader {
             saveJsonToFile(json, directoryName, fileName)
         }
     }
+    fun updateIndividualSpellList(spellName : String){
+        val indexList = getIndexList(DataType.INDIVIDUAL).toMutableList()
+        if(indexList.contains(spellName)) return
+        indexList.add(spellName)
+        saveIndexList(DataType.INDIVIDUAL, indexList.toList())
+    }
 
     fun getJson(fileName: String, dataType: DataType) : String?{
         val directoryName = when(dataType){

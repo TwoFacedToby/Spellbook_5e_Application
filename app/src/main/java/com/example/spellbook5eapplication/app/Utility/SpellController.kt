@@ -117,7 +117,10 @@ object SpellController {
         if(str != null) return str //Return if found
         println("Checking api")
         str = api.getSpellFromApiWithRetry(index, 10) //Try to find in api
-        if(str != null) LocalDataLoader.saveJson(str, index, LocalDataLoader.DataType.INDIVIDUAL) //Save to device for later use if found
+        if(str != null){
+            LocalDataLoader.saveJson(str, index, LocalDataLoader.DataType.INDIVIDUAL)
+            LocalDataLoader.updateIndividualSpellList(index)
+        } //Save to device for later use if found
         return str //Return either json string or null if not found
     }
     /**@author Tobias s224271
