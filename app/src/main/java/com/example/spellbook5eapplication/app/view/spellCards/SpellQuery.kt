@@ -16,6 +16,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -61,9 +62,9 @@ fun SpellQuery(
     //Back-up
     //val spells by spellQueryViewModel.spells.observeAsState(emptyList())
 
-    /*LaunchedEffect(filter) {
+    LaunchedEffect(filter) {
         spellQueryViewModel.loadSpellsBasedOnFilter(filter)
-    }*/
+    }
 
     val spells by spellsLiveData.observeAsState(emptyList())
     val isLoading by spellQueryViewModel.isLoading.observeAsState(false)
