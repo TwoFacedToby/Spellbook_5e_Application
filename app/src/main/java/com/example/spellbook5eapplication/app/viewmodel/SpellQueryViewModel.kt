@@ -38,6 +38,15 @@ class SpellQueryViewModel() : ViewModel() {
     private val _spellBooks = MutableLiveData<List<Displayable?>>()
     val spellBooks: LiveData<List<Displayable?>> = _spellBooks
 
+    //Is all spells loaded
+    private val _allSpellsLoaded = MutableLiveData<Boolean>()
+    val allSpellsLoaded: LiveData<Boolean> = _allSpellsLoaded
+    private var _allSpells = SpellList()
+
+
+
+
+
     fun getLiveData(type: String): LiveData<List<Displayable?>> {
         loadFavoriteSpells()
         loadHomebrewList()
@@ -117,8 +126,20 @@ class SpellQueryViewModel() : ViewModel() {
 
     fun loadSpellsBasedOnFilter(filter: Filter) {
         Log.d("com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModel", "LoadSpellsBasedOnFilter start: ${filter.toString()}")
+
         viewModelScope.launch {
-            _isLoading.postValue(true)
+
+            SpellController.loadEntireSpellList(spellList!!)
+
+            _allSpells = spellList as SpellList
+
+            _allSpellsLoaded.postValue(true)
+
+            val filteredSpells = SpellController.searchSpellListWithFilter(spellList!!, filter)
+
+            _spells.postValue(filteredSpells.getSpellInfoList())
+
+            /*_isLoading.postValue(true)
 
             SpellController.loadEntireSpellList(spellList!!)
             val filteredSpells = SpellController.searchSpellListWithFilter(spellList!!, filter)
@@ -127,7 +148,15 @@ class SpellQueryViewModel() : ViewModel() {
             val displayableSpells = filteredSpells.getSpellInfoList().map { it }
             _spells.postValue(displayableSpells)
 
-            _isLoading.postValue(false)
+            _isLoading.postValue(false)*/
         }
     }
+
+    fun loadSecondTimeFilter(filter: Filter){
+
+        val filteredSpells = SpellController.searchSpellListWithFilter(_allSpells, filter)
+        _spells.postValue(filteredSpells.getSpellInfoList())
+
+    }
+
 }
