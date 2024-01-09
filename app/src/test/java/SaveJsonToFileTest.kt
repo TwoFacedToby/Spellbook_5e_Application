@@ -1,5 +1,6 @@
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import org.junit.After
 import org.junit.Before
@@ -45,16 +46,17 @@ class SaveJsonToFileTest {
         // Use Robolectric to get a mock Context
         context = ApplicationProvider.getApplicationContext()
         // Set the context in your SpellController or the class where saveJsonToFile is defined
-        SpellController.setContext(context)
+        LocalDataLoader.setContext(context)
     }
 
     @Test
     fun saveJsonToFile_CreatesFileWithCorrectContent() {
+
         // Call the method to test
-        SpellController.saveJsonToFile(testJsonString, testDirectoryName, testFileName)
+        LocalDataLoader.saveJson(testJsonString, testFileName, LocalDataLoader.DataType.HOMEBREW)
 
         // Construct the expected file path
-        val expectedFilePath = File(context.filesDir, "$testDirectoryName/$testFileName")
+        val expectedFilePath = File(context.filesDir, "Homebrews/$testFileName")
 
         // Assert the file exists
         assertTrue(expectedFilePath.exists())

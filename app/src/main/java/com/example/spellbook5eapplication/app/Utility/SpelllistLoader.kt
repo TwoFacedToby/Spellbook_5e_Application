@@ -1,7 +1,6 @@
 package com.example.spellbook5eapplication.app.Utility
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Spellbook
-import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.google.gson.Gson
 import java.io.File
 
@@ -33,22 +32,13 @@ object SpelllistLoader {
     }
 
     fun loadSpellbooks() {
-        val directoryPath = "/data/data/com.example.spellbook5eapplication/files/Spellbooks"
-        val directory = File(directoryPath)
-
-        if (directory.exists() && directory.isDirectory) {
-            val files = directory.listFiles { file -> file.isFile && file.extension == "json" }
-            files?.forEach { file ->
-                try {
-                    val json = file.readText()
-                    val spellbook = Gson().fromJson(json, Spellbook::class.java)
-                    if (spellbook != null) {
-                        if (SpellbookManager.getSpellbook(spellbook.spellbookName) == null) {
-                            SpellbookManager.addSpellbook(spellbook)
-                        }
-                    }
-                } catch (e: Exception) {
-                    // Handle exceptions
+        val listOfNames = LocalDataLoader.getIndexList(LocalDataLoader.DataType.SPELLBOOK)
+        listOfNames.forEach{
+            val json = LocalDataLoader.getJson(it, LocalDataLoader.DataType.SPELLBOOK)
+            val spellbook = Gson().fromJson(json, Spellbook::class.java)
+            if (spellbook != null) {
+                if (SpellbookManager.getSpellbook(spellbook.spellbookName) == null) {
+                    SpellbookManager.addSpellbook(spellbook)
                 }
             }
         }
@@ -60,6 +50,27 @@ object SpelllistLoader {
      * @return A SpellList containing the favourite spells.
      */
     fun loadFavouritesAsSpellList(): SpellList {
+        val json = LocalDataLoader.getJson("Favourites", LocalDataLoader.DataType.SPELLBOOK)
+        if(json != null){
+            val favourites = Gson().fromJson(json, Spellbook::class.java)
+            if (favourites != null) {
+                val spellInfoList = favourites.spells.mapNotNull { spellName ->
+                    SpellController.getSpellFromName(spellName)
+                }
+
+                val spellList = SpellList()
+                spellList.setIndexList(favourites.spells)
+                spellList.setSpellInfoList(spellInfoList)
+                return spellList
+            } else {
+                println("Failed to deserialize JSON into Spellbook: $json")
+            }
+        }
+
+        SpellbookManager.addSpellbook(Spellbook("Favourites"))
+        return SpellList()
+
+
         val filePath =
             "/data/data/com.example.spellbook5eapplication/files/Spellbooks/Favourites.json"
         val file = File(filePath)

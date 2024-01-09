@@ -9,6 +9,7 @@ import org.junit.runner.RunWith
 import java.io.File
 import org.robolectric.RobolectricTestRunner
 import androidx.test.core.app.ApplicationProvider
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
@@ -35,13 +36,13 @@ class TestLocalStorage {
         // Assuming you have a setup in SpellController to use a passed context
         println("1")
         //Sets the context in spellcontroller
-        SpellController.setContext(context)
+        LocalDataLoader.setContext(context)
         println("2")
         //Saves the json file to the device
-        SpellController.saveJsonToFile("{}", "testDir", "testFile.json")
+        LocalDataLoader.saveJson("{}", "testFile.json", LocalDataLoader.DataType.HOMEBREW)
         println("3")
         //deleteFileFromDirectory returns true if the file was deleted and false if nothing was deleted
-        val isDeleted = SpellController.deleteFileFromDirectory("testDir", "testFile.json")
+        val isDeleted = LocalDataLoader.deleteFile("testFile.json", LocalDataLoader.DataType.HOMEBREW)
 
         //Some prints for debugging
         println("4")
@@ -67,7 +68,7 @@ class TestLocalStorage {
         // Assuming the context has already been set in the setUp method
         // Attempt to delete a file that does not exist
         val doesNotExistFileName = "nonExistentFile.json"
-        val isDeleted = SpellController.deleteFileFromDirectory("testDir", doesNotExistFileName)
+        val isDeleted = LocalDataLoader.deleteFile(doesNotExistFileName, LocalDataLoader.DataType.HOMEBREW)
 
         // Some prints for debugging
         println("Attempting to delete a non-existent file.")
@@ -76,9 +77,4 @@ class TestLocalStorage {
         // Test should pass if isDeleted is false, indicating no file was deleted because it didn't exist
         assertFalse(isDeleted)
     }
-
-
-
-
-
 }
