@@ -48,10 +48,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
@@ -60,7 +60,7 @@ import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun SpellCard(
-    spell : Spell_Info.SpellInfo)
+    spell : Spell.SpellInfo)
 {
     val images = SpellCardCreation(spell)
 
@@ -115,7 +115,7 @@ fun SpellCard(
                             modifier = Modifier.width(145.dp)
                         ) {
                             var spellName = "UNDEFINED"
-                            if(spell.name != null) spellName = spell.name
+                            if(spell.name != null) spellName = spell.name!!
                             Text(
                                 text = spellName,
                                 fontWeight = FontWeight.Bold,
@@ -208,7 +208,7 @@ fun SpellCard(
 }
 
 @Composable
-fun SpellInfo(spell : Spell_Info.SpellInfo){
+fun SpellInfo(spell : Spell.SpellInfo){
     Row(
         modifier = Modifier
             .padding(top = 2.5.dp, start = 10.dp, end = 10.dp, bottom = 0.dp)
@@ -234,7 +234,7 @@ fun SpellInfo(spell : Spell_Info.SpellInfo){
         ) {
             Text(text = "School:", fontSize = 12.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellSchool = ""
-            if(spell.school?.name != null) spellSchool = "${spell.school.name}"
+            if(spell.school?.name != null) spellSchool = "${spell.school!!.name}"
             Text(text = spellSchool, fontSize = 12.sp, maxLines = 1, color = colorResource(id = R.color.black))
             Text(text = "Duration:", fontSize = 12.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellDuration = ""
@@ -246,14 +246,14 @@ fun SpellInfo(spell : Spell_Info.SpellInfo){
         ) {
             Text(text = "Casting Time:", fontSize = 12.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellCT = ""
-            if(spell.castingTime != null) spellCT = "${spell.castingTime}"
+            if(spell.casting_time != null) spellCT = "${spell.casting_time}"
             Text(text = spellCT, fontSize = 12.sp, maxLines = 1, color = colorResource(id = R.color.black))
             Text(text = "Components:", fontSize = 12.sp, maxLines = 1, color = colorResource(id = R.color.black))
             var spellComponents = ""
             if(spell.components != null) {
-                for(index in 1..spell.components.size){
+                for(index in 1..spell.components!!.size){
                     if(index - 1 != 0) spellComponents += ", "
-                    spellComponents += spell.components[index-1]
+                    spellComponents += spell.components!![index-1]
                 }
             }
             Text(text = spellComponents, fontSize = 12.sp, maxLines = 1, color = colorResource(id = R.color.black))

@@ -36,7 +36,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.SpellbookViewModel
@@ -48,12 +47,13 @@ import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.rememberCoroutineScope
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 
 
 @Composable
 fun AddToSpellBookOverlay(
     onDismissRequest: () -> Unit,
-    spellInfo: Spell_Info.SpellInfo
+    spellInfo: Spell.SpellInfo
 ) {
     //Initializing viewModel to make the app recompose when a new spellbook is selected.
     val viewModel: SpellbookViewModel = viewModel(

@@ -1,5 +1,9 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
 
+import android.util.Log
+import androidx.compose.runtime.Composable
+import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import com.google.gson.annotations.SerializedName
 
 class Spell{
@@ -61,10 +65,20 @@ data class SpellInfo(
     @SerializedName("dc")
     var dc: String?,
 
-    @SerializedName("area_of_effect")
-    var aoe: String?,
+    var homebrew: Boolean?): Displayable {
+    override fun renderCardComposable(spell: Displayable): @Composable () -> Unit {
+    return {
 
-    var homebrew: Boolean?)
+    if (spell is SpellInfo) {
+    //Render SpellCard if it's a Spell
+        SpellCard(spell = spell)
+    } else {
+
+    Log.d("Errors","Error: Item is not a Spell")
+                }
+            }
+        }
+    }
 
     data class SpellNames(
         @SerializedName("index") val index: String?,
@@ -100,5 +114,7 @@ data class SpellInfo(
         @SerializedName("index") val index: String?,
         @SerializedName("name") val name: String?
     )
+
+
 
 }

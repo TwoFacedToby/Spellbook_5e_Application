@@ -10,13 +10,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.app.Model.DND5eAPI
 import com.example.spellbook5eapplication.app.view.MainScreen
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Favourites
 import com.example.spellbook5eapplication.app.Model.RetroFitAPI
 import com.example.spellbook5eapplication.app.Model.Spellbook
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.SpellFactory
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Utility.SpellController
@@ -44,9 +41,6 @@ class MainActivity : ComponentActivity() {
 
         SpelllistLoader.loadSpellbooks()
 
-        // Set the context for the SpellController
-        SpellController.setContext(applicationContext)
-
         val factory = SpellsViewModelFactory(applicationContext)
         viewModel = ViewModelProvider(this, factory)[SpellsViewModel::class.java]
 
@@ -72,8 +66,6 @@ class MainActivity : ComponentActivity() {
         viewModel.fetchAllSpellNames()
 
 
-
-        // Initialize SpellController with context
         LocalDataLoader.setContext(applicationContext)
         val list = LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL)
         println("Printing local list")
@@ -87,7 +79,5 @@ class MainActivity : ComponentActivity() {
                 MainScreen(SpellController, SpelllistLoader)
             }
         }
-    }
-
     }
 }

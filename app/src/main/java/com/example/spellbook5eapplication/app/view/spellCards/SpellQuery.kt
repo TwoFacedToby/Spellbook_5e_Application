@@ -30,7 +30,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.view.utilities.DefaultSpellCardFactory
@@ -88,7 +88,7 @@ fun SpellQuery(
                 spells[index]?.let {
                     Log.d("SpellDebug", "Spell at index $index is of type: ${it::class.java}")
                     when (it) {
-                        is Spell_Info.SpellInfo -> {
+                        is Spell.SpellInfo -> {
                             val spellCardComposable = spellCardFactory.createSpellCard(it)
                             spellCardComposable()
                         }

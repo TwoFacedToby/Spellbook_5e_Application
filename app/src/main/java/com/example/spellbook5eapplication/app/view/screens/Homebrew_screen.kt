@@ -31,14 +31,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.HomeBrewManager
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.DeleteOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.EraseOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
-import com.example.spellbook5eapplication.app.view.Overlays.NewSpellOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.LocalLargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard

@@ -40,8 +40,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import kotlinx.coroutines.Dispatchers
@@ -56,9 +56,9 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 @Composable
 fun SpellQuery(
     filter: Filter,
-    spellsLiveData: LiveData<List<Spell_Info.SpellInfo?>>,
-    onFullSpellCardRequest: (Spell_Info.SpellInfo) -> Unit,
-    onAddToSpellbookRequest: (Spell_Info.SpellInfo) -> Unit,
+    spellsLiveData: LiveData<List<Spell.SpellInfo?>>,
+    onFullSpellCardRequest: (Spell.SpellInfo) -> Unit,
+    onAddToSpellbookRequest: (Spell.SpellInfo) -> Unit,
     enablePagination: Boolean,
     modifier: Modifier = Modifier
 ) {

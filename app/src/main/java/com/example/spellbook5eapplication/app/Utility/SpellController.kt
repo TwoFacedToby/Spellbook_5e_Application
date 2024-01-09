@@ -3,9 +3,9 @@ package com.example.spellbook5eapplication.app.Utility
 import com.example.spellbook5eapplication.app.Model.API
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.JSON
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -45,8 +45,8 @@ object SpellController {
      *
      * Starts the request for getting spell info from the API. This function might take a while to return, so make sure you run it on another thread than main.
      */
-    fun getSpellFromName(spellName : String) : Spell_Info.SpellInfo? {
-        var spell: Spell_Info.SpellInfo? = null
+    fun getSpellFromName(spellName : String) : Spell.SpellInfo? {
+        var spell: Spell.SpellInfo? = null
         runBlocking {
             try {
                 val json = getJson(spellName)
@@ -65,7 +65,7 @@ object SpellController {
      *
      * Loads the next spells from the spelllist from the api. This is made to work with pagination.
      */
-    fun loadNextFromSpellList(amount : Int, spellList: SpellList) : List<Spell_Info.SpellInfo?>? {
+    fun loadNextFromSpellList(amount : Int, spellList: SpellList) : List<Spell.SpellInfo?>? {
 
         val current = if(spellList.getLoaded() == 0) 0 else spellList.getLoaded() + 1;
         if (spellList.getIndexList().size <= current) return null
@@ -133,13 +133,13 @@ object SpellController {
      * Converts each json into a SpellInfo data class and inserts into list
      * Returns the list
      */
-    fun loadSpells(indexes: List<String>): List<Spell_Info.SpellInfo> {
+    fun loadSpells(indexes: List<String>): List<Spell.SpellInfo> {
         var spellInfoJson: List<String?>
         runBlocking {
             spellInfoJson = getJsonsFromIndexes(indexes)
         }
         if (spellInfoJson.isEmpty()) return emptyList();
-        val spellInfoList = mutableListOf<Spell_Info.SpellInfo>()
+        val spellInfoList = mutableListOf<Spell.SpellInfo>()
         for (spell in spellInfoJson) {
             if (spell != null) {
                 val spellInfo = jsonToSpell.jsonToSpell(spell)

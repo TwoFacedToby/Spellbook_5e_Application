@@ -3,7 +3,7 @@ package com.example.spellbook5eapplication.app.Model.Data_Model
 class SpellList {
 
     private var indexList: List<String> = emptyList()
-    private var spellInfoList: List<Spell_Info.SpellInfo> = emptyList()
+    private var spellInfoList: List<Spell.SpellInfo> = emptyList()
     private var loaded = 0;
 
     fun getLoaded(): Int {
@@ -24,13 +24,13 @@ class SpellList {
         return indexList
     }
 
-    fun setSpellInfoList(spellInfo: List<Spell_Info.SpellInfo>) {
+    fun setSpellInfoList(spellInfo: List<Spell.SpellInfo>) {
         spellInfoList = spellInfo
     }
 
 
 
-    fun getSpellInfoList(): List<Spell_Info.SpellInfo> {
+    fun getSpellInfoList(): List<Spell.SpellInfo> {
         return spellInfoList
     }
      /*
@@ -74,7 +74,7 @@ class SpellList {
 
             println("${spell.name}")
             println("- Classes: ${spellClasses.toString()}")
-            println("- Casting Time: ${spell.castingTime}")
+            println("- Casting Time: ${spell.casting_time}")
             println("- Duration: ${spell.duration}")
             println("- Spell Level: ${spell.level}")
             println("- Components: ${spell.components}")
@@ -83,127 +83,12 @@ class SpellList {
 
     }
 
-    fun createFakeSpellList(): SpellList {
-        val fakeSpellList = SpellList()
-        val spells = mutableListOf<Spell_Info.SpellInfo>()
-
-        // Creating a few fake spells
-        spells.add(Spell_Info.SpellInfo(
-            index = "fireball",
-            name = "Fireball",
-            description = listOf("A bright light emerges."),
-            higherLevelDescription = listOf("The light gets brighter."),
-            range = "30 feet",
-            components = listOf("V"),
-            material = null,
-            isRitual = false,
-            duration = "1 hour",
-            isConcentration = false,
-            castingTime = "1 action",
-            level = 0,
-            school = Spell_Info.SpellSchool("evocation", "Evocation", null),
-            classes = listOf(Spell_Info.SpellClass("cleric", "Cleric", null)),
-            subclasses = listOf(),
-            url = null,
-            attackType = null,
-            damage = null,
-            dc = null,
-            areaOfEffect = null,
-            healAtSlotLevel = null,
-            higherLevelAbility = listOf(),
-            archetype = null,
-            race = null,
-            timeOfDay = null,
-            circle = null,
-            domain = null,
-            eldritchInvocations = null,
-            patron = null,
-            oaths = null,
-            sorcerousOrigins = null,
-            otherworldlyPatrons = null
-        ))
-        spells.add(Spell_Info.SpellInfo(
-            index = "fire-shield",
-            name = "Fire Shield",
-            description = listOf("A bright light emerges."),
-            higherLevelDescription = listOf("The light gets brighter."),
-            range = "30 feet",
-            components = listOf("V"),
-            material = null,
-            isRitual = false,
-            duration = "1 hour",
-            isConcentration = false,
-            castingTime = "1 action",
-            level = 2,
-            school = Spell_Info.SpellSchool("evocation", "Evocation", null),
-            classes = listOf(Spell_Info.SpellClass("cleric", "Cleric", null)),
-            subclasses = listOf(),
-            url = null,
-            attackType = null,
-            damage = null,
-            dc = null,
-            areaOfEffect = null,
-            healAtSlotLevel = null,
-            higherLevelAbility = listOf(),
-            archetype = null,
-            race = null,
-            timeOfDay = null,
-            circle = null,
-            domain = null,
-            eldritchInvocations = null,
-            patron = null,
-            oaths = null,
-            sorcerousOrigins = null,
-            otherworldlyPatrons = null
-        ))
-        spells.add(Spell_Info.SpellInfo(
-            index = "light",
-            name = "Light",
-            description = listOf("A bright light emerges."),
-            higherLevelDescription = listOf("The light gets brighter."),
-            range = "30 feet",
-            components = listOf("V"),
-            material = null,
-            isRitual = false,
-            duration = "1 hour",
-            isConcentration = false,
-            castingTime = "1 action",
-            level = 0,
-            school = Spell_Info.SpellSchool("evocation", "Evocation", null),
-            classes = listOf(Spell_Info.SpellClass("cleric", "Cleric", null)),
-            subclasses = listOf(),
-            url = null,
-            attackType = null,
-            damage = null,
-            dc = null,
-            areaOfEffect = null,
-            healAtSlotLevel = null,
-            higherLevelAbility = listOf(),
-            archetype = null,
-            race = null,
-            timeOfDay = null,
-            circle = null,
-            domain = null,
-            eldritchInvocations = null,
-            patron = null,
-            oaths = null,
-            sorcerousOrigins = null,
-            otherworldlyPatrons = null
-        ))
-
-
-        fakeSpellList.setSpellInfoList(spells.toList())
-        fakeSpellList.setIndexList(spells.map { it.index!! })
-
-        println("Am I even being returned!? $fakeSpellList")
-        return fakeSpellList
-    }
 
     fun getCopy() : SpellList{
         val copy = SpellList();
         copy.loaded = loaded;
         val indexes = emptyList<String>().toMutableList()
-        val spellInfos = emptyList<Spell_Info.SpellInfo>().toMutableList()
+        val spellInfos = emptyList<Spell.SpellInfo>().toMutableList()
         for(spell in indexList){
             indexes.add(spell)
         }

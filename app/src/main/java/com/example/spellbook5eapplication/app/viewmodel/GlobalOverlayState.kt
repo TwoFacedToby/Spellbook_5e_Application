@@ -1,14 +1,14 @@
 package com.example.spellbook5eapplication.app.viewmodel
 import androidx.compose.runtime.mutableStateListOf
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 
 object GlobalOverlayState {
 
     private val overlayStack = mutableStateListOf<OverlayType>()
 
-    var currentSpell: Spell_Info.SpellInfo? = null
+    var currentSpell: Spell.SpellInfo? = null
 
-    fun showOverlayWithSpell(overlayType: OverlayType, spell: Spell_Info.SpellInfo) {
+    fun showOverlayWithSpell(overlayType: OverlayType, spell: Spell.SpellInfo) {
         currentSpell = spell
         overlayStack.add(overlayType)
     }

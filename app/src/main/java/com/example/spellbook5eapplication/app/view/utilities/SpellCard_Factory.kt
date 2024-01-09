@@ -1,7 +1,7 @@
 package com.example.spellbook5eapplication.app.view.utilities
 
 import androidx.compose.runtime.Composable
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
@@ -23,7 +23,7 @@ class DefaultSpellCardFactory(): SpellCardFactory {
     ): @Composable () -> Unit {
 
         return when (displayable) {
-            is Spell_Info.SpellInfo -> {
+            is Spell.SpellInfo -> {
                 { SpellCard(
                     spell = displayable
                 ) }
@@ -37,7 +37,7 @@ class DefaultSpellCardFactory(): SpellCardFactory {
     ): @Composable () -> Unit {
 
         return when (displayable) {
-            is Spell_Info.SpellInfo -> {
+            is Spell.SpellInfo -> {
                 { LargeSpellCardOverlay(
                     spell = displayable
                 ) }
