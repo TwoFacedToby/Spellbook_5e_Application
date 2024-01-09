@@ -116,7 +116,13 @@ data class SpellInfo(
         @SerializedName("name") val name: String?,
         @SerializedName("url") val url: String?
     )
+    data class GraphQLResponse(
+        val data: SpellData?
+    )
 
+    data class SpellData(
+        val spell: Spell.SpellInfo?
+    )
 
 
 }

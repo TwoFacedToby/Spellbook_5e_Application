@@ -56,9 +56,11 @@ object SpellsViewModel : ViewModel() {
         return withContext(Dispatchers.IO) {
             try {
                 val response = api.getSpells()
+                Log.d(TAG, "MKL: " + response.body().toString())
                 if (response.isSuccessful) {
                     response.body()?.let { spellsResponse ->
-                        jsonToSpell.jsonToSpellList(spellsResponse)
+                         Log.d(TAG, jsonToSpell.jsonToSpellList(spellsResponse).toString())
+                         jsonToSpell.jsonToSpellList(spellsResponse)
                     } ?: SpellList() // Return empty list if body is null
                 } else {
                     Log.e(TAG, "Failed to retrieve spell names. HTTP Status Code: ${response.code()}")
@@ -68,6 +70,8 @@ object SpellsViewModel : ViewModel() {
             } catch (e: Exception) {
                 Log.e(TAG, "Error: ${e.message}")
                 SpellList() // Return empty list on exception
+            } finally {
+                Log.d(TAG, "We did it my baby")
             }
         }
     }
@@ -108,7 +112,9 @@ object SpellsViewModel : ViewModel() {
                     try {
                         val jsonResult = getSpellDetails(indices[i])
                         if (jsonResult.isNotEmpty()) {
-                            gson.fromJson(jsonResult, Spell.SpellInfo::class.java)
+                            val jsonObject = gson.fromJson(jsonResult, JsonObject::class.java)
+                            val spellJson = jsonObject.getAsJsonObject("data")?.getAsJsonObject("spell")
+                            gson.fromJson(spellJson, Spell.SpellInfo::class.java)
                         } else {
                             failedIndices.add(indices[i])
                             null

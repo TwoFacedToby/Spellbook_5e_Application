@@ -60,17 +60,21 @@ class SpellQueryViewModel() : ViewModel() {
         viewModelScope.launch {
             println("Kig her")
             spellList = SpellsViewModel.fetchAllSpellNames()
-            Log.d("SpellQueryViewModel", "init: ${spellList?.getIndexList()?.size}")
+            Log.d("API_RESPONSE_NEW", spellList.toString())
             loadInitialSpells()
         }
     }
 
     private fun loadInitialSpells() {
         viewModelScope.launch {
+
+            Log.d("API_RESPONSE_NEW",_spells.value.isNullOrEmpty().toString())
+
             // Load initial spells only if the spell list is empty
             if (_spells.value.isNullOrEmpty()) {
                 _isLoading.postValue(true)
                 val initialSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
+                Log.d("API_RESPONSE_NEW","IS: " + initialSpells.toString())
                 val displayableSpells = initialSpells?.map { it as Displayable }
                 _spells.postValue(displayableSpells)
                 _isLoading.postValue(false)
