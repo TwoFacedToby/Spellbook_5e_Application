@@ -41,6 +41,7 @@ class SpellQueryViewModel() : ViewModel() {
 
     fun getLiveData(type: String): LiveData<List<Displayable?>> {
         loadFavoriteSpells()
+
         loadHomebrewList()
         loadSpellBooks()
         return when (type) {
@@ -98,16 +99,19 @@ class SpellQueryViewModel() : ViewModel() {
     }
 
     private fun loadFavoriteSpells() {
-        val spellList = SpellList()
-        spellList.setIndexList(LocalDataLoader.getIndexList(LocalDataLoader.DataType.FAVOURITES))
-        val displayableFavorites = spellList.getSpellInfoList().map { it as Displayable }
+        spellList?.setIndexList(LocalDataLoader.getIndexList(LocalDataLoader.DataType.FAVOURITES))
+
+        val displayableFavorites = spellList?.getSpellInfoList()?.map { it as Displayable }
+
+        Log.d("MILK", LocalDataLoader.getIndexList(LocalDataLoader.DataType.FAVOURITES).toString())
+        Log.d("MILK3", displayableFavorites.toString())
+
         _favorite.postValue(displayableFavorites)
     }
 
     private fun loadHomebrewList(){
-        val spellList = SpellList()
-        spellList.setIndexList(LocalDataLoader.getIndexList(LocalDataLoader.DataType.HOMEBREW))
-        val displayableHomebrews = spellList.getSpellInfoList().map { it as Displayable }
+        spellList?.setIndexList(LocalDataLoader.getIndexList(LocalDataLoader.DataType.HOMEBREW))
+        val displayableHomebrews = spellList?.getSpellInfoList()?.map { it as Displayable }
         _homebrew.postValue(displayableHomebrews)
     }
 

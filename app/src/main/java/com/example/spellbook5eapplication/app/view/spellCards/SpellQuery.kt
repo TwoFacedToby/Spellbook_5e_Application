@@ -74,7 +74,7 @@ fun SpellQuery(
         }
     }
 
-    if (spells.isEmpty() && !isLoading) {
+    if (spells.isNullOrEmpty() && !isLoading) {
         NoSpellsFoundMessage()
     } else {
 

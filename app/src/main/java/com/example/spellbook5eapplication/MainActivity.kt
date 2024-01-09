@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        SpelllistLoader.loadSpellbooks()
+        //SpelllistLoader.loadSpellbooks()
 
         LocalDataLoader.setContext(applicationContext)
         val list = LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL)

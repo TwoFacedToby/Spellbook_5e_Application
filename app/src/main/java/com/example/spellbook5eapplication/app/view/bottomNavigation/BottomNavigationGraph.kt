@@ -3,6 +3,7 @@ package com.example.spellbook5eapplication.app.view.bottomNavigation
 import FavoriteScreen
 import SpellQueryViewModel
 import SpellbooksScreen
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -30,6 +31,7 @@ fun BottomNavigationGraph(
         composable(route = Screens.Favorite.route){
             //FavoriteScreen(spellController, spellListLoader, globalOverlayState)
             val spellList = SpellQueryViewModelFactory.create(type = "FAVORITES")
+            Log.d("TAGGERKLAPPER", spellList.value.toString())
             Basic_Screen(spellList, false)
         }
         composable(route = Screens.Spellbooks.route){

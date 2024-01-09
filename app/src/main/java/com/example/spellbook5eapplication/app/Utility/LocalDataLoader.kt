@@ -170,6 +170,9 @@ object LocalDataLoader {
         for (i in 0 until spellsArray.length()) {
             spellsList.add(spellsArray.getString(i))
         }
+
+        Log.d("deez", spellsList.toString())
+
         return spellsList
     }
     private fun getIndexListFromDirectory(directoryName: String) : List<String> {
