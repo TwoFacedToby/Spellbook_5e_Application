@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class SpellsViewModelFactory(private val applicationContext: Context) : ViewModelProvider.Factory {
+/*class SpellsViewModelFactory(private val applicationContext: Context) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SpellsViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
@@ -13,3 +13,5 @@ class SpellsViewModelFactory(private val applicationContext: Context) : ViewMode
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
+ */

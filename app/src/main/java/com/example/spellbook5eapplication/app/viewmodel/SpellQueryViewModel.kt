@@ -5,14 +5,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-
-import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Utility.Search
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
+import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
 import kotlinx.coroutines.launch
 
 class SpellQueryViewModel() : ViewModel() {
@@ -60,7 +59,7 @@ class SpellQueryViewModel() : ViewModel() {
     private fun loadSpellList() {
         viewModelScope.launch {
             println("Kig her")
-            spellList = SpellController.getAllSpellsList()
+            spellList = SpellsViewModel.fetchAllSpellNames()
             Log.d("SpellQueryViewModel", "init: ${spellList?.getIndexList()?.size}")
             loadInitialSpells()
         }
@@ -71,7 +70,7 @@ class SpellQueryViewModel() : ViewModel() {
             // Load initial spells only if the spell list is empty
             if (_spells.value.isNullOrEmpty()) {
                 _isLoading.postValue(true)
-                val initialSpells = SpellController.loadNextFromSpellList(10, spellList!!)
+                val initialSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
                 val displayableSpells = initialSpells?.map { it as Displayable }
                 _spells.postValue(displayableSpells)
                 _isLoading.postValue(false)
@@ -83,7 +82,7 @@ class SpellQueryViewModel() : ViewModel() {
         viewModelScope.launch {
             if (canLoadMoreSpells()) {
                 _isLoading.postValue(true)
-                val nextSpells = SpellController.loadNextFromSpellList(10, spellList!!)
+                val nextSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
                 // Convert each SpellInfo to Displayable
                 val displayableNextSpells = nextSpells?.map { it as Displayable }
                 val updatedList = _spells.value.orEmpty().toMutableList()

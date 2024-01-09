@@ -15,9 +15,9 @@ class JSON_to_Spell {
         spell.url = json
         return spell
     }
-    fun jsonToSpellList(json : String) : SpellList {
+    fun jsonToSpellList(spellsResponse: Spell.SpellsResponseOverview): SpellList {
         val spells = SpellList()
-        spells.setIndexList(extractIndexesFromJson(json))
+        spells.setIndexList(spellsResponse.spells.mapNotNull { it.name }) // or it.index if you need indexes
         return spells
     }
 

@@ -19,7 +19,6 @@ import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
-import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModelFactory
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -30,10 +29,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : ComponentActivity() {
-    // Define a CoroutineScope for launching coroutines
-    //private val scope = CoroutineScope(Dispatchers.Main)
-    private lateinit var viewModel: SpellsViewModel
-    private val TAG: String = "API_RESPONSE_NEW"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,38 +36,12 @@ class MainActivity : ComponentActivity() {
 
         SpelllistLoader.loadSpellbooks()
 
-        val factory = SpellsViewModelFactory(applicationContext)
-        viewModel = ViewModelProvider(this, factory)[SpellsViewModel::class.java]
-
-        // Observe the spellsOverview LiveData for changes
-        viewModel.spellsOverview.observe(this, Observer { spellNames ->
-            // This list will contain the indices of all spells
-            val indices = spellNames.mapNotNull { it.index }
-            spellNames.forEach {
-                Log.e(TAG, indices.toString())
-
-            }
-            // Fetch the details for all spells. Outcommented due to we ask for one spell at a time. So the entire list is not needed.
-            //Merging and changing the approach to fetch a spell.
-            //viewModel.getSpellDetails(indices)
-        })
-
-        viewModel.spellDetails.observe(this, Observer { spellDetails ->
-            spellDetails.forEach { spellDetail ->
-                Log.e(TAG, "Spell detail: ${spellDetail.name}")
-            }
-        })
-
-        viewModel.fetchAllSpellNames()
-
-
         LocalDataLoader.setContext(applicationContext)
         val list = LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL)
         println("Printing local list")
         for (s in list) {
-            println(s)
+            println("testasdamsdnasj" + s)
         }
-        runBlocking {  SpellController.getAllSpellsList()  }
 
         setContent {
             Spellbook5eApplicationTheme {

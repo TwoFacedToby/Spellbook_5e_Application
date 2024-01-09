@@ -88,7 +88,7 @@ data class SpellInfo(
 
     data class SpellsResponseOverview(
         @SerializedName("count") val count: Int,
-        @SerializedName("results") val spells: List<Spell.SpellNames>
+        @SerializedName("results") val spells: List<SpellNames>
     )
 
     data class SpellDamage(

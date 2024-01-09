@@ -1,23 +1,41 @@
 package com.example.spellbook5eapplication.app.Utility
 
+import android.content.Context
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import com.example.spellbook5eapplication.app.Model.API
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.JSON
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.runBlocking
+import java.lang.ref.WeakReference
 
 object SpellController {
     private val api = API()
     private val jsonToSpell = JSON_to_Spell()
 
+    private var context: WeakReference<Context>? = null
+
+    fun setContext(appContext: Context) {
+        context = WeakReference(appContext.applicationContext)
+    }
+
+    private fun getContext(): Context? {
+        return context?.get()
+    }
+
+    lateinit var viewModel: SpellsViewModel
 
 
-    suspend fun getAllSpellsList(): SpellList? {
+
+
+    /*suspend fun getAllSpellsList(): SpellList? {
         var list: SpellList? = null
         try {
             val json = api.getListOfSpells()
@@ -39,6 +57,8 @@ object SpellController {
         }
         return list
     }
+
+     */
     /**@author Tobias s224271
      * @param spellName The index of the spell, that can be called to the api.
      * @return The converted JSON in a data model class called Spell_Info.SpellInfo

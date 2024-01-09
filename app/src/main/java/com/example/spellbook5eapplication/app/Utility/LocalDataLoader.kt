@@ -1,11 +1,13 @@
 package com.example.spellbook5eapplication.app.Utility
 
 import android.content.Context
+import android.util.Log
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
+import java.io.IOException
 import java.lang.ref.WeakReference
 
 object LocalDataLoader {
@@ -83,6 +85,22 @@ object LocalDataLoader {
             saveJsonToFile(json, directoryName, fileName)
         }
     }
+
+    fun loadGraphQLQueryFromFile(): String {
+        val localContext = context?.get()
+        return if (localContext != null) {
+            try {
+                localContext.assets.open("spell_query.graphql").bufferedReader().use { it.readText() }
+            } catch (ioException: IOException) {
+                Log.e("LocalDataLoader", "Error reading GraphQL query from file", ioException)
+                ""
+            }
+        } else {
+            Log.e("LocalDataLoader", "Context is null, cannot read GraphQL query from file")
+            ""
+        }
+    }
+
     fun updateIndividualSpellList(spellName : String){
         println("Inserting $spellName")
         val indexList = getIndexList(DataType.INDIVIDUAL).toMutableList()
