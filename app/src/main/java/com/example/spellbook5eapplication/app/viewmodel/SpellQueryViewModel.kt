@@ -94,7 +94,8 @@ class SpellQueryViewModel() : ViewModel() {
     }
 
     private fun loadFavoriteSpells() {
-        val spellList = SpelllistLoader.loadFavouritesAsSpellList()
+        val spellList = SpellList()
+        spellList.setIndexList(LocalDataLoader.getIndexList(LocalDataLoader.DataType.FAVOURITES))
         val displayableFavorites = spellList.getSpellInfoList().map { it as Displayable }
         _favorite.postValue(displayableFavorites)
     }

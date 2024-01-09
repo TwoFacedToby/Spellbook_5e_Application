@@ -144,6 +144,10 @@ object LocalDataLoader {
         file.writeText(json)
     }
     private fun getIndexListFromFileName(directoryName: String, name: String) : List<String>{
+
+        val directoryExists = File(baseDirectory, directoryName)
+        if(!directoryExists.exists()) directoryExists.mkdirs()
+
         val file = File(baseDirectory, "$directoryName/$name.json")
         if (!file.exists()) {
             println("File does not exist: $name")
