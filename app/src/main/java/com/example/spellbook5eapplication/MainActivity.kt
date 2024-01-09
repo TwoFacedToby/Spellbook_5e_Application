@@ -58,12 +58,9 @@ class MainActivity : ComponentActivity() {
                 Log.e(TAG, indices.toString())
 
             }
-
-
-
-
-            // Fetch the details for all spells
-            viewModel.getSpellsDetails(indices)
+            // Fetch the details for all spells. Outcommented due to we ask for one spell at a time. So the entire list is not needed.
+            //Merging and changing the approach to fetch a spell.
+            //viewModel.getSpellDetails(indices)
         })
 
         viewModel.spellDetails.observe(this, Observer { spellDetails ->
