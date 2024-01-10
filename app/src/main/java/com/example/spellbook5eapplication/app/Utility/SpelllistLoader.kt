@@ -16,8 +16,11 @@ object SpelllistLoader {
      */
     suspend fun loadSpellbookAsSpellList(index: String): SpellList {
         // Read the spellbook JSON
-        val json = LocalDataLoader.getJson(index, LocalDataLoader.DataType.SPELLBOOK)
-        val spellbook = Gson().fromJson(json, Spellbook::class.java)
+        val list = LocalDataLoader.getSpellBookIndexList(index)
+        val spellbook = Spellbook(index)
+        list.forEach {
+            spellbook.addSpellToSpellbook(it)
+        }
 
         // Get detailed spell info for each spell name
         val spellInfoList = spellbook.spells.mapNotNull { spellName ->

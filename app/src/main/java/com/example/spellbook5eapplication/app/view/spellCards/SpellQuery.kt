@@ -106,7 +106,7 @@ fun SpellQuery(
                 }
 
                 // Handle pagination logic only if enabled
-                if (enablePagination) {
+                if (enablePagination && filter.count() == 0) {
                     val shouldLoadMore = index == spells.size - 1 &&
                             !isLoading &&
                             spellQueryViewModel.canLoadMoreSpells()

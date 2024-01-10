@@ -10,9 +10,11 @@ import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Utility.Search
 import com.example.spellbook5eapplication.app.Utility.SpellController
+import com.example.spellbook5eapplication.app.Utility.SpellDataFetcher
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SpellQueryViewModel() : ViewModel() {
@@ -140,10 +142,28 @@ class SpellQueryViewModel() : ViewModel() {
 
     fun loadSpellsBasedOnFilter(filter: Filter) {
         Log.d("SpellQueryViewModel", "LoadSpellsBasedOnFilter start: ${filter.toString()}")
-        viewModelScope.launch {
-            _isLoading.postValue(true)
 
-            spellList!!.setSpellInfoList(SpellController.loadSpells(spellList!!.getIndexList()))
+        _spells.value = emptyList()
+        _isLoading.postValue(true)
+        //SpellList.Hide()
+        viewModelScope.launch {
+
+
+            delay(1)
+            /*
+            Necessary delay, please don't remove me.
+            without this delay, the list is not emptied, as it knows it is gonna be filled shortly thereafter.
+            It is just 1 millisecond, it is okay. We'll live love laugh.
+            * */
+
+            val spellInfoList = mutableListOf<Spell.SpellInfo>()
+            for(spell in spellList!!.getIndexList())
+            {
+                spellInfoList.add(SpellDataFetcher.localOrAPI(spell)!!)
+            }
+
+
+            spellList!!.setSpellInfoList(spellInfoList)
             val search = Search()
 
             val filteredSpells = search.searchSpellListWithFilter(spellList!!, filter)
@@ -151,8 +171,10 @@ class SpellQueryViewModel() : ViewModel() {
 
             val displayableSpells = filteredSpells.getSpellInfoList().map { it }
             _spells.postValue(displayableSpells)
-
+            //SpellList.Show()
             _isLoading.postValue(false)
+
         }
+
     }
 }
