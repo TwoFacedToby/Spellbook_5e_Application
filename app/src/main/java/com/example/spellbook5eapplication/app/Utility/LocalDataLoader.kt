@@ -181,10 +181,12 @@ object LocalDataLoader {
     private fun getIndexListFromDirectory(directoryName: String) : List<String> {
         val targetDirectory = File(baseDirectory, directoryName)
 
+        if(!targetDirectory.exists()) targetDirectory.mkdirs()
+
         val list = if (targetDirectory.exists() && targetDirectory.isDirectory) {
             targetDirectory.listFiles()?.map { it.name } ?: emptyList()
         } else {
-            emptyList() // Or throw an exception if the directory does not exist
+            return emptyList()
         }
         val modifiedList = list.map { it.removeSuffix(".json") }
 
@@ -196,8 +198,7 @@ object LocalDataLoader {
         if (file.exists()) {
             return file.readText(Charsets.UTF_8)
         }
-        println("File $fileName not found - lulz")
-        return null
+        return null //Spell not found
     }
     fun deleteFile(fileName: String, dataType : DataType): Boolean {
         val directoryName = when(dataType){

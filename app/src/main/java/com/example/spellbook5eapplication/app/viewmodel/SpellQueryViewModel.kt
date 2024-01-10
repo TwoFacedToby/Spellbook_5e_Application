@@ -119,9 +119,12 @@ class SpellQueryViewModel() : ViewModel() {
     }
 
     private fun loadHomebrewList(){
-        spellList?.setIndexList(LocalDataLoader.getIndexList(LocalDataLoader.DataType.HOMEBREW))
-        val displayableHomebrews = spellList?.getSpellInfoList()?.map { it as Displayable }
-        _homebrew.postValue(displayableHomebrews)
+        viewModelScope.launch {
+            val spellList = SpelllistLoader.loadHomeBrewSpellList()
+            val displayableHomebrews = spellList.getSpellInfoList().map { it as Displayable }
+            _homebrew.postValue(displayableHomebrews)
+        }
+
     }
 
     private fun loadSpellBooks(){

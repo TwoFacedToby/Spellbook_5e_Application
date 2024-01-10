@@ -46,6 +46,15 @@ object SpelllistLoader {
             }
         }
     }
+    suspend fun loadHomeBrewSpellList() : SpellList{
+        val spellList = SpellList()
+        spellList.setIndexList(LocalDataLoader.getIndexList(LocalDataLoader.DataType.HOMEBREW))
+        val spellInfoList = spellList.getIndexList().mapNotNull { spellName ->
+            SpellDataFetcher.localOrAPI(spellName)
+        }
+        spellList.setSpellInfoList(spellInfoList)
+        return spellList
+    }
 
     /**
      * Load the "Favourites" spellbook from its JSON file and convert it to a SpellList.
