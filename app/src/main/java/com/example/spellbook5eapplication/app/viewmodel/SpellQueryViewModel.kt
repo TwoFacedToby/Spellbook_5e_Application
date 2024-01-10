@@ -143,8 +143,9 @@ class SpellQueryViewModel() : ViewModel() {
     fun loadSpellsBasedOnFilter(filter: Filter) {
         Log.d("SpellQueryViewModel", "LoadSpellsBasedOnFilter start: ${filter.toString()}")
 
+        _isLoading.value = true
         _spells.value = emptyList()
-        _isLoading.postValue(true)
+
         //SpellList.Hide()
         viewModelScope.launch {
 
