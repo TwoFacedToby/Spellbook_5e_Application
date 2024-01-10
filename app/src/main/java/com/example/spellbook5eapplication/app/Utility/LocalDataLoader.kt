@@ -20,6 +20,7 @@ object LocalDataLoader {
         baseDirectory = context!!.get()?.filesDir
     }
     fun getIndexList(dataType : DataType) : List<String>{
+        Log.d("1234567", dataType.value + " is datatype")
         if(dataType == DataType.HOMEBREW) return getIndexListFromDirectory("Homebrews")
         if(dataType == DataType.SPELLBOOK) return getIndexListFromDirectory("Spellbooks")
         var fileName = ""
@@ -69,6 +70,7 @@ object LocalDataLoader {
         return getIndexListFromFileName("Spellbooks", name)
     }
     fun saveJson(json : String, fileName: String, dataType: DataType) {
+        Log.d("tobylog", dataType.value + "is datatype" + fileName + "is filename" + json + "is json")
         if(dataType == DataType.SPELLBOOK) saveJsonToFile(json, "Spellbooks", fileName)
         else
         {
@@ -130,6 +132,7 @@ object LocalDataLoader {
                 directory.mkdirs() // Make the directory if it does not exist
             }
             val file = File(directory, "$fileName.json")
+            Log.d("deez12312", file.absolutePath)
             file.writeText(json)
         } catch (e: Exception) {
             println("Failed to save JSON to file: ${e.message}")
@@ -178,18 +181,22 @@ object LocalDataLoader {
     private fun getIndexListFromDirectory(directoryName: String) : List<String> {
         val targetDirectory = File(baseDirectory, directoryName)
 
-        return if (targetDirectory.exists() && targetDirectory.isDirectory) {
+        val list = if (targetDirectory.exists() && targetDirectory.isDirectory) {
             targetDirectory.listFiles()?.map { it.name } ?: emptyList()
         } else {
             emptyList() // Or throw an exception if the directory does not exist
         }
+        val modifiedList = list.map { it.removeSuffix(".json") }
+
+        return modifiedList
     }
+
     private fun getLocalJson(fileName: String) : String? {
         val file = File(baseDirectory, "$fileName.json")
         if (file.exists()) {
             return file.readText(Charsets.UTF_8)
         }
-        println("File $fileName not found")
+        println("File $fileName not found - lulz")
         return null
     }
     fun deleteFile(fileName: String, dataType : DataType): Boolean {

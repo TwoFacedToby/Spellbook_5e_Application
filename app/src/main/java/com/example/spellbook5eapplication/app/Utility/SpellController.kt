@@ -61,7 +61,7 @@ object SpellController {
      */
     /**@author Tobias s224271
      * @param spellName The index of the spell, that can be called to the api.
-     * @return The converted JSON in a data model class called Spell_Info.SpellInfo
+     * @return The converted JSON in a data model class called Spell.SpellInfo
      *
      * Starts the request for getting spell info from the API. This function might take a while to return, so make sure you run it on another thread than main.
      */
@@ -131,19 +131,19 @@ object SpellController {
      * Checks for and returns if spell is found in the api
      * else returns null
      */
-    private suspend fun getJson(index: String): String? {
-        var str : String? = LocalDataLoader.getJson(index, LocalDataLoader.DataType.HOMEBREW) //Try to find in Homebrew
-        if(str != null) return str //Return if found
-        str = LocalDataLoader.getJson(index, LocalDataLoader.DataType.INDIVIDUAL) //Try to find in saved data
-        if(str != null) return str //Return if found
-        println("Checking api")
-        str = api.getSpellFromApiWithRetry(index, 10) //Try to find in api
-        if(str != null){
-            LocalDataLoader.saveJson(str, index, LocalDataLoader.DataType.INDIVIDUAL)
-            LocalDataLoader.updateIndividualSpellList(index)
-        } //Save to device for later use if found
-        return str //Return either json string or null if not found
-    }
+        private suspend fun getJson(index: String): String? {
+            var str : String? = LocalDataLoader.getJson(index, LocalDataLoader.DataType.HOMEBREW) //Try to find in Homebrew
+            if(str != null) return str //Return if found
+            str = LocalDataLoader.getJson(index, LocalDataLoader.DataType.INDIVIDUAL) //Try to find in saved data
+            if(str != null) return str //Return if found
+            println("Checking api")
+            str = api.getSpellFromApiWithRetry(index, 10) //Try to find in api
+            if(str != null){
+                LocalDataLoader.saveJson(str, index, LocalDataLoader.DataType.INDIVIDUAL)
+                LocalDataLoader.updateIndividualSpellList(index)
+            } //Save to device for later use if found
+            return str //Return either json string or null if not found
+        }
     /**@author Tobias s224271
      * @param indexes A list of string indexes that needs to be searched for and loaded
      * @return A List of SpellInfo from of those spells named with indexes

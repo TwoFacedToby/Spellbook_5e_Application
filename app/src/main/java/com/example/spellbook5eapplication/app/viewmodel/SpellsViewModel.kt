@@ -21,6 +21,7 @@ import android.content.Context
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
+import com.example.spellbook5eapplication.app.Utility.SpellDataFetcher
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -109,21 +110,8 @@ object SpellsViewModel : ViewModel() {
 
             for (i in startIndex until endIndex) {
                 val deferred = async {
-                    try {
-                        val jsonResult = getSpellDetails(indices[i])
-                        if (jsonResult.isNotEmpty()) {
-                            val jsonObject = gson.fromJson(jsonResult, JsonObject::class.java)
-                            val spellJson = jsonObject.getAsJsonObject("data")?.getAsJsonObject("spell")
-                            gson.fromJson(spellJson, Spell.SpellInfo::class.java)
-                        } else {
-                            failedIndices.add(indices[i])
-                            null
-                        }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Error fetching details for index ${indices[i]}", e)
-                        failedIndices.add(indices[i])
-                        null
-                    }
+                    val index = indices[i]
+                    SpellDataFetcher.localOrAPI(index)
                 }
                 deferredResults.add(deferred)
             }

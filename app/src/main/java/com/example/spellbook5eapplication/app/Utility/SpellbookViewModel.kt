@@ -7,8 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Spellbook
+import kotlinx.coroutines.launch
 
 class SpellbookViewModel(
     private val spellController: SpellController,
@@ -36,12 +38,13 @@ class SpellbookViewModel(
     }
 
     private fun loadSpellListForSelectedSpellbook(spellbook: Spellbook) {
-        val filePath = "/data/data/com.example.spellbook5eapplication/files/Spellbooks/${spellbook.spellbookName}.json"
-        val temporarySpelllist = spellListLoader.loadSpellbookAsSpellList(filePath, spellController)
-        // Update the mutable state property
-        _spellList.value = temporarySpelllist
-        if(_selectedSpellbook.value == SpellbookManager.getSpellbook("Favourites")) {
-            println("hi sexy")
+        viewModelScope.launch {
+            val temporarySpelllist = spellListLoader.loadSpellbookAsSpellList(spellbook.spellbookName)
+            // Update the mutable state property
+            _spellList.value = temporarySpelllist
+            if(_selectedSpellbook.value == SpellbookManager.getSpellbook("Favourites")) {
+                println("hi sexy")
+            }
         }
     }
 

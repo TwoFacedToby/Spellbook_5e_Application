@@ -17,11 +17,14 @@ object SpellbookManager {
     }
 
     fun getSpellbook(spellbookName: String): Spellbook? {
+        Log.d("LOLOL", spellbooks.toString())
+        Log.d("TESTITEST", spellbooks.toString())
         return spellbooks.find { it.spellbookName == spellbookName }
     }
 
     fun saveSpellbookToFile(spellBookName: String) {
         val spellbook = getSpellbook(spellBookName)
+        Log.d("LOLOL", spellBookName)
         spellbook?.let {
             val gson = Gson()
             val spellbookJson = gson.toJson(it)

@@ -1,10 +1,46 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
 
+import android.util.Log
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell.SpellInfo
+import com.example.spellbook5eapplication.app.Utility.SpellDataFetcher
+import kotlin.math.min
+
+
 class SpellList {
 
+    private val spellInfoMap = HashMap<String, SpellInfo>()
     private var indexList: List<String> = emptyList()
-    private var spellInfoList: List<Spell.SpellInfo> = emptyList()
+    private var spellInfoList: List<SpellInfo> = emptyList()
     private var loaded = 0;
+
+
+    // Method to add SpellInfo objects to the map
+    fun addSpellInfo(spellInfo: SpellInfo) {
+        spellInfo.index?.let { index ->
+            spellInfoMap.putIfAbsent(index, spellInfo)
+        }
+    }
+
+    fun getSpellInfo(index: String?): SpellInfo? {
+        return spellInfoMap[index]
+    }
+
+    fun hasSpellInfo(index: String?): Boolean {
+        return spellInfoMap.containsKey(index)
+    }
+
+    fun loadSpellInfos(spellInfos: List<SpellInfo?>) {
+        for (spellInfo in spellInfos) {
+            addSpellInfo(spellInfo!!)
+        }
+    }
+
+    suspend fun getOrFetchSpellInfo(index: String): SpellInfo? {
+        Log.d("SpellList", spellInfoMap.size.toString() + " spells loaded and was it already in map: "+ spellInfoMap.containsKey(index))
+        return spellInfoMap[index] ?: SpellDataFetcher.localOrAPI(index)?.also { spellInfo ->
+            spellInfoMap[index] = spellInfo
+        }
+    }
 
     fun getLoaded(): Int {
         return loaded

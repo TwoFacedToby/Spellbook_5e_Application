@@ -169,7 +169,6 @@ fun SpellCard(
                     }
                     val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
                     var favouriteImage by remember { mutableStateOf(defaultFavouriteImage) }
-                    var isFavourite = SpellbookManager.getSpellbook("Favourites")?.spells?.contains(spell.index)
                     IconButton(onClick = {
                         spell.index?.let { spellIndex ->
                             val favouritesSpellbook = SpellbookManager.getSpellbook("Favourites")

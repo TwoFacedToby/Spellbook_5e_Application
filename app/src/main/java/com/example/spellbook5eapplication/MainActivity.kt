@@ -33,10 +33,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        //SpelllistLoader.loadSpellbooks()
-
         LocalDataLoader.setContext(applicationContext)
+
+        SpelllistLoader.loadSpellbooks()
+
+
         val list = LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL)
         println("Printing local list")
         for (s in list) {

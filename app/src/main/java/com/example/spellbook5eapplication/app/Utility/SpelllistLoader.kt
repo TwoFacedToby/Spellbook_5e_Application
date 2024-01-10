@@ -1,4 +1,5 @@
 package com.example.spellbook5eapplication.app.Utility
+import android.util.Log
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.google.gson.Gson
@@ -13,14 +14,14 @@ object SpelllistLoader {
      * @param spellController The SpellController instance to use for loading spell details.
      * @return A SpellList containing the spells from the spellbook.
      */
-    fun loadSpellbookAsSpellList(filePath: String, spellController: SpellController): SpellList {
+    suspend fun loadSpellbookAsSpellList(index: String): SpellList {
         // Read the spellbook JSON
-        val json = File(filePath).readText()
+        val json = LocalDataLoader.getJson(index, LocalDataLoader.DataType.SPELLBOOK)
         val spellbook = Gson().fromJson(json, Spellbook::class.java)
 
         // Get detailed spell info for each spell name
         val spellInfoList = spellbook.spells.mapNotNull { spellName ->
-            spellController.getSpellFromName(spellName)
+            SpellDataFetcher.localOrAPI(spellName)
         }
 
         // Create and populate the SpellList
@@ -33,9 +34,11 @@ object SpelllistLoader {
 
     fun loadSpellbooks() {
         val listOfNames = LocalDataLoader.getIndexList(LocalDataLoader.DataType.SPELLBOOK)
+        Log.d("12345678Names", listOfNames.toString())
         listOfNames.forEach{
             val json = LocalDataLoader.getJson(it, LocalDataLoader.DataType.SPELLBOOK)
             val spellbook = Gson().fromJson(json, Spellbook::class.java)
+            Log.d("12345678", spellbook.toString())
             if (spellbook != null) {
                 if (SpellbookManager.getSpellbook(spellbook.spellbookName) == null) {
                     SpellbookManager.addSpellbook(spellbook)

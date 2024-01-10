@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
@@ -18,6 +19,8 @@ class SpellQueryViewModel() : ViewModel() {
 
     //Spell name list for API
     private var spellList: SpellList? = null
+
+
 
     //Loading from pagination
     private val _isLoading = MutableLiveData<Boolean>()
@@ -39,9 +42,12 @@ class SpellQueryViewModel() : ViewModel() {
     private val _spellBooks = MutableLiveData<List<Displayable?>>()
     val spellBooks: LiveData<List<Displayable?>> = _spellBooks
 
+    private var _indexListFromAPI = mutableListOf<String>()
+    var indexListFromAPI: List<String> = _indexListFromAPI
+
+
     fun getLiveData(type: String): LiveData<List<Displayable?>> {
         loadFavoriteSpells()
-
         loadHomebrewList()
         loadSpellBooks()
         return when (type) {
@@ -61,6 +67,7 @@ class SpellQueryViewModel() : ViewModel() {
         viewModelScope.launch {
             println("Kig her")
             spellList = SpellsViewModel.fetchAllSpellNames()
+            _indexListFromAPI = spellList!!.getIndexList().toMutableList()
             Log.d("API_RESPONSE_NEW", spellList.toString())
             loadInitialSpells()
         }
@@ -88,25 +95,27 @@ class SpellQueryViewModel() : ViewModel() {
             if (canLoadMoreSpells()) {
                 _isLoading.postValue(true)
                 val nextSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
-                // Convert each SpellInfo to Displayable
-                val displayableNextSpells = nextSpells?.map { it as Displayable }
+                val displayableNextSpells = nextSpells.map { it as Displayable }
+
                 val updatedList = _spells.value.orEmpty().toMutableList()
-                updatedList.addAll(displayableNextSpells!!)
+                updatedList.addAll(displayableNextSpells)
                 _spells.postValue(updatedList)
                 _isLoading.postValue(false)
             }
         }
     }
 
+
+
     private fun loadFavoriteSpells() {
-        spellList?.setIndexList(LocalDataLoader.getIndexList(LocalDataLoader.DataType.FAVOURITES))
+        viewModelScope.launch {
+            val spellList = SpelllistLoader.loadSpellbookAsSpellList("Favourites")
+            Log.d("MILK2", spellList.toString())
 
-        val displayableFavorites = spellList?.getSpellInfoList()?.map { it as Displayable }
+            val displayableFavorites = spellList.getSpellInfoList().map { it as Displayable }
 
-        Log.d("MILK", LocalDataLoader.getIndexList(LocalDataLoader.DataType.FAVOURITES).toString())
-        Log.d("MILK3", displayableFavorites.toString())
-
-        _favorite.postValue(displayableFavorites)
+            _favorite.postValue(displayableFavorites)
+        }
     }
 
     private fun loadHomebrewList(){
