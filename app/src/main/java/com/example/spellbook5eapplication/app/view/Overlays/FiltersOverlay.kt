@@ -90,6 +90,14 @@ fun FiltersOverlay(
                 modifier = Modifier.width(150.dp),
                 color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
                 onClick = {
+                    onResetAllFiltersClicked(
+                        spellLevel,
+                        components,
+                        saveReq,
+                        classes,
+                        concentration,
+                        ritual
+                    )
                     filterViewModel.resetCurrentFilter()
                     GlobalOverlayState.dismissOverlay()
                 }
@@ -326,6 +334,39 @@ fun FilterButton(
                 color = Color.White
             )
         }
+    }
+
+}
+
+fun onResetAllFiltersClicked(
+    spellLevel: List<FilterItem>,
+    components: List<FilterItem>,
+    saveReq: List<FilterItem>,
+    classes: List<FilterItem>,
+    concentration: List<FilterItem>,
+    ritual: List<FilterItem>,
+){
+    spellLevel.forEach { filterItem ->
+        filterItem.isSelected.value = false
+    }
+
+    components.forEach { filterItem ->
+        filterItem.isSelected.value = false
+    }
+
+    saveReq.forEach { filterItem ->
+        filterItem.isSelected.value = false
+    }
+
+    classes.forEach { filterItem ->
+        filterItem.isSelected.value = false
+    }
+    concentration.forEach { filterItem ->
+        filterItem.isSelected.value = false
+    }
+
+    ritual.forEach { filterItem ->
+        filterItem.isSelected.value = false
     }
 }
 

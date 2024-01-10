@@ -57,6 +57,8 @@ fun SpellQuery(
 
     val filter by filterViewModel.currentFilter
     Log.d("SpellQuery", "observed filter: $filter")
+    val isUpdated by filterViewModel.isUpdated
+
 
 
     //Back-up
@@ -69,8 +71,9 @@ fun SpellQuery(
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(filter) {
-        if(filter.count() != 0) {
+        if(isUpdated){
             spellQueryViewModel.loadSpellsBasedOnFilter(filter)
+            filterViewModel.resetUpdatedValue()
         }
     }
 

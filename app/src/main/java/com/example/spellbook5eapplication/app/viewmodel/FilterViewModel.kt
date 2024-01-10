@@ -13,7 +13,8 @@ import okhttp3.internal.wait
 class FilterViewModel : ViewModel() {
     private val _currentFilter = mutableStateOf(Filter())
     val currentFilter: State<Filter> = _currentFilter
-
+    private val _isUpdated = mutableStateOf(false)
+    val isUpdated : State<Boolean> = _isUpdated
     fun applyFilters(
         spellLevel: List<FilterItem>,
         components: List<FilterItem>,
@@ -33,6 +34,7 @@ class FilterViewModel : ViewModel() {
 
         Log.d("FilterViewModel", "New filter: $newFilter")
         _currentFilter.value = newFilter
+        _isUpdated.value = true
     }
 
     private fun processList(items: List<FilterItem>, updateFilter: (String) -> Unit) {
@@ -82,7 +84,8 @@ class FilterViewModel : ViewModel() {
     }
 
     fun resetCurrentFilter() {
-        _currentFilter.value.reset()
+        _currentFilter.value = Filter()
+        _isUpdated.value = true
         Log.d("FilterViewModel", "After reset: ${currentFilter.toString()}")// Reset to a new, blank Filter instance
     }
 
@@ -107,6 +110,10 @@ class FilterViewModel : ViewModel() {
 
         Log.d("FilterViewModel", "After name added: $newFilter")
         _currentFilter.value = newFilter
+        _isUpdated.value = true
+    }
+    fun resetUpdatedValue(){
+        _isUpdated.value = false
     }
 }
 
