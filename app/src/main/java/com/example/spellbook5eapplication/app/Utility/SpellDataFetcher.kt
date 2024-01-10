@@ -101,5 +101,12 @@ object SpellDataFetcher {
         }
     }
 
+    suspend fun sneakyQuickLoader(){
+        val sneakyList = SpellsViewModel.fetchAllSpellNames()
+        sneakyList.getIndexList().forEach {
+            localOrAPI(it)
+        }
+    }
+
 
 }

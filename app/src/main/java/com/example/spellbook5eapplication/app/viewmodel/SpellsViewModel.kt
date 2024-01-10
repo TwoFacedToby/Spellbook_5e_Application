@@ -39,6 +39,7 @@ object SpellsViewModel : ViewModel() {
     private val jsonToSpell = JSON_to_Spell()
     private val gson = Gson()
     private val failedIndices = mutableListOf<String>()
+    private var allSpellNames : SpellList? = null
 
     private val api = Retrofit.Builder()
         .baseUrl(BASE_URL_API)
@@ -54,7 +55,8 @@ object SpellsViewModel : ViewModel() {
 
 
     suspend fun fetchAllSpellNames(): SpellList {
-        return withContext(Dispatchers.IO) {
+        if(allSpellNames != null) return allSpellNames as SpellList
+        else allSpellNames = withContext(Dispatchers.IO) {
             try {
                 val response = api.getSpells()
                 Log.d(TAG, "MKL: " + response.body().toString())
@@ -75,6 +77,7 @@ object SpellsViewModel : ViewModel() {
                 Log.d(TAG, "We did it my baby")
             }
         }
+        return allSpellNames as SpellList
     }
 
 
