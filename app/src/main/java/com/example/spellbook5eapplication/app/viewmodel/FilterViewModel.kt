@@ -4,7 +4,10 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import okhttp3.internal.wait
 
 class FilterViewModel : ViewModel() {
@@ -79,7 +82,7 @@ class FilterViewModel : ViewModel() {
     }
 
     fun resetCurrentFilter() {
-        _currentFilter.value = Filter()
+        _currentFilter.value.reset()
         Log.d("FilterViewModel", "After reset: ${currentFilter.toString()}")// Reset to a new, blank Filter instance
     }
 

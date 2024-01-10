@@ -175,7 +175,9 @@ class Filter {
 
     }
 
+
     fun reset(){
+        spellName = ""
         clearLevel()
         clearClasses()
         clearCastingTime()
