@@ -140,5 +140,21 @@ class SpellList {
         return "SpellList(indexList=$indexList, spellInfoList=$spellInfoList, loaded=$loaded)"
     }
 
+    fun copy() : SpellList {
+        val indexListNew = mutableListOf<String>()
+        indexList.forEach {
+            indexListNew.add(it)
+        }
+        val infoListNew = mutableListOf<Spell.SpellInfo>()
+        spellInfoList.forEach {
+            infoListNew.add(it)
+        }
+
+        val spellList = SpellList()
+        spellList.loaded = loaded
+        spellList.indexList = indexListNew
+        spellList.spellInfoList = infoListNew
+        return spellList
+    }
 
 }

@@ -47,7 +47,6 @@ class SpellQueryViewModel() : ViewModel() {
     private var _indexListFromAPI = mutableListOf<String>()
     var indexListFromAPI: List<String> = _indexListFromAPI
 
-
     fun getLiveData(type: String): LiveData<List<Displayable?>> {
         loadFavoriteSpells()
         loadHomebrewList()
@@ -157,18 +156,19 @@ class SpellQueryViewModel() : ViewModel() {
             It is just 1 millisecond, it is okay. We'll live love laugh.
             * */
 
-            val spellInfoList = mutableListOf<Spell.SpellInfo>()
-            for(spell in spellList!!.getIndexList())
-            {
-                spellInfoList.add(SpellDataFetcher.localOrAPI(spell)!!)
+            //If it is not loaded fully -> load it fully.
+            if(spellList!!.getLoaded() < spellList!!.getIndexList().count()){
+                val spellInfoList = mutableListOf<Spell.SpellInfo>()
+                for(spell in spellList!!.getIndexList())
+                {
+                    spellInfoList.add(SpellDataFetcher.localOrAPI(spell)!!)
+                }
+                spellList!!.setSpellInfoList(spellInfoList)
+                spellList!!.setLoaded(spellList!!.getIndexList().count())
             }
 
-
-            spellList!!.setSpellInfoList(spellInfoList)
             val search = Search()
-
-            val filteredSpells = search.searchSpellListWithFilter(spellList!!, filter)
-            Log.d("SpellQueryViewModel", "FilteredSpellList: $spellList")
+            val filteredSpells = search.searchSpellListWithFilter(spellList!!.copy(), filter)
 
             val displayableSpells = filteredSpells.getSpellInfoList().map { it }
             _spells.postValue(displayableSpells)
