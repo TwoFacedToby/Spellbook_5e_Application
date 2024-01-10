@@ -1,22 +1,22 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
 import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 
 
-class SpellCardCreation(spell: Spell_Info.SpellInfo) {
+class SpellCardCreation(spell: Spell.SpellInfo) {
 
 
     val classImageIDs : MutableList<Int> = emptyList<Int>().toMutableList()
     var schoolID = R.drawable.abjuration
 
     init {
-        if(spell.classes != null) setClassImages(spell.classes)
-        if(spell.school != null) setSchoolImage(spell.school)
+        if(spell.classes != null) setClassImages(spell.classes!!)
+        if(spell.school != null) setSchoolImage(spell.school!!)
     }
     // TODO // set class ids to actual right images once they've been created.
 
-    private fun setClassImages(classes : List<Spell_Info.SpellClass>){
+    private fun setClassImages(classes : List<Spell.SpellClass>){
         classImageIDs.clear()
         for(c in classes){
             when (c.name) {
@@ -38,7 +38,7 @@ class SpellCardCreation(spell: Spell_Info.SpellInfo) {
         }
     }
     // TODO // set school ids to actual right images once they've been created.
-    private fun setSchoolImage(school: Spell_Info.SpellSchool) {
+    private fun setSchoolImage(school: Spell.SpellSchool) {
         when(school.name){
             null -> println("null school")
             "Abjuration" -> schoolID = R.drawable.abjuration

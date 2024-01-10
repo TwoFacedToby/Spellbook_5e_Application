@@ -29,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -38,7 +37,7 @@ import kotlinx.coroutines.withContext
 const val amountToLoadH = 10
 const val paginationH = true //Run app with pagination
 const val bottomDistanceH = 10 //How many spell cards from the bottom should the next 10 be loaded. (The lower it is, there more loading stops you will see, the higher it is the more spells you will load and might cause the app to be slower sometimes)
-@SuppressLint("CoroutineCreationDuringComposition")
+/*@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun HomeQuery(
     filter: Filter?,
@@ -129,7 +128,7 @@ if(maxSize){
                             Box(modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(start = 20.dp)){//Centering is weird idk what to tell you
-                                SpellCard(
+                                /*SpellCard(
                                     onFullSpellCardRequest = {
                                         onFullSpellCardRequest(it)
                                     },
@@ -137,7 +136,7 @@ if(maxSize){
                                         onAddToSpellbookRequest(it)
                                     },
                                     spell = it
-                                )
+                                )*/
                             }
 
                         }
@@ -196,4 +195,4 @@ if(maxSize){
             }
         }
     }
-}
+}*/

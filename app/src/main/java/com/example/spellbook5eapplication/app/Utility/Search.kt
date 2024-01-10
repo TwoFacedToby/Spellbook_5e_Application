@@ -1,9 +1,10 @@
 package com.example.spellbook5eapplication.app.Utility
 
+import android.util.Log
 import androidx.compose.ui.text.toLowerCase
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import java.lang.Character.toLowerCase
 import java.util.Locale
 
@@ -46,7 +47,7 @@ class Search {
     private fun matchLists(spellList : SpellList){
         if(spellList.getSpellInfoList().isEmpty()) return
         val names = spellList.getIndexList()
-        val spells = mutableListOf<Spell_Info.SpellInfo>()
+        val spells = mutableListOf<Spell.SpellInfo>()
         for(info in spellList.getSpellInfoList()){
             if(info.index != null)
                 if(names.contains(info.index))
@@ -65,6 +66,7 @@ class Search {
      */
 
     fun searchSpellListWithFilter(spellList: SpellList, filter : Filter) : SpellList {
+        Log.d("Search", "RecievedList: $spellList")
         var changingSpellList = spellList
         if(filter.getSpellName() != "") changingSpellList = searchSpellNames(changingSpellList, filter.getSpellName())
         if(filter.getCastingTime().isNotEmpty()) filterSpells(spellList, "casting_time", filter)
@@ -77,6 +79,8 @@ class Search {
         if(filter.getLevel().isNotEmpty()) filterSpells(spellList, "level", filter)
         if(filter.getClasses().isNotEmpty()) filterSpells(spellList, "classes", filter)
         if(filter.getIsConcentration().isNotEmpty()) filterSpells(spellList, "concentration", filter)
+
+        Log.d("Search", "ReturnedSpellList: $changingSpellList")
         return changingSpellList
     }
 
@@ -95,7 +99,11 @@ class Search {
             "level" -> {
                 var index = 0
                 while(index < list.size){
-                    if(!filter.getLevel().contains(list[index].level)) list.remove(list[index])
+                    Log.d("Search", "${filter.getLevel()}")
+                    if(!filter.getLevel().contains(list[index].level)) {
+                        list.remove(list[index])
+                        Log.d("Search", "List after remove: $list")
+                    }
                     else{
                         index++
                     }
@@ -106,7 +114,7 @@ class Search {
                 while(index < list.size){
                     var found = false
                     for(time in filter.getCastingTime()){
-                        if(lower(time.value) == lower(list[index].castingTime)) {
+                        if(lower(time.value) == lower(list[index].casting_time)) {
                             found = true
                             break
                         }
@@ -136,7 +144,7 @@ class Search {
             "concentration" ->{
                 var index = 0
                 while(index < list.size){
-                    if(!filter.getIsConcentration().contains(list[index].isConcentration)) {
+                    if(!filter.getIsConcentration().contains(list[index].concentration)) {
                         list.removeAt(index)
                     }
                     else{
@@ -147,23 +155,7 @@ class Search {
             "ritual" ->{
                 var index = 0
                 while(index < list.size){
-                    if(!filter.getIsRitual().contains(list[index].isRitual)) list.remove(list[index])
-                    else{
-                        index++
-                    }
-                }
-            }
-            "aoe" ->{
-                var index = 0
-                while(index < list.size){
-                    var found = false
-                    for(aoe in filter.getAreaOfEffect()){
-                        if(lower(aoe.value) == lower(list[index].areaOfEffect?.type)) {
-                            found = true
-                            break
-                        }
-                    }
-                    if(!found) list.remove(list[index])
+                    if(!filter.getIsRitual().contains(list[index].ritual)) list.remove(list[index])
                     else{
                         index++
                     }
@@ -272,11 +264,11 @@ class Search {
 
     class Relevance (){
         private var spell : String = ""
-        private var spellInfo : Spell_Info.SpellInfo? = null
+        private var spellInfo : Spell.SpellInfo? = null
         private var name : List<String> = emptyList()
 
         private var noFits : Int = 0
-        fun get(spell : String, info : Spell_Info.SpellInfo, keywords: List<String>) : Relevance {
+        fun get(spell : String, info : Spell.SpellInfo, keywords: List<String>) : Relevance {
             this.spellInfo = info
             this.spell = spell
             this.name = spell.split("-")
@@ -305,7 +297,7 @@ class Search {
         fun getSpell() : String{
             return spell
         }
-        fun getInfo() : Spell_Info.SpellInfo? {
+        fun getInfo() : Spell.SpellInfo? {
             return spellInfo
         }
 

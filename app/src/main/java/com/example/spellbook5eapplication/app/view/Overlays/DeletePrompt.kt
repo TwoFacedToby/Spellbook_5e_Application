@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.view.spellCards.LocalLargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
@@ -101,7 +102,7 @@ fun DeleteOverlay(onDismissRequest: () -> Unit, name: String, closeSpell: () -> 
                             )
                         )
                     ) {
-                        SpellController.deleteHomeBrew(name = name)
+                        LocalDataLoader.deleteFile(name, LocalDataLoader.DataType.HOMEBREW)
                         println("Button delete clicked")
                         onDismissRequest()
                         closeSpell()

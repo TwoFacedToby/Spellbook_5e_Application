@@ -1,5 +1,6 @@
     package com.example.spellbook5eapplication.app.Model
 
+    import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
     import com.example.spellbook5eapplication.app.Utility.SpellController
     import com.example.spellbook5eapplication.app.Utility.SpellbookManager
     import com.google.gson.Gson
@@ -9,7 +10,7 @@
 
 
     object Favourites {
-        val favouritesSpellbook = SpellController.extractIndexListFromFile("Spellbooks/Favourites.json").toMutableList()
+        val favouritesSpellbook = LocalDataLoader.getIndexList(LocalDataLoader.DataType.FAVOURITES).toMutableList()
 
 
         fun addFavourite(spellname : String) {
@@ -28,6 +29,7 @@
 
 
         fun saveFavouritesAsSpellbook(){
+
             SpellbookManager.saveSpellbookToFile("Favourites")
         }
     }

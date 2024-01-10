@@ -2,6 +2,7 @@ package com.example.spellbook5eapplication.test
 
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Utility.Search
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.When
@@ -25,7 +26,8 @@ class UserStoryOneSearchFunctionality {
         val filter = Filter().apply { setSpellName("fire") }
 
         if (fakeSpellList != null && fakeSpellList!!.getIndexList().isNotEmpty()) {
-            fakeSpellList = SpellController.searchSpellListWithFilter(fakeSpellList!!, filter)
+            val search = Search()
+            fakeSpellList = search.searchSpellListWithFilter(fakeSpellList!!, filter)
         } else {
             println("Spell list is empty or not initialized.")
         }

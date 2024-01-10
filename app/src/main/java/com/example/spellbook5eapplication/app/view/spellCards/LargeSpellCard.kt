@@ -46,7 +46,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
@@ -57,9 +57,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LargeSpellCardOverlay(
-    globalOverlayState: GlobalOverlayState,
-    onDismissRequest: () -> Unit,
-    spell : Spell_Info.SpellInfo
+    spell : Spell.SpellInfo
 )
 {
         val images = SpellCardCreation(spell)
@@ -99,7 +97,7 @@ fun LargeSpellCardOverlay(
                             horizontalArrangement = Arrangement.End
                         ) {
                             IconButton(
-                                onClick = { globalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
+                                onClick = { GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
                                 Icon(
                                     imageVector = Icons.Outlined.Add,
                                     contentDescription = "Add to spellbook",
@@ -143,7 +141,7 @@ fun LargeSpellCardOverlay(
                             }
 
                             IconButton(
-                                onClick = { onDismissRequest() }) {
+                                onClick = { GlobalOverlayState.dismissOverlay() }){
                                 Icon(
                                     imageVector = Icons.Outlined.Close,
                                     contentDescription = "Close",
@@ -238,11 +236,11 @@ fun LargeSpellCardOverlay(
 
 
                     ){
-                        val combinedDescriptions = (spell.description ?: emptyList()) + (spell.higherLevelDescription ?: emptyList())
+                        val combinedDescriptions = (spell.desc ?: emptyList()) + (spell.atHigherLevel ?: emptyList())
 
                         items(combinedDescriptions.size) { index ->
-                            if(spell.higherLevelDescription?.isNotEmpty() == true)
-                                if(combinedDescriptions[index] == spell.higherLevelDescription?.get(0)){
+                            if(spell.atHigherLevel?.isNotEmpty() == true)
+                                if(combinedDescriptions[index] == spell.atHigherLevel?.get(0)){
                                     Text(
                                         text = "At Higher Levels",
                                         modifier = Modifier
@@ -265,11 +263,7 @@ fun LargeSpellCardOverlay(
                                 modifier = Modifier.padding(5.dp, 0.dp)
                             )
                         }
-
-
                     }
-
-
                 }
                 Column(
                     modifier = Modifier

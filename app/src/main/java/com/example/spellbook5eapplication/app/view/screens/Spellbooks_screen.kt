@@ -30,7 +30,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpellbookManager
@@ -47,7 +46,7 @@ fun SpellbooksScreen(
     spellListLoader: SpelllistLoader,
     globalOverlayState: GlobalOverlayState
 ) {
-    //Initializing viewModel to make the app recompose when a new spellbook is selected.
+    /*//Initializing viewModel to make the app recompose when a new spellbook is selected.
     val viewModel: SpellbookViewModel = viewModel(
         factory = SpellbookViewModelFactory(spellController, spellListLoader)
     )
@@ -154,7 +153,7 @@ fun SpellbooksScreen(
 
                 SpellQuery(
                     filter = filter,
-                    spellList = spellList,
+                    //spellList = spellList,
                     onFullSpellCardRequest = { spellInfo ->
                         overlaySpell = spellInfo
                         globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
@@ -197,5 +196,5 @@ fun SpellbooksScreen(
                 }
             }
         }
-    }
+    }*/
 }

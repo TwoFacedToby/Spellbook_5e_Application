@@ -1,0 +1,31 @@
+query Spell($index: String) {
+    spell(index: $index) {
+        index
+        name
+        desc
+        higher_level
+        range
+        components
+        material
+        ritual
+        duration
+        concentration
+        casting_time
+        level
+        school {
+            index
+            name
+        }
+        classes {
+            index
+            name
+        }
+        attack_type
+        damage {
+            damage_type {
+                index
+                name
+            }
+        }
+    }
+}

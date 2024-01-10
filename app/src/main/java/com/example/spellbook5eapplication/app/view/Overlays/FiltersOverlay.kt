@@ -35,19 +35,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
 import com.example.spellbook5eapplication.app.viewmodel.FilterItem
+import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 
 
 @Composable
 fun FiltersOverlay(
-    onDismissRequest: () -> Unit,
-    //onFilterSelected: (FilterItem) -> Unit,
-    currentfilter: Filter,
-    createNewFilter: () -> Filter,
-    updateFilterState: (Filter) -> Unit
 ) {
     val spellLevel = remember { mutableStateListOf(*FilterItem.spellLevels.toTypedArray()) }
     val components = remember { mutableStateListOf(*FilterItem.components.toTypedArray()) }
@@ -55,6 +53,8 @@ fun FiltersOverlay(
     val classes = remember { mutableStateListOf(*FilterItem.classes.toTypedArray()) }
     val concentration = remember { mutableStateListOf(*FilterItem.isConcentration.toTypedArray()) }
     val ritual = remember { mutableStateListOf(*FilterItem.isRitual.toTypedArray()) }
+
+    val filterViewModel: FilterViewModel = viewModel()
 
     Column(
         modifier = Modifier
@@ -66,8 +66,7 @@ fun FiltersOverlay(
             modifier = Modifier
                 .width(250.dp)
                 .height(15.dp)
-                .clip(shape = RoundedCornerShape(5.dp))
-                /*.clickable { onDismissRequest() }*/,
+                .clip(shape = RoundedCornerShape(5.dp)),
             color = colorResource(id = R.color.black).copy(alpha = 0.2F),
         )
         Spacer(modifier = Modifier.height(20.dp))
@@ -75,14 +74,15 @@ fun FiltersOverlay(
             ColouredButton(label = "Apply filters",
                 modifier = Modifier.width(150.dp),
                 color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
-                onClick = { onApplyFiltersClicked(
-                    spellLevel, components,
-                    saveReq, classes,
-                    concentration, ritual,
-                    currentfilter, createNewFilter,
-                    updateFilterState
+                onClick = { filterViewModel.applyFilters(
+                    spellLevel,
+                    components,
+                    saveReq,
+                    classes,
+                    concentration,
+                    ritual
                 )
-                    onDismissRequest()
+                    GlobalOverlayState.dismissOverlay()
                 }
             )
             Spacer(modifier = Modifier.width(10.dp))
@@ -90,13 +90,8 @@ fun FiltersOverlay(
                 modifier = Modifier.width(150.dp),
                 color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
                 onClick = {
-                    onResetAllFiltersClicked(
-                        spellLevel, components,
-                        saveReq, classes,
-                        concentration, ritual)
-                    updateFilterState(Filter()
-                    )
-                    onDismissRequest()
+                    filterViewModel.resetCurrentFilter()
+                    GlobalOverlayState.dismissOverlay()
                 }
             )
         }
@@ -121,36 +116,6 @@ fun FiltersOverlay(
                 item {
                     Spacer(modifier = Modifier.height(5.dp))
                 }
-                /*item {
-                    Row{
-                        ColouredButton(label = "Apply filters",
-                            modifier = Modifier.width(150.dp),
-                            color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
-                            onClick = { onApplyFiltersClicked(
-                                spellLevel, components,
-                                saveReq, classes,
-                                concentration, ritual,
-                                currentfilter, createNewFilter,
-                                updateFilterState
-                            )
-                                onDismissRequest()
-                            }
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        ColouredButton(label = "Reset filters",
-                            modifier = Modifier.width(150.dp),
-                            color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
-                            onClick = {
-                                onResetAllFiltersClicked(
-                                    spellLevel, components,
-                                    saveReq, classes,
-                                    concentration, ritual)
-                                updateFilterState(Filter())
-                            }
-                        )
-                    }
-                }*/
-                //item { Spacer(modifier = Modifier.height(5.dp)) }
                 item {
                     Text(
                         text = "Spell Level",
@@ -168,8 +133,7 @@ fun FiltersOverlay(
                                 FilterButton(
                                     modifier = Modifier.size(55.dp),
                                     contentPaddingValues = PaddingValues(1.dp),
-                                    filter = level,
-                                    //onFilterSelected = { onFilterSelected(level)
+                                    filter = level
                                 )
                             }
                         }
@@ -196,7 +160,6 @@ fun FiltersOverlay(
                                         modifier = Modifier.size(46.dp),
                                         contentPaddingValues = PaddingValues(1.dp),
                                         filter = concentration,
-                                        //onFilterSelected = { onFilterSelected(concentration)
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                 }
@@ -217,7 +180,6 @@ fun FiltersOverlay(
                                         modifier = Modifier.size(46.dp),
                                         contentPaddingValues = PaddingValues(1.dp),
                                         filter = ritual,
-                                        //onFilterSelected = { onFilterSelected(ritual)
                                     )
                                     Spacer(modifier = Modifier.width(8.dp))
                                 }
@@ -246,7 +208,6 @@ fun FiltersOverlay(
                                     modifier = Modifier.size(width = 100.dp, height = 40.dp),
                                     contentPaddingValues = PaddingValues(1.dp),
                                     filter = components,
-                                    //onFilterSelected = { onFilterSelected(components)
                                 )
                             }
                         }
@@ -274,7 +235,6 @@ fun FiltersOverlay(
                                         modifier = Modifier.size(width = 100.dp, height = 40.dp),
                                         filter = level,
                                         contentPaddingValues = PaddingValues(1.dp),
-                                        //onFilterSelected = { onFilterSelected(level)
                                     )
                                 }
                             }
@@ -302,7 +262,6 @@ fun FiltersOverlay(
                                     FilterButton(
                                         modifier = Modifier.size(width = 145.dp, height = 40.dp),
                                         filter = level,
-                                        //onFilterSelected = { onFilterSelected(level)
                                     )
                                 }
                             }
@@ -319,14 +278,12 @@ fun FilterButton(
     modifier: Modifier,
     contentPaddingValues: PaddingValues? = null,
     filter: FilterItem,
-    //onFilterSelected: (FilterItem) -> Unit
 ) {
     if (contentPaddingValues == null) {
         Button(
             modifier = modifier,
             onClick = {
                 filter.isSelected.value = !filter.isSelected.value
-                //onFilterSelected(filter)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (filter.isSelected.value) colorResource(id = R.color.selected_button)
@@ -350,7 +307,6 @@ fun FilterButton(
             modifier = modifier,
             onClick = {
                 filter.isSelected.value = !filter.isSelected.value
-                //onFilterSelected(filter)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = if (filter.isSelected.value) colorResource(id = R.color.selected_button)
@@ -373,7 +329,7 @@ fun FilterButton(
     }
 }
 
-fun processList(items: List<FilterItem>, updateFilter: (Filter, String) -> Unit, filter: Filter, asBoolean: Boolean = false) {
+/*fun processList(items: List<FilterItem>, updateFilter: (Filter, String) -> Unit, filter: Filter, asBoolean: Boolean = false) {
     items.forEach { item ->
         if (item.isSelected.value) {
             if (asBoolean) {
@@ -521,4 +477,4 @@ fun updateFilterWithSearchName(currentFilter: Filter, searchName: String): Filte
     }
 
     return newFilter
-}
+}*/

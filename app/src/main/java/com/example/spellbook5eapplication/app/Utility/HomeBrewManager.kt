@@ -1,6 +1,5 @@
 package com.example.spellbook5eapplication.app.Utility
 
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.google.gson.Gson
 import java.io.File
@@ -66,8 +65,16 @@ class HomeBrewManager {
             ),
             "/api/spells/acid-arrow"
         )
-        SpellController.saveHomeJSON(gson.toJson(spell), name)
+        addHomebrewSpell(gson.toJson(spell), name)
         return gson.toJson(spell)
     }
-
+    private fun addHomebrewSpell(json : String, name : String){
+        LocalDataLoader.saveJson(json, name, LocalDataLoader.DataType.HOMEBREW)
+        val list = LocalDataLoader.getIndexList(LocalDataLoader.DataType.HOMEBREW).toMutableList()
+        list.add(name)
+        LocalDataLoader.saveIndexList(LocalDataLoader.DataType.HOMEBREW, list.toList())
+    }
+    fun retrieveHomeBrew(): List<String> {
+        return LocalDataLoader.getIndexList(LocalDataLoader.DataType.HOMEBREW)
+    }
 }

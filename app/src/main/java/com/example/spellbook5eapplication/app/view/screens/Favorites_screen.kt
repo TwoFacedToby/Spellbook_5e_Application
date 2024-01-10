@@ -24,12 +24,10 @@ import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell_Info
 import com.example.spellbook5eapplication.app.Utility.SpellController
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.Overlays.AddToSpellBookOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
-import com.example.spellbook5eapplication.app.view.Overlays.updateFilterWithSearchName
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
@@ -42,7 +40,7 @@ import kotlinx.coroutines.runBlocking
 @Composable
 fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistLoader, globalOverlayState: GlobalOverlayState) {
     // State to keep track of the currently selected spell
-    val nullSpell = Spell_Info.SpellInfo(
+    /*val nullSpell = Spell_Info.SpellInfo(
         null,
         "Example name",
         null,
@@ -140,7 +138,7 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
 
                 SpellQuery(
                     filter = filter,
-                    spellList = favouriteSpellList,
+                    //spellList = favouriteSpellList,
                     onFullSpellCardRequest = { spell ->
                         overlaySpell = spell
                         globalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
@@ -213,5 +211,5 @@ fun FavoriteScreen(spellController: SpellController, spellListLoader: SpelllistL
                 }
             }
         }
-    }
+    }*/
 }
