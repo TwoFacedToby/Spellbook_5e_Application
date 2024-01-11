@@ -33,12 +33,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.view.Overlays.CreateOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
+import com.example.spellbook5eapplication.app.view.Overlays.HomeBrewInstantiator
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.utilities.FilterButton
 import com.example.spellbook5eapplication.app.view.utilities.UserInputField
+import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
@@ -108,6 +111,20 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 CustomOverlay(overlayType = OverlayType.FILTER) {
                     FiltersOverlay()
                 }
+            }
+            OverlayType.MAKE_SPELL -> {
+                val createViewModel = CreateSpellViewModel()
+                val createView = HomeBrewInstantiator()
+                //HomeBrewInstantiator.makeNewSpellFromTheTop(createViewModel)
+                createView.makeNewSpellFromTheTop(createViewModel)
+            }
+            OverlayType.ERASE_PROMPT -> {
+                CreateOverlay(
+                    message = "Exiting now will erase all progress",
+                    button1Message = "Cancel",
+                    button2Message = "Exit",
+                    button2Function = {GlobalOverlayState.dismissOverlay()}
+                )
             }
             else -> {}
         }
