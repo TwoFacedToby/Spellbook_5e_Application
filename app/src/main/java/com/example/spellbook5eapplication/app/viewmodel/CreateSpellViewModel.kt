@@ -142,7 +142,7 @@
 
             // adding the json to the spell after all else is added if empty (don't want it to grow indefinitely)
             if(spell.json.isNullOrBlank())
-            spell.apply{
+                spell.apply{
                 json = jsonSpell
             }
 
