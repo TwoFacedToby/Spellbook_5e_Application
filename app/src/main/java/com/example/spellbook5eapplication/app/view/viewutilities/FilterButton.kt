@@ -12,6 +12,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
@@ -24,16 +25,20 @@ fun FilterButton(onShowFiltersRequest: () -> Unit){
         modifier = Modifier
             .background(
                 color = colorResource(id = R.color.main_color),
-                shape = RoundedCornerShape(2.dp))
-            .border(BorderStroke(
-                2.dp,
-                colorResource(id = R.color.border_color)),
-                shape = RoundedCornerShape(2.dp)),
+                shape = RoundedCornerShape(2.dp)
+            )
+            .border(
+                BorderStroke(2.dp, colorResource(id = R.color.border_color)),
+                shape = RoundedCornerShape(2.dp)
+            ),
         colors = IconButtonDefaults.iconButtonColors(containerColor = colorResource(id = R.color.main_color), contentColor = colorResource(
             id = R.color.white))
     )
     {
-        Icon(imageVector = Icons.AutoMirrored.Outlined.ManageSearch, contentDescription = "")
+        Icon(
+            painter = painterResource(id = R.drawable.filter), // Use your drawable resource ID
+            contentDescription = "Filter" // Provide a meaningful description for accessibility
+        )
     }
 }
 

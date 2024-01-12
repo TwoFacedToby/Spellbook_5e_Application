@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view.screens
 
+import SpellQueryViewModel
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -21,18 +22,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.view.Overlays.CreateOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.HomeBrewInstantiator
-import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
+import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.viewutilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.viewutilities.FilterButton
@@ -53,6 +58,8 @@ fun Basic_Screen(
     println("Current filter: $filter")
     println("Current filter level size: " + filter.getLevel().size)
 
+    val bottomPadding = with(LocalDensity.current) { 20.dp.toPx().toInt() }
+
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -65,13 +72,57 @@ fun Basic_Screen(
                 modifier = Modifier.matchParentSize(),
                 alpha = 0.5F
             )
-            Column (modifier = Modifier
-                .padding(top = 100.dp, bottom = 56.dp)
-                .matchParentSize()) {
+            Column (
+                modifier = Modifier
+                    .matchParentSize()
+                    .padding(top = 80.dp, bottom = 50.dp, start = 10.dp, end = 10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 // TopBar with Search and Filters
                 SearchFilterBar()
+
+                SubcomposeLayout { constraints ->
+                    val spellQueryLayout = subcompose("spellQuery") {
+
+                        Box(modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth()
+                            .weight(3f)
+                            .padding(top = 10.dp),
+                            contentAlignment = Alignment.Center
+                        ){
+                            SpellQuery(
+                                spellsLiveData = spellsLiveData,
+                                enablePagination = enablePagination
+                            )
+                        }
+
+                    }.first().measure(constraints)
+
+                    val customContentLayout = customContent?.let {
+                        subcompose("customContent", customContent).first().measure(constraints)
+                    }
+
+                    // Calculate the height for the SpellQuery considering the height of the custom content
+                    val spellQueryHeight = if (customContentLayout != null) {
+                        constraints.maxHeight - customContentLayout.height - bottomPadding
+                    } else {
+                        spellQueryLayout.height
+                    }
+
+                    layout(constraints.maxWidth, constraints.maxHeight) {
+                        // Place the SpellQuery
+                        spellQueryLayout.placeRelative(0, 0)
+
+                        // Calculate the horizontal center for the custom content
+                        customContentLayout?.let {
+                            val xCenter = (constraints.maxWidth - it.width) / 2
+                            it.placeRelative(xCenter, spellQueryHeight)
+                        }
+                    }
+                }
                 // List of Spells, taking up all available space
-                Box(modifier = Modifier
+                /*Box(modifier = Modifier
                     .fillMaxHeight()
                     .weight(3f)){
                     SpellQuery(
@@ -88,9 +139,9 @@ fun Basic_Screen(
                     {
                         customContent()
                     }
-                }
+                }*/
             }
-            OverlayRenderer(overlayStack = GlobalOverlayState.getOverlayStack())
+            OverlayRenderer(GlobalOverlayState.getOverlayStack())
         }
 
     }
@@ -101,7 +152,7 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
     overlayStack.forEach { overlayType ->
         when (overlayType) {
             OverlayType.LARGE_SPELLCARD ->  {
-                LargeSpellCardOverlay(GlobalOverlayState.currentSpell!!)
+                LargeSpellCard(GlobalOverlayState.currentSpell!!)
             }
             OverlayType.FILTER -> {
                 CustomOverlay(overlayType = OverlayType.FILTER) {
@@ -114,12 +165,32 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 //HomeBrewInstantiator.makeNewSpellFromTheTop(createViewModel)
                 createView.makeNewSpellFromTheTop(createViewModel)
             }
+            OverlayType.EDIT_SPELL -> {
+                val createViewModel = CreateSpellViewModel()
+                val createView = HomeBrewInstantiator()
+                createViewModel.updateEntireSpell(GlobalOverlayState.currentSpell!!)
+                createView.EditSpell(createViewModel)
+            }
             OverlayType.ERASE_PROMPT -> {
                 CreateOverlay(
                     message = "Exiting now will erase all progress",
                     button1Message = "Cancel",
                     button2Message = "Exit",
                     button2Function = {GlobalOverlayState.dismissOverlay()}
+                )
+            }
+            OverlayType.DELETE_PROMPT -> {
+                // To refresh screen and that it is gone
+                val spellQueryViewModel: SpellQueryViewModel = viewModel()
+
+                CreateOverlay(
+                    message = "Delete ${GlobalOverlayState.currentSpell!!.name}?",
+                    button1Message = "Cancel",
+                    button2Message = "Delete",
+                    button2Function = {
+                            LocalDataLoader.deleteFile(GlobalOverlayState.currentSpell!!.index +".json", LocalDataLoader.DataType.HOMEBREW)
+                        spellQueryViewModel.loadHomebrewList()
+                        GlobalOverlayState.dismissOverlay()}
                 )
             }
             else -> {}
@@ -143,8 +214,9 @@ fun SearchFilterBar(
             onInputChanged = { input ->
                 filterViewModel.updateFilterWithSearchName(input)
             },
-            modifier = Modifier.size(height = 24.dp, width =  120.dp),
-            imeAction = ImeAction.Search
+            modifier = Modifier.size(height = 48.dp, width = 220.dp),
+            imeAction = ImeAction.Search,
+            initialInput = ""
         )
         Spacer(modifier = Modifier.width(5.dp))
         FilterButton(

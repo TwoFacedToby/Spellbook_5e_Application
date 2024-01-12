@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view.Overlays
 
+import SpellQueryViewModel
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -38,6 +39,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 //import com.example.spellbook5eapplication.app.view.Overlays.UserInputMethods
 import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
@@ -64,7 +66,9 @@ class HomeBrewInstantiator {
      * through the different parts of a spell
      */
     @Composable
-    fun makeNewSpellFromTheTop(viewModel: CreateSpellViewModel) {
+    fun makeNewSpellFromTheTop(createViewModel: CreateSpellViewModel) {
+
+        val spellQueryViewModel: SpellQueryViewModel = viewModel()
 
         var show by remember { mutableStateOf(BrewParts.NAME) }
         var changeShow by remember { mutableStateOf(BrewParts.DESCRIPTION) }
@@ -195,7 +199,9 @@ class HomeBrewInstantiator {
                                 )
                             ) {
                                 //Save the spell on the device here
-                                viewModel.saveSpell()
+                                createViewModel.saveSpell()
+                                spellQueryViewModel.loadHomebrewList()
+                                GlobalOverlayState.dismissOverlay()
                             }
                         }
                     }
@@ -205,7 +211,7 @@ class HomeBrewInstantiator {
                     Spacer(modifier = Modifier.height(10.dp))
 
                     // The part dependent of what is being edited/created for the spell
-                    ShowBrewPart(show, viewModel)
+                    ShowBrewPart(show, createViewModel)
 
                     // Testing the possibility of jumping in parts
                     NavigateBrewParts(
@@ -221,6 +227,126 @@ class HomeBrewInstantiator {
         }
     }
         }
+
+
+    /**
+     * Create the overlay for creating a new Spell using a CreateSpellViewModel to do the technical things!
+     * This bad boy has a few private it uses to create a guided tour
+     * through the different parts of a spell
+     */
+    @Composable
+    fun EditSpell(createViewModel: CreateSpellViewModel) {
+
+        val spellQueryViewModel: SpellQueryViewModel = viewModel()
+        val oldIndex = createViewModel.spell.index
+
+        var show by remember { mutableStateOf(BrewParts.NAME) }
+        var changeShow by remember { mutableStateOf(BrewParts.DESCRIPTION) }
+        var showDialog = false
+        var alpha by remember { mutableStateOf(1f) }
+
+        val animatedAlpha by animateFloatAsState(
+            targetValue = alpha,
+            animationSpec = tween(durationMillis = 250), label = ""
+        )
+
+        LaunchedEffect(animatedAlpha) {
+            if (animatedAlpha == 0f) {
+                show = changeShow
+                alpha = 1f // Start fade in
+            }
+        }
+
+        Box(
+            contentAlignment = Alignment.Center, // Center content in the Box
+            modifier = Modifier.fillMaxSize()    // Make Box fill the entire available space
+        ) {
+
+            Column(
+                modifier = Modifier
+                    .padding(top = 8.dp, start = 15.dp, end = 15.dp)
+                ,//.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                //Testing visual
+                Box(
+                    modifier = Modifier
+                        .height(600.dp)
+                        .fillMaxWidth()
+                        .background(
+                            color = colorResource(id = R.color.overlay_box_color),
+                            shape = RoundedCornerShape(20.dp)
+                        ),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+
+                    Column(
+                        modifier = Modifier
+                            .alpha(animatedAlpha)
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    )
+                    {
+
+                        // Name of spell
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(
+                            text = show.displayedBrewPart(),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // Top navigation buttons
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+                                // Button to move on
+                                ColouredButton(
+                                    "Done", modifier = Modifier
+                                        .height(38.dp) // Sets the height of the button
+                                        .width(100.dp), color = ButtonDefaults.buttonColors(
+                                        containerColor = colorResource(
+                                            id = R.color.green_button
+                                        )
+                                    )
+                                ) {
+                                    createViewModel.replaceSpell(oldIndex!!)
+                                    spellQueryViewModel.loadHomebrewList()
+                                    GlobalOverlayState.dismissOverlay()
+                                }
+                        }
+
+                        //End of top navigation
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // The part dependent of what is being edited/created for the spell
+                        ShowBrewPart(show, createViewModel)
+
+                        // Testing the possibility of jumping in parts
+                        NavigateBrewParts(
+                            brewParts = BrewParts.values().toList(),
+                            dropName = "Parts of spell to edit",
+                            brewChange = {
+                                changeShow = it
+                                alpha = 0f
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
 
 
 
@@ -345,7 +471,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.name.toString(),
+                        label = "Name",
                         onInputChanged = {
                             viewModel.updateName(it)
                         },
@@ -353,6 +479,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.name.toString()
                     )
                 }
             })
@@ -371,7 +498,7 @@ class HomeBrewInstantiator {
         }
 
         CreateBrewPartDependentRegion(
-            description = "What level is the spell\nLevel explains how powerfull a spell is, higher level more powerfull",
+            description = "What level is the spell\nLevel explains how powerfull a spell is, higher level is more powerfull",
             userChoise = {
                 UserDropOnly(
                     dropdown = levels,
@@ -386,6 +513,12 @@ class HomeBrewInstantiator {
     @Composable
     private fun Description(viewModel: CreateSpellViewModel) {
 
+        var showVal = viewModel.spell.atHigherLevel.toString()
+
+        if (showVal.length >= 2) {
+            showVal = showVal.substring(1, showVal.length - 1)
+        }
+
         CreateBrewPartDependentRegion(
             description = "Explain what the spell does\nWhat effect does it have, how is it used, anything can be put here",
             userChoise = {
@@ -395,7 +528,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.desc.toString(),
+                        label = "Description",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateDescription(listOf(it))
@@ -404,6 +537,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
+                        initialInput = showVal
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -414,9 +548,14 @@ class HomeBrewInstantiator {
     @Composable
     private fun HigherLevel(viewModel: CreateSpellViewModel) {
 
+        var showVal = viewModel.spell.atHigherLevel.toString()
+
+        if (showVal.length >= 2) {
+            showVal = showVal.substring(1, showVal.length - 1)
+        }
+
         CreateBrewPartDependentRegion(
-            description = "Tell how the spell function at higher levels" +
-                    "\nSome spells have further functions when the level increase",
+            description = "Optional: Tell how the spell function at higher levels",
             userChoise = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -425,7 +564,7 @@ class HomeBrewInstantiator {
 
 
                     UserInputField(
-                        label = viewModel.spell.atHigherLevel.toString(),
+                        label = "At higher level quirks",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateHigherLevel(listOf(it))
@@ -434,6 +573,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
+                        initialInput = showVal
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -463,8 +603,7 @@ class HomeBrewInstantiator {
         var material by remember { mutableStateOf(viewModel.spell.components!!.contains("Material")) }
 
         CreateBrewPartDependentRegion(//spell = spell,
-            description = "What is requiered inorder to cast the spell?" +
-                    "\nVerbal is when a spell must be spoken,"
+            description = "Verbal is when a spell must be spoken"
                     + "\nSemantic is when a spell need to be gestured"
                     + "\nMaterial is regions required to cast a spell choosing this option will let you write what "
                     + "ingredients is required to cast the spell",
@@ -479,43 +618,43 @@ class HomeBrewInstantiator {
                         function = listOf(
                             // Verbal
                             {
-                                if (viewModel.spell.components!!.contains("Verbal")) {
+                                if (viewModel.spell.components!!.contains("V")) {
                                     newList.set(0, "")
                                     viewModel.updateComponents(newList)
                                 } else {
-                                    newList.set(0, "Verbal")
+                                    newList.set(0, "V")
                                     viewModel.updateComponents(newList)
                                 }
                             },
                             // Semantic
                             {
-                                if (viewModel.spell.components!!.contains("Semantic")) {
+                                if (viewModel.spell.components!!.contains("S")) {
                                     newList.set(1, "")
                                     viewModel.updateComponents(newList)
                                 } else {
-                                    newList.set(1, "Semantic")
+                                    newList.set(1, "S")
                                     viewModel.updateComponents(newList)
                                 }
                             },
                             //Material
                             {
-                                if (viewModel.spell.components!!.contains("Material")) {
+                                if (viewModel.spell.components!!.contains("M")) {
                                     newList.set(2, "")
                                     viewModel.updateComponents(newList)
                                     material = false
                                     // Removes materials from the spell
                                     viewModel.updateMaterial("")
                                 } else {
-                                    newList.set(2, "Material")
+                                    newList.set(2, "M")
                                     viewModel.updateComponents(newList)
                                     material = true
                                 }
                             }
                         ),
                         startState = listOf(
-                            viewModel.spell.components!!.contains("Verbal"),
-                            viewModel.spell.components!!.contains("Semantic"),
-                            viewModel.spell.components!!.contains("Material")
+                            viewModel.spell.components!!.contains("V"),
+                            viewModel.spell.components!!.contains("S"),
+                            viewModel.spell.components!!.contains("M")
                         ))
                 }
 
@@ -528,7 +667,7 @@ class HomeBrewInstantiator {
                     ) {
 
                         UserInputField(
-                            label = viewModel.spell.materials.toString(),
+                            label = "Materials",
                             //Should connect with name
                             onInputChanged = {
                                 viewModel.updateMaterial(it)
@@ -537,6 +676,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
+                            initialInput = viewModel.spell.materials.toString()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
 
@@ -553,8 +693,8 @@ class HomeBrewInstantiator {
     private fun RitualAndConcentration(viewModel: CreateSpellViewModel) {
         CreateBrewPartDependentRegion(
             description = "Does the spell requiere concentration? Is it a ritual?" +
-                    "\nConcentration means an unfocused character can't cast it"
-                    + "\nRitual is a kind of spell dedicated to a God or cause",
+                    "\nConcentration spells require concentration to maintain their effects."
+                    + "\nRituals take longer to cast but don't consume a spell slot.",
             userChoise = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -620,6 +760,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
+                            initialInput = viewModel.spell.range.toString()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -678,6 +819,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
+                            initialInput = viewModel.spell.duration.toString()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -709,7 +851,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.casting_time.toString(),
+                        label = "Cast time",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateCastTime(it)
@@ -718,6 +860,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.casting_time.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -749,7 +892,7 @@ class HomeBrewInstantiator {
 
         CreateBrewPartDependentRegion(
             description = "What kind of spell is it?" +
-                    "\nSchools tell what kind of knowledge or power the spell stems from ",
+                    "\nSpells are categorized into different schools of magic like Evocation (dealing damage) or Divination (gaining information).",
             userChoise = {
 
 
@@ -813,7 +956,7 @@ class HomeBrewInstantiator {
     private fun AttackType(viewModel: CreateSpellViewModel) {
         CreateBrewPartDependentRegion(
             description = "Explain what type of attack the spell has" +
-                    "\ntypes can be such as fire or fists",
+                    "\nsuch as fire, cold, or slashing.",
             userChoise = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -821,7 +964,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.attackType.toString(),
+                        label = "Attack type",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateAttackType(it)
@@ -830,6 +973,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.attackType.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -840,8 +984,7 @@ class HomeBrewInstantiator {
     @Composable
     private fun Damage(viewModel: CreateSpellViewModel) {
         CreateBrewPartDependentRegion(
-            description = "Explain what the damage inflicted by the spell" +
-                    "\ndamage can be such as \"broken jaws\" or others",
+            description = "Explain how much damage is inflicted by the spell",
             userChoise = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -849,7 +992,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.damage!!.damageType!!.name.toString(),
+                        label = "Damage",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateDamage(it)
@@ -858,6 +1001,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.damage!!.damageType!!.name.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -869,7 +1013,7 @@ class HomeBrewInstantiator {
     private fun DC(viewModel: CreateSpellViewModel) {
         CreateBrewPartDependentRegion(
             description = "How difficult is the spell?" +
-                    "\ndifficulty can such as \"Master\", \"apprentice\" or others",
+                    "\nDC is the number the target needs to roll on a 20-sided die (d20) to resist the spell's effects. The caster's spellcasting ability often determines this DC.",
             userChoise = {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -877,7 +1021,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.dc.toString(),
+                        label = "Difficulty Class",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateDC(it)
@@ -886,6 +1030,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.dc.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
