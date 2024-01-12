@@ -2,7 +2,9 @@ package com.example.spellbook5eapplication.app.Utility
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
@@ -192,7 +194,6 @@ object LocalDataLoader {
 
         return modifiedList
     }
-
     private fun getLocalJson(fileName: String) : String? {
         val file = File(baseDirectory, "$fileName.json")
         if (file.exists()) {
