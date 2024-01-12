@@ -2,18 +2,13 @@ package com.example.spellbook5eapplication.test
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Spellbook
-import com.example.spellbook5eapplication.app.Utility.SpellController
-import com.example.spellbook5eapplication.app.Utility.SpellbookManager
-import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
-import io.cucumber.java.PendingException
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
+import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.When
 import io.cucumber.java.en.Then
-import io.cucumber.java.en.And
-import io.cucumber.java.en.But
 import org.junit.Assert
 
 class UserStoryFourFavouriteASpell {
@@ -39,7 +34,8 @@ class UserStoryFourFavouriteASpell {
     @Given("the user is viewing a list of spells not favourited")
     fun the_user_is_viewing_a_list_of_spells_not_favourited() {
         loadSpellbooks()
-        fakeSpellList = SpellList().createFakeSpellList()
+        fakeSpellList = SpellList()
+        fakeSpellList!!.addSpell("Fake Spell 1")
 
         //Remove spell from favourites if it is there, before we move on to be able to test it.
         if (fakeSpellList!!.getIndexList().size > 1) {

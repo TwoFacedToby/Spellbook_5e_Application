@@ -2,7 +2,7 @@ package com.example.spellbook5eapplication.app.Utility
 
 import android.content.Context
 import android.util.Log
-import com.example.spellbook5eapplication.app.Model.Spellbook
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject

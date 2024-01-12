@@ -32,7 +32,6 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SettingsOverlay(onDismissRequest: () -> Unit) {
-    // dafasfsdfasfasfs
     Column(
     modifier = Modifier
         .padding(16.dp)

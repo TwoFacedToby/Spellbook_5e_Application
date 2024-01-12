@@ -1,7 +1,8 @@
-package com.example.spellbook5eapplication.app.Utility
+package com.example.spellbook5eapplication.app.Repository
 import android.util.Log
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Spellbook
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.google.gson.Gson
 import java.io.File
 

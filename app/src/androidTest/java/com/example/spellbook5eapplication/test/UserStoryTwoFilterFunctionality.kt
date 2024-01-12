@@ -1,23 +1,89 @@
 package com.example.spellbook5eapplication.test
 
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
-import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Utility.Search
-import com.example.spellbook5eapplication.app.Utility.SpellController
-import io.cucumber.java.PendingException
+import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.When
 import io.cucumber.java.en.Then
-import io.cucumber.java.en.And
-import io.cucumber.java.en.But
 import org.junit.Assert
 
 class UserStoryTwoFilterFunctionality {
-    private var fakeSpellList: SpellList? = null
+    private var fakeSpellList: CreateSpellViewModel? = null
+    private var spellinfo1: Spell.SpellInfo? = (Spell.SpellInfo(
+        json = "",
+        index = null,
+        name = "",
+        desc = listOf(),
+        atHigherLevel = listOf(),
+        range = "",
+        components = listOf(),
+        materials = "",
+        ritual = false,
+        duration = "",
+        concentration = false,
+        casting_time = "",
+        level = 0,
+        school = Spell.SpellSchool(index = "", name = "", url = "Homebrew"),
+        classes = listOf(),
+        url = "",
+        attackType = "",
+        damage = Spell.SpellDamage(Spell.SpellDamageType(name = "", index = "")),
+        dc = "",
+        homebrew = true
+    ))
+    private var spellinfo2: Spell.SpellInfo = (Spell.SpellInfo(
+        json = "",
+        index = null,
+        name = "",
+        desc = listOf(),
+        atHigherLevel = listOf(),
+        range = "",
+        components = listOf(),
+        materials = "",
+        ritual = false,
+        duration = "",
+        concentration = false,
+        casting_time = "",
+        level = 0,
+        school = Spell.SpellSchool(index = "", name = "", url = "Homebrew"),
+        classes = listOf(),
+        url = "",
+        attackType = "",
+        damage = Spell.SpellDamage(Spell.SpellDamageType(name = "", index = "")),
+        dc = "",
+        homebrew = true
+    ))
+    private var spellinfo3: Spell.SpellInfo = (Spell.SpellInfo(
+        json = "",
+        index = null,
+        name = "",
+        desc = listOf(),
+        atHigherLevel = listOf(),
+        range = "",
+        components = listOf(),
+        materials = "",
+        ritual = false,
+        duration = "",
+        concentration = false,
+        casting_time = "",
+        level = 0,
+        school = Spell.SpellSchool(index = "", name = "", url = "Homebrew"),
+        classes = listOf(),
+        url = "",
+        attackType = "",
+        damage = Spell.SpellDamage(Spell.SpellDamageType(name = "", index = "")),
+        dc = "",
+        homebrew = true
+    )
 
     @Given("the user is viewing a list of spells")
     fun the_user_is_viewing_a_list_of_spells( ) {
-        fakeSpellList = SpellList().createFakeSpellList()
+
+        fakeSpellList.updateEntireSpell(spellinfo!!);
+
+
     }
 
     @When("the user applies a filter based on specific attributes \\(e.g., level, school, class)")

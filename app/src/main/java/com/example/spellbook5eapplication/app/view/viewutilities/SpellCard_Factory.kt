@@ -1,12 +1,10 @@
-package com.example.spellbook5eapplication.app.view.utilities
+package com.example.spellbook5eapplication.app.view.viewutilities
 
 import androidx.compose.runtime.Composable
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
-import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
-import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 interface SpellCardFactory {
     fun createSpellCard(

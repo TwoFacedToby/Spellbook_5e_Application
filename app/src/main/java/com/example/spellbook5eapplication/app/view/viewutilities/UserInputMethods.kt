@@ -1,4 +1,4 @@
-package com.example.spellbook5eapplication.app.view.utilities
+package com.example.spellbook5eapplication.app.view.viewutilities
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,7 +37,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.app.view.Overlays.HomeBrewInstantiator
 
 /**
  * Some different ways for the user to communicate with the system

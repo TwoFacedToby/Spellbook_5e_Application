@@ -1,4 +1,4 @@
-package com.example.spellbook5eapplication.app.Model
+package com.example.spellbook5eapplication.app.Repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -11,7 +11,7 @@ import okhttp3.Request
 import okhttp3.Response
 import java.net.UnknownHostException
 
-class API {
+class API_OLD {
 
     private val client = OkHttpClient() //Our Client
 
