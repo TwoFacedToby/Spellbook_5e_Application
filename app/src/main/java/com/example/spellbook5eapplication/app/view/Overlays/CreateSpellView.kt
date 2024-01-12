@@ -470,7 +470,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.name.toString(),
+                        label = "Name",
                         onInputChanged = {
                             viewModel.updateName(it)
                         },
@@ -478,6 +478,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.name.toString()
                     )
                 }
             })
@@ -520,7 +521,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.desc.toString(),
+                        label = "Description",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateDescription(listOf(it))
@@ -529,6 +530,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.desc.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -549,7 +551,7 @@ class HomeBrewInstantiator {
 
 
                     UserInputField(
-                        label = viewModel.spell.atHigherLevel.toString(),
+                        label = "At higher level quirks",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateHigherLevel(listOf(it))
@@ -558,6 +560,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.atHigherLevel.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -651,7 +654,7 @@ class HomeBrewInstantiator {
                     ) {
 
                         UserInputField(
-                            label = viewModel.spell.materials.toString(),
+                            label = "Materials",
                             //Should connect with name
                             onInputChanged = {
                                 viewModel.updateMaterial(it)
@@ -660,6 +663,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
+                            initialInput = viewModel.spell.materials.toString()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
 
@@ -743,6 +747,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
+                            initialInput = viewModel.spell.range.toString()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -801,6 +806,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
+                            initialInput = viewModel.spell.duration.toString()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -832,7 +838,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.casting_time.toString(),
+                        label = "Cast time",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateCastTime(it)
@@ -841,6 +847,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.casting_time.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -944,7 +951,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.attackType.toString(),
+                        label = "Attack type",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateAttackType(it)
@@ -953,6 +960,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.attackType.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -971,7 +979,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.damage!!.damageType!!.name.toString(),
+                        label = "Damage",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateDamage(it)
@@ -980,6 +988,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.damage!!.damageType!!.name.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -999,7 +1008,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.dc.toString(),
+                        label = "Difficulty Class",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateDC(it)
@@ -1008,6 +1017,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.dc.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }

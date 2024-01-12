@@ -40,9 +40,10 @@ fun UserInputField(
     onInputChanged: (String) -> Unit,
     modifier : Modifier,
     singleLine : Boolean,
-    imeAction: ImeAction
+    imeAction: ImeAction,
+    initialInput: String
 ){
-    var input by remember { mutableStateOf("") }
+    var input by remember { mutableStateOf(initialInput) }
     val keyboardController = LocalSoftwareKeyboardController.current
     //val coroutineScope = rememberCoroutineScope()
 

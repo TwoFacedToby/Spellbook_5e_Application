@@ -198,7 +198,8 @@ fun SearchFilterBar(
                 filterViewModel.updateFilterWithSearchName(input)
             },
             modifier = Modifier.size(height = 48.dp, width = 220.dp),
-            imeAction = ImeAction.Search
+            imeAction = ImeAction.Search,
+            initialInput = ""
         )
         Spacer(modifier = Modifier.width(5.dp))
         FilterButton(

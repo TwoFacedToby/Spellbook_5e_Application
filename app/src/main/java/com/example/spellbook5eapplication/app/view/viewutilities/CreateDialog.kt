@@ -77,7 +77,8 @@ fun CreateDialog(
                         .height(40.dp)
                         .width(200.dp),
                     singleLine = true,
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Done,
+                    initialInput = ""
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(modifier = Modifier.fillMaxWidth(),
