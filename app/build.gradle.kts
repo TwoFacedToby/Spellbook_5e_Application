@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -77,6 +78,7 @@ dependencies {
 
     //GraphQL API:
     implementation("com.apollographql.apollo:apollo-runtime:2.5.14")
+    implementation("com.google.firebase:firebase-auth:22.3.0")
 
     //Test and Debug:
     testImplementation("junit:junit:4.13.2")

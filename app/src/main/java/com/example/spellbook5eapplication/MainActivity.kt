@@ -22,6 +22,9 @@ import com.example.spellbook5eapplication.app.Utility.SpellDataFetcher
 import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -36,6 +39,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lateinit var auth: FirebaseAuth
         LocalDataLoader.setContext(applicationContext)
 
         SpelllistLoader.loadSpellbooks()
@@ -44,6 +48,8 @@ class MainActivity : ComponentActivity() {
         }
 
 
+        // Initialize Firebase Auth
+        auth = Firebase.auth
         setContent {
             Spellbook5eApplicationTheme {
                 MainScreen(SpellController, SpelllistLoader)
