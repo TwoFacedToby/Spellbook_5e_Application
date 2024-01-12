@@ -271,6 +271,7 @@ fun FiltersOverlay(
                         }
                     }
                 }
+                item { Spacer(modifier = Modifier.height(5.dp)) }
             }
         }
     }
