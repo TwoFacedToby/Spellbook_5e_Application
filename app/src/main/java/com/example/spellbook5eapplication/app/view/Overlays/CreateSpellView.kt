@@ -512,6 +512,12 @@ class HomeBrewInstantiator {
     @Composable
     private fun Description(viewModel: CreateSpellViewModel) {
 
+        var showVal = viewModel.spell.atHigherLevel.toString()
+
+        if (showVal.length >= 2) {
+            showVal = showVal.substring(1, showVal.length - 1)
+        }
+
         CreateBrewPartDependentRegion(
             description = "Explain what the spell does\nWhat effect does it have, how is it used, anything can be put here",
             userChoise = {
@@ -530,7 +536,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
-                        initialInput = viewModel.spell.desc.toString()
+                        initialInput = showVal
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -540,6 +546,12 @@ class HomeBrewInstantiator {
 
     @Composable
     private fun HigherLevel(viewModel: CreateSpellViewModel) {
+
+        var showVal = viewModel.spell.atHigherLevel.toString()
+
+        if (showVal.length >= 2) {
+            showVal = showVal.substring(1, showVal.length - 1)
+        }
 
         CreateBrewPartDependentRegion(
             description = "Optional: Tell how the spell function at higher levels",
@@ -560,7 +572,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
-                        initialInput = viewModel.spell.atHigherLevel.toString()
+                        initialInput = showVal
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
