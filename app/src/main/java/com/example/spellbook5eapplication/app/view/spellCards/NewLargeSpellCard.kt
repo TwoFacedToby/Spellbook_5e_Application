@@ -272,7 +272,9 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                         horizontalArrangement = Arrangement.End
                     ) {
                         if(spell.homebrew == true) {
-                            IconButton(onClick = { /*TODO*/ }
+                            IconButton(onClick = {
+
+                            }
                             ) {
                                 Icon(
                                     imageVector = Icons.Outlined.Edit,
