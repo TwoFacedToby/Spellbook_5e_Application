@@ -20,8 +20,6 @@ class SpellQueryViewModel() : ViewModel() {
     //Spell name list for API
     private var spellList: SpellList? = null
 
-
-
     //Loading from pagination
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading

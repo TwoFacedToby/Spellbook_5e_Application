@@ -49,6 +49,8 @@ object SpellbookManager {
 
     fun getAllSpellbooks(): List<Spellbook> {
         Log.d("LOLO", spellbooks.toList().toString())
-        return spellbooks.toList()
+
+        // Removing "favourite spellbook" from Spellbooklist
+        return spellbooks.filter { it.spellbookName != "Favourites" }
     }
 }
