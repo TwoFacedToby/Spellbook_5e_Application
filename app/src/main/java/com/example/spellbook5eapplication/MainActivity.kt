@@ -13,6 +13,7 @@ import com.example.spellbook5eapplication.app.view.MainScreen
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Favourites
+import com.example.spellbook5eapplication.app.Model.QuickPlay
 import com.example.spellbook5eapplication.app.Model.RetroFitAPI
 import com.example.spellbook5eapplication.app.Model.Spellbook
 import com.example.spellbook5eapplication.app.Model.SpellFactory
