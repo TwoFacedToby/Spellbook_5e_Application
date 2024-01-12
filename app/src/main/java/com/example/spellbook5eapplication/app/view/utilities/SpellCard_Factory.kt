@@ -3,10 +3,8 @@ package com.example.spellbook5eapplication.app.view.utilities
 import androidx.compose.runtime.Composable
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Utility.Displayable
-import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCardOverlay
+import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
-import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
-import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 interface SpellCardFactory {
     fun createSpellCard(
@@ -38,7 +36,7 @@ class DefaultSpellCardFactory(): SpellCardFactory {
 
         return when (displayable) {
             is Spell.SpellInfo -> {
-                { LargeSpellCardOverlay(
+                { LargeSpellCard(
                     spell = displayable
                 ) }
             }

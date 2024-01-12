@@ -71,8 +71,8 @@ fun FiltersOverlay(
         )
         Spacer(modifier = Modifier.height(20.dp))
         Row{
-            ColouredButton(label = "Apply filters",
-                modifier = Modifier.width(150.dp),
+            ColouredButton(label = "Apply",
+                modifier = Modifier.weight(1F),
                 color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
                 onClick = { filterViewModel.applyFilters(
                     spellLevel,
@@ -86,8 +86,8 @@ fun FiltersOverlay(
                 }
             )
             Spacer(modifier = Modifier.width(10.dp))
-            ColouredButton(label = "Reset filters",
-                modifier = Modifier.width(150.dp),
+            ColouredButton(label = "Reset",
+                modifier = Modifier.weight(1F),
                 color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
                 onClick = {
                     onResetAllFiltersClicked(
@@ -103,7 +103,7 @@ fun FiltersOverlay(
                 }
             )
         }
-        Spacer(modifier = Modifier.height(5.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         Box(
             modifier = Modifier
                 .height(500.dp)

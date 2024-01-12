@@ -59,7 +59,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 @Composable
-fun SpellCard(
+fun SpellCardOLD(
     spell : Spell.SpellInfo)
 {
     val images = SpellCardCreation(spell)

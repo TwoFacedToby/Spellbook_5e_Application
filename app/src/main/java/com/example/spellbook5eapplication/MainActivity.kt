@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             Spellbook5eApplicationTheme {
-                MainScreen(SpellController, SpelllistLoader)
+                MainScreen()
             }
         }
     }

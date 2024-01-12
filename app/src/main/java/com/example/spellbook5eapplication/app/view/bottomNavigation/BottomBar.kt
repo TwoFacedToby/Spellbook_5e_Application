@@ -23,9 +23,9 @@ fun BottomBar(
     navController: NavHostController,
 ){
     val bottomNavItems = listOf(
-        Screens.Favorite,
         Screens.Search,
         Screens.Spellbooks,
+        Screens.Favorite,
         Screens.Homebrew,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()

@@ -16,7 +16,7 @@ import retrofit2.Retrofit
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(spellController: SpellController, spellListLoader: SpelllistLoader){
+fun MainScreen(){
     val navController = rememberNavController()
 
     Scaffold(

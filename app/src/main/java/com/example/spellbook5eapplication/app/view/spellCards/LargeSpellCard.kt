@@ -56,7 +56,7 @@ import kotlinx.coroutines.launch
 
 
 @Composable
-fun LargeSpellCardOverlay(
+fun LargeSpellCardOverlayOLD(
     spell : Spell.SpellInfo
 )
 {
