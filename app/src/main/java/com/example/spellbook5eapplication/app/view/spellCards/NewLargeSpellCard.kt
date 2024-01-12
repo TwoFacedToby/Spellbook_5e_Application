@@ -271,14 +271,16 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        IconButton(onClick = { /*TODO*/ }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Edit,
-                                contentDescription = "Edit Homebrew",
-                                modifier = Modifier.size(48.dp),
-                                colorResource(id = R.color.spellcard_button)
-                            )
+                        if(spell.homebrew == true) {
+                            IconButton(onClick = { /*TODO*/ }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Edit,
+                                    contentDescription = "Edit Homebrew",
+                                    modifier = Modifier.size(48.dp),
+                                    colorResource(id = R.color.spellcard_button)
+                                )
+                            }
                         }
                     }
                     Divider(
