@@ -2,23 +2,13 @@ package com.example.spellbook5eapplication.test
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.toMutableStateList
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
-import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.Spellbook
-import com.example.spellbook5eapplication.app.Utility.SpellController
-import com.example.spellbook5eapplication.app.Utility.SpellbookManager
-import com.example.spellbook5eapplication.app.Utility.SpellbookViewModel
-import com.example.spellbook5eapplication.app.Utility.SpellbookViewModelFactory
-import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
+import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
 
-import io.cucumber.java.PendingException
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.When
 import io.cucumber.java.en.Then
-import io.cucumber.java.en.And
-import io.cucumber.java.en.But
 import org.junit.Assert
 class UserStoryThreeSelectSpecificSpellbook {
     private var selectedSpellbook = mutableStateOf<Spellbook?>(null)

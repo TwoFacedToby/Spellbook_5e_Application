@@ -37,7 +37,6 @@ data class FilterItem(
         )
 
         val classes = listOf(
-            FilterItem("Artificer", mutableStateOf(false)),
             FilterItem("Bard", mutableStateOf(false)),
             FilterItem("Cleric", mutableStateOf(false)),
             FilterItem("Druid", mutableStateOf(false)),

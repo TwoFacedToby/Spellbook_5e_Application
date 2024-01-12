@@ -24,7 +24,7 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.view.Overlays.SettingsOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.UserOverlay
 import com.example.spellbook5eapplication.app.view.bottomNavigation.Screens
-import com.example.spellbook5eapplication.app.view.utilities.CustomOverlay
+import com.example.spellbook5eapplication.app.view.viewutilities.CustomOverlay
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 

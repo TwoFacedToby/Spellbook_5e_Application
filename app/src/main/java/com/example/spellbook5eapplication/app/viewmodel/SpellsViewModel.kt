@@ -1,34 +1,23 @@
 package com.example.spellbook5eapplication.app.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
-import com.example.spellbook5eapplication.app.Model.RetroFitAPI
+import com.example.spellbook5eapplication.app.Repository.RetroFitAPI
 import com.example.spellbook5eapplication.app.Utility.GraphQLRequestBody
 import com.google.gson.Gson
-import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import android.content.Context
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
-import com.example.spellbook5eapplication.app.Utility.SpellDataFetcher
+import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import okhttp3.OkHttpClient
-import java.io.IOException
-import java.lang.ref.WeakReference
-import java.util.concurrent.TimeUnit
 import kotlin.math.pow
 import kotlin.math.min
 

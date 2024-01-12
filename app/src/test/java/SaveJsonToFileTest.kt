@@ -1,7 +1,6 @@
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
-import com.example.spellbook5eapplication.app.Utility.SpellController
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -9,7 +8,6 @@ import org.junit.runner.RunWith
 import org.junit.Assert.*
 import org.robolectric.RobolectricTestRunner
 import java.io.File
-import java.io.IOException
 
 
 /**

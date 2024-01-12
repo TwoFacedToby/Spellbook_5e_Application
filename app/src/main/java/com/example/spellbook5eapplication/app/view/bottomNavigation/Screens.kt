@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.automirrored.outlined.MenuBook
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Search
@@ -26,7 +27,7 @@ sealed class Screens(
     object Spellbooks: Screens(
         route = "spell_books_screen",
         title = "Spell books",
-        icon = Icons.AutoMirrored.Outlined.MenuBook
+        icon = Icons.Outlined.Book
     )
     object Homebrew: Screens(
         route = "homebrew_screen",
