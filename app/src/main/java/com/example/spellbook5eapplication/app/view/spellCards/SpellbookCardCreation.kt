@@ -5,10 +5,20 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 
 class SpellbookCardCreation(spellbook: Spellbook) {
 
-    var spellbookImageID = when (spellbook.imageIdentifier) {
-        "spellbook_diamond" -> R.drawable.spellbook_diamond
-        "spellbook_brown" -> R.drawable.spellbook_brown
-        else -> R.drawable.spellbook_brown // Just a default image
+
+    var spellbookImageID: Int = R.drawable.spellbook_brown // Default image
+
+    init {
+        setImage(spellbook)
+    }
+
+    private fun setImage(spellbook: Spellbook) {
+        when (spellbook.imageIdentifier) {
+            "spellbook_diamond" -> spellbookImageID = R.drawable.spellbook_diamond
+            "spellbook_brown" -> spellbookImageID = R.drawable.spellbook_brown
+            // Add more cases as needed
+            else -> spellbookImageID = R.drawable.spellbook_brown // Default image
+        }
     }
 
 }

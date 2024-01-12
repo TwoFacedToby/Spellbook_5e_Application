@@ -19,7 +19,8 @@ object SpellbookManager {
     fun getSpellbook(spellbookName: String): Spellbook? {
         Log.d("LOLOL", spellbooks.toString())
         Log.d("TESTITEST", spellbooks.toString())
-        return spellbooks.find { it.spellbookName == spellbookName }
+        return spellbooks.find { it.spellbookName == spellbookName
+        }
     }
 
     fun saveSpellbookToFile(spellBookName: String) {

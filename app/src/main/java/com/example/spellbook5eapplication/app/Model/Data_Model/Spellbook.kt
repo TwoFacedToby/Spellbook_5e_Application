@@ -19,9 +19,7 @@ class Spellbook(var spellbookName: String, var imageIdentifier: String = "spellb
         spells.remove(spellName)
     }
 
-    override fun toString(): String {
-        return "Spellbook(spellbookName='$spellbookName', spells=$spells)"
-    }
+
 
     override fun renderCardComposable(spellBook: Displayable): @Composable () -> Unit {
         return {
@@ -34,5 +32,9 @@ class Spellbook(var spellbookName: String, var imageIdentifier: String = "spellb
             }
 
         }
+    }
+
+    override fun toString(): String {
+        return "Spellbook(spellbookName='$spellbookName', imageIdentifier='$imageIdentifier', spells=$spells)"
     }
 }
