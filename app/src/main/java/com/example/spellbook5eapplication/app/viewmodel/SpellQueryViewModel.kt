@@ -117,7 +117,7 @@ class SpellQueryViewModel() : ViewModel() {
         }
     }
 
-    private fun loadHomebrewList(){
+    fun loadHomebrewList(){
         viewModelScope.launch {
             val spellList = SpelllistLoader.loadHomeBrewSpellList()
             val displayableHomebrews = spellList.getSpellInfoList().map { it as Displayable }

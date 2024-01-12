@@ -49,7 +49,7 @@
         }
 
         fun updateComponents(updatedComp: List<String>){
-        spell.components = updatedComp
+            spell.components = updatedComp.filterNot { it == "" }
         }
 
         fun updateMaterial(updatedMaterial: String){
