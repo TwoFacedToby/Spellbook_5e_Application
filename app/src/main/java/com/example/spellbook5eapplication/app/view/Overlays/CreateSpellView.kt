@@ -238,6 +238,7 @@ class HomeBrewInstantiator {
     fun EditSpell(createViewModel: CreateSpellViewModel) {
 
         val spellQueryViewModel: SpellQueryViewModel = viewModel()
+        val oldIndex = createViewModel.spell.index
 
         var show by remember { mutableStateOf(BrewParts.NAME) }
         var changeShow by remember { mutableStateOf(BrewParts.DESCRIPTION) }
@@ -319,7 +320,7 @@ class HomeBrewInstantiator {
                                         )
                                     )
                                 ) {
-                                    createViewModel.saveSpell()
+                                    createViewModel.replaceSpell(oldIndex!!)
                                     spellQueryViewModel.loadHomebrewList()
                                     GlobalOverlayState.dismissOverlay()
                                 }
