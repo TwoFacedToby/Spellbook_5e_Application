@@ -21,3 +21,9 @@ Scenario: Cucumber Test 4: Add spell to Favourites
   When the user marks a spell as a favorite by tapping the heart icon
   And the tapped spell is already favourited, the spell should be removed from the favourites list
   Then that spell should be saved to a dedicated Favorites section
+
+  Scenario: Cucumber Test 5: Creating Homebrew Spells
+    Given the user has an idea for a new homebrew spell
+    When the user writes all the spell information down
+    And create the spell
+    Then that spell should exist localy
