@@ -1,4 +1,4 @@
-package com.example.spellbook5eapplication.app.Model
+package com.example.spellbook5eapplication.app.Model.Data_Model
 
 import android.util.Log
 import androidx.compose.runtime.Composable

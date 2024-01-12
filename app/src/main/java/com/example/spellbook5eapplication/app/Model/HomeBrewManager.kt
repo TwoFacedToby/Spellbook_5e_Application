@@ -1,8 +1,7 @@
-package com.example.spellbook5eapplication.app.Utility
+package com.example.spellbook5eapplication.app.Model
 
-import com.example.spellbook5eapplication.app.Model.Spellbook
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.google.gson.Gson
-import java.io.File
 
 class HomeBrewManager {
 

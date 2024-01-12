@@ -3,12 +3,9 @@ package com.example.spellbook5eapplication.test
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Utility.Search
-import com.example.spellbook5eapplication.app.Utility.SpellController
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.When
 import io.cucumber.java.en.Then
-import io.cucumber.java.en.And
-import io.cucumber.java.en.But
 import org.junit.Assert
 import java.util.Locale
 

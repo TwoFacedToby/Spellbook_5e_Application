@@ -1,7 +1,6 @@
-package com.example.spellbook5eapplication.app.view.utilities
+package com.example.spellbook5eapplication.app.view.viewutilities
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FavoriteBorder

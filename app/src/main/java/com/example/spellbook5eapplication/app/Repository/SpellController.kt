@@ -1,14 +1,10 @@
-package com.example.spellbook5eapplication.app.Utility
+package com.example.spellbook5eapplication.app.Repository
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
-import com.example.spellbook5eapplication.app.Model.API
-import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
-import com.example.spellbook5eapplication.app.Model.Data_Model.JSON
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -17,7 +13,7 @@ import kotlinx.coroutines.runBlocking
 import java.lang.ref.WeakReference
 
 object SpellController {
-    private val api = API()
+    //private val api = API()
     private val jsonToSpell = JSON_to_Spell()
 
     private var context: WeakReference<Context>? = null
@@ -132,12 +128,18 @@ object SpellController {
      * else returns null
      */
         private suspend fun getJson(index: String): String? {
-            var str : String? = LocalDataLoader.getJson(index, LocalDataLoader.DataType.HOMEBREW) //Try to find in Homebrew
+            var str : String? = LocalDataLoader.getJson(
+                index,
+                LocalDataLoader.DataType.HOMEBREW
+            ) //Try to find in Homebrew
             if(str != null) return str //Return if found
-            str = LocalDataLoader.getJson(index, LocalDataLoader.DataType.INDIVIDUAL) //Try to find in saved data
+            str = LocalDataLoader.getJson(
+                index,
+                LocalDataLoader.DataType.INDIVIDUAL
+            ) //Try to find in saved data
             if(str != null) return str //Return if found
             println("Checking api")
-            str = api.getSpellFromApiWithRetry(index, 10) //Try to find in api
+            //str = api.getSpellFromApiWithRetry(index, 10) //Try to find in api
             if(str != null){
                 LocalDataLoader.saveJson(str, index, LocalDataLoader.DataType.INDIVIDUAL)
                 LocalDataLoader.updateIndividualSpellList(index)

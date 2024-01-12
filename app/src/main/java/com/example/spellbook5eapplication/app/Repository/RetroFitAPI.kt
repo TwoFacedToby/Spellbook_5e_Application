@@ -1,4 +1,4 @@
-package com.example.spellbook5eapplication.app.Model
+package com.example.spellbook5eapplication.app.Repository
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Utility.GraphQLRequestBody
 import com.google.gson.JsonObject

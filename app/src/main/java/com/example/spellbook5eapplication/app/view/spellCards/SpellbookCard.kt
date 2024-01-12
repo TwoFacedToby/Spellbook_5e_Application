@@ -1,6 +1,5 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,8 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.app.Model.Spellbook
-import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 
 @Composable
 fun SpellbookCard(

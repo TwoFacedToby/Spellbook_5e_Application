@@ -1,12 +1,7 @@
 package com.example.spellbook5eapplication.app.view.Overlays
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.Crossfade
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,15 +40,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 //import com.example.spellbook5eapplication.app.view.Overlays.UserInputMethods
-import com.example.spellbook5eapplication.app.view.utilities.ColouredButton
-import com.example.spellbook5eapplication.app.view.utilities.EditableList
-import com.example.spellbook5eapplication.app.view.utilities.UserButtons
-import com.example.spellbook5eapplication.app.view.utilities.UserDropOnly
-import com.example.spellbook5eapplication.app.view.utilities.UserInputField
+import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
+import com.example.spellbook5eapplication.app.view.viewutilities.EditableList
+import com.example.spellbook5eapplication.app.view.viewutilities.UserButtons
+import com.example.spellbook5eapplication.app.view.viewutilities.UserDropOnly
+import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
-import kotlinx.coroutines.delay
 
 
 //Works with BrewFactory2 to create homebrews
@@ -79,7 +73,7 @@ class HomeBrewInstantiator {
 
         val animatedAlpha by animateFloatAsState(
             targetValue = alpha,
-            animationSpec = tween(durationMillis = 250)
+            animationSpec = tween(durationMillis = 250), label = ""
         )
 
         LaunchedEffect(animatedAlpha) {

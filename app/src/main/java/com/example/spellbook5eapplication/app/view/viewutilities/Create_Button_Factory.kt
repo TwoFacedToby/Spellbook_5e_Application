@@ -1,4 +1,4 @@
-package com.example.spellbook5eapplication.app.view.utilities
+package com.example.spellbook5eapplication.app.view.viewutilities
 
 import android.util.Log
 import androidx.compose.material3.ButtonDefaults

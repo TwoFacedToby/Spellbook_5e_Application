@@ -7,7 +7,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import androidx.test.core.app.ApplicationProvider
-import com.example.spellbook5eapplication.app.Utility.SpellController
+import com.example.spellbook5eapplication.app.Repository.SpellController
 import java.io.File
 
 

@@ -1,4 +1,4 @@
-package com.example.spellbook5eapplication.app.view.utilities
+package com.example.spellbook5eapplication.app.view.viewutilities
 
 import androidx.compose.runtime.Composable
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell

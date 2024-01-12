@@ -1,4 +1,4 @@
-package com.example.spellbook5eapplication.app.view.utilities
+package com.example.spellbook5eapplication.app.view.viewutilities
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
