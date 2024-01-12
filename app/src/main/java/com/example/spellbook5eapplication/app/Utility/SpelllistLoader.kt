@@ -23,7 +23,7 @@ object SpelllistLoader {
         }
 
         //TEST
-        spellbook.addSpellToSpellbook("TestSpell1")
+        spellbook.addSpellToSpellbook("testspell2")
 
         // Get detailed spell info for each spell name
         val spellInfoList = spellbook.spells.mapNotNull { spellName ->

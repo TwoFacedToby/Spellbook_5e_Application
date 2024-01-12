@@ -38,6 +38,8 @@ object SpellDataFetcher {
         // Check if the spell info exists in homebrew data
         LocalDataLoader.getJson(index, LocalDataLoader.DataType.HOMEBREW)?.let { json ->
             val spellInfo = parseSpellJson(json)
+
+            Log.d("SpellDataFetcher", "Fetched from homebrew: $index - $json")
             Log.d("SpellDataFetcher", "Fetched from homebrew: $index - ${spellInfo.toString()}")
             spellInfo?.let { addSpellInfo(it) }
             return spellInfo

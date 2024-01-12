@@ -143,7 +143,8 @@ class CreateSpellViewModel : ViewModel() {
 
         spell.json = ""
 
-        val jsonSpell = gson.toJson(spell)
+        var jsonSpell = gson.toJson(spell)
+        jsonSpell = "{\"data\":{\"spell\":$jsonSpell}}"
 
         // adding the json to the spell after all else is added if empty (don't want it to grow indefinitely)
         if(spell.json.isNullOrBlank())
@@ -152,7 +153,7 @@ class CreateSpellViewModel : ViewModel() {
         }
 
         //What ever way the spell may now be saved on the device, might need to be changed.
-        LocalDataLoader.saveJson(jsonSpell, spell.name!!, LocalDataLoader.DataType.HOMEBREW)
+        LocalDataLoader.saveJson(jsonSpell, spell.index!!, LocalDataLoader.DataType.HOMEBREW)
         println(jsonSpell)
     }
 }
