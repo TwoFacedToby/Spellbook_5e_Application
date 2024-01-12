@@ -1,7 +1,9 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,9 +19,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -28,6 +32,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,23 +51,23 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun LargeSpellCard(spell: Spell.SpellInfo) {
 
     val images = SpellCardCreation(spell)
 
-    Popup(
-        alignment = Alignment.Center,
-        onDismissRequest = {
-            GlobalOverlayState.dismissOverlay()
-        },
-        properties = PopupProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        )
-    ) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Black.copy(alpha = 0.5f))
+        .clickable { GlobalOverlayState.dismissOverlay() },
+        contentAlignment = Alignment.Center
+        ) {
         Card(
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
             shape = RoundedCornerShape(10.dp),
@@ -68,6 +76,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                 .fillMaxWidth()
                 .height(600.dp)
                 .padding(10.dp)
+                .clickable { /*Nothing here, it consumes the outer box's click event*/ }
         ) {
             Box(
                 modifier = Modifier
@@ -107,11 +116,35 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                                     modifier = Modifier.size(48.dp)
                                 )
                             }
+                            val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
+                            var favouriteImage by remember { mutableStateOf(defaultFavouriteImage) }
                             IconButton(
-                                onClick = { /*TODO*/ }){
+                                onClick = { spell.index?.let { spellIndex ->
+                                    val favouritesSpellbook = SpellbookManager.getSpellbook("Favourites")
+                                    favouriteImage = if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
+                                        // Remove spell from favorites
+                                        favouritesSpellbook.removeSpell(spellIndex)
+                                        defaultFavouriteImage
+                                    } else {
+                                        // Add spell to favorites
+                                        favouritesSpellbook?.addSpellToSpellbook(spellIndex)
+                                        Icons.Filled.Favorite // Change this to the filled heart icon
+                                    }
+                                    // Save the updated favorites list
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        SpellbookManager.saveSpellbookToFile("Favourites")
+                                        println("Favorites updated")
+                                    }
+                                }
+                                }
+                            ){
+                                if(SpellbookManager.getSpellbook("Favourites")?.spells?.contains(spell.index) == true)
+                                {
+                                    favouriteImage = Icons.Filled.Favorite
+                                }
                                 Icon(
-                                    imageVector = Icons.Outlined.FavoriteBorder,
-                                    contentDescription = "Favorite",
+                                    imageVector = favouriteImage,
+                                    contentDescription = "Favorite button",
                                     tint = colorResource(id = R.color.spellcard_button),
                                     modifier = Modifier.size(48.dp)
                                 )
