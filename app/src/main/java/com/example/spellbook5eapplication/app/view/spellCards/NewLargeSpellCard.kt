@@ -53,6 +53,7 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -273,7 +274,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                     ) {
                         if(spell.homebrew == true) {
                             IconButton(onClick = {
-
+                                GlobalOverlayState.showOverlay(OverlayType.EDIT_SPELL)
                             }
                             ) {
                                 Icon(

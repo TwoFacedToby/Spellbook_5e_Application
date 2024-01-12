@@ -162,6 +162,12 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 //HomeBrewInstantiator.makeNewSpellFromTheTop(createViewModel)
                 createView.makeNewSpellFromTheTop(createViewModel)
             }
+            OverlayType.EDIT_SPELL -> {
+                val createViewModel = CreateSpellViewModel()
+                val createView = HomeBrewInstantiator()
+                createViewModel.updateEntireSpell(GlobalOverlayState.currentSpell!!)
+                createView.EditSpell(createViewModel)
+            }
             OverlayType.ERASE_PROMPT -> {
                 CreateOverlay(
                     message = "Exiting now will erase all progress",

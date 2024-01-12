@@ -229,6 +229,125 @@ class HomeBrewInstantiator {
         }
 
 
+    /**
+     * Create the overlay for creating a new Spell using a CreateSpellViewModel to do the technical things!
+     * This bad boy has a few private it uses to create a guided tour
+     * through the different parts of a spell
+     */
+    @Composable
+    fun EditSpell(createViewModel: CreateSpellViewModel) {
+
+        val spellQueryViewModel: SpellQueryViewModel = viewModel()
+
+        var show by remember { mutableStateOf(BrewParts.NAME) }
+        var changeShow by remember { mutableStateOf(BrewParts.DESCRIPTION) }
+        var showDialog = false
+        var alpha by remember { mutableStateOf(1f) }
+
+        val animatedAlpha by animateFloatAsState(
+            targetValue = alpha,
+            animationSpec = tween(durationMillis = 250), label = ""
+        )
+
+        LaunchedEffect(animatedAlpha) {
+            if (animatedAlpha == 0f) {
+                show = changeShow
+                alpha = 1f // Start fade in
+            }
+        }
+
+        Box(
+            contentAlignment = Alignment.Center, // Center content in the Box
+            modifier = Modifier.fillMaxSize()    // Make Box fill the entire available space
+        ) {
+
+            Column(
+                modifier = Modifier
+                    .padding(top = 8.dp, start = 15.dp, end = 15.dp)
+                ,//.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+
+                //Testing visual
+                Box(
+                    modifier = Modifier
+                        .height(600.dp)
+                        .fillMaxWidth()
+                        .background(
+                            color = colorResource(id = R.color.overlay_box_color),
+                            shape = RoundedCornerShape(20.dp)
+                        ),
+                    contentAlignment = Alignment.TopCenter
+                ) {
+
+                    Column(
+                        modifier = Modifier
+                            .alpha(animatedAlpha)
+                            .fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    )
+                    {
+
+                        // Name of spell
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(
+                            text = show.displayedBrewPart(),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // Top navigation buttons
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+
+
+                            Spacer(modifier = Modifier.width(10.dp))
+
+                                // Button to move on
+                                ColouredButton(
+                                    "Done", modifier = Modifier
+                                        .height(38.dp) // Sets the height of the button
+                                        .width(100.dp), color = ButtonDefaults.buttonColors(
+                                        containerColor = colorResource(
+                                            id = R.color.green_button
+                                        )
+                                    )
+                                ) {
+                                    createViewModel.saveSpell()
+                                    spellQueryViewModel.loadHomebrewList()
+                                    GlobalOverlayState.dismissOverlay()
+                                }
+                        }
+
+                        //End of top navigation
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        // The part dependent of what is being edited/created for the spell
+                        ShowBrewPart(show, createViewModel)
+
+                        // Testing the possibility of jumping in parts
+                        NavigateBrewParts(
+                            brewParts = BrewParts.values().toList(),
+                            dropName = "Parts of spell to edit",
+                            brewChange = {
+                                changeShow = it
+                                alpha = 0f
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
 
     /**
      * Here is where the UI for each spell part is encapsulated
