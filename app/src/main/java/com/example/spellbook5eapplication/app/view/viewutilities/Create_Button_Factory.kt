@@ -27,7 +27,7 @@ fun DynamicButtonFactory(buttonType: String) {
             }
             "SPELLBOOK" -> {
                 GlobalOverlayState.showOverlay(
-                    OverlayType.ADD_TO_SPELLBOOK,
+                    OverlayType.CREATE_SPELLBOOK,
                 )
             }
         }

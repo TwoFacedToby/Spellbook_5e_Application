@@ -34,12 +34,14 @@ import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.view.Overlays.CreateOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.HomeBrewInstantiator
+import com.example.spellbook5eapplication.app.view.Overlays.SpellbookCreator
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.viewutilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.viewutilities.FilterButton
 import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
+import com.example.spellbook5eapplication.app.viewmodel.CreateSpellbookViewModel
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
@@ -171,7 +173,9 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 )
             }
             OverlayType.CREATE_SPELLBOOK -> {
-
+                val createSpellbookViewModel = CreateSpellbookViewModel()
+                val createView = SpellbookCreator()
+                createView.createNewSpellbook(createSpellbookViewModel)
             }
             else -> {}
         }
