@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view.Overlays
 
+import SpellQueryViewModel
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
@@ -54,12 +56,14 @@ class SpellbookCreator {
     enum class SpellbookPart {
         NAME,
         DESC,
-        IMAGE,
-        DC
+        IMAGE
     }
 
     @Composable
     fun createNewSpellbook(viewModel: CreateSpellbookViewModel) {
+
+        val spellQueryViewModel: SpellQueryViewModel = viewModel()
+
         var show by remember { mutableStateOf(SpellbookPart.NAME) }
         var changeShow by remember { mutableStateOf<SpellbookPart?>(null) }
         var alpha by remember { mutableStateOf(1f) }
@@ -168,7 +172,7 @@ class SpellbookCreator {
 
                             Spacer(modifier = Modifier.width(10.dp))
 
-                            if (show != SpellbookPart.DC) {
+                            if (show != SpellbookPart.IMAGE) {
                                 // Button to move on
                                 ColouredButton(
                                     "Next", modifier = Modifier
@@ -192,10 +196,10 @@ class SpellbookCreator {
                                         )
                                     )
                                 ) {
-                                    /*//Save the spell on the device here
-                                    createViewModel.saveSpell()
-                                    spellQueryViewModel.loadHomebrewList()
-                                    GlobalOverlayState.dismissOverlay()*/
+                                    //Save spellbook
+                                    viewModel.saveSpellbook()
+                                    spellQueryViewModel.loadSpellBooks()
+                                    GlobalOverlayState.dismissOverlay()
                                 }
                             }
                         }
@@ -258,25 +262,19 @@ class SpellbookCreator {
             SpellbookPart.NAME -> "Name"
             SpellbookPart.DESC -> "Description"
             SpellbookPart.IMAGE -> "Image"
-            SpellbookPart.DC -> "DC"
-
         }
     }
 
     fun SpellbookPart.nextSpellbookPart(): SpellbookPart? = when (this) {
         SpellbookPart.NAME -> SpellbookPart.DESC
         SpellbookPart.DESC -> SpellbookPart.IMAGE
-        SpellbookPart.IMAGE -> SpellbookPart.DC
-        SpellbookPart.DC -> null
-
+        SpellbookPart.IMAGE -> null
     }
 
     fun SpellbookPart.previousSpellbookPart(): SpellbookPart? = when (this) {
         SpellbookPart.NAME -> null
         SpellbookPart.DESC -> SpellbookPart.NAME
         SpellbookPart.IMAGE -> SpellbookPart.DESC
-        SpellbookPart.DC -> SpellbookPart.IMAGE
-
     }
 
 

@@ -124,7 +124,7 @@ class SpellQueryViewModel() : ViewModel() {
 
     }
 
-    private fun loadSpellBooks(){
+    fun loadSpellBooks(){
         val spellBookList = SpellbookManager.getAllSpellbooks()
         _spellBooks.postValue(spellBookList)
     }
