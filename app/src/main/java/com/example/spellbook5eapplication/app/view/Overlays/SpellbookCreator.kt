@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
+import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellbookViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
@@ -46,6 +47,7 @@ class SpellbookCreator {
 
     enum class SpellbookPart {
         NAME,
+        DESC,
         DC
     }
 
@@ -107,6 +109,7 @@ class SpellbookCreator {
 
                         when (show) {
                             SpellbookPart.NAME -> Naming(viewModel)
+                            SpellbookPart.DESC -> Description(viewModel)
 
                             else -> {}
                         }
@@ -218,23 +221,51 @@ class SpellbookCreator {
         )
     }
 
+    @Composable
+    private fun Description(viewModel: CreateSpellbookViewModel) {
+        CreateSpellbookPartDependentRegion(
+            description = "Describe your spellbook\nInclude any special notes, history, or features.",
+            userChoice = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    UserInputField(
+                        label = if (viewModel.spellbookDescription.isEmpty()) "Spellbook Description" else viewModel.spellbookDescription,
+                        onInputChanged = { viewModel.updateSpellbookDescription(it) },
+                        modifier = Modifier
+                            .size(width = 220.dp, height = 240.dp),
+                        singleLine = false,
+                        imeAction = ImeAction.Default
+                        // Include other properties as needed
+                    )
+                }
+            }
+        )
+    }
+
+
     private fun displayPartTitle(part: SpellbookPart): String {
         return when (part) {
             SpellbookPart.NAME -> "Name"
+            SpellbookPart.DESC -> "Description"
             SpellbookPart.DC -> "DC"
 
         }
     }
 
     fun SpellbookPart.nextSpellbookPart(): SpellbookPart? = when (this) {
-        SpellbookPart.NAME -> SpellbookPart.DC
+        SpellbookPart.NAME -> SpellbookPart.DESC
+        SpellbookPart.DESC -> SpellbookPart.DC
         SpellbookPart.DC -> null
 
     }
 
     fun SpellbookPart.previousSpellbookPart(): SpellbookPart? = when (this) {
         SpellbookPart.NAME -> null
-        SpellbookPart.DC -> SpellbookPart.NAME
+        SpellbookPart.DESC -> SpellbookPart.NAME
+        SpellbookPart.DC -> SpellbookPart.DESC
+
     }
 
 

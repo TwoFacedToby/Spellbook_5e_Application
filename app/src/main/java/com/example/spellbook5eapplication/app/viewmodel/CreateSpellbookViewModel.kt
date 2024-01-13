@@ -14,4 +14,11 @@ class CreateSpellbookViewModel : ViewModel() {
         spellbookName = newName
     }
 
+    var spellbookDescription by mutableStateOf("")
+        private set
+
+    fun updateSpellbookDescription(newDescription: String) {
+        spellbookDescription = newDescription
+    }
+
 }
