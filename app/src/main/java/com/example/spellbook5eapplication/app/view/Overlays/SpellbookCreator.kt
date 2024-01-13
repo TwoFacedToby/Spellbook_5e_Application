@@ -47,7 +47,6 @@ class SpellbookCreator {
     enum class SpellbookPart {
         NAME,
         DC
-        // Add more parts as needed
     }
 
     @Composable
@@ -109,7 +108,6 @@ class SpellbookCreator {
                         when (show) {
                             SpellbookPart.NAME -> Naming(viewModel)
 
-                            // Add cases for other parts as needed
                             else -> {}
                         }
 
@@ -145,7 +143,7 @@ class SpellbookCreator {
 
                             ColouredButton(
                                 "Cancel", modifier = Modifier
-                                    .height(38.dp) // Sets the height of the button
+                                    .height(38.dp)
                                     .width(100.dp), color = ButtonDefaults.buttonColors(
                                     containerColor = colorResource(
                                         id = R.color.red_button
@@ -224,20 +222,19 @@ class SpellbookCreator {
         return when (part) {
             SpellbookPart.NAME -> "Name"
             SpellbookPart.DC -> "DC"
-            // Add more cases as needed
+
         }
     }
 
     fun SpellbookPart.nextSpellbookPart(): SpellbookPart? = when (this) {
         SpellbookPart.NAME -> SpellbookPart.DC
-        SpellbookPart.DC -> null  // No next part after DC
-        // Add cases for other parts when they are implemented
+        SpellbookPart.DC -> null
+
     }
 
     fun SpellbookPart.previousSpellbookPart(): SpellbookPart? = when (this) {
-        SpellbookPart.NAME -> null  // No previous part before NAME
+        SpellbookPart.NAME -> null
         SpellbookPart.DC -> SpellbookPart.NAME
-        // Add cases for other parts when they are implemented
     }
 
 
