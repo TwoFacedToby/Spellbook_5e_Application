@@ -170,6 +170,9 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                     button2Function = {GlobalOverlayState.dismissOverlay()}
                 )
             }
+            OverlayType.CREATE_SPELLBOOK -> {
+
+            }
             else -> {}
         }
     }
