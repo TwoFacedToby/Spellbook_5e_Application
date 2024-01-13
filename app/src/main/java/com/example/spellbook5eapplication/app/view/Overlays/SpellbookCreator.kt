@@ -1,8 +1,12 @@
 package com.example.spellbook5eapplication.app.view.Overlays
 
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -30,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,6 +54,7 @@ class SpellbookCreator {
     enum class SpellbookPart {
         NAME,
         DESC,
+        IMAGE,
         DC
     }
 
@@ -110,6 +117,7 @@ class SpellbookCreator {
                         when (show) {
                             SpellbookPart.NAME -> Naming(viewModel)
                             SpellbookPart.DESC -> Description(viewModel)
+                            SpellbookPart.IMAGE -> ImageSelection(viewModel)
 
                             else -> {}
                         }
@@ -249,6 +257,7 @@ class SpellbookCreator {
         return when (part) {
             SpellbookPart.NAME -> "Name"
             SpellbookPart.DESC -> "Description"
+            SpellbookPart.IMAGE -> "Image"
             SpellbookPart.DC -> "DC"
 
         }
@@ -256,7 +265,8 @@ class SpellbookCreator {
 
     fun SpellbookPart.nextSpellbookPart(): SpellbookPart? = when (this) {
         SpellbookPart.NAME -> SpellbookPart.DESC
-        SpellbookPart.DESC -> SpellbookPart.DC
+        SpellbookPart.DESC -> SpellbookPart.IMAGE
+        SpellbookPart.IMAGE -> SpellbookPart.DC
         SpellbookPart.DC -> null
 
     }
@@ -264,7 +274,8 @@ class SpellbookCreator {
     fun SpellbookPart.previousSpellbookPart(): SpellbookPart? = when (this) {
         SpellbookPart.NAME -> null
         SpellbookPart.DESC -> SpellbookPart.NAME
-        SpellbookPart.DC -> SpellbookPart.DESC
+        SpellbookPart.IMAGE -> SpellbookPart.DESC
+        SpellbookPart.DC -> SpellbookPart.IMAGE
 
     }
 
@@ -292,6 +303,61 @@ class SpellbookCreator {
     }
 
 }
+
+@Composable
+fun ImageSelection(viewModel: CreateSpellbookViewModel) {
+
+    val images = listOf(
+        "spellbook_diamond" to R.drawable.spellbook_diamond,
+        "spellbook_brown" to R.drawable.spellbook_brown
+    )
+
+    Column(modifier = Modifier.padding(16.dp)) {
+        Text(
+            text = "Select an Image for Your Spellbook",
+            style = MaterialTheme.typography.h6
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        images.forEach { (identifier, drawable) ->
+            val isSelected = identifier == viewModel.selectedImageIdentifier
+            ImageCard(
+                drawable = drawable,
+                isSelected = isSelected,
+                onImageSelected = { viewModel.updateSelectedImageIdentifier(identifier) }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+        }
+    }
+}
+
+@Composable
+fun ImageCard(
+    @DrawableRes drawable: Int,
+    isSelected: Boolean,
+    onImageSelected: () -> Unit
+) {
+    val borderColor = if (isSelected) MaterialTheme.colors.primary else Color.Gray
+    val borderWidth = if (isSelected) 2.dp else 1.dp
+
+    Box(
+        modifier = Modifier
+            .size(100.dp)
+            .border(borderWidth, borderColor, RoundedCornerShape(8.dp))
+            .clickable { onImageSelected() },
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = drawable),
+            contentDescription = "Spellbook Image",
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+
+
+
     @Preview
     @Composable
     fun PreviewSpellbookCreator() {

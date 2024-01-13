@@ -21,4 +21,11 @@ class CreateSpellbookViewModel : ViewModel() {
         spellbookDescription = newDescription
     }
 
+    var selectedImageIdentifier by mutableStateOf("spellbook_brown")
+        private set
+
+    fun updateSelectedImageIdentifier(newIdentifier: String) {
+        selectedImageIdentifier = newIdentifier
+    }
+
 }
