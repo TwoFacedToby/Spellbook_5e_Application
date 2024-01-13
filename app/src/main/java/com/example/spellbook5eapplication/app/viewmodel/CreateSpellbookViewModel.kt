@@ -36,7 +36,7 @@ class CreateSpellbookViewModel : ViewModel() {
 
     fun saveSpellbook() {
         // Assuming you have similar properties in your Spellbook model
-        val spellbook = Spellbook(spellbookName, selectedImageIdentifier)
+        val spellbook = Spellbook(spellbookName, selectedImageIdentifier, spellbookDescription)
 
         SpellbookManager.addSpellbook(spellbook)
 

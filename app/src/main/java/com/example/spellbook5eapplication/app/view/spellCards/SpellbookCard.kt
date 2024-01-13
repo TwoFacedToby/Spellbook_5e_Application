@@ -3,6 +3,7 @@ package com.example.spellbook5eapplication.app.view.spellCards
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -52,16 +53,23 @@ fun SpellbookCard(
                 modifier = Modifier
                     .weight(2f) // Adjust weight as needed
                     .align(Alignment.CenterVertically)
-                    .padding(10.dp)
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
                     text = spellbook.spellbookName,
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     color = colorResource(id = R.color.black),
-                    modifier = Modifier.align(Alignment.End) // Align to the end (right)
+
                 )
-                // Additional content for the spellbook card can be added here
+                Spacer(modifier = Modifier.height(4.dp)) // Space between name and description
+                Text(
+                    text = spellbook.description, // Assuming 'description' is a property of Spellbook
+                    fontSize = 16.sp,
+                    color = colorResource(id = R.color.black),
+                )
+
             }
         }
     }
