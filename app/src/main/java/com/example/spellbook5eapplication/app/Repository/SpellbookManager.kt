@@ -1,6 +1,7 @@
 package com.example.spellbook5eapplication.app.Repository
 
 import android.util.Log
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.google.gson.Gson
@@ -18,6 +19,16 @@ object SpellbookManager {
         if(delete){
             spellbooks.removeAll { it.spellbookName == spellbookName }
         }
+
+    }
+
+    fun removeSpellFromSpellbook(spellbookName: String, spell: Spell.SpellInfo){
+
+        val spellbook = getSpellbook(spellbookName)
+
+        spellbook!!.spells.remove(spell.index)
+
+        saveSpellbookToFile(spellbookName)
 
     }
 

@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
+import SpellQueryViewModel
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -27,6 +28,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
@@ -46,12 +48,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.app.viewmodel.TitleState
 
 @Composable
 fun SpellCard(
@@ -62,6 +66,11 @@ fun SpellCard(
     var showDialog by remember { mutableStateOf(false) }
 
     val spellbooks = SpellbookManager.getAllSpellbooks()
+
+    val spellQueryViewModel: SpellQueryViewModel = viewModel()
+
+    // Checker to see if we are viewing spells in a spellbook
+    val isSpellbookView = TitleState.currentTitle.value != null
 
     Card(
         elevation = 10.dp,
@@ -179,6 +188,28 @@ fun SpellCard(
                             modifier = Modifier.size(48.dp)
                         )
                     }
+
+                }
+
+            }
+
+            if (isSpellbookView) {
+                IconButton(
+                    onClick = {
+                        SpellbookManager.removeSpellFromSpellbook(TitleState.currentTitle.value!!, spell)
+                        SpellbookManager.getSpellbook(TitleState.currentTitle.value!!)
+                            ?.let { spellQueryViewModel.loadSpellsFromSpellbook(it) }
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 4.dp, end = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Delete Spell",
+                        modifier = Modifier.size(24.dp),
+                        tint = colorResource(id = R.color.spellcard_button)
+                    )
                 }
             }
         }
