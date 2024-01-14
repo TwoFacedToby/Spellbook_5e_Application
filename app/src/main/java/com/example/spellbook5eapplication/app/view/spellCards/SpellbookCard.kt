@@ -4,6 +4,7 @@ import SpellQueryViewModel
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,10 +12,15 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +33,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.MainViewModel
+import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import com.example.spellbook5eapplication.app.viewmodel.TitleState
 
 @Composable
@@ -37,7 +46,6 @@ fun SpellbookCard(
 
     val spellbookImage = SpellbookCardCreation(spellbook)
     val spellQueryViewModel: SpellQueryViewModel = viewModel()
-    val mainViewModel: MainViewModel = viewModel()
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -47,9 +55,7 @@ fun SpellbookCard(
             .height(150.dp)
             .padding(10.dp)
             .clickable {
-                Log.d("BUUUH", spellbook.spellbookName)
                 TitleState.currentTitle.value = spellbook.spellbookName
-                Log.d("BUUUH", "Title updated to: ${mainViewModel.currentTitle}")
                 spellQueryViewModel.loadSpellsFromSpellbook(spellbook)
             }
     ) {
@@ -83,6 +89,29 @@ fun SpellbookCard(
                 )
 
             }
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .fillMaxHeight()
+                    .padding(end = 4.dp, bottom = 4.dp),
+                contentAlignment = Alignment.BottomEnd
+            ) {
+                IconButton(
+                    onClick = {
+                        SpellbookManager.removeSpellbook(spellbook.spellbookName)
+                        spellQueryViewModel.loadSpellBooks()
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Delete Spellbook",
+                        modifier = Modifier
+                            .size(24.dp),
+                        tint = colorResource(id = R.color.spellcard_button)
+                    )
+                }
+            }
         }
     }
+
 }

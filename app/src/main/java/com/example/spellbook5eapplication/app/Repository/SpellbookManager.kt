@@ -13,7 +13,12 @@ object SpellbookManager {
     }
 
     fun removeSpellbook(spellbookName: String) {
-        spellbooks.removeAll { it.spellbookName == spellbookName }
+        var delete = LocalDataLoader.deleteFile(spellbookName.lowercase(), LocalDataLoader.DataType.SPELLBOOK)
+        Log.d("DIDIT", delete.toString())
+        if(delete){
+            spellbooks.removeAll { it.spellbookName == spellbookName }
+        }
+
     }
 
     fun getSpellbook(spellbookName: String): Spellbook? {
