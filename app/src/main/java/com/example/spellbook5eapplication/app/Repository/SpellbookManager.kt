@@ -26,13 +26,16 @@ object SpellbookManager {
     fun saveSpellbookToFile(spellBookName: String) {
         val spellbook = getSpellbook(spellBookName)
         Log.d("LOLOL", spellBookName)
+        Log.d("LOLOL3", spellbook.toString())
         spellbook?.let {
             val gson = Gson()
             val spellbookJson = gson.toJson(it)
 
+            Log.d("LOLOL3", spellbookJson)
+
             LocalDataLoader.saveJson(
                 spellbookJson,
-                spellBookName,
+                spellBookName.lowercase(),
                 LocalDataLoader.DataType.SPELLBOOK
             )
         }
