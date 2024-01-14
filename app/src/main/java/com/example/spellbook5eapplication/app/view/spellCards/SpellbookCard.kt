@@ -1,6 +1,7 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
 import SpellQueryViewModel
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -26,6 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.viewmodel.MainViewModel
+import com.example.spellbook5eapplication.app.viewmodel.TitleState
 
 @Composable
 fun SpellbookCard(
@@ -34,6 +37,7 @@ fun SpellbookCard(
 
     val spellbookImage = SpellbookCardCreation(spellbook)
     val spellQueryViewModel: SpellQueryViewModel = viewModel()
+    val mainViewModel: MainViewModel = viewModel()
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
@@ -42,7 +46,12 @@ fun SpellbookCard(
         modifier = Modifier
             .height(150.dp)
             .padding(10.dp)
-            .clickable { spellQueryViewModel.loadSpellsFromSpellbook(spellbook)}
+            .clickable {
+                Log.d("BUUUH", spellbook.spellbookName)
+                TitleState.currentTitle.value = spellbook.spellbookName
+                Log.d("BUUUH", "Title updated to: ${mainViewModel.currentTitle}")
+                spellQueryViewModel.loadSpellsFromSpellbook(spellbook)
+            }
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
             Image(
