@@ -355,7 +355,7 @@ fun SelectSpellbookDialog(spellbooks: List<Spellbook>, onDismiss: () -> Unit, sp
                             Log.d("POKE", spell.name.toString())
                             Log.d("POKE", spellbooks[index].spellbookName)
 
-                            spellbooks[index].addSpellToSpellbook(spell.name ?: "")
+                            spellbooks[index].addSpellToSpellbook(spell.index ?: "")
                             SpellbookManager.saveSpellbookToFile(spellbooks[index].spellbookName)
                             onDismiss()
                         }

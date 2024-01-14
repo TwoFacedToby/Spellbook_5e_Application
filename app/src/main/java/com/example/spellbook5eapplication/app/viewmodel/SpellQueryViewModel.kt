@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.Search
 import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
@@ -134,6 +135,28 @@ class SpellQueryViewModel() : ViewModel() {
     }
 
     fun totalSpellsLoaded(): Int = spellList!!.getIndexList().size
+
+    fun loadSpellsFromSpellbook(spellbook: Spellbook) {
+
+        val spellsLiveData: MutableLiveData<List<Displayable?>> = MutableLiveData()
+
+        Log.d("MAY", spellbook.toString())
+
+        viewModelScope.launch {
+            val spellInfos = spellbook.spells.mapNotNull { spellName ->
+                try {
+                    SpellDataFetcher.localOrAPI(spellName)
+                } catch (e: Exception) {
+                    Log.e("SpellQueryViewModel", "Error fetching spell info for $spellName", e)
+                    null
+                }
+            }
+
+            Log.d("MAY", spellInfos.toString())
+
+            _spellBooks.postValue(spellInfos)
+        }
+    }
 
     fun loadSpellsBasedOnFilter(filter: Filter) {
         Log.d("SpellQueryViewModel", "LoadSpellsBasedOnFilter start: ${filter.toString()}")
