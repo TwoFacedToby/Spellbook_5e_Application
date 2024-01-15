@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.spellbook5eapplication.app.view.screens.Basic_Screen
+import com.example.spellbook5eapplication.app.view.screens.QuickPlay
 import com.example.spellbook5eapplication.app.view.viewutilities.DynamicButtonFactory
 import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModelFactory
 
@@ -13,7 +14,7 @@ import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModelFacto
 fun BottomNavigationGraph(
     navController: NavHostController,
 ) {
-    NavHost(navController = navController, startDestination = Screens.Search.route){
+    NavHost(navController = navController, startDestination = Screens.QuickPlay.route){
         composable(route = Screens.Search.route){
             //SearchScreen(globalOverlayState)
             val spellList = SpellQueryViewModelFactory.create(type = "ALL_SPELLS")
@@ -40,6 +41,9 @@ fun BottomNavigationGraph(
                     buttonType = "HOMEBREW",
                 )
             })
+        }
+        composable(route = Screens.QuickPlay.route){
+            QuickPlay()
         }
     }
 }

@@ -16,7 +16,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
+import com.example.spellbook5eapplication.ui.theme.SpellbookTheme
 
 @Composable
 fun FilterButton(onShowFiltersRequest: () -> Unit){
@@ -45,7 +45,7 @@ fun FilterButton(onShowFiltersRequest: () -> Unit){
 @Preview(showBackground = true)
 @Composable
 fun FilterButtonPreview() {
-    Spellbook5eApplicationTheme {
+    SpellbookTheme {
         FilterButton(onShowFiltersRequest = {println("show filters")})
     }
 }

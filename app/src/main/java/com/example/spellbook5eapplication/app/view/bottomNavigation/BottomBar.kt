@@ -26,6 +26,7 @@ fun BottomBar(
         Screens.Search,
         Screens.Spellbooks,
         Screens.Favorite,
+        Screens.QuickPlay,
         Screens.Homebrew,
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()

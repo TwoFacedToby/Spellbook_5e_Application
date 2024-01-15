@@ -2,7 +2,7 @@ package com.example.spellbook5eapplication.app.Model
 
 import kotlin.math.roundToInt
 
-object QuickPlay {
+object QuickPlayHandler {
 
 
     fun getQuickPlayList(c : Class, lvl : Int) : List<String>{
@@ -18,7 +18,6 @@ object QuickPlay {
             Class.MONK -> getMonk(getSpellLevelFromCharLevel(c, lvl))
             Class.WARLOCK -> getWarlock(getSpellLevelFromCharLevel(c, lvl))
             Class.WIZARD -> getWizard(getSpellLevelFromCharLevel(c, lvl))
-            Class.ARTIFICER -> getArtificer(getSpellLevelFromCharLevel(c, lvl))
             Class.SORCERER -> getSorcerer(getSpellLevelFromCharLevel(c, lvl))
         }
         return list.toList()
@@ -69,13 +68,6 @@ object QuickPlay {
                 else 5
             }
             Class.WIZARD -> (lvl / 2f).roundToInt()
-            Class.ARTIFICER -> {
-                if(lvl < 5) 1
-                else if(lvl < 9) 2
-                else if(lvl < 13) 3
-                else if(lvl < 17) 4
-                else 5
-            }
             Class.SORCERER -> (lvl / 2f).roundToInt()
         }
     }
@@ -394,11 +386,6 @@ object QuickPlay {
 
         return list
     }
-
-    private fun getArtificer(lvl: Int): MutableList<String> {
-        return mutableListOf<String>() //Not in SRD 5e
-    }
-
     private fun getSorcerer(lvl: Int): MutableList<String> {
         val list = mutableListOf<String>()
 
@@ -440,25 +427,58 @@ object QuickPlay {
 
         return list
     }
+    fun getAvailableLevelsForClass(c: Class): List<Int> {
+        return when (c) {
+            Class.FIGHTER, Class.ROGUE -> listOf(3, 4, 5, 6, 7, 8, 9, 10)
+            Class.PALADIN, Class.RANGER -> listOf(2, 3, 4, 5, 6, 7, 8, 9, 10)
+            Class.BARBARIAN, Class.MONK -> listOf()
+            Class.WIZARD, Class.SORCERER, Class.DRUID, Class.WARLOCK, Class.CLERIC, Class.BARD -> listOf(
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+            )
+        }
+    }
+}
 
+enum class Class{
+    BARD,
+    CLERIC,
+    DRUID,
+    FIGHTER,
+    PALADIN,
+    RANGER,
+    ROGUE,
+    BARBARIAN,
+    MONK,
+    WARLOCK,
+    WIZARD,
+    SORCERER;
 
-
-
-
-
-    enum class Class{
-        BARD,
-        CLERIC,
-        DRUID,
-        FIGHTER,
-        PALADIN,
-        RANGER,
-        ROGUE,
-        BARBARIAN,
-        MONK,
-        WARLOCK,
-        WIZARD,
-        ARTIFICER,
-        SORCERER
+    companion object {
+        fun className(type: Enum<Class>): String{
+            return when(type){
+                BARD -> "Bard"
+                CLERIC -> "Cleric"
+                DRUID -> "Druid"
+                FIGHTER -> "Fighter"
+                PALADIN -> "Paladin"
+                RANGER -> "Ranger"
+                ROGUE -> "Rouge"
+                BARBARIAN -> "Barbarian"
+                MONK -> "Monk"
+                WARLOCK -> "Warlock"
+                WIZARD -> "Wizard"
+                SORCERER -> "Sorcerer"
+                else -> { "UNIDENTIFIED" }
+            }
+        }
     }
 }

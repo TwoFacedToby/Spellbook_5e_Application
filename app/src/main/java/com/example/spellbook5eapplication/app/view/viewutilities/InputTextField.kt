@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -57,28 +58,14 @@ fun UserInputField(
         ),
         keyboardActions = KeyboardActions(
             onSearch = {
-                //onInputChanged(input)
                 keyboardController?.hide() // Hide the keyboard
             },
             onDone = {
-                //onInputChanged(input)
                 keyboardController?.hide() // Hide the keyboard
             },
 
         ),
-        /*onValueChange = {
-            input = it
-            coroutineScope.launch {
-                delay(500)  // Wait for 300ms
-                if (input == it) {
-                    onInputChanged(it)
-                }
-            }
-        },*/
-        /*onValueChange = {
-            input = it
-            onInputChanged(it)
-        },*/
+
         modifier = modifier,
         singleLine = singleLine,
         cursorBrush = SolidColor(colorResource(id = R.color.white)),
@@ -104,8 +91,7 @@ fun UserInputField(
                     verticalAlignment = Alignment.CenterVertically
                 )
                 {
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.size(4.dp, 20.dp))
                     if (input.isEmpty())
                         Text(
                             text = label,
@@ -116,8 +102,7 @@ fun UserInputField(
                             )
                         )
 
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.size(4.dp, 20.dp))
                     innerTextField()
                 }
             }

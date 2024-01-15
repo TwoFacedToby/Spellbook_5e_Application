@@ -149,7 +149,10 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
     overlayStack.forEach { overlayType ->
         when (overlayType) {
             OverlayType.LARGE_SPELLCARD ->  {
-                LargeSpellCard(GlobalOverlayState.currentSpell!!)
+                LargeSpellCard(GlobalOverlayState.currentSpell!!, false)
+            }
+            OverlayType.LARGE_QUICKSPELLCARD -> {
+                LargeSpellCard(spell = GlobalOverlayState.currentSpell!!, fromQuickPlay = true)
             }
             OverlayType.FILTER -> {
                 CustomOverlay(overlayType = OverlayType.FILTER) {
@@ -159,7 +162,6 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
             OverlayType.MAKE_SPELL -> {
                 val createViewModel = CreateSpellViewModel()
                 val createView = HomeBrewInstantiator()
-                //HomeBrewInstantiator.makeNewSpellFromTheTop(createViewModel)
                 createView.makeNewSpellFromTheTop(createViewModel)
             }
             OverlayType.ERASE_PROMPT -> {
@@ -169,6 +171,11 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                     button2Message = "Exit",
                     button2Function = {GlobalOverlayState.dismissOverlay()}
                 )
+            }
+            OverlayType.QUICKPLAY_SPELLBOOK -> {
+                CustomOverlay(OverlayType.QUICKPLAY_SPELLBOOK) {
+                    QuickPlaySpellBooks()
+                }
             }
             else -> {}
         }

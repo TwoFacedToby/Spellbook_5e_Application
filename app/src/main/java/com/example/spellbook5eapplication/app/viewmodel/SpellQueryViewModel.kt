@@ -11,6 +11,7 @@ import com.example.spellbook5eapplication.app.Utility.Search
 import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
+import com.example.spellbook5eapplication.app.view.bottomNavigation.Screens
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

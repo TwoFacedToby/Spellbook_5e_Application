@@ -58,7 +58,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun LargeSpellCard(spell: Spell.SpellInfo) {
+fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
 
     val images = SpellCardCreation(spell)
 
@@ -105,51 +105,63 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                         Row(
                             modifier = Modifier
                                 .weight(1F),
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                            horizontalArrangement = if(!fromQuickPlay) Arrangement.SpaceEvenly else Arrangement.End
                         ) {
-                            IconButton(
-                                onClick = { /*TODO*/ }){
-                                Icon(
-                                    imageVector = Icons.Outlined.Add,
-                                    contentDescription = "Add to Spellbook",
-                                    tint = colorResource(id = R.color.spellcard_button),
-                                    modifier = Modifier.size(48.dp)
-                                )
-                            }
-                            val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
-                            var favouriteImage by remember { mutableStateOf(defaultFavouriteImage) }
-                            IconButton(
-                                onClick = { spell.index?.let { spellIndex ->
-                                    val favouritesSpellbook = SpellbookManager.getSpellbook("Favourites")
-                                    favouriteImage = if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
-                                        // Remove spell from favorites
-                                        favouritesSpellbook.removeSpell(spellIndex)
+                            if(!fromQuickPlay) {
+                                IconButton(
+                                    onClick = { /*TODO*/ }) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Add,
+                                        contentDescription = "Add to Spellbook",
+                                        tint = colorResource(id = R.color.spellcard_button),
+                                        modifier = Modifier.size(48.dp)
+                                    )
+                                }
+                                val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
+                                var favouriteImage by remember {
+                                    mutableStateOf(
                                         defaultFavouriteImage
-                                    } else {
-                                        // Add spell to favorites
-                                        favouritesSpellbook?.addSpellToSpellbook(spellIndex)
-                                        Icons.Filled.Favorite // Change this to the filled heart icon
+                                    )
+                                }
+                                IconButton(
+                                    onClick = {
+                                        spell.index?.let { spellIndex ->
+                                            val favouritesSpellbook =
+                                                SpellbookManager.getSpellbook("Favourites")
+                                            favouriteImage =
+                                                if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
+                                                    // Remove spell from favorites
+                                                    favouritesSpellbook.removeSpell(spellIndex)
+                                                    defaultFavouriteImage
+                                                } else {
+                                                    // Add spell to favorites
+                                                    favouritesSpellbook?.addSpellToSpellbook(
+                                                        spellIndex
+                                                    )
+                                                    Icons.Filled.Favorite // Change this to the filled heart icon
+                                                }
+                                            // Save the updated favorites list
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                SpellbookManager.saveSpellbookToFile("Favourites")
+                                                println("Favorites updated")
+                                            }
+                                        }
                                     }
-                                    // Save the updated favorites list
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        SpellbookManager.saveSpellbookToFile("Favourites")
-                                        println("Favorites updated")
+                                ) {
+                                    if (SpellbookManager.getSpellbook("Favourites")?.spells?.contains(
+                                            spell.index
+                                        ) == true
+                                    ) {
+                                        favouriteImage = Icons.Filled.Favorite
                                     }
+                                    Icon(
+                                        imageVector = favouriteImage,
+                                        contentDescription = "Favorite button",
+                                        tint = colorResource(id = R.color.spellcard_button),
+                                        modifier = Modifier.size(48.dp)
+                                    )
                                 }
-                                }
-                            ){
-                                if(SpellbookManager.getSpellbook("Favourites")?.spells?.contains(spell.index) == true)
-                                {
-                                    favouriteImage = Icons.Filled.Favorite
-                                }
-                                Icon(
-                                    imageVector = favouriteImage,
-                                    contentDescription = "Favorite button",
-                                    tint = colorResource(id = R.color.spellcard_button),
-                                    modifier = Modifier.size(48.dp)
-                                )
                             }
-
                             IconButton(
                                 onClick = { GlobalOverlayState.dismissOverlay() }){
                                 Icon(
@@ -206,12 +218,13 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                             .padding(0.dp, 5.dp)
                     ) {
                         Box(modifier = Modifier
-                            .weight(3F)
+                            .weight(4F)
                         ){
                             SpellInfoNew(spell)
                         }
                         Box(modifier = Modifier
-                            .weight(1F)
+                            .weight(1F),
+                            contentAlignment = Alignment.CenterEnd
                         ){
                             Image(
                                 painter = painterResource(id = images.schoolID),
@@ -292,4 +305,10 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun LargeSpellCardPreview(){
+    LargeSpellCard(spell = Spell.SpellInfo(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null), fromQuickPlay = false)
 }
