@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Divider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
@@ -57,6 +59,7 @@ import com.example.spellbook5eapplication.app.viewmodel.MainViewModel
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import com.example.spellbook5eapplication.app.viewmodel.TitleState
 import java.time.format.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -119,6 +122,10 @@ fun SpellbookCard(
                     TextField(
                         value = newTitle,
                         onValueChange = { newTitle = it },
+                        keyboardOptions = KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            onTitleChangeConfirm()
+                        }),
                         modifier = Modifier
                             .pointerInput(Unit) { detectTapGestures(onPress = { onLongPress() }) }
                             .onKeyEvent { keyEvent ->
