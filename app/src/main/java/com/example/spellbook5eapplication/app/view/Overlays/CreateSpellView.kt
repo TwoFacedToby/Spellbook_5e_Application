@@ -538,7 +538,7 @@ class HomeBrewInstantiator {
     @Composable
     private fun Description(viewModel: CreateSpellViewModel) {
 
-        var showVal = viewModel.spell.atHigherLevel.toString()
+        var showVal = viewModel.spell.desc.toString()
 
         if (showVal.length >= 2) {
             showVal = showVal.substring(1, showVal.length - 1)
