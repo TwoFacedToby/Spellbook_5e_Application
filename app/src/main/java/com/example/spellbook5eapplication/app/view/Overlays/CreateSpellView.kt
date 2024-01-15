@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -87,146 +89,158 @@ class HomeBrewInstantiator {
             }
         }
 
+        // This box stops user from interacting with other parts of the app
         Box(
-            contentAlignment = Alignment.Center, // Center content in the Box
-            modifier = Modifier.fillMaxSize()    // Make Box fill the entire available space
-        ) {
-
-        Column(
             modifier = Modifier
-                .padding(top = 8.dp, start = 15.dp, end = 15.dp)
-                ,//.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures { /* consume tap events */ }
+                }
+                .background(Color.Black.copy(alpha = 0.5f)), // Semi-transparent background
+            contentAlignment = Alignment.Center
         ) {
 
-            //Testing visual
             Box(
-                modifier = Modifier
-                    .height(600.dp)
-                    .fillMaxWidth()
-                    .background(
-                        color = colorResource(id = R.color.overlay_box_color),
-                        shape = RoundedCornerShape(20.dp)
-                    ),
-                contentAlignment = Alignment.TopCenter
+                contentAlignment = Alignment.Center, // Center content in the Box
+                modifier = Modifier.fillMaxSize()    // Make Box fill the entire available space
             ) {
 
                 Column(
                     modifier = Modifier
-                        .alpha(animatedAlpha)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                )
-                {
+                        .padding(top = 8.dp, start = 15.dp, end = 15.dp),//.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
-                    // Name of spell
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    Text(
-                        text = show.displayedBrewPart(),
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    // Top navigation buttons
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
+                    //Testing visual
+                    Box(
+                        modifier = Modifier
+                            .height(600.dp)
+                            .fillMaxWidth()
+                            .background(
+                                color = colorResource(id = R.color.overlay_box_color),
+                                shape = RoundedCornerShape(20.dp)
+                            ),
+                        contentAlignment = Alignment.TopCenter
                     ) {
 
-                        if (show != BrewParts.NAME) {
+                        Column(
+                            modifier = Modifier
+                                .alpha(animatedAlpha)
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        )
+                        {
 
-                            ColouredButton(
-                                label = "Back",
-                                modifier = Modifier
-                                    .height(38.dp)
-                                    .width(100.dp),
-                                color = ButtonDefaults.buttonColors(
-                                    containerColor = colorResource(
-                                        id = R.color.selected_button
-                                    )
-                                )
-                            ) {
+                            // Name of spell
+                            Spacer(modifier = Modifier.height(10.dp))
 
-                                changeShow = show.previousBrewPart()!!
-                                alpha = 0f
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.width(10.dp))
-
-                        ColouredButton(
-                            "Cancel", modifier = Modifier
-                                .height(38.dp) // Sets the height of the button
-                                .width(100.dp), color = ButtonDefaults.buttonColors(
-                                containerColor = colorResource(
-                                    id = R.color.red_button
-                                )
+                            Text(
+                                text = show.displayedBrewPart(),
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
                             )
-                        ) {
-                            GlobalOverlayState.showOverlay(
-                                OverlayType.ERASE_PROMPT)
-                        }
 
+                            Spacer(modifier = Modifier.height(10.dp))
 
-                        Spacer(modifier = Modifier.width(10.dp))
-
-                        if (show != BrewParts.DC) {
-                            // Button to move on
-                            ColouredButton(
-                                "Next", modifier = Modifier
-                                    .height(38.dp) // Sets the height of the button
-                                    .width(100.dp), color = ButtonDefaults.buttonColors(
-                                    containerColor = colorResource(
-                                        id = R.color.green_button
-                                    )
-                                )
+                            // Top navigation buttons
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
                             ) {
-                                changeShow = show.nextBrewPart()!!
-                                alpha = 0f // Start fade out
-                            }
-                        } else {
-                            ColouredButton(
-                                "Finish", modifier = Modifier
-                                    .height(38.dp) // Sets the height of the button
-                                    .width(100.dp), color = ButtonDefaults.buttonColors(
-                                    containerColor = colorResource(
-                                        id = R.color.green_button
+
+                                if (show != BrewParts.NAME) {
+
+                                    ColouredButton(
+                                        label = "Back",
+                                        modifier = Modifier
+                                            .height(38.dp)
+                                            .width(100.dp),
+                                        color = ButtonDefaults.buttonColors(
+                                            containerColor = colorResource(
+                                                id = R.color.selected_button
+                                            )
+                                        )
+                                    ) {
+
+                                        changeShow = show.previousBrewPart()!!
+                                        alpha = 0f
+                                    }
+                                }
+
+                                Spacer(modifier = Modifier.width(10.dp))
+
+                                ColouredButton(
+                                    "Cancel", modifier = Modifier
+                                        .height(38.dp) // Sets the height of the button
+                                        .width(100.dp), color = ButtonDefaults.buttonColors(
+                                        containerColor = colorResource(
+                                            id = R.color.red_button
+                                        )
                                     )
-                                )
-                            ) {
-                                //Save the spell on the device here
-                                createViewModel.saveSpell()
-                                spellQueryViewModel.loadHomebrewList()
-                                GlobalOverlayState.dismissOverlay()
+                                ) {
+                                    GlobalOverlayState.showOverlay(
+                                        OverlayType.ERASE_PROMPT
+                                    )
+                                }
+
+
+                                Spacer(modifier = Modifier.width(10.dp))
+
+                                if (show != BrewParts.DC) {
+                                    // Button to move on
+                                    ColouredButton(
+                                        "Next", modifier = Modifier
+                                            .height(38.dp) // Sets the height of the button
+                                            .width(100.dp), color = ButtonDefaults.buttonColors(
+                                            containerColor = colorResource(
+                                                id = R.color.green_button
+                                            )
+                                        )
+                                    ) {
+                                        changeShow = show.nextBrewPart()!!
+                                        alpha = 0f // Start fade out
+                                    }
+                                } else {
+                                    ColouredButton(
+                                        "Finish", modifier = Modifier
+                                            .height(38.dp) // Sets the height of the button
+                                            .width(100.dp), color = ButtonDefaults.buttonColors(
+                                            containerColor = colorResource(
+                                                id = R.color.green_button
+                                            )
+                                        )
+                                    ) {
+                                        //Save the spell on the device here
+                                        createViewModel.saveSpell()
+                                        spellQueryViewModel.loadHomebrewList()
+                                        GlobalOverlayState.dismissOverlay()
+                                    }
+                                }
                             }
+
+                            //End of top navigation
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            // The part dependent of what is being edited/created for the spell
+                            ShowBrewPart(show, createViewModel)
+
+                            // Testing the possibility of jumping in parts
+                            NavigateBrewParts(
+                                brewParts = BrewParts.values().toList(),
+                                dropName = "Parts of spell to edit",
+                                brewChange = {
+                                    changeShow = it
+                                    alpha = 0f
+                                }
+                            )
                         }
                     }
-
-                    //End of top navigation
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    // The part dependent of what is being edited/created for the spell
-                    ShowBrewPart(show, createViewModel)
-
-                    // Testing the possibility of jumping in parts
-                    NavigateBrewParts(
-                        brewParts = BrewParts.values().toList(),
-                        dropName = "Parts of spell to edit",
-                        brewChange = {
-                            changeShow = it
-                            alpha = 0f
-                        }
-                    )
                 }
             }
         }
     }
-        }
 
 
     /**
@@ -257,58 +271,68 @@ class HomeBrewInstantiator {
             }
         }
 
+        // This box stops user from interacting with other parts of the app
         Box(
-            contentAlignment = Alignment.Center, // Center content in the Box
-            modifier = Modifier.fillMaxSize()    // Make Box fill the entire available space
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures { /* consume tap events */ }
+                }
+                .background(Color.Black.copy(alpha = 0.5f)), // Semi-transparent background
+            contentAlignment = Alignment.Center
         ) {
 
-            Column(
-                modifier = Modifier
-                    .padding(top = 8.dp, start = 15.dp, end = 15.dp)
-                ,//.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                contentAlignment = Alignment.Center, // Center content in the Box
+                modifier = Modifier.fillMaxSize()    // Make Box fill the entire available space
             ) {
 
-                //Testing visual
-                Box(
+                Column(
                     modifier = Modifier
-                        .height(600.dp)
-                        .fillMaxWidth()
-                        .background(
-                            color = colorResource(id = R.color.overlay_box_color),
-                            shape = RoundedCornerShape(20.dp)
-                        ),
-                    contentAlignment = Alignment.TopCenter
+                        .padding(top = 8.dp, start = 15.dp, end = 15.dp),//.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-                    Column(
+                    //Testing visual
+                    Box(
                         modifier = Modifier
-                            .alpha(animatedAlpha)
-                            .fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)
-                    )
-                    {
+                            .height(600.dp)
+                            .fillMaxWidth()
+                            .background(
+                                color = colorResource(id = R.color.overlay_box_color),
+                                shape = RoundedCornerShape(20.dp)
+                            ),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
 
-                        // Name of spell
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(
-                            text = show.displayedBrewPart(),
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
+                        Column(
+                            modifier = Modifier
+                                .alpha(animatedAlpha)
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         )
+                        {
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                            // Name of spell
+                            Spacer(modifier = Modifier.height(10.dp))
 
-                        // Top navigation buttons
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
+                            Text(
+                                text = show.displayedBrewPart(),
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            // Top navigation buttons
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
 
 
-                            Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.width(10.dp))
 
                                 // Button to move on
                                 ColouredButton(
@@ -324,24 +348,25 @@ class HomeBrewInstantiator {
                                     spellQueryViewModel.loadHomebrewList()
                                     GlobalOverlayState.dismissOverlay()
                                 }
-                        }
-
-                        //End of top navigation
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        // The part dependent of what is being edited/created for the spell
-                        ShowBrewPart(show, createViewModel)
-
-                        // Testing the possibility of jumping in parts
-                        NavigateBrewParts(
-                            brewParts = BrewParts.values().toList(),
-                            dropName = "Parts of spell to edit",
-                            brewChange = {
-                                changeShow = it
-                                alpha = 0f
                             }
-                        )
+
+                            //End of top navigation
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            // The part dependent of what is being edited/created for the spell
+                            ShowBrewPart(show, createViewModel)
+
+                            // Testing the possibility of jumping in parts
+                            NavigateBrewParts(
+                                brewParts = BrewParts.values().toList(),
+                                dropName = "Parts of spell to edit",
+                                brewChange = {
+                                    changeShow = it
+                                    alpha = 0f
+                                }
+                            )
+                        }
                     }
                 }
             }
