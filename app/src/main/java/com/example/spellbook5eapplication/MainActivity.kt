@@ -9,6 +9,7 @@ import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Repository.SpellController
 import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
 import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
+import com.example.spellbook5eapplication.app.viewmodel.SettingsViewModel
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 import kotlinx.coroutines.launch
 
@@ -18,7 +19,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LocalDataLoader.setContext(applicationContext)
-
         SpelllistLoader.loadSpellbooks()
         lifecycleScope.launch {
             SpellDataFetcher.sneakyQuickLoader()

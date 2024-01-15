@@ -13,6 +13,7 @@ import com.example.spellbook5eapplication.app.Utility.Search
 import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.view.spellCards.bottomDistance
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
 import kotlinx.coroutines.delay
@@ -69,6 +70,11 @@ class SpellQueryViewModel() : ViewModel() {
         viewModelScope.launch {
             println("Kig her")
             spellList = SpellsViewModel.fetchAllSpellNames()
+            if(spellList!!.getIndexList().isEmpty()){
+                val list = LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL)
+                spellList!!.setIndexList(list)
+
+            }
             _indexListFromAPI = spellList!!.getIndexList().toMutableList()
             Log.d("API_RESPONSE_NEW", spellList.toString())
             loadInitialSpells()

@@ -167,4 +167,5 @@ object SpellsViewModel : ViewModel() {
     fun getEmptySpell(): Spell.SpellInfo {
         return Spell.SpellInfo(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null )
     }
+
 }

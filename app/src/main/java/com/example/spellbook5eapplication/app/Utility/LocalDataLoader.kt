@@ -119,6 +119,7 @@ object LocalDataLoader {
             DataType.HOMEBREW -> "Homebrews"
             DataType.INDIVIDUAL -> "IndividualSpells"
             DataType.SPELLBOOK -> "Spellbooks"
+            DataType.LOCAL -> "LocalJSONData"
             else -> {""}
         }
         if(directoryName == ""){
@@ -205,6 +206,7 @@ object LocalDataLoader {
         val directoryName = when(dataType){
             DataType.HOMEBREW -> "Homebrews"
             DataType.INDIVIDUAL -> "IndividualSpells"
+            DataType.LOCAL -> "LocalJSONData"
             else -> {""}
         }
         try {
