@@ -124,7 +124,7 @@ fun SpellCard(
                                 .padding(5.dp, 0.dp)
                         ) {
                             Text(
-                                text = spell.name ?: "", //TODO loading icon
+                                text = spell.name ?: "", //loading icon
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
                                 maxLines = 1,
@@ -261,7 +261,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.range?: "", //TODO loading icon
+                text = spell.range?: "", //loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
@@ -281,7 +281,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.school?.name ?: "", //TODO loading icon
+                text = spell.school?.name ?: "", //loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
@@ -295,7 +295,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.duration?: "", //TODO loading icon
+                text = spell.duration?: "", //loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
@@ -315,7 +315,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.casting_time?: "", //TODO loading icon
+                text = spell.casting_time?: "", //loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
