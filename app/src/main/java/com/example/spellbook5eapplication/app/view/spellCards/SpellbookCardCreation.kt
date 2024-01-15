@@ -6,7 +6,7 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 class SpellbookCardCreation(spellbook: Spellbook) {
 
 
-    var spellbookImageID: Int = R.drawable.spellbook_brown // Default image
+    var spellbookImageID: Int = R.drawable.spellbook_brown
 
     init {
         setImage(spellbook)
@@ -16,8 +16,7 @@ class SpellbookCardCreation(spellbook: Spellbook) {
         when (spellbook.imageIdentifier) {
             "spellbook_diamond" -> spellbookImageID = R.drawable.spellbook_diamond
             "spellbook_brown" -> spellbookImageID = R.drawable.spellbook_brown
-            // Add more cases as needed
-            else -> spellbookImageID = R.drawable.spellbook_brown // Default image
+            else -> spellbookImageID = R.drawable.spellbook_brown
         }
     }
 

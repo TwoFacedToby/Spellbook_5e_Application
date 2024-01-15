@@ -118,18 +118,6 @@ class SpellbookCreator {
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        when (show) {
-                            SpellbookPart.NAME -> Naming(viewModel)
-                            SpellbookPart.DESC -> Description(viewModel)
-                            SpellbookPart.IMAGE -> ImageSelection(viewModel)
-
-                            else -> {}
-                        }
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-
-                        // Top navigation buttons
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.Center
@@ -203,6 +191,22 @@ class SpellbookCreator {
                                 }
                             }
                         }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        when (show) {
+                            SpellbookPart.NAME -> Naming(viewModel)
+                            SpellbookPart.DESC -> Description(viewModel)
+                            SpellbookPart.IMAGE -> ImageSelection(viewModel)
+
+                            else -> {}
+                        }
+
+
+
+
+                        // Top navigation buttons
+
 
                         //NavigationButtons(show, changeShow, alpha)
                     }
