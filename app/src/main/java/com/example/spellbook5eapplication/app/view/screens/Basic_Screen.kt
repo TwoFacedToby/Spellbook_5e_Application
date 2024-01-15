@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view.screens
 
+import SpellQueryViewModel
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -27,10 +28,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.view.Overlays.CreateOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.HomeBrewInstantiator
@@ -162,12 +165,32 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 //HomeBrewInstantiator.makeNewSpellFromTheTop(createViewModel)
                 createView.makeNewSpellFromTheTop(createViewModel)
             }
+            OverlayType.EDIT_SPELL -> {
+                val createViewModel = CreateSpellViewModel()
+                val createView = HomeBrewInstantiator()
+                createViewModel.updateEntireSpell(GlobalOverlayState.currentSpell!!)
+                createView.EditSpell(createViewModel)
+            }
             OverlayType.ERASE_PROMPT -> {
                 CreateOverlay(
                     message = "Exiting now will erase all progress",
                     button1Message = "Cancel",
                     button2Message = "Exit",
                     button2Function = {GlobalOverlayState.dismissOverlay()}
+                )
+            }
+            OverlayType.DELETE_PROMPT -> {
+                // To refresh screen and that it is gone
+                val spellQueryViewModel: SpellQueryViewModel = viewModel()
+
+                CreateOverlay(
+                    message = "Delete ${GlobalOverlayState.currentSpell!!.name}?",
+                    button1Message = "Cancel",
+                    button2Message = "Delete",
+                    button2Function = {
+                            LocalDataLoader.deleteFile(GlobalOverlayState.currentSpell!!.index +".json", LocalDataLoader.DataType.HOMEBREW)
+                        spellQueryViewModel.loadHomebrewList()
+                        GlobalOverlayState.dismissOverlay()}
                 )
             }
             else -> {}
@@ -192,7 +215,8 @@ fun SearchFilterBar(
                 filterViewModel.updateFilterWithSearchName(input)
             },
             modifier = Modifier.size(height = 48.dp, width = 220.dp),
-            imeAction = ImeAction.Search
+            imeAction = ImeAction.Search,
+            initialInput = ""
         )
         Spacer(modifier = Modifier.width(5.dp))
         FilterButton(

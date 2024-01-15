@@ -1,11 +1,9 @@
 package com.example.spellbook5eapplication.app.Utility
 
 import android.util.Log
-import androidx.compose.ui.text.toLowerCase
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import java.lang.Character.toLowerCase
 import java.util.Locale
 
 class Search {
@@ -34,7 +32,9 @@ class Search {
                 }
             }
         }
+        Log.d("Search", "Matches: $matches")
         spellList.setIndexList(matches.toList())
+        Log.d("Search12345", "Matches $matches")
         matchLists(spellList)
         return sortSpellsDueToKeywordRelevance(keywords, spellList)
     }
@@ -47,12 +47,15 @@ class Search {
     private fun matchLists(spellList : SpellList){
         if(spellList.getSpellInfoList().isEmpty()) return
         val names = spellList.getIndexList()
+        Log.d("Search123", "Names: $names")
         val spells = mutableListOf<Spell.SpellInfo>()
         for(info in spellList.getSpellInfoList()){
             if(info.index != null)
                 if(names.contains(info.index))
                     spells.add(info)
         }
+        Log.d("Search123", "Spells: ${spellList.getIndexList()}")
+        Log.d("Search123", "Spells: ${spellList.getSpellInfoList()}")
         spellList.setSpellInfoList(spells.toList())
     }
     /**@author Tobias s224271
@@ -242,6 +245,8 @@ class Search {
         var indexes = spellList.getIndexList().toMutableList()
         var infos = spellList.getSpellInfoList().toMutableList()
         val relevances : MutableList<Relevance> = emptyList<Relevance>().toMutableList()
+        Log.d("Search1234", "Indexes: $indexes")
+        Log.d("Search1234", "Infos: $infos")
 
         for(i in indexes.indices){
             val relevance = Relevance()
