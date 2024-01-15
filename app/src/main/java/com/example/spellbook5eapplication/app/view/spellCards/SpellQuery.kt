@@ -142,7 +142,7 @@ fun NoSpellsFoundMessage() {
         )
         Text(
             text = "Could not find spells matching filter or no internet connection.",
-            color = colorResource(id = R.color.black),
+            color = Color.White.copy(alpha = 0.8f),
             fontSize = 18.sp
         )
     }
@@ -159,7 +159,7 @@ fun LoadingIndicator() {
         Text(
             text = "Loading...",
             fontSize = 18.sp,
-            color = Color.Black
+            color = Color.White.copy(alpha = 0.8f)
         )
     }
 }

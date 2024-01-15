@@ -56,15 +56,11 @@ fun SettingsOverlay(onDismissRequest: () -> Unit) {
                 .clip(shape = RoundedCornerShape(5.dp)),
             color = colorResource(id = R.color.black).copy(alpha = 0.2F),
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
-        Text(text = "Settings", color = colorResource(id = R.color.white), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Text(text = "Settings", color = colorResource(id = R.color.white), fontSize = 28.sp, fontWeight = FontWeight.Bold)
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(onClick = onDismissRequest) {
-            Text("Dismiss")
-        }
+        Spacer(modifier = Modifier.height(24.dp))
 
 
 
