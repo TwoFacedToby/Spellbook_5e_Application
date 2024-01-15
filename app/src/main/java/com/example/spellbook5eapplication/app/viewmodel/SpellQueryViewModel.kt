@@ -7,12 +7,10 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Utility.Displayable
-import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Utility.Search
-import com.example.spellbook5eapplication.app.Utility.SpellController
-import com.example.spellbook5eapplication.app.Utility.SpellDataFetcher
-import com.example.spellbook5eapplication.app.Utility.SpellbookManager
-import com.example.spellbook5eapplication.app.Utility.SpelllistLoader
+import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
+import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -119,7 +117,7 @@ class SpellQueryViewModel() : ViewModel() {
         }
     }
 
-    private fun loadHomebrewList(){
+    fun loadHomebrewList(){
         viewModelScope.launch {
             val spellList = SpelllistLoader.loadHomeBrewSpellList()
             val displayableHomebrews = spellList.getSpellInfoList().map { it as Displayable }

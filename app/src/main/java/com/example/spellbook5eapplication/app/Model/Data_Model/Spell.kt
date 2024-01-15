@@ -48,10 +48,10 @@ data class SpellInfo(
     var level: Int?,
 
     @SerializedName("school")
-    val school: SpellSchool?,
+    var school: SpellSchool?,
 
     @SerializedName("classes")
-    val classes: List<SpellClass>?,
+    var classes: List<SpellClass>?,
 
     @SerializedName("url")
     var url: String?,

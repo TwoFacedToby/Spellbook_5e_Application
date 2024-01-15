@@ -2,8 +2,7 @@ package com.example.spellbook5eapplication.app.Model.Data_Model
 
 import android.util.Log
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell.SpellInfo
-import com.example.spellbook5eapplication.app.Utility.SpellDataFetcher
-import kotlin.math.min
+import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
 
 
 class SpellList {
@@ -60,7 +59,7 @@ class SpellList {
         return indexList
     }
 
-    fun setSpellInfoList(spellInfo: List<Spell.SpellInfo>) {
+    fun setSpellInfoList(spellInfo: List<SpellInfo>) {
         spellInfoList = spellInfo
     }
 

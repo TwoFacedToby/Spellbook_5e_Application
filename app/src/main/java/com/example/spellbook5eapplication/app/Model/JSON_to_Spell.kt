@@ -1,6 +1,5 @@
 package com.example.spellbook5eapplication.app.Model
 
-import com.example.spellbook5eapplication.app.Model.Data_Model.JSON
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.google.gson.Gson
