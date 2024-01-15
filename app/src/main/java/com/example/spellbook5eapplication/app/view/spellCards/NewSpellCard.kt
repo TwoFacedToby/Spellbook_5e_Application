@@ -1,6 +1,7 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -88,25 +89,42 @@ fun SpellCard(
                         .weight(3F),
                 ) {
                     Row{
-                        Image(
-                            painter = painterResource(id = images.schoolID),
-                            contentDescription = "Spell school",
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(RoundedCornerShape(2.dp))
-                                .border(
-                                    0.5.dp,
-                                    colorResource(id = R.color.border_color),
-                                    shape = RoundedCornerShape(2.dp)
-                                )
-                        )
+                        if(spell.index != null){
+                            Image(
+                                painter = painterResource(id = images.schoolID),
+                                contentDescription = "Spell school",
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .border(
+                                        0.5.dp,
+                                        colorResource(id = R.color.border_color),
+                                        shape = RoundedCornerShape(2.dp)
+                                    )
+                            )
+                        }
+                        else
+                        {
+                            Box(
+                                modifier = Modifier
+                                    .background(colorResource(id = R.color.unselected_icon))
+                                    .size(48.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .border(
+                                        0.5.dp,
+                                        colorResource(id = R.color.border_color),
+                                        shape = RoundedCornerShape(2.dp)
+                                    )
+                            )
+                        }
+
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(5.dp, 0.dp)
                         ) {
                             Text(
-                                text = spell.name ?: "UNIDENTIFIED",
+                                text = spell.name ?: "", //TODO loading icon
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
                                 maxLines = 1,
@@ -243,7 +261,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.range?: "UNIDENTIFIED",
+                text = spell.range?: "", //TODO loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
@@ -263,7 +281,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.school?.name ?: "UNIDENTIFIED",
+                text = spell.school?.name ?: "", //TODO loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
@@ -277,7 +295,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.duration?: "UNIDENTIFIED",
+                text = spell.duration?: "", //TODO loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
@@ -297,7 +315,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.casting_time?: "UNIDENTIFIED",
+                text = spell.casting_time?: "", //TODO loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,

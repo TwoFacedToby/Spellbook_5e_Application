@@ -17,8 +17,6 @@ object SpellbookManager {
     }
 
     fun getSpellbook(spellbookName: String): Spellbook? {
-        Log.d("LOLOL", spellbooks.toString())
-        Log.d("TESTITEST", spellbooks.toString())
         return spellbooks.find { it.spellbookName == spellbookName }
     }
 
@@ -51,4 +49,5 @@ object SpellbookManager {
         Log.d("LOLO", spellbooks.toList().toString())
         return spellbooks.toList()
     }
+
 }
