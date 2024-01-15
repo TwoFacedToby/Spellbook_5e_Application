@@ -5,15 +5,22 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.navigation.NavController
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.view.bottomNavigation.Screens
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
 @Composable
-fun DynamicButtonFactory(buttonType: String) {
+fun DynamicButtonFactory(buttonType: String, navController: NavController) {
+
+
+
+
     val buttonText = when (buttonType) {
         "HOMEBREW" -> "New Homebrew"
         "SPELLBOOK" -> "New Spellbook"
+        "VIEW_SPELLS" -> "Back"
         else -> ""
     }
 
@@ -30,16 +37,23 @@ fun DynamicButtonFactory(buttonType: String) {
                     OverlayType.CREATE_SPELLBOOK,
                 )
             }
+            "VIEW_SPELLS" -> {
+                    navController.navigate(Screens.Spellbooks.route)
+            }
         }
+    }
+
+    val buttonColor = if (buttonType == "VIEW_SPELLS") {
+        ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black))
+    } else {
+        ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button))
     }
 
     if (buttonText.isNotEmpty()) {
         ColouredButton(
             label = buttonText,
             modifier = Modifier,
-            color = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.green_button)
-            ),
+            color = buttonColor,
             onClick = { buttonOnClick() }
         )
     }

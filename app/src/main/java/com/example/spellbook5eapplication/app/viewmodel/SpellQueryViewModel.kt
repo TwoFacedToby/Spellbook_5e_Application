@@ -13,6 +13,7 @@ import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
+import com.example.spellbook5eapplication.app.viewmodel.TitleState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -47,7 +48,10 @@ class SpellQueryViewModel() : ViewModel() {
     fun getLiveData(type: String): LiveData<List<Displayable?>> {
         loadFavoriteSpells()
         loadHomebrewList()
-        loadSpellBooks()
+        if(TitleState.currentTitle.value == null){
+            loadSpellBooks()
+        }
+
         return when (type) {
             "ALL_SPELLS" -> spells
             "FAVORITES" -> favorite
@@ -138,7 +142,6 @@ class SpellQueryViewModel() : ViewModel() {
 
     fun loadSpellsFromSpellbook(spellbook: Spellbook) {
 
-        val spellsLiveData: MutableLiveData<List<Displayable?>> = MutableLiveData()
 
         Log.d("MAY", spellbook.toString())
 

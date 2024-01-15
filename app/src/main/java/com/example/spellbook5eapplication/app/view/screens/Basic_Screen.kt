@@ -13,7 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -23,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -37,6 +41,7 @@ import com.example.spellbook5eapplication.app.view.Overlays.HomeBrewInstantiator
 import com.example.spellbook5eapplication.app.view.Overlays.SpellbookCreator
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
+import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.viewutilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.viewutilities.FilterButton
 import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
@@ -45,6 +50,8 @@ import com.example.spellbook5eapplication.app.viewmodel.CreateSpellbookViewModel
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.app.viewmodel.TitleState
+import androidx.compose.material3.ButtonDefaults as Material3ButtonDefaults
 
 @Composable
 fun Basic_Screen(
@@ -211,6 +218,10 @@ fun SearchFilterBar(
         )
     }
 }
+
+
+
+
 
 // Old way of doing Overlay State
 /*for (overlayType in GlobalOverlayState.getOverlayStack()) {
