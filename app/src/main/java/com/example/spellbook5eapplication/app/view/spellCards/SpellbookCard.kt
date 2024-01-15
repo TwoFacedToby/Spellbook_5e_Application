@@ -142,8 +142,16 @@ fun SpellbookCard(
                             .fillMaxHeight(0.4f)
                             .padding(top = 16.dp)
                             .pointerInput(Unit) {
-                            detectTapGestures(onLongPress = { onLongPress() })
-                        },
+                                detectTapGestures(
+                                    onLongPress = { onLongPress() },
+                                    onPress = {
+                                        tryAwaitRelease()
+                                        TitleState.currentTitle.value = spellbook.spellbookName
+                                        spellQueryViewModel.loadSpellsFromSpellbook(spellbook)
+
+                                    }
+                                )
+                            },
                         fontWeight = FontWeight.Bold,
                         fontSize = 20.sp,
                         color = colorResource(id = R.color.black)
