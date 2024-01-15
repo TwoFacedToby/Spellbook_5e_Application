@@ -3,8 +3,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import android.content.IntentSender
+import androidx.activity.result.IntentSenderRequest
 import com.example.spellbook5eapplication.app.Model.Data_Model.SignInResult
 import com.example.spellbook5eapplication.app.view.AuthUI.GoogleAuthUIClient
+import com.example.spellbook5eapplication.app.view.AuthUI.SignInIntentSender
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,22 +16,21 @@ class SignInViewModel(
     private val googleAuthUIClient: GoogleAuthUIClient // Inject GoogleAuthUIClient
 ): ViewModel() {
 
+    var signInIntentSender: SignInIntentSender? = null
     private val _state = MutableStateFlow(SignInState())
     val state = _state.asStateFlow()
 
     // Function to initiate Google Sign-In
-    fun signInWithGoogle() {
+    fun signInWithGoogle(onIntentReady: (IntentSenderRequest) -> Unit) {
         viewModelScope.launch {
             try {
                 val signInIntentSender = googleAuthUIClient.signIn()
                 signInIntentSender?.let {
-                    // Handle the IntentSender, typically by starting an activity for result
-                    // You'll need to pass this IntentSender back to the UI
+                    val intentSenderRequest = IntentSenderRequest.Builder(it).build()
+                    onIntentReady(intentSenderRequest)
                 }
             } catch (e: Exception) {
-                _state.update {
-                    it.copy(isSignInSuccessful = false, signInError = e.message)
-                }
+                _state.update { it.copy(isSignInSuccessful = false, signInError = e.message) }
             }
         }
     }

@@ -1,8 +1,14 @@
 package com.example.spellbook5eapplication
 
+import SignInViewModel
+import android.app.Activity
+import android.content.IntentSender
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -21,23 +27,32 @@ import com.example.spellbook5eapplication.app.view.AuthUI.GoogleAuthUIClient
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 import com.google.android.gms.auth.api.identity.Identity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.spellbook5eapplication.app.view.AuthUI.SignInIntentSender
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), SignInIntentSender {
 
-    private val googleAuthUiClient by lazy {
-        GoogleAuthUIClient(
-            context = applicationContext,
-            oneTapClient = Identity.getSignInClient(applicationContext)
-        )
+    private lateinit var viewModel: SignInViewModel
+
+    private val signInResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.let { intent ->
+                viewModel.onSignInResult(intent)
+            }
+        }
     }
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel = SignInViewModel(googleAuthUIClient = GoogleAuthUIClient(this, Identity.getSignInClient(this)))
+        viewModel.signInIntentSender = this
+
         LocalDataLoader.setContext(applicationContext)
 
         SpelllistLoader.loadSpellbooks()
@@ -50,4 +65,13 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun sendIntent(intentSenderRequest: IntentSenderRequest) {
+        signInResultLauncher.launch(intentSenderRequest)
+    }
+
+    companion object {
+        private const val SIGN_IN_REQUEST_CODE = 1001
+    }
+
 }

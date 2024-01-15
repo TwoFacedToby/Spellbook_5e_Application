@@ -1,6 +1,9 @@
 package com.example.spellbook5eapplication.app.view.Overlays
 
 import SignInViewModel
+import android.app.Activity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -41,8 +44,20 @@ import com.google.android.gms.auth.api.identity.Identity
 fun UserOverlay(
     onDismissRequest: () -> Unit
 ) {
-    val viewModel = SignInViewModel(googleAuthUIClient = GoogleAuthUIClient(context = LocalContext.current, oneTapClient = Identity.getSignInClient(LocalContext.current)))
-    val signInState by viewModel.state.collectAsStateWithLifecycle() // Observe sign-in state
+    val context = LocalContext.current
+    val signInClient = Identity.getSignInClient(context)
+    val viewModel = remember { SignInViewModel(googleAuthUIClient = GoogleAuthUIClient(context, signInClient)) }
+    val signInState by viewModel.state.collectAsStateWithLifecycle()
+    // ActivityResultLauncher for Google Sign-In
+    val signInResultLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.let { intent ->
+                viewModel.onSignInResult(intent)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -68,8 +83,11 @@ fun UserOverlay(
                 Text("Sign Out")
             }
         } else {
-            // Display a sign-in button
-            Button(onClick = { viewModel.signInWithGoogle() }) {
+            Button(onClick = {
+                viewModel.signInWithGoogle { intentSenderRequest ->
+                    signInResultLauncher.launch(intentSenderRequest)
+                }
+            }) {
                 Text("Sign In with Google")
             }
         }
