@@ -73,4 +73,8 @@ object SpellbookManager {
         // Removing "favourite spellbook" from Spellbooklist
         return spellbooks.filter { it.spellbookName != "Favourites" }
     }
+
+
+
+
 }
