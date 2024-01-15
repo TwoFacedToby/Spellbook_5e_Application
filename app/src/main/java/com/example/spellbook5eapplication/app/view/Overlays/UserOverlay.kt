@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view.Overlays
 
+import SignInViewModel
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
@@ -29,8 +30,20 @@ import androidx.compose.ui.unit.sp
 import com.example.spellbook5eapplication.R
 import kotlinx.coroutines.launch
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.spellbook5eapplication.app.view.AuthUI.GoogleAuthUIClient
+import com.google.android.gms.auth.api.identity.Identity
+
 @Composable
-fun UserOverlay(onDismissRequest: () -> Unit) {
+fun UserOverlay(
+    onDismissRequest: () -> Unit
+) {
+    val viewModel = SignInViewModel(googleAuthUIClient = GoogleAuthUIClient(context = LocalContext.current, oneTapClient = Identity.getSignInClient(LocalContext.current)))
+    val signInState by viewModel.state.collectAsStateWithLifecycle() // Observe sign-in state
+
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -45,6 +58,21 @@ fun UserOverlay(onDismissRequest: () -> Unit) {
         )
 
         Spacer(modifier = Modifier.height(16.dp))
+
+        // Conditionally display content based on sign-in state
+        if (signInState.isSignInSuccessful) {
+            // Display user profile information
+            Text("User is signed in")
+            // Add a sign-out button
+            Button(onClick = { viewModel.onSignOutClick() }) {
+                Text("Sign Out")
+            }
+        } else {
+            // Display a sign-in button
+            Button(onClick = { viewModel.signInWithGoogle() }) {
+                Text("Sign In with Google")
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 

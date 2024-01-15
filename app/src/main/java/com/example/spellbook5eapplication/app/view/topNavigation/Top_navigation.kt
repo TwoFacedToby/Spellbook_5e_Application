@@ -93,7 +93,7 @@ fun TopBar(navController: NavController){
         }
         OverlayType.PROFILE -> {
             CustomOverlay(OverlayType.PROFILE) {
-                UserOverlay(onDismissRequest = { GlobalOverlayState.dismissOverlay() })
+                UserOverlay(onDismissRequest = { GlobalOverlayState.dismissOverlay()})
             }
         }
         else -> Unit // Do nothing
