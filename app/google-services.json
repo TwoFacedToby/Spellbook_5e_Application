@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "193586956456",
+    "project_id": "spellbook5e-group14",
+    "storage_bucket": "spellbook5e-group14.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193586956456:android:18f18a6214eb45a5115a9d",
+        "android_client_info": {
+          "package_name": "com.example.spellbook5eapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "193586956456-gd6ebpbjleb5ftakg62f44eor6drv47a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.spellbook5eapplication",
+            "certificate_hash": "44add38bffbc285e51d6816394e9f90a09ff0dfa"
+          }
+        },
+        {
+          "client_id": "193586956456-58pc7k5j76ephvpdpdd7suigubu9tst1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4SheezvInhAPWdEKV_NxhKaMhu33ds3Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193586956456-58pc7k5j76ephvpdpdd7suigubu9tst1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

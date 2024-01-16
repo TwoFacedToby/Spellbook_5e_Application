@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication
 
+import GoogleAuthUIClient
 import SignInViewModel
 import android.app.Activity
 import android.content.IntentSender
@@ -23,7 +24,6 @@ import com.example.spellbook5eapplication.app.view.MainScreen
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
 import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
-import com.example.spellbook5eapplication.app.view.AuthUI.GoogleAuthUIClient
 import com.example.spellbook5eapplication.ui.theme.Spellbook5eApplicationTheme
 import com.google.android.gms.auth.api.identity.Identity
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -33,45 +33,30 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
 
-class MainActivity : ComponentActivity(), SignInIntentSender {
+class MainActivity : ComponentActivity() {
 
-    private lateinit var viewModel: SignInViewModel
-
-    private val signInResultLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let { intent ->
-                viewModel.onSignInResult(intent)
-            }
-        }
-    }
+    private val googleAuthUIClient by lazy { GoogleAuthUIClient(this) }
+    private val signInViewModel by lazy { SignInViewModel(googleAuthUIClient) }
 
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = SignInViewModel(googleAuthUIClient = GoogleAuthUIClient(this, Identity.getSignInClient(this)))
-        viewModel.signInIntentSender = this
 
         LocalDataLoader.setContext(applicationContext)
 
         SpelllistLoader.loadSpellbooks()
+
         lifecycleScope.launch {
             SpellDataFetcher.sneakyQuickLoader()
         }
+
         setContent {
             Spellbook5eApplicationTheme {
-                MainScreen()
+                MainScreen(signInViewModel)
             }
         }
-    }
-
-    override fun sendIntent(intentSenderRequest: IntentSenderRequest) {
-        signInResultLauncher.launch(intentSenderRequest)
-    }
-
-    companion object {
-        private const val SIGN_IN_REQUEST_CODE = 1001
     }
 
 }

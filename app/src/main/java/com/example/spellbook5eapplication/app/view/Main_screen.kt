@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view
 
+import SignInViewModel
 import android.annotation.SuppressLint
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -14,11 +15,11 @@ import com.example.spellbook5eapplication.app.view.topNavigation.TopBar
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(){
+fun MainScreen(signInViewModel: SignInViewModel){
     val navController = rememberNavController()
 
     Scaffold(
-        topBar = { TopBar(navController = navController)},
+        topBar = { TopBar(navController = navController, signInViewModel = signInViewModel)},
         bottomBar = { BottomBar(navController = navController) }
     ){
         BottomNavigationGraph(

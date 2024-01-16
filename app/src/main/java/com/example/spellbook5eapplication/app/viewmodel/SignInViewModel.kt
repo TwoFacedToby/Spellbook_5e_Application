@@ -3,12 +3,16 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import android.content.IntentSender
+import android.util.Log
 import androidx.activity.result.IntentSenderRequest
 import com.example.spellbook5eapplication.app.Model.Data_Model.SignInResult
-import com.example.spellbook5eapplication.app.view.AuthUI.GoogleAuthUIClient
+import com.example.spellbook5eapplication.app.Model.Data_Model.UserData
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInIntentSender
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInState
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -19,32 +23,32 @@ class SignInViewModel(
     var signInIntentSender: SignInIntentSender? = null
     private val _state = MutableStateFlow(SignInState())
     val state = _state.asStateFlow()
+    private val _eventFlow = MutableSharedFlow<String>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    private val _userData = MutableStateFlow<UserData?>(null)
+    val userData: StateFlow<UserData?> = _userData.asStateFlow()
 
     // Function to initiate Google Sign-In
-    fun signInWithGoogle(onIntentReady: (IntentSenderRequest) -> Unit) {
-        viewModelScope.launch {
-            try {
-                val signInIntentSender = googleAuthUIClient.signIn()
-                signInIntentSender?.let {
-                    val intentSenderRequest = IntentSenderRequest.Builder(it).build()
-                    onIntentReady(intentSenderRequest)
-                }
-            } catch (e: Exception) {
-                _state.update { it.copy(isSignInSuccessful = false, signInError = e.message) }
-            }
-        }
+    fun signInWithGoogle(onIntentReady: (Intent) -> Unit) {
+        val signInIntent = googleAuthUIClient.signIn()
+        onIntentReady(signInIntent)
     }
 
     // Function to process the result of the sign-in attempt
     fun onSignInResult(intent: Intent) {
         viewModelScope.launch {
             try {
-                val signInResult: SignInResult = googleAuthUIClient.getSignInResultFromIntend(intent)
+                val signInResult: SignInResult = googleAuthUIClient.handleSignInResult(intent)
                 _state.update {
                     it.copy(
                         isSignInSuccessful = signInResult.data != null,
-                        signInError = signInResult.error
+                        signInError = signInResult.error,
+                        data = signInResult.data
                     )
+                }
+                if (signInResult.data != null) {
+                    _eventFlow.emit("Logged in successfully")
                 }
             } catch (e: Exception) {
                 _state.update {
@@ -57,7 +61,17 @@ class SignInViewModel(
     fun onSignOutClick() {
         viewModelScope.launch {
             googleAuthUIClient.signOut()
+            _state.update { SignInState(isSignInSuccessful = false, signInError = null) }
+            _eventFlow.emit("Logged out successfully")
         }
+    }
+
+    private fun setUserProfile(userData: UserData) {
+        _userData.value = userData
+    }
+
+    private fun clearUserProfile() {
+        _userData.value = null
     }
 
     fun resetSignInState() {

@@ -1,47 +1,42 @@
-package com.example.spellbook5eapplication.app.view.AuthUI
-import com.google.android.gms.auth.api.identity.SignInClient
-
 import android.content.Context
 import android.content.Intent
-import android.content.IntentSender
+import android.util.Log
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.SignInResult
 import com.example.spellbook5eapplication.app.Model.Data_Model.UserData
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.BeginSignInRequest.GoogleIdTokenRequestOptions
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
-import java.util.concurrent.CancellationException
 
-class GoogleAuthUIClient(
-    private val context: Context,
-    private val oneTapClient: SignInClient
-) {
-    private val auth = Firebase.auth
+class GoogleAuthUIClient(private val context: Context) {
+    private val auth: FirebaseAuth = Firebase.auth
+    private lateinit var googleSignInClient: GoogleSignInClient
 
-
-    suspend fun signIn(): IntentSender? {
-        val result = try {
-            oneTapClient.beginSignIn(
-                buildSignInRequest()
-            ).await()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if (e is CancellationException) throw e
-            null
-        }
-        return result?.pendingIntent?.intentSender
+    init {
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(context.getString(R.string.web_client_id))
+            .requestEmail()
+            .build()
+                googleSignInClient = GoogleSignIn.getClient(context, gso)
     }
 
-    suspend fun getSignInResultFromIntend(intent: Intent): SignInResult{
-        val credential = oneTapClient.getSignInCredentialFromIntent(intent)
-        val idToken = credential.googleIdToken
-        val googleCredential =  GoogleAuthProvider.getCredential(idToken, null)
+    fun signIn(): Intent {
+        return googleSignInClient.signInIntent
+    }
 
+    suspend fun handleSignInResult(data: Intent?): SignInResult {
+        val task = GoogleSignIn.getSignedInAccountFromIntent(data)
         return try {
-            val user = auth.signInWithCredential(googleCredential).await().user
+            val account = task.getResult(ApiException::class.java)
+            val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+            val authResult = auth.signInWithCredential(credential).await()
+            val user = authResult.user
             SignInResult(
                 data = user?.run {
                     UserData(
@@ -52,47 +47,28 @@ class GoogleAuthUIClient(
                 },
                 error = null
             )
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if(e is CancellationException) throw e
-            SignInResult(
-                data = null,
-                error = e.message
-            )
+        } catch (e: ApiException) {
+            // Handle API exception here
+            SignInResult(data = null, error = e.localizedMessage)
         }
     }
 
-    suspend fun signOut(){
-        try {
-            oneTapClient.signOut().await()
+    // Function to sign out the user
+    fun signOut() {
+        googleSignInClient.signOut().addOnCompleteListener {
             auth.signOut()
-        } catch (e: Exception) {
-            e.printStackTrace()
-            if(e is CancellationException) throw e
+            Log.d("GoogleAuthUIClient", "User signed out successfully")
         }
     }
 
-    fun getSignedInUser(): UserData? = auth.currentUser?.run{
-        UserData(
-            userId = uid,
-            name = displayName,
-            profilePictureUrl = photoUrl?.toString()
-        )
-    }
-
-
-    private fun buildSignInRequest(): BeginSignInRequest{
-        return BeginSignInRequest.builder()
-            .setGoogleIdTokenRequestOptions(
-                GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    .setFilterByAuthorizedAccounts(false)
-                    .setServerClientId(context.getString(R.string.web_client_id))
-                    .build()
+    // Function to get the currently signed in user
+    fun getSignedInUser(): UserData? {
+        return auth.currentUser?.run {
+            UserData(
+                userId = uid,
+                name = displayName,
+                profilePictureUrl = photoUrl?.toString()
             )
-            .setAutoSelectEnabled(true)
-            .build()
+        }
     }
-
-
 }
