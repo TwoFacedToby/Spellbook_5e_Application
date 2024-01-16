@@ -3,19 +3,17 @@ package com.example.spellbook5eapplication.test
 import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
-import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
-import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
 import io.cucumber.java.PendingException
 import io.cucumber.java.en.Given
-import io.cucumber.java.en.When
 import io.cucumber.java.en.Then
+import io.cucumber.java.en.When
 import junit.framework.TestCase.assertFalse
-import org.junit.Assert
+import junit.framework.TestCase.assertTrue
 
-class UserStoryFourFavouriteASpell {
+public class UserStoryFiveDefavouriteASpell {
+
     private var selectedSpellbook = mutableStateOf<Spellbook?>(null)
     private val spellbooks = mutableStateListOf<Spellbook>()
     private var favouritesSpellbook: Spellbook? = null
@@ -42,28 +40,28 @@ class UserStoryFourFavouriteASpell {
         Log.d("nasdjnasdnjasnj", "favouritesSpellbook contains: $favourites: ")
     }
 
-    @Given("the user is viewing a list of spells not favourited")
-    fun the_user_is_viewing_a_list_of_spells_not_favourited() {
-        Log.d("Executed", "Given")
-        Assert.assertNotNull("Favourites spellbook should not be null", favourites)
+    @Given("the user has a spell marked as favourite")
+    fun the_user_has_a_spell_marked_as_favourite( ) {
+        Log.d("Executed5", "Given")
+        Log.d("Executed5given", favourites.spells.contains("Healing Word").toString())
+        assertTrue("Spellbook Should contain the spell Healing Word", favourites.spells.contains("Healing Word"))
     }
 
-    @When("the user marks a spell as a favorite by tapping the heart icon")
-    fun the_user_marks_a_spell_as_a_favorite_by_tapping_the_heart_icon() {
-        Log.d("Executed", "First When")
-        val spellToAdd = "Lightning Bolt"
-        SpellbookManager.getSpellbook("FavouritesTest")?.addSpellToSpellbook(spellToAdd)
-        Log.d("nasdjnasdnjasnj1234", "favouritesSpellbook contains: ${favourites}: ")
-        SpellbookManager.saveSpellbookToFile("FavouritesTest")
+    @When("the tapped spell is already favourited, the spell should be removed from the favourites list")
+    fun the_tapped_spell_is_already_favourited_the_spell_should_be_removed_from_the_favourites_list() {
+        Log.d("Executed5", "Second When")
+        favourites?.removeSpell("Healing Word")
+        val containsSpell = favourites.spells.contains("Healing Word")
+        assertFalse("Favourites spellbook should not contain the marked spell", containsSpell)
+    }
+
+    @Then("the favourites list should not contain that spell")
+    fun the_favourites_list_should_not_contain_that_spell( ) {
+        Log.d("Executed5", "Then")
+        val contains = SpellbookManager.getSpellbook("FavouritesTest")?.spells?.contains("Healing Word")
+        if (contains != null) {
+            assertFalse("Favourites spellbook should not contain the marked spell", contains)
         }
 
-    @Then("that spell should be saved to a dedicated Favorites section")
-    fun that_spell_should_be_saved_to_a_dedicated_favorites_section() {
-        Log.d("Executed", "Then")
-        val updatedFavouriteSpellbook = favourites?.spells?.contains("Lightning Bolt") ?: false
-        Log.d("asmodkoasdnk", updatedFavouriteSpellbook.toString())
-        Assert.assertTrue("Favourites spellbook should contain the marked spell", updatedFavouriteSpellbook!!)
     }
-
-
 }

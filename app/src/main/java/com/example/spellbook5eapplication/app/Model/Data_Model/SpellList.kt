@@ -59,7 +59,7 @@ class SpellList {
         return indexList
     }
 
-    fun setSpellInfoList(spellInfo: List<Spell.SpellInfo>) {
+    fun setSpellInfoList(spellInfo: List<SpellInfo>) {
         spellInfoList = spellInfo
     }
 

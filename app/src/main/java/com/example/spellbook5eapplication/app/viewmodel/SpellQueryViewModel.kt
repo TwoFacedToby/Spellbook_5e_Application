@@ -1,4 +1,5 @@
 import android.util.Log
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -6,12 +7,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Model.QuickPlay
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.Search
 import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
+import com.example.spellbook5eapplication.app.view.spellCards.bottomDistance
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
 import com.example.spellbook5eapplication.app.viewmodel.TitleState
 import kotlinx.coroutines.delay
@@ -21,6 +25,8 @@ class SpellQueryViewModel() : ViewModel() {
 
     //Spell name list for API
     private var spellList: SpellList? = null
+
+
 
     //Loading from pagination
     private val _isLoading = MutableLiveData<Boolean>()
@@ -69,6 +75,11 @@ class SpellQueryViewModel() : ViewModel() {
         viewModelScope.launch {
             println("Kig her")
             spellList = SpellsViewModel.fetchAllSpellNames()
+            if(spellList!!.getIndexList().isEmpty()){
+                val list = LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL)
+                spellList!!.setIndexList(list)
+
+            }
             _indexListFromAPI = spellList!!.getIndexList().toMutableList()
             Log.d("API_RESPONSE_NEW", spellList.toString())
             loadInitialSpells()
@@ -83,7 +94,12 @@ class SpellQueryViewModel() : ViewModel() {
             // Load initial spells only if the spell list is empty
             if (_spells.value.isNullOrEmpty()) {
                 _isLoading.postValue(true)
-                val initialSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
+                val loadedSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
+                val loadingSpells = mutableListOf<Spell.SpellInfo>()
+                for(i in 0 until spellList!!.getIndexList().count()-10){
+                    loadingSpells.add(SpellsViewModel.getEmptySpell())
+                }
+                val initialSpells = loadedSpells + loadingSpells
                 Log.d("API_RESPONSE_NEW","IS: " + initialSpells.toString())
                 val displayableSpells = initialSpells?.map { it as Displayable }
                 _spells.postValue(displayableSpells)
@@ -94,17 +110,39 @@ class SpellQueryViewModel() : ViewModel() {
 
     fun loadMoreSpells() {
         viewModelScope.launch {
-            if (canLoadMoreSpells()) {
+            if (canLoadMoreSpells() && spellList!!.getLoaded() < spellList!!.getIndexList().count()) {
                 _isLoading.postValue(true)
                 val nextSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
                 val displayableNextSpells = nextSpells.map { it as Displayable }
 
                 val updatedList = _spells.value.orEmpty().toMutableList()
-                updatedList.addAll(displayableNextSpells)
+
+                var loaded = 0
+
+                for (i in updatedList.indices) {
+                    if (loaded == nextSpells.size) break
+                    when (val displayable = updatedList[i]) {
+                        is Spell.SpellInfo -> {
+                            if (displayable.index == null) {
+                                updatedList[i] = nextSpells[loaded++]
+                            }
+                        }
+                    }
+                }
                 _spells.postValue(updatedList)
                 _isLoading.postValue(false)
             }
         }
+    }
+
+    fun shouldLoadMoreData(listState: LazyListState): Boolean {
+        val layoutInfo = listState.layoutInfo
+        val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
+        val loaded = try { spellList!!.getLoaded() }
+        catch (e : Exception){ 0 } //Loaded is null
+        val toReturn = lastVisibleItem > (loaded - 3) //We minus by three, because we want it to start loading before we reach the bottom
+        Log.d("SpellQuery", "Should load more: $toReturn\nLast: $lastVisibleItem\nLoaded: $loaded")
+        return toReturn
     }
 
 
@@ -128,6 +166,22 @@ class SpellQueryViewModel() : ViewModel() {
         }
 
     }
+    fun loadQuickPlayer(){
+        viewModelScope.launch {
+            val spellBookList = SpellbookManager.getAllSpellbooks()
+            _spellBooks.postValue(spellBookList)
+
+
+
+            val spellList = SpellList()
+            val indexList = QuickPlay.getQuickPlayList(QuickPlay.Class.WIZARD, 6)
+            spellList.setIndexList(indexList)
+
+
+
+
+        }
+    }
 
     fun loadSpellBooks(){
         val spellBookList = SpellbookManager.getAllSpellbooks()
@@ -135,7 +189,12 @@ class SpellQueryViewModel() : ViewModel() {
     }
 
     fun canLoadMoreSpells(): Boolean {
-        return (_spells.value?.size ?: 0) < spellList!!.getIndexList().size
+        if(!_spells.isInitialized) return false
+        _spells.value!!.forEach {
+            val spell : Spell.SpellInfo = it as Spell.SpellInfo
+            if(spell.index == null) return true
+        }
+        return false
     }
 
     fun totalSpellsLoaded(): Int = spellList!!.getIndexList().size

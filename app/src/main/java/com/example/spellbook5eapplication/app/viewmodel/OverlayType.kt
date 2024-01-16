@@ -10,5 +10,6 @@ enum class OverlayType {
     ADD_TO_SPELLBOOK,
     FILTER,
     MAKE_SPELL,
-    CREATE_SPELLBOOK
+    CREATE_SPELLBOOK,
+    EDIT_SPELL
 }

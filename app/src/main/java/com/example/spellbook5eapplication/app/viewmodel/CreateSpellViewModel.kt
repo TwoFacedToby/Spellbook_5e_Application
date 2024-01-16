@@ -142,7 +142,7 @@
 
             // adding the json to the spell after all else is added if empty (don't want it to grow indefinitely)
             if(spell.json.isNullOrBlank())
-            spell.apply{
+                spell.apply{
                 json = jsonSpell
             }
 
@@ -150,4 +150,45 @@
             LocalDataLoader.saveJson(jsonSpell, spell.index!!, LocalDataLoader.DataType.HOMEBREW)
             println(jsonSpell)
         }
+
+        fun replaceSpell(oldIndex: String){
+
+            // Some fix values in homebrew
+
+            if(oldIndex != null) {
+
+                spell.homebrew = true
+
+                spell.index = spell.name!!.lowercase()
+
+                spell.url = "Homebrew"
+
+                // Saving the spell localy
+                val gson = Gson()
+
+                spell.json = ""
+
+                var jsonSpell = gson.toJson(spell)
+                jsonSpell = "{\"data\":{\"spell\":$jsonSpell}}"
+
+                // adding the json to the spell after all else is added if empty (don't want it to grow indefinitely)
+                if (spell.json.isNullOrBlank())
+                    spell.apply {
+                        json = jsonSpell
+                    }
+
+                //What ever way the spell may now be saved on the device, might need to be changed.
+                LocalDataLoader.deleteFile(oldIndex+".json", LocalDataLoader.DataType.HOMEBREW)
+                LocalDataLoader.saveJson(
+                    jsonSpell,
+                    spell.index!!,
+                    LocalDataLoader.DataType.HOMEBREW
+                )
+                println(jsonSpell)
+            }
+            else{
+                println("Index given is null can not replace")
+            }
+        }
+
     }

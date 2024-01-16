@@ -1,7 +1,9 @@
 package com.example.spellbook5eapplication.app.view.screens
 
+import SpellQueryViewModel
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,6 +25,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
@@ -31,10 +34,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.view.Overlays.CreateOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.HomeBrewInstantiator
@@ -77,6 +82,11 @@ fun Basic_Screen(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize(),
                 alpha = 0.5F
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize() // Fill the parent size
+                    .background(Color.Black.copy(alpha = 0.4f))
             )
             Column (
                 modifier = Modifier
@@ -171,6 +181,12 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 //HomeBrewInstantiator.makeNewSpellFromTheTop(createViewModel)
                 createView.makeNewSpellFromTheTop(createViewModel)
             }
+            OverlayType.EDIT_SPELL -> {
+                val createViewModel = CreateSpellViewModel()
+                val createView = HomeBrewInstantiator()
+                createViewModel.updateEntireSpell(GlobalOverlayState.currentSpell!!)
+                createView.EditSpell(createViewModel)
+            }
             OverlayType.ERASE_PROMPT -> {
                 CreateOverlay(
                     message = "Exiting now will erase all progress",
@@ -183,6 +199,20 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 val createSpellbookViewModel = CreateSpellbookViewModel()
                 val createView = SpellbookCreator()
                 createView.createNewSpellbook(createSpellbookViewModel)
+            }
+            OverlayType.DELETE_PROMPT -> {
+                // To refresh screen and that it is gone
+                val spellQueryViewModel: SpellQueryViewModel = viewModel()
+
+                CreateOverlay(
+                    message = "Delete ${GlobalOverlayState.currentSpell!!.name}?",
+                    button1Message = "Cancel",
+                    button2Message = "Delete",
+                    button2Function = {
+                            LocalDataLoader.deleteFile(GlobalOverlayState.currentSpell!!.index +".json", LocalDataLoader.DataType.HOMEBREW)
+                        spellQueryViewModel.loadHomebrewList()
+                        GlobalOverlayState.dismissOverlay()}
+                )
             }
             else -> {}
         }
@@ -206,7 +236,8 @@ fun SearchFilterBar(
                 filterViewModel.updateFilterWithSearchName(input)
             },
             modifier = Modifier.size(height = 48.dp, width = 220.dp),
-            imeAction = ImeAction.Search
+            imeAction = ImeAction.Search,
+            initialInput = ""
         )
         Spacer(modifier = Modifier.width(5.dp))
         FilterButton(
@@ -218,10 +249,6 @@ fun SearchFilterBar(
         )
     }
 }
-
-
-
-
 
 // Old way of doing Overlay State
 /*for (overlayType in GlobalOverlayState.getOverlayStack()) {
