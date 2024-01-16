@@ -29,7 +29,7 @@ fun FilterButton(onShowFiltersRequest: () -> Unit){
                 shape = RoundedCornerShape(2.dp)
             )
             .border(
-                BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary),
+                BorderStroke(2.dp, MaterialTheme.colorScheme.onPrimaryContainer),
                 shape = RoundedCornerShape(2.dp)
             ),
         colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary)

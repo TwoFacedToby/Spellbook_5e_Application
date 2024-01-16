@@ -4,7 +4,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Card
 import androidx.compose.material3.MaterialTheme
@@ -25,8 +27,9 @@ fun ClassCard(type: Class) {
     val quickPlayViewModel: QuickPlayViewModel = viewModel()
     Card(
         modifier = Modifier
-            .width(300.dp)
+            .fillMaxWidth()
             .height(100.dp)
+            .padding(start = 10.dp, end = 10.dp)
             .clickable {
                 quickPlayViewModel.updateCurrentClass(type)
                 GlobalOverlayState.showOverlay(OverlayType.QUICKPLAY_SPELLBOOK)

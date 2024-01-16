@@ -86,7 +86,7 @@ fun SpellCard(
         shape = MaterialTheme.shapes.small,
         backgroundColor = cardColor,
         modifier = Modifier
-            .width(300.dp)
+            .fillMaxWidth()
             .height(160.dp)
             .padding(10.dp)
             .clickable {
