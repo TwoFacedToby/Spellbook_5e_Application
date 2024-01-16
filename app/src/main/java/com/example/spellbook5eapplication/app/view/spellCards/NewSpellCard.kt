@@ -56,7 +56,6 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
-import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.CoroutineScope

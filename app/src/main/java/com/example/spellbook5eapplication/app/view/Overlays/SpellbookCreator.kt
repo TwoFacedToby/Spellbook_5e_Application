@@ -227,7 +227,8 @@ class SpellbookCreator {
                         modifier = Modifier
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
-                        imeAction = ImeAction.Default
+                        imeAction = ImeAction.Default,
+                        initialInput = ""
                     )
                 }
             }
@@ -249,8 +250,8 @@ class SpellbookCreator {
                         modifier = Modifier
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
-                        imeAction = ImeAction.Default
-                        // Include other properties as needed
+                        imeAction = ImeAction.Default,
+                        initialInput = ""
                     )
                 }
             }
