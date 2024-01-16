@@ -96,13 +96,13 @@ class HomeBrewInstantiator {
                 .pointerInput(Unit) {
                     detectTapGestures { /* consume tap events */ }
                 }
-                .background(Color.Black.copy(alpha = 0.5f)), // Semi-transparent background
+                .background(Color.Black.copy(alpha = 0.5f)), // dark background
             contentAlignment = Alignment.Center
         ) {
 
             Box(
-                contentAlignment = Alignment.Center, // Center content in the Box
-                modifier = Modifier.fillMaxSize()    // Make Box fill the entire available space
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
             ) {
 
                 Column(
@@ -172,7 +172,7 @@ class HomeBrewInstantiator {
 
                                 ColouredButton(
                                     "Cancel", modifier = Modifier
-                                        .height(38.dp) // Sets the height of the button
+                                        .height(38.dp)
                                         .width(100.dp), color = ButtonDefaults.buttonColors(
                                         containerColor = colorResource(
                                             id = R.color.red_button
@@ -278,13 +278,13 @@ class HomeBrewInstantiator {
                 .pointerInput(Unit) {
                     detectTapGestures { /* consume tap events */ }
                 }
-                .background(Color.Black.copy(alpha = 0.5f)), // Semi-transparent background
+                .background(Color.Black.copy(alpha = 0.5f)), // darker background
             contentAlignment = Alignment.Center
         ) {
 
             Box(
-                contentAlignment = Alignment.Center, // Center content in the Box
-                modifier = Modifier.fillMaxSize()    // Make Box fill the entire available space
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
             ) {
 
                 Column(
@@ -770,6 +770,7 @@ class HomeBrewInstantiator {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 if (specific) {
+                    viewModel.spell.range = ""
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -828,6 +829,7 @@ class HomeBrewInstantiator {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 if (specific) {
+                    viewModel.spell.duration = ""
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center

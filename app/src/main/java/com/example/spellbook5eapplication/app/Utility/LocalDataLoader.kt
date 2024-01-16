@@ -213,7 +213,7 @@ object LocalDataLoader {
         }
         try {
             // Locate the file in the specified directory
-            val file = File(baseDirectory, "$directoryName/$fileName"+".json")
+            val file = File(baseDirectory, "$directoryName/$fileName")
 
             if (file.exists()) {
                 // Attempt to delete the file and return the result
