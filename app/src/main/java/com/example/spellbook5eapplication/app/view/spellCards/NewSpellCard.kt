@@ -247,9 +247,9 @@ fun SpellCard(
             if (isSpellbookView) {
                 IconButton(
                     onClick = {
-                        SpellbookManager.removeSpellFromSpellbook(TitleState.currentTitle.value!!, spell)
-                        SpellbookManager.getSpellbook(TitleState.currentTitle.value!!)
-                            ?.let { spellQueryViewModel.loadSpellsFromSpellbook(it) }
+                        GlobalOverlayState.currentSpell = spell
+                        GlobalOverlayState.currentSpellbook = SpellbookManager.getSpellbook(TitleState.currentTitle.value!!)
+                        GlobalOverlayState.showOverlay(OverlayType.REMOVE_SPELL_FROM_SPELLBOOK)
                     },
                     modifier = Modifier
                         .align(Alignment.BottomEnd)

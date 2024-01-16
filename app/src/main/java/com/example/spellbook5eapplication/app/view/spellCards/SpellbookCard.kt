@@ -190,8 +190,9 @@ fun SpellbookCard(
             ) {
                 IconButton(
                     onClick = {
-                        SpellbookManager.removeSpellbook(spellbook.spellbookName)
-                        spellQueryViewModel.loadSpellBooks()
+                        GlobalOverlayState.currentSpellbook = spellbook
+                        GlobalOverlayState.showOverlay(OverlayType.REMOVE_SPELLBOOK)
+
                     }
                 ) {
                     Icon(

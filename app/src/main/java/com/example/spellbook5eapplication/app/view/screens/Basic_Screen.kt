@@ -36,8 +36,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.view.Overlays.CreateOverlay
@@ -213,6 +215,37 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                         spellQueryViewModel.loadHomebrewList()
                         GlobalOverlayState.dismissOverlay()}
                 )
+            }
+
+            OverlayType.REMOVE_SPELLBOOK -> {
+                val spellQueryViewModel : SpellQueryViewModel = viewModel()
+                CreateOverlay(
+                    message = "Do you want to delete ${GlobalOverlayState.currentSpellbook!!.spellbookName}?",
+                    button1Message = "Cancel",
+                    button2Message = "Delete",
+                    button2Function = {
+                        SpellbookManager.removeSpellbook(GlobalOverlayState.currentSpellbook!!.spellbookName)
+                        spellQueryViewModel.loadSpellBooks()
+                        GlobalOverlayState.dismissOverlay()}
+                )
+
+            }
+            OverlayType.REMOVE_SPELL_FROM_SPELLBOOK -> {
+
+                val spellQueryViewModel : SpellQueryViewModel = viewModel()
+                CreateOverlay(
+                    /*message = "Do you want to remove ${GlobalOverlayState.currentSpell!!.name} from " +
+                            "${GlobalOverlayState.currentSpellbook!!.spellbookName}?"*/
+                    message = "Do you want to remove ${GlobalOverlayState.currentSpell!!.name}",
+                    button1Message = "Cancel",
+                    button2Message = "Remove",
+                    button2Function = {
+                        SpellbookManager.removeSpellFromSpellbook(GlobalOverlayState.currentSpellbook!!.spellbookName, GlobalOverlayState.currentSpell!!)
+                        spellQueryViewModel.loadSpellsFromSpellbook(GlobalOverlayState.currentSpellbook!!)
+
+                        GlobalOverlayState.dismissOverlay()}
+                )
+
             }
             else -> {}
         }
