@@ -432,7 +432,11 @@ fun SelectSpellbookDialog(spellbooks: List<Spellbook>, onDismiss: () -> Unit, sp
             LazyColumn {
                 items(spellbooks.size) { index ->
                     ListItem(
-                        text = { Text(spellbooks[index].spellbookName) },
+                        text = {
+                            if(!spellbooks[index].spells.contains(spell.index)){
+                                Text(spellbooks[index].spellbookName) }
+                            }
+                            ,
                         modifier = Modifier.clickable {
                             Log.d("POKE", spell.name.toString())
                             Log.d("POKE", spellbooks[index].spellbookName)
