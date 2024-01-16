@@ -2,32 +2,15 @@ package com.example.spellbook5eapplication.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+val DarkGrey = Color(0xFF2C2C2C) // Main Color
+val LightGrey = Color(0xFF878787) // Unselected Icon Color
+val Cream = Color(0xFFD9D9D9) // SpellCard color
+val MediumGrey = Color(0xFF434343) // Border Color
+val OverlayGrey = Color(0xFF303030) // Overlay - Inner Box Color
+val UnselectedButton = Color(0xFF292929) // Unselected Button Color - For Overlay
+val SelectedButton = Color(0xFF686868) // Selected Button Color
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+val SpellCardButton = Color(0xFF807E7E)
 
-val MintGreen80 = Color(0xFFA6F6C1)
-val SkyBlue80 = Color(0xFFA7C7E7)
-val LemonYellow80 = Color(0xFFF6E199)
-
-val MintGreen40 = Color(0xFF5CBB74)
-val SkyBlue40 = Color(0xFF5A9BCF)
-val LemonYellow40 = Color(0xFFC1A566)
-
-val Coral80 = Color(0xFFFFC2B4)
-val Aqua80 = Color(0xFFB4E1E7)
-val Lavender80 = Color(0xFFDCC6FF)
-val Peach80 = Color(0xFFFED4C0)
-val Teal80 = Color(0xFFB4E5DE)
-val Rose80 = Color(0xFFFFC2C7)
-
-val Coral40 = Color(0xFFE67A77)
-val Aqua40 = Color(0xFF77B1B7)
-val Lavender40 = Color(0xFFA088CC)
-val Peach40 = Color(0xFFE5A088)
-val Teal40 = Color(0xFF77A1A8)
-val Rose40 = Color(0xFFE67A7E)
+val GreenButton = Color(0xFF3C5E30)
+val RedButton = Color(0xFF791811)

@@ -1,8 +1,9 @@
 package com.example.spellbook5eapplication.app.Model
 
+import com.example.spellbook5eapplication.R
 import kotlin.math.roundToInt
 
-object QuickPlay {
+object QuickPlayHandler {
 
 
     fun getQuickPlayList(c : Class, lvl : Int) : List<String>{
@@ -14,11 +15,8 @@ object QuickPlay {
             Class.PALADIN -> getPaladin(getSpellLevelFromCharLevel(c, lvl))
             Class.RANGER -> getRanger(getSpellLevelFromCharLevel(c, lvl))
             Class.ROGUE -> getRogue(getSpellLevelFromCharLevel(c, lvl))
-            Class.BARBARIAN -> getBarbarian(getSpellLevelFromCharLevel(c, lvl))
-            Class.MONK -> getMonk(getSpellLevelFromCharLevel(c, lvl))
             Class.WARLOCK -> getWarlock(getSpellLevelFromCharLevel(c, lvl))
             Class.WIZARD -> getWizard(getSpellLevelFromCharLevel(c, lvl))
-            Class.ARTIFICER -> getArtificer(getSpellLevelFromCharLevel(c, lvl))
             Class.SORCERER -> getSorcerer(getSpellLevelFromCharLevel(c, lvl))
         }
         return list.toList()
@@ -59,8 +57,6 @@ object QuickPlay {
                 else if(lvl < 19) 3
                 else 4
             }
-            Class.BARBARIAN -> 0
-            Class.MONK -> 0
             Class.WARLOCK -> {
                 if(lvl < 3) 1
                 else if(lvl < 5) 2
@@ -69,13 +65,6 @@ object QuickPlay {
                 else 5
             }
             Class.WIZARD -> (lvl / 2f).roundToInt()
-            Class.ARTIFICER -> {
-                if(lvl < 5) 1
-                else if(lvl < 9) 2
-                else if(lvl < 13) 3
-                else if(lvl < 17) 4
-                else 5
-            }
             Class.SORCERER -> (lvl / 2f).roundToInt()
         }
     }
@@ -308,14 +297,6 @@ object QuickPlay {
         return list
     }
 
-    private fun getBarbarian(lvl: Int): MutableList<String> {
-        return mutableListOf<String>() //Has no spells
-    }
-
-    private fun getMonk(lvl: Int): MutableList<String> {
-        return mutableListOf<String>() //Has no spells
-    }
-
     private fun getWarlock(lvl: Int): MutableList<String> {
         val list = mutableListOf<String>()
         if (lvl < 1) return list
@@ -394,11 +375,6 @@ object QuickPlay {
 
         return list
     }
-
-    private fun getArtificer(lvl: Int): MutableList<String> {
-        return mutableListOf<String>() //Not in SRD 5e
-    }
-
     private fun getSorcerer(lvl: Int): MutableList<String> {
         val list = mutableListOf<String>()
 
@@ -440,25 +416,69 @@ object QuickPlay {
 
         return list
     }
+    fun getAvailableLevelsForClass(c: Class): List<Int> {
+        return when (c) {
+            Class.FIGHTER, Class.ROGUE -> listOf(3, 4, 5, 6, 7, 8, 9, 10)
+            Class.PALADIN, Class.RANGER -> listOf(2, 3, 4, 5, 6, 7, 8, 9, 10)
+            Class.WIZARD, Class.SORCERER, Class.DRUID, Class.WARLOCK, Class.CLERIC, Class.BARD -> listOf(
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10
+            )
+        }
+    }
+}
 
+enum class Class{
+    BARD,
+    CLERIC,
+    DRUID,
+    FIGHTER,
+    PALADIN,
+    RANGER,
+    ROGUE,
+    WARLOCK,
+    WIZARD,
+    SORCERER;
 
+    companion object {
+        fun className(type: Enum<Class>): String{
+            return when(type){
+                BARD -> "Bard"
+                CLERIC -> "Cleric"
+                DRUID -> "Druid"
+                FIGHTER -> "Fighter"
+                PALADIN -> "Paladin"
+                RANGER -> "Ranger"
+                ROGUE -> "Rouge"
+                WARLOCK -> "Warlock"
+                WIZARD -> "Wizard"
+                SORCERER -> "Sorcerer"
+                else -> { "UNIDENTIFIED" }
+            }
+        }
 
-
-
-
-    enum class Class{
-        BARD,
-        CLERIC,
-        DRUID,
-        FIGHTER,
-        PALADIN,
-        RANGER,
-        ROGUE,
-        BARBARIAN,
-        MONK,
-        WARLOCK,
-        WIZARD,
-        ARTIFICER,
-        SORCERER
+        fun classBackground(type: Enum<Class>): Int {
+            return when(type){
+                BARD -> R.drawable.bard_class_background
+                CLERIC -> R.drawable.cleric_class_background
+                DRUID -> R.drawable.druid_class_background
+                FIGHTER -> R.drawable.fighter_class_background
+                PALADIN -> R.drawable.paladin_class_background
+                RANGER -> R.drawable.ranger_class_background
+                ROGUE -> R.drawable.rouge_class_background
+                WARLOCK -> R.drawable.warlock_class_background
+                WIZARD -> R.drawable.wizard_class_background
+                SORCERER -> R.drawable.sorcerer_class_background
+                else -> { 0 }
+            }
+        }
     }
 }

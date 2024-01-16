@@ -3,6 +3,7 @@ package com.example.spellbook5eapplication.app.view.spellCards
 import SpellQueryViewModel
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +16,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
@@ -34,6 +37,8 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.view.viewutilities.DefaultSpellCardFactory
+import com.example.spellbook5eapplication.app.view.viewutilities.FadeSide
+import com.example.spellbook5eapplication.app.view.viewutilities.fadingEdge
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import kotlinx.coroutines.launch
 
@@ -85,15 +90,21 @@ fun SpellQuery(
         }
     }
 
-
-
     if (spells.isEmpty() && !isLoading) {
         NoSpellsFoundMessage()
     } else {
 
         LazyColumn(
             state = lazyListState,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .fadingEdge(
+                    side = FadeSide.BOTTOM,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
+                    width = 40.dp,
+                    isVisible = lazyListState.canScrollForward,
+                    spec = tween(500)
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
@@ -124,7 +135,6 @@ fun SpellQuery(
                 item { LoadingIndicator() }
             }
         }
-
     }
 }
 

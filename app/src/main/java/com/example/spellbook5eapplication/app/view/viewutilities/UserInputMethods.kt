@@ -23,6 +23,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +38,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 
 /**
  * Some different ways for the user to communicate with the system
@@ -73,9 +75,7 @@ horizontalArrangement = Arrangement.Center
             label = "$current",
             modifier = Modifier,
             color = ButtonDefaults.buttonColors(
-                containerColor = colorResource(
-                    id = R.color.selected_button
-                )
+                containerColor = ButtonColors.SelectedButton
             )
         )
         { expand = true }
@@ -88,7 +88,7 @@ horizontalArrangement = Arrangement.Center
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .background(color = colorResource(id = R.color.overlay_box_color))
+                .background(color = MaterialTheme.colorScheme.tertiary)
         ) {
             LazyColumn(
                 modifier = Modifier
@@ -100,7 +100,7 @@ horizontalArrangement = Arrangement.Center
                 dropdown.forEach { item ->
                     item {Text(
                         text = item,
-                        color = colorResource(id = R.color.white),
+                        color = MaterialTheme.colorScheme.onTertiary,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .fillMaxWidth()
@@ -145,9 +145,9 @@ fun UserButtons(
             label = label,
             modifier = Modifier,
             color = if (pressed) {
-                ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.selected_button))
+                ButtonDefaults.buttonColors(containerColor = ButtonColors.SelectedButton)
             } else {
-                ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.unselected_button))
+                ButtonDefaults.buttonColors(containerColor = ButtonColors.UnselectedButton)
             }
         ) {
             function[index].invoke()  // Invoke the function associated with the button
@@ -233,7 +233,7 @@ fun EditableList(
                         Icon(
                             imageVector = Icons.Outlined.Close,
                             contentDescription = "Remove from list",
-                            tint = colorResource(id = R.color.spellcard_button)
+                            tint = ButtonColors.SpellCardButton
                         )
                     }
                 }

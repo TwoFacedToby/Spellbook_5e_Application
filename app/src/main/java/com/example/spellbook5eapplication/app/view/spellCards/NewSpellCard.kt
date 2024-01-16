@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +37,7 @@ import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -63,6 +65,7 @@ import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.view.viewutilities.OverlayBox
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -72,7 +75,7 @@ import com.example.spellbook5eapplication.app.viewmodel.TitleState
 fun SpellCard(
     spell: Spell.SpellInfo
 ) {
-    val cardColor = colorResource(id = R.color.spellcard_color)
+    val cardColor = MaterialTheme.colorScheme.secondary
     val images = SpellCardCreation(spell)
     var showDialog by remember { mutableStateOf(false) }
 
@@ -85,7 +88,7 @@ fun SpellCard(
 
     Card(
         elevation = 10.dp,
-        shape = RoundedCornerShape(10.dp),
+        shape = MaterialTheme.shapes.small,
         backgroundColor = cardColor,
         modifier = Modifier
             .fillMaxWidth()
@@ -122,7 +125,7 @@ fun SpellCard(
                                     .clip(RoundedCornerShape(2.dp))
                                     .border(
                                         0.5.dp,
-                                        colorResource(id = R.color.border_color),
+                                        MaterialTheme.colorScheme.tertiary,
                                         shape = RoundedCornerShape(2.dp)
                                     )
                             )
@@ -179,7 +182,7 @@ fun SpellCard(
                                             .clip(RoundedCornerShape(2.dp))
                                             .border(
                                                 0.5.dp,
-                                                colorResource(id = R.color.border_color),
+                                                MaterialTheme.colorScheme.tertiary,
                                                 shape = RoundedCornerShape(2.dp)
                                             )
                                             .shadow(elevation = 5.dp)
@@ -204,7 +207,7 @@ fun SpellCard(
                         Icon(
                             imageVector = Icons.Outlined.Add,
                             contentDescription = "Add to spellbook",
-                            tint = colorResource(id = R.color.spellcard_button),
+                            tint = ButtonColors.SpellCardButton,
                             modifier = Modifier.size(48.dp)
                         )
                     }
@@ -243,8 +246,8 @@ fun SpellCard(
                         }
                         Icon(
                             imageVector = favouriteImage,
-                            contentDescription = "Favorite",
-                            tint = colorResource(id = R.color.spellcard_button),
+                            contentDescription = "Favorite button",
+                            tint = ButtonColors.SpellCardButton,
                             modifier = Modifier.size(48.dp)
                         )
                     }

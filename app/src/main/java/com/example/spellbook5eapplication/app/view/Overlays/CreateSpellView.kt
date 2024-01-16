@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,10 +53,10 @@ import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 
 
 //Works with BrewFactory2 to create homebrews
-
 
 
 // Old
@@ -117,8 +118,8 @@ class HomeBrewInstantiator {
                             .height(600.dp)
                             .fillMaxWidth()
                             .background(
-                                color = colorResource(id = R.color.overlay_box_color),
-                                shape = RoundedCornerShape(20.dp)
+                                color = MaterialTheme.colorScheme.tertiary,
+                                shape = MaterialTheme.shapes.large
                             ),
                         contentAlignment = Alignment.TopCenter
                     ) {
@@ -157,9 +158,7 @@ class HomeBrewInstantiator {
                                             .height(38.dp)
                                             .width(100.dp),
                                         color = ButtonDefaults.buttonColors(
-                                            containerColor = colorResource(
-                                                id = R.color.selected_button
-                                            )
+                                            containerColor = ButtonColors.SelectedButton
                                         )
                                     ) {
 
@@ -172,11 +171,9 @@ class HomeBrewInstantiator {
 
                                 ColouredButton(
                                     "Cancel", modifier = Modifier
-                                        .height(38.dp)
+                                        .height(38.dp) // Sets the height of the button
                                         .width(100.dp), color = ButtonDefaults.buttonColors(
-                                        containerColor = colorResource(
-                                            id = R.color.red_button
-                                        )
+                                        containerColor = ButtonColors.RedButton
                                     )
                                 ) {
                                     GlobalOverlayState.showOverlay(
@@ -193,9 +190,7 @@ class HomeBrewInstantiator {
                                         "Next", modifier = Modifier
                                             .height(38.dp) // Sets the height of the button
                                             .width(100.dp), color = ButtonDefaults.buttonColors(
-                                            containerColor = colorResource(
-                                                id = R.color.green_button
-                                            )
+                                            containerColor = ButtonColors.GreenButton
                                         )
                                     ) {
                                         changeShow = show.nextBrewPart()!!
@@ -206,9 +201,7 @@ class HomeBrewInstantiator {
                                         "Finish", modifier = Modifier
                                             .height(38.dp) // Sets the height of the button
                                             .width(100.dp), color = ButtonDefaults.buttonColors(
-                                            containerColor = colorResource(
-                                                id = R.color.green_button
-                                            )
+                                            containerColor = ButtonColors.GreenButton
                                         )
                                     ) {
                                         //Save the spell on the device here
@@ -241,7 +234,6 @@ class HomeBrewInstantiator {
             }
         }
     }
-
 
     /**
      * Create the overlay for creating a new Spell using a CreateSpellViewModel to do the technical things!
@@ -374,7 +366,6 @@ class HomeBrewInstantiator {
     }
 
 
-
     /**
      * Here is where the UI for each spell part is encapsulated
      * Each has a special view and a descriptive guide
@@ -384,22 +375,22 @@ class HomeBrewInstantiator {
         description: String,
         userChoise: @Composable () -> Unit
     ) {
-            userChoise()
+        userChoise()
 
-            // End of ways for users to give input
+        // End of ways for users to give input
 
-            Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(10.dp))
 
 
-            Text(
-                text = description,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth()
-            )
-        }
+        Text(
+            text = description,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+        )
+    }
 
     /**
      * A differernt kind of dropdown specificaly made for bottom of create spell overlay
@@ -423,7 +414,7 @@ class HomeBrewInstantiator {
             // Button to open dropdown
             Text(
                 text = dropName,
-                color = colorResource(id = R.color.white),
+                color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -439,7 +430,7 @@ class HomeBrewInstantiator {
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .background(color = colorResource(id = R.color.overlay_box_color))
+                    .background(color = MaterialTheme.colorScheme.tertiary)
             ) {
                 LazyColumn(
                     modifier = Modifier
@@ -452,7 +443,7 @@ class HomeBrewInstantiator {
                         item {
                             Text(
                                 text = item.displayedBrewPart(),
-                                color = colorResource(id = R.color.white),
+                                color = MaterialTheme.colorScheme.onTertiary,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -1145,27 +1136,27 @@ class HomeBrewInstantiator {
     // What function each enum should use
     @Composable
     fun ShowBrewPart(part: BrewParts, viewModel: CreateSpellViewModel) {
-            when (part) {
-                BrewParts.NAME -> Naming(viewModel)
-                BrewParts.DESCRIPTION -> Description(viewModel)
-                BrewParts.LEVEL -> Level(viewModel)
-                BrewParts.HIGHLEVEL -> HigherLevel(viewModel)
-                BrewParts.COMPONENTS -> Components(viewModel)
-                BrewParts.RANGE -> Range(viewModel)
-                BrewParts.CONCENTANDRITUAL -> RitualAndConcentration(viewModel)
-                BrewParts.DURATION -> Duration(viewModel)
-                BrewParts.CASTTIME -> CastTime(viewModel)
-                BrewParts.SCHOOL -> School(viewModel)
-                BrewParts.CLASSES -> Classes(viewModel)
-                BrewParts.ATTACKTYPE -> AttackType(viewModel)
-                BrewParts.DAMAGE -> Damage(viewModel)
-                BrewParts.DC -> DC(viewModel)
-                else -> {
-                    Text("There was an issue!")
-                }
+        when (part) {
+            BrewParts.NAME -> Naming(viewModel)
+            BrewParts.DESCRIPTION -> Description(viewModel)
+            BrewParts.LEVEL -> Level(viewModel)
+            BrewParts.HIGHLEVEL -> HigherLevel(viewModel)
+            BrewParts.COMPONENTS -> Components(viewModel)
+            BrewParts.RANGE -> Range(viewModel)
+            BrewParts.CONCENTANDRITUAL -> RitualAndConcentration(viewModel)
+            BrewParts.DURATION -> Duration(viewModel)
+            BrewParts.CASTTIME -> CastTime(viewModel)
+            BrewParts.SCHOOL -> School(viewModel)
+            BrewParts.CLASSES -> Classes(viewModel)
+            BrewParts.ATTACKTYPE -> AttackType(viewModel)
+            BrewParts.DAMAGE -> Damage(viewModel)
+            BrewParts.DC -> DC(viewModel)
+            else -> {
+                Text("There was an issue!")
             }
         }
     }
+}
 
 /**
  * This is preview for testing
@@ -1174,7 +1165,7 @@ class HomeBrewInstantiator {
 
 @Preview
 @Composable
-fun testMan(){
+fun testMan() {
     val home: HomeBrewInstantiator = HomeBrewInstantiator()
     val viewModel = CreateSpellViewModel()
     home.makeNewSpellFromTheTop(viewModel)

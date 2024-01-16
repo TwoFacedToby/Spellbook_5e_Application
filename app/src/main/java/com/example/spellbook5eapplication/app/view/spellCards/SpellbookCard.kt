@@ -25,6 +25,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -92,8 +93,8 @@ fun SpellbookCard(
 
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-        shape = RoundedCornerShape(10.dp),
-        colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.spellcard_color)),
+        shape = MaterialTheme.shapes.small,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
         modifier = Modifier
             .height(150.dp)
             .padding(10.dp)
@@ -206,5 +207,4 @@ fun SpellbookCard(
             }
         }
     }
-
 }

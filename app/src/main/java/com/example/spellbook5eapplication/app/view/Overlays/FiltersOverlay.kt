@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -37,6 +38,7 @@ import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.viewmodel.FilterItem
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 
 
 @Composable
@@ -61,14 +63,14 @@ fun FiltersOverlay(
             modifier = Modifier
                 .width(250.dp)
                 .height(15.dp)
-                .clip(shape = RoundedCornerShape(5.dp)),
-            color = colorResource(id = R.color.black).copy(alpha = 0.2F),
+                .clip(shape = MaterialTheme.shapes.extraSmall),
+            color = Color.Black.copy(alpha = 0.2F),
         )
         Spacer(modifier = Modifier.height(20.dp))
         Row{
             ColouredButton(label = "Apply",
                 modifier = Modifier.weight(1F),
-                color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
+                color = ButtonDefaults.buttonColors(containerColor = ButtonColors.GreenButton),
                 onClick = { filterViewModel.applyFilters(
                     spellLevel,
                     components,
@@ -83,7 +85,7 @@ fun FiltersOverlay(
             Spacer(modifier = Modifier.width(10.dp))
             ColouredButton(label = "Reset",
                 modifier = Modifier.weight(1F),
-                color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
+                color = ButtonDefaults.buttonColors(containerColor = ButtonColors.RedButton),
                 onClick = {
                     onResetAllFiltersClicked(
                         spellLevel,
@@ -104,8 +106,8 @@ fun FiltersOverlay(
                 .height(500.dp)
                 .fillMaxWidth()
                 .background(
-                    color = colorResource(id = R.color.overlay_box_color),
-                    shape = RoundedCornerShape(20.dp)
+                    color = MaterialTheme.colorScheme.tertiary,
+                    shape = MaterialTheme.shapes.large
                 ),
             contentAlignment = Alignment.TopCenter
         ) {
@@ -290,14 +292,14 @@ fun FilterButton(
                 filter.isSelected.value = !filter.isSelected.value
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (filter.isSelected.value) colorResource(id = R.color.selected_button)
-                else colorResource(id = R.color.unselected_button)
+                containerColor = if (filter.isSelected.value) ButtonColors.SelectedButton
+                else ButtonColors.UnselectedButton
             ),
             border = BorderStroke(
                 width = 2.dp,
-                color = colorResource(id = R.color.border_color)
+                color = MaterialTheme.colorScheme.secondaryContainer
             ),
-            shape = RoundedCornerShape(5.dp),
+            shape = MaterialTheme.shapes.extraSmall,
         ) {
             Text(
                 text = filter.label,
@@ -313,15 +315,15 @@ fun FilterButton(
                 filter.isSelected.value = !filter.isSelected.value
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (filter.isSelected.value) colorResource(id = R.color.selected_button)
-                else colorResource(id = R.color.unselected_button)
+                containerColor = if (filter.isSelected.value) ButtonColors.SelectedButton
+                else ButtonColors.UnselectedButton
             ),
             border = BorderStroke(
                 width = 2.dp,
-                color = colorResource(id = R.color.border_color)
+                color = MaterialTheme.colorScheme.secondaryContainer
             ),
             contentPadding = contentPaddingValues,
-            shape = RoundedCornerShape(5.dp),
+            shape = MaterialTheme.shapes.extraSmall,
         ) {
             Text(
                 text = filter.label,
@@ -365,153 +367,3 @@ fun onResetAllFiltersClicked(
         filterItem.isSelected.value = false
     }
 }
-
-/*fun processList(items: List<FilterItem>, updateFilter: (Filter, String) -> Unit, filter: Filter, asBoolean: Boolean = false) {
-    items.forEach { item ->
-        if (item.isSelected.value) {
-            if (asBoolean) {
-                val booleanValue = item.label.equals("Yes", ignoreCase = true)
-                updateFilter(filter, booleanValue.toString())
-            } else {
-                updateFilter(filter, item.label)
-            }
-        }
-    }
-}
-
-fun onApplyFiltersClicked(
-    spellLevel: List<FilterItem>,
-    components: List<FilterItem>,
-    saveReq: List<FilterItem>,
-    classes: List<FilterItem>,
-    concentration: List<FilterItem>,
-    ritual: List<FilterItem>,
-    currentfilter: Filter,
-    createNewFilter: () -> Filter,
-    updateFilterState: (Filter) -> Unit,
-) {
-    val newFilter = createNewFilter()
-
-    if(currentfilter.getSpellName() != ""){
-        newFilter.setSpellName(currentfilter.getSpellName())
-    }
-
-    val updateSpellLevel: (Filter, String) -> Unit = { filter, value ->
-        val level = value.toInt()
-        filter.addLevel(level)
-    }
-
-    val updateComponents: (Filter, String) -> Unit = { filter, value ->
-        when (value) {
-            "Verbal" -> filter.addComponent(Filter.Component.VERBAL)
-            "Semantic" -> filter.addComponent(Filter.Component.SOMATIC)
-            "Material" -> filter.addComponent(Filter.Component.MATERIAL)
-        }
-    }
-
-    val updateSaveReq: (Filter, String) -> Unit = { filter, value ->
-        when (value) {
-            "Strength" -> filter.addSaveReq(Filter.SaveReq.STRENGTH)
-            "Dexterity" -> filter.addSaveReq(Filter.SaveReq.DEXTERITY)
-            "Constitution" -> filter.addSaveReq(Filter.SaveReq.CONSTITUTION)
-            "Wisdom" -> filter.addSaveReq(Filter.SaveReq.WISDOM)
-            "Intelligence" -> filter.addSaveReq(Filter.SaveReq.INTELLIGENCE)
-            "Charisma" -> filter.addSaveReq(Filter.SaveReq.CHARISMA)
-        }
-    }
-    val updateClasses: (Filter, String) -> Unit = { filter, value ->
-        when (value) {
-            "Artificer" -> filter.addClass(Filter.Classes.ARTIFICER)
-            "Barbarian" -> filter.addClass(Filter.Classes.BARBARIAN)
-            "Bard" -> filter.addClass(Filter.Classes.BARD)
-            "Cleric" -> filter.addClass(Filter.Classes.CLERIC)
-            "Druid" -> filter.addClass(Filter.Classes.DRUID)
-            "Fighter" -> filter.addClass(Filter.Classes.FIGHTER)
-            "Monk" -> filter.addClass(Filter.Classes.MONK)
-            "Paladin" -> filter.addClass(Filter.Classes.PALADIN)
-            "Ranger" -> filter.addClass(Filter.Classes.RANGER)
-            "Rogue" -> filter.addClass(Filter.Classes.ROGUE)
-            "Sorcerer" -> filter.addClass(Filter.Classes.SORCERER)
-            "Warlock" -> filter.addClass(Filter.Classes.WARLOCK)
-            "Wizard" -> filter.addClass(Filter.Classes.WIZARD)
-        }
-    }
-    val updateConcentration: (Filter, String) -> Unit = { filter, value ->
-        filter.addConcentration(value.toBoolean())
-    }
-    val updateRitual: (Filter, String) -> Unit = { filter, value ->
-        filter.addRitual(value.toBoolean())
-    }
-
-    processList(spellLevel, updateSpellLevel, newFilter)
-    processList(components, updateComponents, newFilter)
-    processList(saveReq, updateSaveReq, newFilter)
-    processList(classes, updateClasses, newFilter)
-    processList(concentration, updateConcentration, newFilter, true)
-    processList(ritual, updateRitual, newFilter, true)
-
-    println("New filter level size: " + newFilter.getLevel().size)
-
-    updateFilterState(newFilter)
-}
-
-fun onResetAllFiltersClicked(
-    spellLevel: List<FilterItem>,
-    components: List<FilterItem>,
-    saveReq: List<FilterItem>,
-    classes: List<FilterItem>,
-    concentration: List<FilterItem>,
-    ritual: List<FilterItem>,
-){
-    spellLevel.forEach { filterItem ->
-        filterItem.isSelected.value = false
-    }
-
-    components.forEach { filterItem ->
-        filterItem.isSelected.value = false
-    }
-
-    saveReq.forEach { filterItem ->
-        filterItem.isSelected.value = false
-    }
-
-    classes.forEach { filterItem ->
-        filterItem.isSelected.value = false
-    }
-    concentration.forEach { filterItem ->
-        filterItem.isSelected.value = false
-    }
-
-    ritual.forEach { filterItem ->
-        filterItem.isSelected.value = false
-    }
-}
-
-fun updateFilterWithSearchName(currentFilter: Filter, searchName: String): Filter {
-    val newFilter = Filter()
-    newFilter.setSpellName(searchName)
-
-    currentFilter.getLevel().forEach{level ->
-        newFilter.addLevel(level)
-    }
-    currentFilter.getComponent().forEach{component ->
-        newFilter.addComponent(component)
-    }
-
-    currentFilter.getSaveReq().forEach { saveReq ->
-        newFilter.addSaveReq(saveReq)
-    }
-
-    currentFilter.getClasses().forEach { classes ->
-        newFilter.addClass(classes)
-    }
-    currentFilter.getIsConcentration().forEach{
-        newFilter.addConcentration(it)
-    }
-
-    currentFilter.getIsRitual().forEach{
-        newFilter.addRitual(it)
-    }
-
-    return newFilter
-}*/

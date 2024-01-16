@@ -10,9 +10,6 @@ interface SpellCardFactory {
     fun createSpellCard(
         displayable: Displayable,
     ): @Composable () -> Unit
-    fun createLargeSpellCard(
-        displayable: Displayable,
-    ): @Composable () -> Unit
 }
 
 class DefaultSpellCardFactory(): SpellCardFactory {
@@ -27,20 +24,6 @@ class DefaultSpellCardFactory(): SpellCardFactory {
                 ) }
             }
             else -> { {} } // Return an empty composable for unrecognized types
-        }
-    }
-
-    override fun createLargeSpellCard(
-        displayable: Displayable,
-    ): @Composable () -> Unit {
-
-        return when (displayable) {
-            is Spell.SpellInfo -> {
-                { LargeSpellCard(
-                    spell = displayable
-                ) }
-            }
-            else -> { {} }
         }
     }
 }

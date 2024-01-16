@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.view.screens.Basic_Screen
+import com.example.spellbook5eapplication.app.view.screens.QuickPlay
 import com.example.spellbook5eapplication.app.view.viewutilities.DynamicButtonFactory
 import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModelFactory
 import com.example.spellbook5eapplication.app.viewmodel.TitleState
@@ -20,12 +21,10 @@ fun BottomNavigationGraph(
 
     NavHost(navController = navController, startDestination = Screens.Search.route){
         composable(route = Screens.Search.route){
-            //SearchScreen(globalOverlayState)
             val spellList = SpellQueryViewModelFactory.create(type = "ALL_SPELLS")
             Basic_Screen(spellList, true)
         }
         composable(route = Screens.Favorite.route){
-            //FavoriteScreen(spellController, spellListLoader, globalOverlayState)
             val spellList = SpellQueryViewModelFactory.create(type = "FAVORITES")
             Log.d("TAGGERKLAPPER", spellList.value.toString())
             Basic_Screen(spellList, false)
@@ -51,6 +50,9 @@ fun BottomNavigationGraph(
                     navController = navController
                 )
             })
+        }
+        composable(route = Screens.QuickPlay.route){
+            QuickPlay()
         }
     }
 }

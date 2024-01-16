@@ -7,6 +7,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
@@ -43,7 +45,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -65,13 +66,16 @@ import com.example.spellbook5eapplication.app.view.Overlays.CreateOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.HomeBrewInstantiator
 import com.example.spellbook5eapplication.app.view.Overlays.SpellbookCreator
+import com.example.spellbook5eapplication.app.view.Overlays.QuickPlaySpellBooks
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.viewutilities.CustomOverlay
+import com.example.spellbook5eapplication.app.view.viewutilities.FadeSide
 import com.example.spellbook5eapplication.app.view.viewutilities.FilterButton
 import com.example.spellbook5eapplication.app.view.viewutilities.OverlayBox
 import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
+import com.example.spellbook5eapplication.app.view.viewutilities.fadingEdge
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellbookViewModel
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
@@ -113,10 +117,10 @@ fun Basic_Screen(
             Column (
                 modifier = Modifier
                     .matchParentSize()
-                    .padding(top = 80.dp, bottom = 50.dp, start = 10.dp, end = 10.dp),
+                    .padding(top = 60.dp, bottom = 50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // TopBar with Search and Filters
+
                 SearchFilterBar()
 
                 SubcomposeLayout { constraints ->
@@ -126,8 +130,15 @@ fun Basic_Screen(
                             .fillMaxHeight()
                             .fillMaxWidth()
                             .weight(3f)
-                            .padding(top = 10.dp),
-                            contentAlignment = Alignment.Center
+                            .fadingEdge(
+                                side = FadeSide.TOP,
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4F),
+                                width = 40.dp,
+                                isVisible = true,
+                                spec = null
+                            )
+                            //.padding(top = 10.dp),
+                            ,contentAlignment = Alignment.Center
                         ){
                             SpellQuery(
                                 spellsLiveData = spellsLiveData,
@@ -141,7 +152,6 @@ fun Basic_Screen(
                         subcompose("customContent", customContent).first().measure(constraints)
                     }
 
-                    // Calculate the height for the SpellQuery considering the height of the custom content
                     val spellQueryHeight = if (customContentLayout != null) {
                         constraints.maxHeight - customContentLayout.height - bottomPadding
                     } else {
@@ -149,35 +159,14 @@ fun Basic_Screen(
                     }
 
                     layout(constraints.maxWidth, constraints.maxHeight) {
-                        // Place the SpellQuery
                         spellQueryLayout.placeRelative(0, 0)
 
-                        // Calculate the horizontal center for the custom content
                         customContentLayout?.let {
                             val xCenter = (constraints.maxWidth - it.width) / 2
                             it.placeRelative(xCenter, spellQueryHeight)
                         }
                     }
                 }
-                // List of Spells, taking up all available space
-                /*Box(modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(3f)){
-                    SpellQuery(
-                        spellsLiveData = spellsLiveData,
-                        enablePagination = enablePagination
-                    )
-                }
-
-                if (customContent != null) {
-                    Box(contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.5f))
-                    {
-                        customContent()
-                    }
-                }*/
             }
             OverlayRenderer(GlobalOverlayState.getOverlayStack())
         }
@@ -190,7 +179,10 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
     overlayStack.forEach { overlayType ->
         when (overlayType) {
             OverlayType.LARGE_SPELLCARD ->  {
-                LargeSpellCard(GlobalOverlayState.currentSpell!!)
+                LargeSpellCard(GlobalOverlayState.currentSpell!!, false)
+            }
+            OverlayType.LARGE_QUICKSPELLCARD -> {
+                LargeSpellCard(spell = GlobalOverlayState.currentSpell!!, fromQuickPlay = true)
             }
             OverlayType.FILTER -> {
                 CustomOverlay(overlayType = OverlayType.FILTER) {
@@ -200,7 +192,6 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
             OverlayType.MAKE_SPELL -> {
                 val createViewModel = CreateSpellViewModel()
                 val createView = HomeBrewInstantiator()
-                //HomeBrewInstantiator.makeNewSpellFromTheTop(createViewModel)
                 createView.makeNewSpellFromTheTop(createViewModel)
             }
             OverlayType.EDIT_SPELL -> {
@@ -265,6 +256,11 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 )
 
             }
+            OverlayType.QUICKPLAY_SPELLBOOK -> {
+                CustomOverlay(OverlayType.QUICKPLAY_SPELLBOOK) {
+                    QuickPlaySpellBooks()
+                }
+            }
             OverlayType.ADD_TO_SPELLBOOK -> {
                 val spellbooks = SpellbookManager.getAllSpellbooks()
                 val spell = GlobalOverlayState.currentSpell!!
@@ -284,7 +280,10 @@ fun SearchFilterBar(
 ){
     val filterViewModel: FilterViewModel = viewModel()
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.4F))
+            .padding(20.dp),
         horizontalArrangement = Arrangement.Center
     )
     {
