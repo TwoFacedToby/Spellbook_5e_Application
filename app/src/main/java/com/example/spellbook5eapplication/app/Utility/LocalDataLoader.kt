@@ -241,4 +241,8 @@ object LocalDataLoader {
         LOCAL("LocalJSONData"),
     }
 
+    fun getContext(): WeakReference<Context>? {
+        return context
+    }
+
 }

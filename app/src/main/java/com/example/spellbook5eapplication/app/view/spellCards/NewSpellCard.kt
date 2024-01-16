@@ -2,6 +2,8 @@ package com.example.spellbook5eapplication.app.view.spellCards
 
 import SpellQueryViewModel
 import android.util.Log
+import android.widget.Toast
+import android.widget.Toast.makeText
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -37,6 +39,7 @@ import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,6 +61,7 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import com.example.spellbook5eapplication.ui.theme.ButtonColors
@@ -449,6 +453,9 @@ fun SelectSpellbookDialog(spellbooks: List<Spellbook>, onDismiss: () -> Unit, sp
 
                             spellbooks[index].addSpellToSpellbook(spell.index ?: "")
                             SpellbookManager.saveSpellbookToFile(spellbooks[index].spellbookName)
+                            LocalDataLoader.getContext()?.get()?.let { context ->
+                                Toast.makeText(context, "${spell.name}" + " added to " +"${spellbooks[index].spellbookName}", Toast.LENGTH_SHORT).show()
+                            }
                             onDismiss()
                         }
                     )
