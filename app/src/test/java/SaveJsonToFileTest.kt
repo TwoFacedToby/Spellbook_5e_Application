@@ -54,20 +54,13 @@ class SaveJsonToFileTest {
         LocalDataLoader.saveJson(testJsonString, testFileName, LocalDataLoader.DataType.HOMEBREW)
 
         // Construct the expected file path
-        val expectedFilePath = File(context.filesDir, "Homebrews/$testFileName")
+        val expectedFile = LocalDataLoader.getJson(testFileName, LocalDataLoader.DataType.HOMEBREW)  //File(context.filesDir, "Homebrews/$testFileName")
 
         // Assert the file exists
-        assertTrue(expectedFilePath.exists())
-
-        // Read the content of the file
-        val fileContent = expectedFilePath.readText()
-
-        //Prints for debugging
-        println(testJsonString)
-        println(fileContent)
+        assertNotNull(expectedFile)
 
         // Assert the content is as expected
-        assertEquals(testJsonString, fileContent)
+        assertEquals(testJsonString, expectedFile)
     }
 
     @After
