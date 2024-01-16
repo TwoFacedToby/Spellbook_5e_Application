@@ -178,7 +178,7 @@
                     }
 
                 //What ever way the spell may now be saved on the device, might need to be changed.
-                LocalDataLoader.deleteFile(oldIndex+".json", LocalDataLoader.DataType.HOMEBREW)
+                LocalDataLoader.deleteFile(oldIndex, LocalDataLoader.DataType.HOMEBREW)
                 LocalDataLoader.saveJson(
                     jsonSpell,
                     spell.index!!,

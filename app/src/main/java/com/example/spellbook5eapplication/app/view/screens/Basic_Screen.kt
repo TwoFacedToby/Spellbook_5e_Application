@@ -211,7 +211,7 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                     button1Message = "Cancel",
                     button2Message = "Delete",
                     button2Function = {
-                            LocalDataLoader.deleteFile(GlobalOverlayState.currentSpell!!.index +".json", LocalDataLoader.DataType.HOMEBREW)
+                            LocalDataLoader.deleteFile(GlobalOverlayState.currentSpell!!.index.toString(), LocalDataLoader.DataType.HOMEBREW)
                         spellQueryViewModel.loadHomebrewList()
                         GlobalOverlayState.dismissOverlay()}
                 )
