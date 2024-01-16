@@ -112,7 +112,7 @@ fun Basic_Screen(
                             .weight(3f)
                             .fadingEdge(
                                 side = FadeSide.TOP,
-                                color = Color.White.copy(alpha = 0.6F),
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4F),
                                 width = 40.dp,
                                 isVisible = true,
                                 spec = null
@@ -225,8 +225,6 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
 
                 val spellQueryViewModel : SpellQueryViewModel = viewModel()
                 CreateOverlay(
-                    /*message = "Do you want to remove ${GlobalOverlayState.currentSpell!!.name} from " +
-                            "${GlobalOverlayState.currentSpellbook!!.spellbookName}?"*/
                     message = "Do you want to remove ${GlobalOverlayState.currentSpell!!.name}",
                     button1Message = "Cancel",
                     button2Message = "Remove",
@@ -256,7 +254,7 @@ fun SearchFilterBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White.copy(alpha = 0.6F))
+            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.4F))
             .padding(20.dp),
         horizontalArrangement = Arrangement.Center
     )

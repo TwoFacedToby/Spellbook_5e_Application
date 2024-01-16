@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
-import com.example.spellbook5eapplication.app.Model.QuickPlay
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.Model.QuickPlayHandler
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.Search
 import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
@@ -167,7 +167,7 @@ class SpellQueryViewModel() : ViewModel() {
         }
 
     }
-    fun loadQuickPlayer(){
+    /*fun loadQuickPlayer(){
         viewModelScope.launch {
             val spellBookList = SpellbookManager.getAllSpellbooks()
             _spellBooks.postValue(spellBookList)
@@ -175,14 +175,14 @@ class SpellQueryViewModel() : ViewModel() {
 
 
             val spellList = SpellList()
-            val indexList = QuickPlay.getQuickPlayList(QuickPlay.Class.WIZARD, 6)
+            val indexList = QuickPlayHandler.getQuickPlayList(Class.WIZARD, 6)
             spellList.setIndexList(indexList)
 
 
 
 
         }
-    }
+    }*/
 
     fun loadSpellBooks(){
         val spellBookList = SpellbookManager.getAllSpellbooks()

@@ -59,7 +59,6 @@ import com.example.spellbook5eapplication.ui.theme.ButtonColors
 //Works with BrewFactory2 to create homebrews
 
 
-
 // Old
 class HomeBrewInstantiator {
 
@@ -113,17 +112,17 @@ class HomeBrewInstantiator {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
 
-            //Testing visual
-            Box(
-                modifier = Modifier
-                    .height(600.dp)
-                    .fillMaxWidth()
-                    .background(
-                        color = MaterialTheme.colorScheme.tertiary,
-                        shape = MaterialTheme.shapes.large
-                    ),
-                contentAlignment = Alignment.TopCenter
-            ) {
+                    //Testing visual
+                    Box(
+                        modifier = Modifier
+                            .height(600.dp)
+                            .fillMaxWidth()
+                            .background(
+                                color = MaterialTheme.colorScheme.tertiary,
+                                shape = MaterialTheme.shapes.large
+                            ),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
 
                         Column(
                             modifier = Modifier
@@ -153,15 +152,15 @@ class HomeBrewInstantiator {
 
                                 if (show != BrewParts.NAME) {
 
-                            ColouredButton(
-                                label = "Back",
-                                modifier = Modifier
-                                    .height(38.dp)
-                                    .width(100.dp),
-                                color = ButtonDefaults.buttonColors(
-                                    containerColor = ButtonColors.SelectedButton
-                                )
-                            ) {
+                                    ColouredButton(
+                                        label = "Back",
+                                        modifier = Modifier
+                                            .height(38.dp)
+                                            .width(100.dp),
+                                        color = ButtonDefaults.buttonColors(
+                                            containerColor = ButtonColors.SelectedButton
+                                        )
+                                    ) {
 
                                         changeShow = show.previousBrewPart()!!
                                         alpha = 0f
@@ -170,47 +169,178 @@ class HomeBrewInstantiator {
 
                                 Spacer(modifier = Modifier.width(10.dp))
 
-                        ColouredButton(
-                            "Cancel", modifier = Modifier
-                                .height(38.dp) // Sets the height of the button
-                                .width(100.dp), color = ButtonDefaults.buttonColors(
-                                containerColor = ButtonColors.RedButton
-                            )
-                        ) {
-                            GlobalOverlayState.showOverlay(
-                                OverlayType.ERASE_PROMPT)
-                        }
+                                ColouredButton(
+                                    "Cancel", modifier = Modifier
+                                        .height(38.dp) // Sets the height of the button
+                                        .width(100.dp), color = ButtonDefaults.buttonColors(
+                                        containerColor = ButtonColors.RedButton
+                                    )
+                                ) {
+                                    GlobalOverlayState.showOverlay(
+                                        OverlayType.ERASE_PROMPT
+                                    )
+                                }
 
 
                                 Spacer(modifier = Modifier.width(10.dp))
 
-                        if (show != BrewParts.DC) {
-                            // Button to move on
-                            ColouredButton(
-                                "Next", modifier = Modifier
-                                    .height(38.dp) // Sets the height of the button
-                                    .width(100.dp), color = ButtonDefaults.buttonColors(
-                                    containerColor = ButtonColors.GreenButton
-                                )
-                            ) {
-                                changeShow = show.nextBrewPart()!!
-                                alpha = 0f // Start fade out
+                                if (show != BrewParts.DC) {
+                                    // Button to move on
+                                    ColouredButton(
+                                        "Next", modifier = Modifier
+                                            .height(38.dp) // Sets the height of the button
+                                            .width(100.dp), color = ButtonDefaults.buttonColors(
+                                            containerColor = ButtonColors.GreenButton
+                                        )
+                                    ) {
+                                        changeShow = show.nextBrewPart()!!
+                                        alpha = 0f // Start fade out
+                                    }
+                                } else {
+                                    ColouredButton(
+                                        "Finish", modifier = Modifier
+                                            .height(38.dp) // Sets the height of the button
+                                            .width(100.dp), color = ButtonDefaults.buttonColors(
+                                            containerColor = ButtonColors.GreenButton
+                                        )
+                                    ) {
+                                        //Save the spell on the device here
+                                        createViewModel.saveSpell()
+                                        spellQueryViewModel.loadHomebrewList()
+                                        GlobalOverlayState.dismissOverlay()
+                                    }
+                                }
                             }
-                        } else {
-                            ColouredButton(
-                                "Finish", modifier = Modifier
-                                    .height(38.dp) // Sets the height of the button
-                                    .width(100.dp), color = ButtonDefaults.buttonColors(
-                                    containerColor = ButtonColors.GreenButton
-                                )
-                            ) {
-                                //Save the spell on the device here
-                                createViewModel.saveSpell()
-                                spellQueryViewModel.loadHomebrewList()
-                                GlobalOverlayState.dismissOverlay()
-                            }
+
+                            //End of top navigation
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            // The part dependent of what is being edited/created for the spell
+                            ShowBrewPart(show, createViewModel)
+
+                            // Testing the possibility of jumping in parts
+                            NavigateBrewParts(
+                                brewParts = BrewParts.values().toList(),
+                                dropName = "Parts of spell to edit",
+                                brewChange = {
+                                    changeShow = it
+                                    alpha = 0f
+                                }
+                            )
                         }
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * Create the overlay for creating a new Spell using a CreateSpellViewModel to do the technical things!
+     * This bad boy has a few private it uses to create a guided tour
+     * through the different parts of a spell
+     */
+    @Composable
+    fun EditSpell(createViewModel: CreateSpellViewModel) {
+
+        val spellQueryViewModel: SpellQueryViewModel = viewModel()
+        val oldIndex = createViewModel.spell.index
+
+        var show by remember { mutableStateOf(BrewParts.NAME) }
+        var changeShow by remember { mutableStateOf(BrewParts.DESCRIPTION) }
+        var showDialog = false
+        var alpha by remember { mutableStateOf(1f) }
+
+        val animatedAlpha by animateFloatAsState(
+            targetValue = alpha,
+            animationSpec = tween(durationMillis = 250), label = ""
+        )
+
+        LaunchedEffect(animatedAlpha) {
+            if (animatedAlpha == 0f) {
+                show = changeShow
+                alpha = 1f // Start fade in
+            }
+        }
+
+        // This box stops user from interacting with other parts of the app
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures { /* consume tap events */ }
+                }
+                .background(Color.Black.copy(alpha = 0.5f)), // darker background
+            contentAlignment = Alignment.Center
+        ) {
+
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .padding(top = 8.dp, start = 15.dp, end = 15.dp),//.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    //Testing visual
+                    Box(
+                        modifier = Modifier
+                            .height(600.dp)
+                            .fillMaxWidth()
+                            .background(
+                                color = colorResource(id = R.color.overlay_box_color),
+                                shape = RoundedCornerShape(20.dp)
+                            ),
+                        contentAlignment = Alignment.TopCenter
+                    ) {
+
+                        Column(
+                            modifier = Modifier
+                                .alpha(animatedAlpha)
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        )
+                        {
+
+                            // Name of spell
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Text(
+                                text = show.displayedBrewPart(),
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            // Top navigation buttons
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+
+
+                                Spacer(modifier = Modifier.width(10.dp))
+
+                                // Button to move on
+                                ColouredButton(
+                                    "Done", modifier = Modifier
+                                        .height(38.dp) // Sets the height of the button
+                                        .width(100.dp), color = ButtonDefaults.buttonColors(
+                                        containerColor = colorResource(
+                                            id = R.color.green_button
+                                        )
+                                    )
+                                ) {
+                                    createViewModel.replaceSpell(oldIndex!!)
+                                    spellQueryViewModel.loadHomebrewList()
+                                    GlobalOverlayState.dismissOverlay()
+                                }
+                            }
 
                             //End of top navigation
 
@@ -236,7 +366,6 @@ class HomeBrewInstantiator {
     }
 
 
-
     /**
      * Here is where the UI for each spell part is encapsulated
      * Each has a special view and a descriptive guide
@@ -246,22 +375,22 @@ class HomeBrewInstantiator {
         description: String,
         userChoise: @Composable () -> Unit
     ) {
-            userChoise()
+        userChoise()
 
-            // End of ways for users to give input
+        // End of ways for users to give input
 
-            Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(10.dp))
 
 
-            Text(
-                text = description,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth()
-            )
-        }
+        Text(
+            text = description,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .fillMaxWidth()
+        )
+    }
 
     /**
      * A differernt kind of dropdown specificaly made for bottom of create spell overlay
@@ -1007,27 +1136,27 @@ class HomeBrewInstantiator {
     // What function each enum should use
     @Composable
     fun ShowBrewPart(part: BrewParts, viewModel: CreateSpellViewModel) {
-            when (part) {
-                BrewParts.NAME -> Naming(viewModel)
-                BrewParts.DESCRIPTION -> Description(viewModel)
-                BrewParts.LEVEL -> Level(viewModel)
-                BrewParts.HIGHLEVEL -> HigherLevel(viewModel)
-                BrewParts.COMPONENTS -> Components(viewModel)
-                BrewParts.RANGE -> Range(viewModel)
-                BrewParts.CONCENTANDRITUAL -> RitualAndConcentration(viewModel)
-                BrewParts.DURATION -> Duration(viewModel)
-                BrewParts.CASTTIME -> CastTime(viewModel)
-                BrewParts.SCHOOL -> School(viewModel)
-                BrewParts.CLASSES -> Classes(viewModel)
-                BrewParts.ATTACKTYPE -> AttackType(viewModel)
-                BrewParts.DAMAGE -> Damage(viewModel)
-                BrewParts.DC -> DC(viewModel)
-                else -> {
-                    Text("There was an issue!")
-                }
+        when (part) {
+            BrewParts.NAME -> Naming(viewModel)
+            BrewParts.DESCRIPTION -> Description(viewModel)
+            BrewParts.LEVEL -> Level(viewModel)
+            BrewParts.HIGHLEVEL -> HigherLevel(viewModel)
+            BrewParts.COMPONENTS -> Components(viewModel)
+            BrewParts.RANGE -> Range(viewModel)
+            BrewParts.CONCENTANDRITUAL -> RitualAndConcentration(viewModel)
+            BrewParts.DURATION -> Duration(viewModel)
+            BrewParts.CASTTIME -> CastTime(viewModel)
+            BrewParts.SCHOOL -> School(viewModel)
+            BrewParts.CLASSES -> Classes(viewModel)
+            BrewParts.ATTACKTYPE -> AttackType(viewModel)
+            BrewParts.DAMAGE -> Damage(viewModel)
+            BrewParts.DC -> DC(viewModel)
+            else -> {
+                Text("There was an issue!")
             }
         }
     }
+}
 
 /**
  * This is preview for testing
@@ -1036,7 +1165,7 @@ class HomeBrewInstantiator {
 
 @Preview
 @Composable
-fun testMan(){
+fun testMan() {
     val home: HomeBrewInstantiator = HomeBrewInstantiator()
     val viewModel = CreateSpellViewModel()
     home.makeNewSpellFromTheTop(viewModel)

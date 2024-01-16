@@ -201,7 +201,8 @@ fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
                     modifier = Modifier
                         .size(200.dp, 48.dp),
                     singleLine = true,
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Done,
+                    initialInput = ""
                 )
                 ColouredButton(
                     label = "OK",

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavController
 import com.example.spellbook5eapplication.R
@@ -45,18 +46,15 @@ fun DynamicButtonFactory(buttonType: String, navController: NavController) {
     }
 
     val buttonColor = if (buttonType == "VIEW_SPELLS") {
-        ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.black))
+        ButtonDefaults.buttonColors(containerColor = Color.Black)
     } else {
-        ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button))
+        ButtonDefaults.buttonColors(containerColor = ButtonColors.GreenButton)
     }
 
     if (buttonText.isNotEmpty()) {
         ColouredButton(
             label = buttonText,
             modifier = Modifier,
-            color = ButtonDefaults.buttonColors(
-                containerColor = ButtonColors.GreenButton
-            ),
             color = buttonColor,
             onClick = { buttonOnClick() }
         )
