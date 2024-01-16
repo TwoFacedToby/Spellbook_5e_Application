@@ -31,6 +31,7 @@ import com.example.spellbook5eapplication.app.view.AuthUI.SignInIntentSender
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -48,6 +49,7 @@ class MainActivity : ComponentActivity() {
 
         SpelllistLoader.loadSpellbooks()
 
+
         lifecycleScope.launch {
             SpellDataFetcher.sneakyQuickLoader()
         }
@@ -58,5 +60,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
 
 }

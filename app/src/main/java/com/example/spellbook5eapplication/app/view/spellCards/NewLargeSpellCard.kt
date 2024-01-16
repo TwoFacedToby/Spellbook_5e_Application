@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
@@ -279,6 +280,18 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                     ) {
                         if(spell.homebrew == true) {
 
+                            IconButton(onClick = {
+                                GlobalOverlayState.showOverlay(OverlayType.SHARE_TOKEN)
+
+                            }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Share,
+                                    contentDescription = "delete Homebrew",
+                                    modifier = Modifier.size(48.dp),
+                                    colorResource(id = R.color.spellcard_button)
+                                )
+                            }
 
                             IconButton(onClick = {
                                 GlobalOverlayState.showOverlay(OverlayType.DELETE_PROMPT)

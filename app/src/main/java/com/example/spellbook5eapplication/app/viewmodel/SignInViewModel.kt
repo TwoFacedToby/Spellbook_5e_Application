@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.result.IntentSenderRequest
 import com.example.spellbook5eapplication.app.Model.Data_Model.SignInResult
 import com.example.spellbook5eapplication.app.Model.Data_Model.UserData
+import com.example.spellbook5eapplication.app.Utility.SignInEvent
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInIntentSender
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInState
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,7 +24,7 @@ class SignInViewModel(
     var signInIntentSender: SignInIntentSender? = null
     private val _state = MutableStateFlow(SignInState())
     val state = _state.asStateFlow()
-    private val _eventFlow = MutableSharedFlow<String>()
+    private val _eventFlow = MutableSharedFlow<SignInEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
     private val _userData = MutableStateFlow<UserData?>(null)
@@ -48,12 +49,16 @@ class SignInViewModel(
                     )
                 }
                 if (signInResult.data != null) {
-                    _eventFlow.emit("Logged in successfully")
+                    _eventFlow.emit(SignInEvent.SignInSuccess)
+                    _eventFlow.emit(SignInEvent.DismissOverlay)
+                } else {
+                    _eventFlow.emit(SignInEvent.SignInFailure)
                 }
             } catch (e: Exception) {
                 _state.update {
                     it.copy(isSignInSuccessful = false, signInError = e.message)
                 }
+                _eventFlow.emit(SignInEvent.SignInFailure)
             }
         }
     }
@@ -62,7 +67,7 @@ class SignInViewModel(
         viewModelScope.launch {
             googleAuthUIClient.signOut()
             _state.update { SignInState(isSignInSuccessful = false, signInError = null) }
-            _eventFlow.emit("Logged out successfully")
+            _eventFlow.emit(SignInEvent.SignOutSuccess)
         }
     }
 

@@ -83,7 +83,7 @@ class SpellQueryViewModel() : ViewModel() {
                 val initialSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
                 Log.d("API_RESPONSE_NEW","IS: " + initialSpells.toString())
                 val displayableSpells = initialSpells?.map { it as Displayable }
-                _spells.postValue(displayableSpells)
+                _spells.postValue(displayableSpells!!)
                 _isLoading.postValue(false)
             }
         }
