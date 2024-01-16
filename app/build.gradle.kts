@@ -97,6 +97,11 @@ dependencies {
     testImplementation("androidx.test.ext:junit:1.1.3")
     testImplementation("androidx.test:runner:1.4.0")
 
+    // Json token dependencies
+    implementation ("io.github.nefilim.kjwt:kjwt-core:0.3.0")
+    implementation ("com.auth0:java-jwt:3.18.2")
+    implementation ("commons-codec:commons-codec:1.15")
+
     implementation ("androidx.compose.material:material-icons-extended:1.6.0-beta01")
 
 
