@@ -68,6 +68,9 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
 
     val images = SpellCardCreation(spell)
 
+    var showDialog by remember { mutableStateOf(false) }
+    val spellbooks = SpellbookManager.getAllSpellbooks()
+
     Box(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black.copy(alpha = 0.5f))
@@ -114,7 +117,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             IconButton(
-                                onClick = { /*TODO*/ }){
+                                onClick = { showDialog = true }){
                                 Icon(
                                     imageVector = Icons.Outlined.Add,
                                     contentDescription = "Add to Spellbook",
@@ -316,5 +319,8 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                 }
             }
         }
+    }
+    if (showDialog) {
+        SelectSpellbookDialog(spellbooks = spellbooks, onDismiss = { showDialog = false }, spell = spell)
     }
 }
