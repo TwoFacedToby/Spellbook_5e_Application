@@ -236,6 +236,18 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                     button2Function = {
                         SpellbookManager.removeSpellbook(GlobalOverlayState.currentSpellbook!!.spellbookName)
                         spellQueryViewModel.loadSpellBooks()
+                        LocalDataLoader
+                            .getContext()
+                            ?.get()
+                            ?.let { context ->
+                                Toast
+                                    .makeText(
+                                        context,
+                                        "Removed the spellbook: ${GlobalOverlayState.currentSpellbook!!.spellbookName}",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                            }
                         GlobalOverlayState.dismissOverlay()}
                 )
 
@@ -250,6 +262,18 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                     button2Function = {
                         SpellbookManager.removeSpellFromSpellbook(GlobalOverlayState.currentSpellbook!!.spellbookName, GlobalOverlayState.currentSpell!!)
                         spellQueryViewModel.loadSpellsFromSpellbook(GlobalOverlayState.currentSpellbook!!)
+                        LocalDataLoader
+                            .getContext()
+                            ?.get()
+                            ?.let { context ->
+                                Toast
+                                    .makeText(
+                                        context,
+                                        "Removed" + "${GlobalOverlayState.currentSpell!!.name} from ${GlobalOverlayState.currentSpellbook!!.spellbookName}",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                            }
 
                         GlobalOverlayState.dismissOverlay()}
                 )

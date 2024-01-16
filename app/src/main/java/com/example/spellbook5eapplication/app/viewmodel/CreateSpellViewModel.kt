@@ -148,6 +148,7 @@
 
             //What ever way the spell may now be saved on the device, might need to be changed.
             LocalDataLoader.saveJson(jsonSpell, spell.index!!, LocalDataLoader.DataType.HOMEBREW)
+
             println(jsonSpell)
         }
 

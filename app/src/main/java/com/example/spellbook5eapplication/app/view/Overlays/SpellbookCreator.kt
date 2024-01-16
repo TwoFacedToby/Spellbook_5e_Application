@@ -1,6 +1,7 @@
 package com.example.spellbook5eapplication.app.view.Overlays
 
 import SpellQueryViewModel
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -41,6 +42,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellbookViewModel
@@ -184,6 +187,19 @@ class SpellbookCreator {
                                     //Save spellbook
                                     viewModel.saveSpellbook()
                                     spellQueryViewModel.loadSpellBooks()
+                                    GlobalOverlayState.currentSpellbook = SpellbookManager.getSpellbook(viewModel.spellbookName)
+                                    LocalDataLoader
+                                        .getContext()
+                                        ?.get()
+                                        ?.let { context ->
+                                            Toast
+                                                .makeText(
+                                                    context,
+                                                    "Created the spellbook ${GlobalOverlayState.currentSpellbook!!.spellbookName}",
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                .show()
+                                        }
                                     GlobalOverlayState.dismissOverlay()
                                 }
                             }
