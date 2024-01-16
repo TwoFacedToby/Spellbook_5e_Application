@@ -167,7 +167,7 @@ fun SpellCard(
 
                     val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
                     var favouriteImage by remember { mutableStateOf(defaultFavouriteImage) }
-                    androidx.compose.material3.IconButton(
+                    IconButton(
                         onClick = {
                             spell.index?.let { spellIndex ->
                                 val favouritesSpellbook =

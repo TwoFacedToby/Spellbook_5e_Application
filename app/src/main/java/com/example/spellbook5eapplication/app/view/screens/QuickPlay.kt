@@ -1,6 +1,14 @@
 package com.example.spellbook5eapplication.app.view.screens
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.sp
+import android.graphics.Paint as AndroidPaint
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -8,10 +16,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,20 +29,15 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material.icons.outlined.Favorite
-import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
@@ -45,39 +46,34 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.LiveData
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Class
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
-import com.example.spellbook5eapplication.app.Repository.SpellbookManager
-import com.example.spellbook5eapplication.app.Utility.Displayable
-import com.example.spellbook5eapplication.app.view.Overlays.FilterButton
-import com.example.spellbook5eapplication.app.view.spellCards.SpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCardCreation
-import com.example.spellbook5eapplication.app.view.spellCards.SpellInfoNew
-import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
-import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
+import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import com.example.spellbook5eapplication.app.viewmodel.QuickPlayViewModel
 import com.example.spellbook5eapplication.ui.theme.ButtonColors
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun QuickPlay() {
@@ -99,16 +95,39 @@ fun QuickPlay() {
             Column(
                 modifier = Modifier
                     .matchParentSize()
-                    .padding(top = 75.dp, bottom = 65.dp, start = 10.dp, end = 10.dp),
+                    .padding(top = 60.dp, bottom = 55.dp),
             ) {
+                val listState = rememberLazyListState()
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
+                    state = listState,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .fadingEdge(
+                            side = FadeSide.TOP,
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
+                            width = 40.dp,
+                            isVisible = listState.canScrollBackward,
+                            spec = tween(500)
+                        )
+                        .fadingEdge(
+                            side = FadeSide.BOTTOM,
+                            color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
+                            width = 40.dp,
+                            isVisible = listState.canScrollForward,
+                            spec = tween(500),
+                        ),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
+                    item {
+                        Spacer(modifier = Modifier.height(10.dp))
+                    }
                     val classes = Class.values()
                     items(classes.size) {
                         ClassCard(type = classes[it])
+                    }
+                    item { 
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
             }
@@ -126,7 +145,6 @@ fun ClassCard(type: Class) {
             .height(100.dp)
             .clickable {
                 quickPlayViewModel.updateCurrentClass(type)
-                GlobalOverlayState.classType = type
                 GlobalOverlayState.showOverlay(OverlayType.QUICKPLAY_SPELLBOOK)
             },
         elevation = 20.dp,
@@ -135,12 +153,15 @@ fun ClassCard(type: Class) {
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(20.dp), contentAlignment = Alignment.TopStart
+                .fillMaxSize(),
         ) {
-            Text(
-                text = Class.className(type), fontSize = 24.sp, fontWeight = FontWeight.ExtraBold
+            Image(
+                painter = painterResource(id = Class.classBackground(type)),
+                contentDescription = "",
+                contentScale = ContentScale.Crop,
+                alpha = 0.7F
             )
+            BorderedText(text = Class.className(type))
         }
     }
 }
@@ -157,6 +178,20 @@ fun QuickPlaySpellBooks(
     val selectedClass = quickPlayViewModel.currentClass?.let { Class.className(it) } ?: "UNIDENTIFIED"
 
     val quickPlaySpellList by quickPlayViewModel.currentQuickPlaySpellList.observeAsState(initial = emptyList())
+
+    var showDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(GlobalOverlayState.getTopOverlay()) {
+        if (!GlobalOverlayState.isOverlayVisible(OverlayType.LARGE_QUICKSPELLCARD)) {
+            quickPlayViewModel.setPreventReset(false)
+        }
+    }
+
+    DisposableEffect(Unit) {
+        onDispose {
+            quickPlayViewModel.resetValuesIfNeeded()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -178,7 +213,25 @@ fun QuickPlaySpellBooks(
             fontSize = 20.sp,
             fontStyle = FontStyle.Italic
         )
-        LazyRow {
+        val rowState = rememberLazyListState()
+        LazyRow(
+            state = rowState,
+            modifier = Modifier
+                .fadingEdge(
+                    side = FadeSide.LEFT,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    width = 20.dp,
+                    isVisible = rowState.canScrollBackward,
+                    spec = tween(500)
+                )
+                .fadingEdge(
+                    side = FadeSide.RIGHT,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    width = 20.dp,
+                    isVisible = rowState.canScrollForward,
+                    spec = tween(500)
+                )
+        ) {
             items(possibleLevels.size) { index ->
                     val level = possibleLevels[index]
                     LevelButton(
@@ -203,7 +256,22 @@ fun QuickPlaySpellBooks(
                 .fillMaxWidth()
                 .weight(6F)
                 .background(
-                    color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(20.dp)
+                    color = MaterialTheme.colorScheme.tertiary,
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .fadingEdge(
+                    side = FadeSide.TOP,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    width = 20.dp,
+                    isVisible = true,
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .fadingEdge(
+                    side = FadeSide.BOTTOM,
+                    color = MaterialTheme.colorScheme.tertiary,
+                    width = 20.dp,
+                    isVisible = true,
+                    shape = RoundedCornerShape(20.dp)
                 ), contentAlignment = Alignment.TopCenter
         ) {
             if (quickPlaySpellList.isNotEmpty()) {
@@ -239,10 +307,99 @@ fun QuickPlaySpellBooks(
                 modifier = Modifier,
                 color = ButtonDefaults.buttonColors(ButtonColors.GreenButton)
             ) {
-                quickPlayViewModel.addToSpellBooks("")
+                showDialog = true
             }
         }
         Spacer(modifier = Modifier.weight(1F))
+        if(showDialog){
+            SaveSpellBookDialog {
+                showDialog = false
+            }
+        }
+    }
+}
+
+@Composable
+fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
+    val quickPlayViewModel: QuickPlayViewModel = viewModel()
+    var showError by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
+    var spellbookName by remember { mutableStateOf("") }
+
+    Dialog(
+        onDismissRequest = {
+        onDissmiss()
+        },
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
+    ) {
+        Box(
+            modifier = Modifier
+                .size(350.dp, 250.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .border(
+                    2.dp,
+                    MaterialTheme.colorScheme.secondaryContainer,
+                    RoundedCornerShape(20.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ){
+            Column(
+                modifier = Modifier
+                    .padding(10.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Box {
+                    if (showError) {
+                        Text(
+                            text = errorMessage,
+                            color = ButtonColors.RedButton,
+                        )
+                    }
+                }
+                Text(
+                    text = "Name your spell book",
+                    modifier = Modifier
+                        .padding(top = 20.dp, bottom = 20.dp),
+                    color = MaterialTheme.colorScheme.onTertiary,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                    fontStyle = FontStyle.Italic
+                    )
+                UserInputField(
+                    label = "spell book name",
+                    onInputChanged = {
+                        spellbookName = it
+                    },
+                    modifier = Modifier
+                        .size(200.dp, 48.dp),
+                    singleLine = true,
+                    imeAction = ImeAction.Done
+                )
+                ColouredButton(
+                    label = "OK",
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .height(48.dp),
+                    color = ButtonDefaults.buttonColors(ButtonColors.GreenButton)
+                ) {
+                    if(spellbookName.isEmpty()){
+                        errorMessage = "Your spell book must have a name"
+                        showError = true
+                    } else {
+                        showError = false
+                        quickPlayViewModel.addToSpellBooks(spellbookName)
+                        onDissmiss()
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -275,6 +432,7 @@ fun LevelButton(
 
 @Composable
 fun QuickPlaySpellCard(spell: Spell.SpellInfo) {
+    val quickPlayViewModel: QuickPlayViewModel = viewModel()
     val cardColor = MaterialTheme.colorScheme.secondary
     val images = SpellCardCreation(spell)
     Card(elevation = 10.dp,
@@ -284,6 +442,7 @@ fun QuickPlaySpellCard(spell: Spell.SpellInfo) {
             .fillMaxWidth()
             .padding(10.dp)
             .clickable {
+                quickPlayViewModel.setPreventReset(true)
                 GlobalOverlayState.currentSpell = spell
                 GlobalOverlayState.showOverlay(OverlayType.LARGE_QUICKSPELLCARD)
             }) {
@@ -328,4 +487,85 @@ fun QuickPlaySpellCard(spell: Spell.SpellInfo) {
             }
         }
     }
+}
+
+enum class FadeSide {
+    LEFT, RIGHT, BOTTOM, TOP
+}
+fun Modifier.fadingEdge(
+    side: FadeSide,
+    color: Color,
+    width: Dp,
+    isVisible: Boolean,
+    shape: Shape? = null,
+    spec: AnimationSpec<Dp>? = null
+): Modifier = composed {
+
+    val animatedWidth = spec?.let {
+        animateDpAsState(
+            targetValue = if (isVisible) width else 0.dp,
+            animationSpec = spec,
+            label = "Fade width"
+        ).value
+    }
+
+    val baseModifier = if (shape != null) this.then(clip(shape)) else this
+
+    baseModifier.drawWithContent {
+        drawContent()
+
+            val (start, end) = when (side) {
+                FadeSide.LEFT -> Offset.Zero to Offset(size.width, 0f)
+                FadeSide.RIGHT -> Offset(size.width, 0f) to Offset.Zero
+                FadeSide.BOTTOM -> Offset(0f, size.height) to Offset.Zero
+                FadeSide.TOP -> Offset.Zero to Offset(0f, size.height)
+            }
+
+            val staticWidth = if (isVisible) width.toPx() else 0f
+
+            val widthPx = animatedWidth?.toPx() ?: staticWidth
+
+            val fraction: Float = when (side) {
+                FadeSide.LEFT, FadeSide.RIGHT -> widthPx / size.width
+                FadeSide.BOTTOM, FadeSide.TOP -> widthPx / size.height
+            }
+
+            drawRect(
+                brush = Brush.linearGradient(
+                    0f to color,
+                    fraction to Color.Transparent,
+                    start = start,
+                    end = end
+                ),
+                size = size
+            )
+        }
+    }
+
+@Composable
+fun BorderedText(text: String) {
+    Canvas(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp)
+    ) {
+        drawTextWithBorder(text, Offset(100f, 100f))
+    }
+}
+
+fun DrawScope.drawTextWithBorder(text: String, position: Offset) {
+    val paint = AndroidPaint().apply {
+        color = Color.Black.toArgb()
+        textSize = 38.sp.toPx()
+        strokeWidth = 8f
+        style = android.graphics.Paint.Style.STROKE // For border
+    }
+
+    drawContext.canvas.nativeCanvas.drawText(text, position.x, position.y, paint)
+
+    paint.apply {
+        color = Color.White.toArgb()
+        style = android.graphics.Paint.Style.FILL // For text itself
+    }
+
+    drawContext.canvas.nativeCanvas.drawText(text, position.x, position.y, paint)
 }

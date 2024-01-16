@@ -8,12 +8,6 @@ object GlobalOverlayState {
     private val overlayStack = mutableStateListOf<OverlayType>()
 
     var currentSpell: Spell.SpellInfo? = null
-    var classType: Class? = null
-
-    fun showOverlayWithSpell(overlayType: OverlayType, spell: Spell.SpellInfo) {
-        currentSpell = spell
-        overlayStack.add(overlayType)
-    }
 
     fun showOverlay(overlayType: OverlayType) {
         overlayStack.add(overlayType)

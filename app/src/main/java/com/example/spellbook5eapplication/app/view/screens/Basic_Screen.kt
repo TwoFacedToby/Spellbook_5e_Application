@@ -146,6 +146,7 @@ fun Basic_Screen(
 
 @Composable
 fun OverlayRenderer(overlayStack: List<OverlayType>) {
+    overlayStack.forEach { it -> Log.d("Overlay", "active overlays $it") }
     overlayStack.forEach { overlayType ->
         when (overlayType) {
             OverlayType.LARGE_SPELLCARD ->  {

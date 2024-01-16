@@ -15,9 +15,23 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Model.QuickPlayHandler
 import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import kotlinx.coroutines.launch
 
 class QuickPlayViewModel : ViewModel() {
+
+    private val _preventReset = MutableLiveData<Boolean>(false)
+    val preventReset: LiveData<Boolean> = _preventReset
+
+    fun setPreventReset(preventReset: Boolean) {
+        _preventReset.value = preventReset
+    }
+
+    fun resetValuesIfNeeded() {
+        if (_preventReset.value != true) {
+            resetValues()
+        }
+    }
 
     private var _availableCharacterLevelsLiveDate = MutableLiveData<List<Int>>()
     val availableCharacterLevels: LiveData<List<Int>> = _availableCharacterLevelsLiveDate
@@ -26,7 +40,6 @@ class QuickPlayViewModel : ViewModel() {
     val currentClass: Class? by _currentClass
 
     private val _currentCharacterLevel = mutableStateOf<Int?>(null)
-    val currentCharacterLevel: Int? by _currentCharacterLevel
 
     private val _currentQuickPlayNameList = mutableListOf<String>()
 
@@ -46,8 +59,8 @@ class QuickPlayViewModel : ViewModel() {
 
     fun updateCurrentClass(newValue: Class) {
         _currentClass.value = newValue
-        Log.d("QuickPlayViewModel", "Class: $newValue")
         viewModelScope.launch {
+            Log.d("QuickPlayViewModel", "Class: $newValue")
             _availableCharacterLevelsLiveDate.postValue(emptyList())
             val levels = QuickPlayHandler.getAvailableLevelsForClass(newValue)
             Log.d("QuickPlayViewModel", "Levels: $levels")
@@ -82,9 +95,9 @@ class QuickPlayViewModel : ViewModel() {
     }
 
     fun clearSpellList() {
-        _currentQuickPlaySpellList.clear()
         _currentQuickPlayNameList.clear()
-        _currentQuickPlaySpellListLiveData.value = _currentQuickPlaySpellList.toList() // Notify observers
+        _currentQuickPlaySpellList.clear()
+        _currentQuickPlaySpellListLiveData.value = _currentQuickPlaySpellList.toList()
     }
 
     fun addToSpellBooks(name: String) {
@@ -93,6 +106,19 @@ class QuickPlayViewModel : ViewModel() {
             _currentQuickPlayNameList.forEach {
                 spellbook.addSpellToSpellbook(it)
             }
+            SpellbookManager.addSpellbook(spellbook)
+            SpellbookManager.saveSpellbookToFile(spellbook.spellbookName)
+        }
+    }
+
+    fun resetValues() {
+        viewModelScope.launch {
+            _currentClass.value = null
+            _availableCharacterLevelsLiveDate.postValue(emptyList())
+            _currentCharacterLevel.value = 0
+            _currentQuickPlayNameList.clear()
+            _currentQuickPlaySpellList.clear()
+            _currentQuickPlaySpellListLiveData.value = _currentQuickPlaySpellList.toList()
         }
     }
 }
