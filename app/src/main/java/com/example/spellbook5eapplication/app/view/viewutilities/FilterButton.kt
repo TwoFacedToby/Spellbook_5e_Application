@@ -9,6 +9,7 @@ import androidx.compose.material.icons.automirrored.outlined.ManageSearch
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
@@ -24,15 +25,14 @@ fun FilterButton(onShowFiltersRequest: () -> Unit){
         onClick = { onShowFiltersRequest() },
         modifier = Modifier
             .background(
-                color = colorResource(id = R.color.main_color),
+                color = MaterialTheme.colorScheme.primary,
                 shape = RoundedCornerShape(2.dp)
             )
             .border(
-                BorderStroke(2.dp, colorResource(id = R.color.border_color)),
+                BorderStroke(2.dp, MaterialTheme.colorScheme.tertiary),
                 shape = RoundedCornerShape(2.dp)
             ),
-        colors = IconButtonDefaults.iconButtonColors(containerColor = colorResource(id = R.color.main_color), contentColor = colorResource(
-            id = R.color.white))
+        colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary)
     )
     {
         Icon(

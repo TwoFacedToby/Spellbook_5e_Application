@@ -5,17 +5,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 
 @Composable
@@ -33,7 +33,7 @@ fun BottomBar(
     val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(
-        backgroundColor = colorResource(id = R.color.main_color)
+        backgroundColor = MaterialTheme.colorScheme.primary
     )
     {
         bottomNavItems.forEach { screen ->
@@ -73,7 +73,7 @@ fun RowScope.AddItem(
                 contentDescription = "Navigation icon",
                 modifier = Modifier.size(35.dp))
         },
-        selectedContentColor = colorResource(id = R.color.white),
-        unselectedContentColor = colorResource(id = R.color.unselected_icon)
+        selectedContentColor = Color.White,
+        unselectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer
     )
 }

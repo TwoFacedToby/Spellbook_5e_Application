@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,6 +51,7 @@ import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 
 
 //Works with BrewFactory2 to create homebrews
@@ -105,8 +107,8 @@ class HomeBrewInstantiator {
                     .height(600.dp)
                     .fillMaxWidth()
                     .background(
-                        color = colorResource(id = R.color.overlay_box_color),
-                        shape = RoundedCornerShape(20.dp)
+                        color = MaterialTheme.colorScheme.tertiary,
+                        shape = MaterialTheme.shapes.large
                     ),
                 contentAlignment = Alignment.TopCenter
             ) {
@@ -145,9 +147,7 @@ class HomeBrewInstantiator {
                                     .height(38.dp)
                                     .width(100.dp),
                                 color = ButtonDefaults.buttonColors(
-                                    containerColor = colorResource(
-                                        id = R.color.selected_button
-                                    )
+                                    containerColor = ButtonColors.SelectedButton
                                 )
                             ) {
 
@@ -162,9 +162,7 @@ class HomeBrewInstantiator {
                             "Cancel", modifier = Modifier
                                 .height(38.dp) // Sets the height of the button
                                 .width(100.dp), color = ButtonDefaults.buttonColors(
-                                containerColor = colorResource(
-                                    id = R.color.red_button
-                                )
+                                containerColor = ButtonColors.RedButton
                             )
                         ) {
                             GlobalOverlayState.showOverlay(
@@ -180,9 +178,7 @@ class HomeBrewInstantiator {
                                 "Next", modifier = Modifier
                                     .height(38.dp) // Sets the height of the button
                                     .width(100.dp), color = ButtonDefaults.buttonColors(
-                                    containerColor = colorResource(
-                                        id = R.color.green_button
-                                    )
+                                    containerColor = ButtonColors.GreenButton
                                 )
                             ) {
                                 changeShow = show.nextBrewPart()!!
@@ -193,9 +189,7 @@ class HomeBrewInstantiator {
                                 "Finish", modifier = Modifier
                                     .height(38.dp) // Sets the height of the button
                                     .width(100.dp), color = ButtonDefaults.buttonColors(
-                                    containerColor = colorResource(
-                                        id = R.color.green_button
-                                    )
+                                    containerColor = ButtonColors.GreenButton
                                 )
                             ) {
                                 //Save the spell on the device here
@@ -278,7 +272,7 @@ class HomeBrewInstantiator {
             // Button to open dropdown
             Text(
                 text = dropName,
-                color = colorResource(id = R.color.white),
+                color = Color.White,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -294,7 +288,7 @@ class HomeBrewInstantiator {
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .background(color = colorResource(id = R.color.overlay_box_color))
+                    .background(color = MaterialTheme.colorScheme.tertiary)
             ) {
                 LazyColumn(
                     modifier = Modifier
@@ -307,7 +301,7 @@ class HomeBrewInstantiator {
                         item {
                             Text(
                                 text = item.displayedBrewPart(),
-                                color = colorResource(id = R.color.white),
+                                color = MaterialTheme.colorScheme.onTertiary,
                                 textAlign = TextAlign.Center,
                                 modifier = Modifier
                                     .fillMaxWidth()

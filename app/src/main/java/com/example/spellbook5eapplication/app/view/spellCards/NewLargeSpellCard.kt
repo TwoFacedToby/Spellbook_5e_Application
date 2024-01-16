@@ -30,6 +30,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -53,6 +54,7 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -70,8 +72,8 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
         ) {
         Card(
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.spellcard_color)),
+            shape = MaterialTheme.shapes.small,
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(600.dp)
@@ -113,7 +115,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                     Icon(
                                         imageVector = Icons.Outlined.Add,
                                         contentDescription = "Add to Spellbook",
-                                        tint = colorResource(id = R.color.spellcard_button),
+                                        tint = ButtonColors.SpellCardButton,
                                         modifier = Modifier.size(48.dp)
                                     )
                                 }
@@ -157,7 +159,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                     Icon(
                                         imageVector = favouriteImage,
                                         contentDescription = "Favorite button",
-                                        tint = colorResource(id = R.color.spellcard_button),
+                                        tint = ButtonColors.SpellCardButton,
                                         modifier = Modifier.size(48.dp)
                                     )
                                 }
@@ -167,7 +169,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                 Icon(
                                     imageVector = Icons.Outlined.Close,
                                     contentDescription = "Close",
-                                    tint = colorResource(id = R.color.spellcard_button),
+                                    tint = ButtonColors.SpellCardButton,
                                     modifier = Modifier.size(48.dp)
                                 )
                             }
@@ -202,7 +204,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                         .clip(RoundedCornerShape(2.dp))
                                         .border(
                                             0.5.dp,
-                                            colorResource(id = R.color.border_color),
+                                            MaterialTheme.colorScheme.tertiary,
                                             shape = RoundedCornerShape(2.dp)
                                         )
                                         .shadow(elevation = 5.dp)
@@ -234,7 +236,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                     .clip(RoundedCornerShape(2.dp))
                                     .border(
                                         0.5.dp,
-                                        colorResource(id = R.color.border_color),
+                                        MaterialTheme.colorScheme.tertiary,
                                         shape = RoundedCornerShape(2.dp)
                                     )
                             )
@@ -291,13 +293,13 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                     imageVector = Icons.Outlined.Edit,
                                     contentDescription = "Edit Homebrew",
                                     modifier = Modifier.size(48.dp),
-                                    colorResource(id = R.color.spellcard_button)
+                                    ButtonColors.SpellCardButton
                                 )
                             }
                         }
                     }
                     Divider(
-                        color = colorResource(id = R.color.black),
+                        color = Color.Black,
                         thickness = 1.dp,
                         modifier = Modifier.padding(start = 5.dp, end = 5.dp, bottom = 10.dp)
                     )

@@ -75,7 +75,7 @@ fun Basic_Screen(
                     .padding(top = 80.dp, bottom = 50.dp, start = 10.dp, end = 10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // TopBar with Search and Filters
+
                 SearchFilterBar()
 
                 SubcomposeLayout { constraints ->
@@ -100,7 +100,6 @@ fun Basic_Screen(
                         subcompose("customContent", customContent).first().measure(constraints)
                     }
 
-                    // Calculate the height for the SpellQuery considering the height of the custom content
                     val spellQueryHeight = if (customContentLayout != null) {
                         constraints.maxHeight - customContentLayout.height - bottomPadding
                     } else {
@@ -108,35 +107,14 @@ fun Basic_Screen(
                     }
 
                     layout(constraints.maxWidth, constraints.maxHeight) {
-                        // Place the SpellQuery
                         spellQueryLayout.placeRelative(0, 0)
 
-                        // Calculate the horizontal center for the custom content
                         customContentLayout?.let {
                             val xCenter = (constraints.maxWidth - it.width) / 2
                             it.placeRelative(xCenter, spellQueryHeight)
                         }
                     }
                 }
-                // List of Spells, taking up all available space
-                /*Box(modifier = Modifier
-                    .fillMaxHeight()
-                    .weight(3f)){
-                    SpellQuery(
-                        spellsLiveData = spellsLiveData,
-                        enablePagination = enablePagination
-                    )
-                }
-
-                if (customContent != null) {
-                    Box(contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(0.5f))
-                    {
-                        customContent()
-                    }
-                }*/
             }
             OverlayRenderer(GlobalOverlayState.getOverlayStack())
         }
@@ -212,54 +190,3 @@ fun SearchFilterBar(
         )
     }
 }
-
-// Old way of doing Overlay State
-/*for (overlayType in GlobalOverlayState.getOverlayStack()) {
-                when (overlayType) {
-                    OverlayType.LARGE_SPELLCARD -> {
-                        LargeSpellCardOverlay(GlobalOverlayState, { GlobalOverlayState.dismissOverlay() }, overlaySpell)
-                    }
-                    OverlayType.ADD_TO_SPELLBOOK -> {
-                        CustomOverlay(
-                            globalOverlayState = GlobalOverlayState,
-                            overlayType = OverlayType.ADD_TO_SPELLBOOK,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
-                        ) {
-                            AddToSpellBookOverlay(
-                                spellInfo = overlaySpell,
-                                onDismissRequest = { globalOverlayState.dismissOverlay() }
-                            )
-                        }
-                    }
-                    OverlayType.FILTER -> {
-                        CustomOverlay(
-                            globalOverlayState = GlobalOverlayState,
-                            overlayType = OverlayType.FILTER,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
-                        ){
-                            FiltersOverlay(
-                                onDismissRequest = { GlobalOverlayState.dismissOverlay() },
-                                currentfilter = filter,
-                                createNewFilter = { Filter() },
-                                updateFilterState = { newFilter ->
-                                    filter = newFilter
-                                    println("Filter updated: $filter") }
-                            )
-                        }
-                    }
-                    OverlayType.MAKE_SPELL -> {
-                        CustomOverlay(
-                            globalOverlayState = GlobalOverlayState,
-                            overlayType = OverlayType.MAKE_SPELL,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
-                        ) {
-                            NewSpellOverlay(onDismissRequest = {
-                                GlobalOverlayState.dismissOverlay()
-
-                            }, onFilterSelected = {/* TODO */ })
-                        }
-                    }
-                    else -> Unit
-                }
-
-            }*/

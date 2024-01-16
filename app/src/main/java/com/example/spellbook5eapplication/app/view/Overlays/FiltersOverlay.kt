@@ -19,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -37,6 +38,7 @@ import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.viewmodel.FilterItem
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 
 
 @Composable
@@ -61,14 +63,14 @@ fun FiltersOverlay(
             modifier = Modifier
                 .width(250.dp)
                 .height(15.dp)
-                .clip(shape = RoundedCornerShape(5.dp)),
-            color = colorResource(id = R.color.black).copy(alpha = 0.2F),
+                .clip(shape = MaterialTheme.shapes.extraSmall),
+            color = Color.Black.copy(alpha = 0.2F),
         )
         Spacer(modifier = Modifier.height(20.dp))
         Row{
             ColouredButton(label = "Apply",
                 modifier = Modifier.weight(1F),
-                color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
+                color = ButtonDefaults.buttonColors(containerColor = ButtonColors.GreenButton),
                 onClick = { filterViewModel.applyFilters(
                     spellLevel,
                     components,
@@ -83,7 +85,7 @@ fun FiltersOverlay(
             Spacer(modifier = Modifier.width(10.dp))
             ColouredButton(label = "Reset",
                 modifier = Modifier.weight(1F),
-                color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
+                color = ButtonDefaults.buttonColors(containerColor = ButtonColors.RedButton),
                 onClick = {
                     onResetAllFiltersClicked(
                         spellLevel,
@@ -104,8 +106,8 @@ fun FiltersOverlay(
                 .height(500.dp)
                 .fillMaxWidth()
                 .background(
-                    color = colorResource(id = R.color.overlay_box_color),
-                    shape = RoundedCornerShape(20.dp)
+                    color = MaterialTheme.colorScheme.tertiary,
+                    shape = MaterialTheme.shapes.large
                 ),
             contentAlignment = Alignment.TopCenter
         ) {
@@ -290,14 +292,14 @@ fun FilterButton(
                 filter.isSelected.value = !filter.isSelected.value
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (filter.isSelected.value) colorResource(id = R.color.selected_button)
-                else colorResource(id = R.color.unselected_button)
+                containerColor = if (filter.isSelected.value) ButtonColors.SelectedButton
+                else ButtonColors.UnselectedButton
             ),
             border = BorderStroke(
                 width = 2.dp,
-                color = colorResource(id = R.color.border_color)
+                color = MaterialTheme.colorScheme.secondaryContainer
             ),
-            shape = RoundedCornerShape(5.dp),
+            shape = MaterialTheme.shapes.extraSmall,
         ) {
             Text(
                 text = filter.label,
@@ -313,15 +315,15 @@ fun FilterButton(
                 filter.isSelected.value = !filter.isSelected.value
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (filter.isSelected.value) colorResource(id = R.color.selected_button)
-                else colorResource(id = R.color.unselected_button)
+                containerColor = if (filter.isSelected.value) ButtonColors.SelectedButton
+                else ButtonColors.UnselectedButton
             ),
             border = BorderStroke(
                 width = 2.dp,
-                color = colorResource(id = R.color.border_color)
+                color = MaterialTheme.colorScheme.secondaryContainer
             ),
             contentPadding = contentPaddingValues,
-            shape = RoundedCornerShape(5.dp),
+            shape = MaterialTheme.shapes.extraSmall,
         ) {
             Text(
                 text = filter.label,

@@ -7,9 +7,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,8 +25,8 @@ fun SpellbookCard(
 ) {
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-        shape = RoundedCornerShape(10.dp),
-        colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.spellcard_color)),
+        shape = MaterialTheme.shapes.small,
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
         modifier = Modifier
             .height(150.dp)
             .padding(10.dp)
@@ -41,7 +43,7 @@ fun SpellbookCard(
                 text = spellbook.spellbookName,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
-                color = colorResource(id = R.color.black)
+                color = Color.Black
             )
         }
     }

@@ -18,6 +18,7 @@ import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.material.swipeable
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,7 +51,7 @@ fun CustomOverlay(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(colorResource(id = R.color.black).copy(alpha = 0.2f))
+                .background(Color.Black.copy(alpha = 0.2f))
                 .clickable(
                     onClick = {
                         Log.d("Overlay", "We dismiss")
@@ -78,8 +79,8 @@ fun CustomOverlay(
                     .align(Alignment.BottomCenter)
                     .offset(y = swipeableState.offset.value.dp)
                     .background(
-                        colorResource(id = R.color.main_color),
-                        shape = RoundedCornerShape(20.dp)
+                        MaterialTheme.colorScheme.primary,
+                        shape = MaterialTheme.shapes.large
                     )
                     .clickable { /*Leaving it empty so that it consume the outer box' click event*/ }
                     .padding(5.dp),

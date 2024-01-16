@@ -4,6 +4,7 @@ import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
@@ -37,12 +38,16 @@ object ButtonColors {
     val RedButton = Color(0xFF791811)
     val UnselectedButton = Color(0xFF292929)
     val SelectedButton = Color(0xFF686868)
+    val SpellCardButton = Color(0xFF807E7E)
+
 }
 
 val shapes = Shapes(
+    extraSmall = RoundedCornerShape(5.dp),
     small = RoundedCornerShape(10.dp),
-    medium = RoundedCornerShape(30.dp),
-    large = RoundedCornerShape(40.dp),
+    medium = RoundedCornerShape(15.dp),
+    large = RoundedCornerShape(20.dp),
+    extraLarge = RoundedCornerShape(30.dp),
 )
 
 @Composable

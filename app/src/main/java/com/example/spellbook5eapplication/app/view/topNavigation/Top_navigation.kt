@@ -10,6 +10,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -53,9 +54,9 @@ fun TopBar(navController: NavController){
                         imageVector = Icons.Outlined.Settings,
                         contentDescription = "Settings button",
                         tint = if (GlobalOverlayState.isOverlayVisible(OverlayType.SETTINGS)) {
-                            colorResource(id = R.color.white)
+                            MaterialTheme.colorScheme.onPrimary
                         } else {
-                            colorResource(id = R.color.unselected_icon)
+                            MaterialTheme.colorScheme.onPrimaryContainer
                         },
                         modifier = Modifier.size(35.dp)
                     )
@@ -71,17 +72,17 @@ fun TopBar(navController: NavController){
                         imageVector = Icons.Outlined.Person,
                         contentDescription = "Profile button",
                         tint = if (GlobalOverlayState.isOverlayVisible(OverlayType.PROFILE)) {
-                            colorResource(id = R.color.white)
+                            MaterialTheme.colorScheme.onPrimary
                         } else {
-                            colorResource(id = R.color.unselected_icon)
+                            MaterialTheme.colorScheme.onPrimaryContainer
                         },
                         modifier = Modifier.size(35.dp)
                     )
                 }
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = colorResource(id = R.color.main_color),
-                titleContentColor = colorResource(id = R.color.white)
+                containerColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = MaterialTheme.colorScheme.onPrimary
             )
         )
     }

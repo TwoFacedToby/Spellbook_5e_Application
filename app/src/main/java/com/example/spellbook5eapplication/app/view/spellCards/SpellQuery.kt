@@ -57,11 +57,6 @@ fun SpellQuery(
     Log.d("SpellQuery", "observed filter: $filter")
     val isUpdated by filterViewModel.isUpdated
 
-
-
-    //Back-up
-    //val spells by spellQueryViewModel.spells.observeAsState(emptyList())
-
     val spells by spellsLiveData.observeAsState(emptyList())
     val isLoading by spellQueryViewModel.isLoading.observeAsState(false)
 

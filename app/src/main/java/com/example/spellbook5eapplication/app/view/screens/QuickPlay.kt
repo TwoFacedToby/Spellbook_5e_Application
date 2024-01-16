@@ -340,12 +340,12 @@ fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
                 .size(350.dp, 250.dp)
                 .background(
                     color = MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(20.dp)
+                    shape = MaterialTheme.shapes.large
                 )
                 .border(
                     2.dp,
                     MaterialTheme.colorScheme.secondaryContainer,
-                    RoundedCornerShape(20.dp)
+                    MaterialTheme.shapes.large
                 ),
             contentAlignment = Alignment.Center
         ){
@@ -419,7 +419,7 @@ fun LevelButton(
         border = BorderStroke(
             width = 2.dp, color = MaterialTheme.colorScheme.secondaryContainer
         ),
-        shape = RoundedCornerShape(5.dp),
+        shape = MaterialTheme.shapes.extraSmall,
     ) {
         Text(
             text = level.toString(),
@@ -436,7 +436,7 @@ fun QuickPlaySpellCard(spell: Spell.SpellInfo) {
     val cardColor = MaterialTheme.colorScheme.secondary
     val images = SpellCardCreation(spell)
     Card(elevation = 10.dp,
-        shape = RoundedCornerShape(10.dp),
+        shape = MaterialTheme.shapes.small,
         backgroundColor = cardColor,
         modifier = Modifier
             .fillMaxWidth()

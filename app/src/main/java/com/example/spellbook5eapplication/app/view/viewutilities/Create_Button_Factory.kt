@@ -8,6 +8,7 @@ import androidx.compose.ui.res.colorResource
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 
 @Composable
 fun DynamicButtonFactory(buttonType: String) {
@@ -38,7 +39,7 @@ fun DynamicButtonFactory(buttonType: String) {
             label = buttonText,
             modifier = Modifier,
             color = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.green_button)
+                containerColor = ButtonColors.GreenButton
             ),
             onClick = { buttonOnClick() }
         )
