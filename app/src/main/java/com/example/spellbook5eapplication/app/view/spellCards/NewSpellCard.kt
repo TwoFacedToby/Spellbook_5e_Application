@@ -204,11 +204,14 @@ fun SpellCard(
 
                     val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
                     var favouriteImage by remember { mutableStateOf(defaultFavouriteImage) }
-                    androidx.compose.material3.IconButton(
+                    IconButton(
                         onClick = {
                             spell.index?.let { spellIndex ->
                                 val favouritesSpellbook =
                                     SpellbookManager.getSpellbook("Favourites")
+
+                                Log.d("LOLOL400", favouritesSpellbook.toString())
+
                                 favouriteImage =
                                     if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
                                         // Remove spell from favorites
@@ -232,7 +235,7 @@ fun SpellCard(
                             favouriteImage = Icons.Outlined.Favorite
                         }
                         Icon(
-                            imageVector = Icons.Outlined.FavoriteBorder,
+                            imageVector = favouriteImage,
                             contentDescription = "Favorite",
                             tint = colorResource(id = R.color.spellcard_button),
                             modifier = Modifier.size(48.dp)

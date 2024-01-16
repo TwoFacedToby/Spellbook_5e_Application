@@ -149,7 +149,7 @@ class SpellQueryViewModel() : ViewModel() {
 
     private fun loadFavoriteSpells() {
         viewModelScope.launch {
-            val spellList = SpelllistLoader.loadSpellbookAsSpellList("Favourites")
+            val spellList = SpelllistLoader.loadSpellbookAsSpellList("favourites")
             Log.d("MILK2", spellList.toString())
 
             val displayableFavorites = spellList.getSpellInfoList().map { it as Displayable }
