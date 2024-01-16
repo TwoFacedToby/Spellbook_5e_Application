@@ -71,12 +71,13 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
     val images = SpellCardCreation(spell)
     val spellbooks = SpellbookManager.getAllSpellbooks()
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black.copy(alpha = 0.5f))
-        .clickable { GlobalOverlayState.dismissOverlay() },
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f))
+            .clickable { GlobalOverlayState.dismissOverlay() },
         contentAlignment = Alignment.Center
-        ) {
+    ) {
         Card(
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
             shape = MaterialTheme.shapes.small,
@@ -104,7 +105,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                 .weight(1F)
                         ) {
                             Text(
-                                text = spell.name?: "UNIDENTIFIED",
+                                text = spell.name ?: "UNIDENTIFIED",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 24.sp,
                                 modifier = Modifier.padding(5.dp, 0.dp),
@@ -114,12 +115,14 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                         Row(
                             modifier = Modifier
                                 .weight(1F),
-                            horizontalArrangement = if(!fromQuickPlay) Arrangement.SpaceEvenly else Arrangement.End
+                            horizontalArrangement = if (!fromQuickPlay) Arrangement.SpaceEvenly else Arrangement.End
                         ) {
-                            if(!fromQuickPlay) {
+                            if (!fromQuickPlay) {
                                 IconButton(
-                                    onClick = { GlobalOverlayState.currentSpell = spell
-                                        GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
+                                    onClick = {
+                                        GlobalOverlayState.currentSpell = spell
+                                        GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
+                                    }) {
                                     Icon(
                                         imageVector = Icons.Outlined.Add,
                                         contentDescription = "Add to Spellbook",
@@ -158,8 +161,10 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                         }
                                     }
                                 ) {
-                                    if(SpellbookManager.getSpellbook("Favourites")?.spells?.contains(spell.index) == true)
-                                    {
+                                    if (SpellbookManager.getSpellbook("Favourites")?.spells?.contains(
+                                            spell.index
+                                        ) == true
+                                    ) {
                                         favouriteImage = Icons.Filled.Favorite
                                     }
                                     Icon(
@@ -169,15 +174,17 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                         modifier = Modifier.size(48.dp)
                                     )
                                 }
-                                IconButton(
-                                    onClick = { GlobalOverlayState.dismissOverlay() }){
-                                    Icon(
-                                        imageVector = Icons.Outlined.Close,
-                                        contentDescription = "Close",
+                            }
+                            IconButton(
+                                onClick = { GlobalOverlayState.dismissOverlay() }) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Close,
+                                    contentDescription = "Close",
                                     tint = ButtonColors.SpellCardButton,
-                                        modifier = Modifier.size(48.dp)
-                                    )
-                                }
+                                    modifier = Modifier.size(48.dp)
+                                )
+
+                            }
                         }
                     }
                     Divider(
@@ -224,15 +231,17 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                             .weight(2F)
                             .padding(0.dp, 5.dp)
                     ) {
-                        Box(modifier = Modifier
-                            .weight(4F)
-                        ){
+                        Box(
+                            modifier = Modifier
+                                .weight(4F)
+                        ) {
                             SpellInfoNew(spell)
                         }
-                        Box(modifier = Modifier
-                            .weight(1F),
+                        Box(
+                            modifier = Modifier
+                                .weight(1F),
                             contentAlignment = Alignment.CenterEnd
-                        ){
+                        ) {
                             Image(
                                 painter = painterResource(id = images.schoolID),
                                 contentDescription = "Spell school",
@@ -247,9 +256,10 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                             )
                         }
                     }
-                    Column(modifier = Modifier
-                        .fillMaxSize()
-                        .weight(7F),
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(7F),
                     ) {
                         Text(
                             text = "Spell description",
@@ -261,11 +271,16 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                             modifier = Modifier
                                 .padding(top = 10.dp)
                                 .fillMaxHeight()
-                        ){
-                            val combinedDescriptions = (spell.desc ?: emptyList()) + (spell.atHigherLevel ?: emptyList())
+                        ) {
+                            val combinedDescriptions =
+                                (spell.desc ?: emptyList()) + (spell.atHigherLevel
+                                    ?: emptyList())
                             items(combinedDescriptions.size) { index ->
                                 if (spell.atHigherLevel?.isNotEmpty() == true)
-                                    if (combinedDescriptions[index] == spell.atHigherLevel?.get(0)) {
+                                    if (combinedDescriptions[index] == spell.atHigherLevel?.get(
+                                            0
+                                        )
+                                    ) {
                                         Text(
                                             text = "At Higher Levels",
                                             color = Color.Black,
@@ -286,12 +301,12 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                             }
                         }
                     }
-                    Row (
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        if(spell.homebrew == true) {
+                        if (spell.homebrew == true) {
 
 
                             IconButton(onClick = {
@@ -333,4 +348,4 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
     }
 
 }
-}
+

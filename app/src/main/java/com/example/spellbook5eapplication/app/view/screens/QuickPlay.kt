@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view.screens
 
+import android.widget.Toast
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
@@ -67,6 +68,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Class
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.view.spellCards.ClassCard
 import com.example.spellbook5eapplication.app.view.spellCards.QuickPlaySpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellCardCreation
@@ -217,6 +219,18 @@ fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
                     } else {
                         showError = false
                         quickPlayViewModel.addToSpellBooks(spellbookName)
+                        LocalDataLoader
+                            .getContext()
+                            ?.get()
+                            ?.let { context ->
+                                Toast
+                                    .makeText(
+                                        context,
+                                        "$spellbookName added to Spellbooks",
+                                        Toast.LENGTH_SHORT
+                                    )
+                                    .show()
+                            }
                         onDissmiss()
                     }
                 }

@@ -379,7 +379,6 @@ fun add_to_spellbook(
     spellbooks: List<Spellbook>,
     spell: Spell.SpellInfo
 ) {
-        // Use your custom OverlayBox composable for the dialog content
     Column(
         modifier = Modifier.padding(top = 8.dp, start = 15.dp, end = 15.dp)
             .fillMaxSize(),
