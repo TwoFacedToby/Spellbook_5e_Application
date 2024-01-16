@@ -104,7 +104,6 @@ fun UserOverlay(
                 }
                 SignOutButton(signInViewModel){
                     onDismissRequest()
-
                 }
             }
 
