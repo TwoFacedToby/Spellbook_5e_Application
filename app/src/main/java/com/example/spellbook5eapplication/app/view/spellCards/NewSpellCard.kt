@@ -425,17 +425,20 @@ fun NewSpellCardPreview() {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SelectSpellbookDialog(spellbooks: List<Spellbook>, onDismiss: () -> Unit, spell: Spell.SpellInfo) {
+
+
+
     AlertDialog(
         onDismissRequest = { onDismiss() },
         title = { Text("Select Spellbook") },
         text = {
             LazyColumn {
                 items(spellbooks.size) { index ->
+
+                    if(!spellbooks[index].spells.contains(spell.index)){
                     ListItem(
                         text = {
-                            if(!spellbooks[index].spells.contains(spell.index)){
-                                Text(spellbooks[index].spellbookName) }
-                            }
+                            Text(spellbooks[index].spellbookName) }
                             ,
                         modifier = Modifier.clickable {
                             Log.d("POKE", spell.name.toString())
@@ -446,6 +449,7 @@ fun SelectSpellbookDialog(spellbooks: List<Spellbook>, onDismiss: () -> Unit, sp
                             onDismiss()
                         }
                     )
+                }
                 }
             }
         },
