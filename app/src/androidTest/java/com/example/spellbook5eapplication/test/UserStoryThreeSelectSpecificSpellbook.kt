@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.test
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
@@ -15,24 +16,44 @@ class UserStoryThreeSelectSpecificSpellbook {
     private val spellbooks = mutableStateListOf<Spellbook>()
     private var selectedSpellbookTemp: Spellbook? = null
 
-    fun loadSpellbooks(){
-        SpelllistLoader.loadSpellbooks()
+    init {
+        prepareSpellbooksForTesting()
+    }
+
+    private fun prepareSpellbooksForTesting() {
+        // Clear existing spellbooks
+        SpellbookManager.getAllSpellbooks().forEach {
+            SpellbookManager.removeSpellbook(it.spellbookName)
+        }
+
+        // Create and add new spellbooks with unique spells
+        val spellbook1 = Spellbook("Spellbook1").apply {
+            addSpellToSpellbook("Fireball")
+        }
+        val spellbook2 = Spellbook("Spellbook2").apply {
+            addSpellToSpellbook("Ice Lance")
+        }
+        val spellbook3 = Spellbook("Spellbook3").apply {
+            addSpellToSpellbook("Earthquake")
+        }
+
+        SpellbookManager.addSpellbook(spellbook1)
+        SpellbookManager.addSpellbook(spellbook2)
+        SpellbookManager.addSpellbook(spellbook3)
+    }
+
+    @Given("a list of user-created spellbooks")
+    fun a_list_of_user_created_spellbooks() {
         spellbooks.clear()
         spellbooks.addAll(SpellbookManager.getAllSpellbooks())
         selectedSpellbook.value = spellbooks.firstOrNull()
     }
 
-
-    @Given("a list of user-created spellbooks")
-    fun a_list_of_user_created_spellbooks() {
-        loadSpellbooks()
-    }
-
     @When("the user selects a specific spellbook")
     fun the_user_selects_a_specific_spellbook() {
-        loadSpellbooks()
         selectedSpellbookTemp = selectedSpellbook.value
 
+        Log.d("LOLOLOLOLOL","Spellbook Size ${spellbooks.size.toString()}")
         if(spellbooks.size > 1) {
             selectedSpellbook.value = spellbooks.getOrNull(1)
         }

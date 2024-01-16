@@ -2,6 +2,7 @@ package com.example.spellbook5eapplication.app.viewmodel
 
 enum class OverlayType {
     LARGE_SPELLCARD,
+    LOCAL_LARGE_SPELLCARD,
     ERASE_PROMPT,
     SETTINGS,
     PROFILE,
@@ -10,4 +11,9 @@ enum class OverlayType {
     MAKE_SPELL,
     QUICKPLAY_SPELLBOOK,
     LARGE_QUICKSPELLCARD
+    MAKE_SPELL,
+    CREATE_SPELLBOOK,
+    EDIT_SPELL,
+    REMOVE_SPELLBOOK,
+    REMOVE_SPELL_FROM_SPELLBOOK
 }

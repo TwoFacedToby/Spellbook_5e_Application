@@ -3,7 +3,9 @@ package com.example.spellbook5eapplication.app.Repository
 import android.util.Log
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
+import com.example.spellbook5eapplication.app.Utility.CurrentSettings
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
+import com.example.spellbook5eapplication.app.viewmodel.SettingsViewModel
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -54,12 +56,16 @@ object SpellDataFetcher {
                 return spellInfo
             }
         }
-
         // If not found in local or homebrew, fetch from API
-        return fetchFromAPI(index)?.also { spellInfo ->
-            addSpellInfo(spellInfo)
-            Log.d("SpellDataFetcher", "Fetched from API: $index - ${spellInfo.toString()}")
+        if(CurrentSettings.currentSettings.useInternet){ //If user has allowed internet
+            return fetchFromAPI(index)?.also { spellInfo ->
+                addSpellInfo(spellInfo)
+                Log.d("SpellDataFetcher", "Fetched from API: $index - ${spellInfo.toString()}")
+            }
         }
+        return null
+
+
     }
 
 
@@ -76,8 +82,11 @@ object SpellDataFetcher {
                     val spellJson = jsonObject.getAsJsonObject("data")?.getAsJsonObject("spell")
 
                     // Save the fetched JSON locally for future use
-                    LocalDataLoader.saveJson(jsonResult, index, LocalDataLoader.DataType.INDIVIDUAL)
-                    LocalDataLoader.updateIndividualSpellList(index)
+                    if(CurrentSettings.currentSettings.saveSpellData){
+                        LocalDataLoader.saveJson(jsonResult, index, LocalDataLoader.DataType.INDIVIDUAL)
+                        LocalDataLoader.updateIndividualSpellList(index)
+                    }
+
 
                     gson.fromJson(spellJson, Spell.SpellInfo::class.java)
                 } else {

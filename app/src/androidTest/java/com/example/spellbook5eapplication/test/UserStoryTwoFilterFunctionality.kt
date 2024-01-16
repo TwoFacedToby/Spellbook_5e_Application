@@ -2,20 +2,20 @@ package com.example.spellbook5eapplication.test
 
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
+import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Utility.Search
-import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import io.cucumber.java.en.Given
 import io.cucumber.java.en.When
 import io.cucumber.java.en.Then
 import org.junit.Assert
 
 class UserStoryTwoFilterFunctionality {
-    private var fakeSpellList: CreateSpellViewModel? = null
-    private var spellinfo1: Spell.SpellInfo? = (Spell.SpellInfo(
+    private var fakeSpellList = SpellList()
+    private var spellinfo1: Spell.SpellInfo = (Spell.SpellInfo(
         json = "",
-        index = null,
-        name = "",
-        desc = listOf(),
+        index = "fireball",
+        name = "Fireball",
+        desc = listOf("Fireball fires fireballs."),
         atHigherLevel = listOf(),
         range = "",
         components = listOf(),
@@ -35,9 +35,9 @@ class UserStoryTwoFilterFunctionality {
     ))
     private var spellinfo2: Spell.SpellInfo = (Spell.SpellInfo(
         json = "",
-        index = null,
-        name = "",
-        desc = listOf(),
+        index = "fire-shield",
+        name = "Fire shield",
+        desc = listOf("Fire shield protects fire shields."),
         atHigherLevel = listOf(),
         range = "",
         components = listOf(),
@@ -57,9 +57,9 @@ class UserStoryTwoFilterFunctionality {
     ))
     private var spellinfo3: Spell.SpellInfo = (Spell.SpellInfo(
         json = "",
-        index = null,
-        name = "",
-        desc = listOf(),
+        index = "water-bolt",
+        name = "Water Bolt",
+        desc = listOf("Water bolt waters water bolts."),
         atHigherLevel = listOf(),
         range = "",
         components = listOf(),
@@ -76,14 +76,20 @@ class UserStoryTwoFilterFunctionality {
         damage = Spell.SpellDamage(Spell.SpellDamageType(name = "", index = "")),
         dc = "",
         homebrew = true
-    )
+    ))
+
+
+    init {
+        // Add spells to the fakeSpellList
+        val spellInfos = listOf(spellinfo1, spellinfo2, spellinfo3)
+        fakeSpellList.setSpellInfoList(listOf(spellinfo1, spellinfo2, spellinfo3))
+
+        fakeSpellList.setIndexList(spellInfos.mapNotNull { it.index })
+    }
 
     @Given("the user is viewing a list of spells")
-    fun the_user_is_viewing_a_list_of_spells( ) {
-
-        fakeSpellList.updateEntireSpell(spellinfo!!);
-
-
+    fun the_user_is_viewing_a_list_of_spells() {
+        // The fakeSpellList is already initialized with spells
     }
 
     @When("the user applies a filter based on specific attributes \\(e.g., level, school, class)")

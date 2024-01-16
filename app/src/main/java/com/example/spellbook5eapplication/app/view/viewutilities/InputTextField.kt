@@ -42,11 +42,25 @@ fun UserInputField(
     onInputChanged: (String) -> Unit,
     modifier : Modifier,
     singleLine : Boolean,
-    imeAction: ImeAction
+    imeAction: ImeAction,
+    initialInput: String
 ){
-    var input by remember { mutableStateOf("") }
+    var input by remember { mutableStateOf(initialInput) }
     val keyboardController = LocalSoftwareKeyboardController.current
     //val coroutineScope = rememberCoroutineScope()
+
+    var alignment = Alignment.CenterVertically
+    var otherModifier = Modifier
+        .fillMaxSize()
+        .padding(start = 5.dp)
+
+    if(!singleLine){
+        alignment = Alignment.Top
+        otherModifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 10.dp)
+            .padding(start = 5.dp)
+    }
 
     BasicTextField(
         value = input,
@@ -86,10 +100,8 @@ fun UserInputField(
             ) {
 
                 Row(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 5.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = otherModifier,
+                    verticalAlignment = alignment
                 )
                 {
                     Spacer(modifier = Modifier.size(4.dp, 20.dp))

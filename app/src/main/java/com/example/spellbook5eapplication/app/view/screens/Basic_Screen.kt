@@ -1,7 +1,9 @@
 package com.example.spellbook5eapplication.app.view.screens
 
+import SpellQueryViewModel
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,8 +16,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -30,25 +35,34 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.view.Overlays.CreateOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.HomeBrewInstantiator
+import com.example.spellbook5eapplication.app.view.Overlays.SpellbookCreator
 import com.example.spellbook5eapplication.app.view.Overlays.QuickPlaySpellBooks
 import com.example.spellbook5eapplication.app.view.spellCards.LargeSpellCard
 import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
+import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.viewutilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.viewutilities.FadeSide
 import com.example.spellbook5eapplication.app.view.viewutilities.FilterButton
 import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
 import com.example.spellbook5eapplication.app.view.viewutilities.fadingEdge
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
+import com.example.spellbook5eapplication.app.viewmodel.CreateSpellbookViewModel
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.app.viewmodel.TitleState
+import androidx.compose.material3.ButtonDefaults as Material3ButtonDefaults
 
 @Composable
 fun Basic_Screen(
@@ -74,6 +88,11 @@ fun Basic_Screen(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.matchParentSize(),
                 alpha = 0.5F
+            )
+            Box(
+                modifier = Modifier
+                    .fillMaxSize() // Fill the parent size
+                    .background(Color.Black.copy(alpha = 0.4f))
             )
             Column (
                 modifier = Modifier
@@ -137,7 +156,6 @@ fun Basic_Screen(
 
 @Composable
 fun OverlayRenderer(overlayStack: List<OverlayType>) {
-    overlayStack.forEach { it -> Log.d("Overlay", "active overlays $it") }
     overlayStack.forEach { overlayType ->
         when (overlayType) {
             OverlayType.LARGE_SPELLCARD ->  {
@@ -156,6 +174,12 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 val createView = HomeBrewInstantiator()
                 createView.makeNewSpellFromTheTop(createViewModel)
             }
+            OverlayType.EDIT_SPELL -> {
+                val createViewModel = CreateSpellViewModel()
+                val createView = HomeBrewInstantiator()
+                createViewModel.updateEntireSpell(GlobalOverlayState.currentSpell!!)
+                createView.EditSpell(createViewModel)
+            }
             OverlayType.ERASE_PROMPT -> {
                 CreateOverlay(
                     message = "Exiting now will erase all progress",
@@ -163,6 +187,56 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                     button2Message = "Exit",
                     button2Function = {GlobalOverlayState.dismissOverlay()}
                 )
+            }
+            OverlayType.CREATE_SPELLBOOK -> {
+                val createSpellbookViewModel = CreateSpellbookViewModel()
+                val createView = SpellbookCreator()
+                createView.createNewSpellbook(createSpellbookViewModel)
+            }
+            OverlayType.DELETE_PROMPT -> {
+                // To refresh screen and that it is gone
+                val spellQueryViewModel: SpellQueryViewModel = viewModel()
+
+                CreateOverlay(
+                    message = "Delete ${GlobalOverlayState.currentSpell!!.name}?",
+                    button1Message = "Cancel",
+                    button2Message = "Delete",
+                    button2Function = {
+                            LocalDataLoader.deleteFile(GlobalOverlayState.currentSpell!!.index.toString(), LocalDataLoader.DataType.HOMEBREW)
+                        spellQueryViewModel.loadHomebrewList()
+                        GlobalOverlayState.dismissOverlay()}
+                )
+            }
+
+            OverlayType.REMOVE_SPELLBOOK -> {
+                val spellQueryViewModel : SpellQueryViewModel = viewModel()
+                CreateOverlay(
+                    message = "Do you want to delete ${GlobalOverlayState.currentSpellbook!!.spellbookName}?",
+                    button1Message = "Cancel",
+                    button2Message = "Delete",
+                    button2Function = {
+                        SpellbookManager.removeSpellbook(GlobalOverlayState.currentSpellbook!!.spellbookName)
+                        spellQueryViewModel.loadSpellBooks()
+                        GlobalOverlayState.dismissOverlay()}
+                )
+
+            }
+            OverlayType.REMOVE_SPELL_FROM_SPELLBOOK -> {
+
+                val spellQueryViewModel : SpellQueryViewModel = viewModel()
+                CreateOverlay(
+                    /*message = "Do you want to remove ${GlobalOverlayState.currentSpell!!.name} from " +
+                            "${GlobalOverlayState.currentSpellbook!!.spellbookName}?"*/
+                    message = "Do you want to remove ${GlobalOverlayState.currentSpell!!.name}",
+                    button1Message = "Cancel",
+                    button2Message = "Remove",
+                    button2Function = {
+                        SpellbookManager.removeSpellFromSpellbook(GlobalOverlayState.currentSpellbook!!.spellbookName, GlobalOverlayState.currentSpell!!)
+                        spellQueryViewModel.loadSpellsFromSpellbook(GlobalOverlayState.currentSpellbook!!)
+
+                        GlobalOverlayState.dismissOverlay()}
+                )
+
             }
             OverlayType.QUICKPLAY_SPELLBOOK -> {
                 CustomOverlay(OverlayType.QUICKPLAY_SPELLBOOK) {
@@ -194,7 +268,8 @@ fun SearchFilterBar(
                 filterViewModel.updateFilterWithSearchName(input)
             },
             modifier = Modifier.size(height = 48.dp, width = 220.dp),
-            imeAction = ImeAction.Search
+            imeAction = ImeAction.Search,
+            initialInput = ""
         )
         Spacer(modifier = Modifier.width(5.dp))
         FilterButton(

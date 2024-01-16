@@ -2,7 +2,9 @@ package com.example.spellbook5eapplication.app.Utility
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.google.gson.Gson
 import org.json.JSONArray
 import org.json.JSONObject
@@ -117,6 +119,7 @@ object LocalDataLoader {
             DataType.HOMEBREW -> "Homebrews"
             DataType.INDIVIDUAL -> "IndividualSpells"
             DataType.SPELLBOOK -> "Spellbooks"
+            DataType.LOCAL -> "LocalJSONData"
             else -> {""}
         }
         if(directoryName == ""){
@@ -204,11 +207,13 @@ object LocalDataLoader {
         val directoryName = when(dataType){
             DataType.HOMEBREW -> "Homebrews"
             DataType.INDIVIDUAL -> "IndividualSpells"
+            DataType.LOCAL -> "LocalJSONData"
+            DataType.SPELLBOOK -> "Spellbooks"
             else -> {""}
         }
         try {
             // Locate the file in the specified directory
-            val file = File(baseDirectory, "$directoryName/$fileName")
+            val file = File(baseDirectory, "$directoryName/$fileName.json")
 
             if (file.exists()) {
                 // Attempt to delete the file and return the result

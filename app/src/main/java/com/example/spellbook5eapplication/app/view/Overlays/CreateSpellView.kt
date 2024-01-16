@@ -5,6 +5,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -89,17 +91,27 @@ class HomeBrewInstantiator {
             }
         }
 
+        // This box stops user from interacting with other parts of the app
         Box(
-            contentAlignment = Alignment.Center, // Center content in the Box
-            modifier = Modifier.fillMaxSize()    // Make Box fill the entire available space
+            modifier = Modifier
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures { /* consume tap events */ }
+                }
+                .background(Color.Black.copy(alpha = 0.5f)), // dark background
+            contentAlignment = Alignment.Center
         ) {
 
-        Column(
-            modifier = Modifier
-                .padding(top = 8.dp, start = 15.dp, end = 15.dp)
-                ,//.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .padding(top = 8.dp, start = 15.dp, end = 15.dp),//.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
 
             //Testing visual
             Box(
@@ -113,33 +125,33 @@ class HomeBrewInstantiator {
                 contentAlignment = Alignment.TopCenter
             ) {
 
-                Column(
-                    modifier = Modifier
-                        .alpha(animatedAlpha)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                )
-                {
+                        Column(
+                            modifier = Modifier
+                                .alpha(animatedAlpha)
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        )
+                        {
 
-                    // Name of spell
-                    Spacer(modifier = Modifier.height(10.dp))
+                            // Name of spell
+                            Spacer(modifier = Modifier.height(10.dp))
 
-                    Text(
-                        text = show.displayedBrewPart(),
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
-                    )
+                            Text(
+                                text = show.displayedBrewPart(),
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold
+                            )
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
 
-                    // Top navigation buttons
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
+                            // Top navigation buttons
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
 
-                        if (show != BrewParts.NAME) {
+                                if (show != BrewParts.NAME) {
 
                             ColouredButton(
                                 label = "Back",
@@ -151,12 +163,12 @@ class HomeBrewInstantiator {
                                 )
                             ) {
 
-                                changeShow = show.previousBrewPart()!!
-                                alpha = 0f
-                            }
-                        }
+                                        changeShow = show.previousBrewPart()!!
+                                        alpha = 0f
+                                    }
+                                }
 
-                        Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.width(10.dp))
 
                         ColouredButton(
                             "Cancel", modifier = Modifier
@@ -170,7 +182,7 @@ class HomeBrewInstantiator {
                         }
 
 
-                        Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.width(10.dp))
 
                         if (show != BrewParts.DC) {
                             // Button to move on
@@ -200,27 +212,28 @@ class HomeBrewInstantiator {
                         }
                     }
 
-                    //End of top navigation
+                            //End of top navigation
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                            Spacer(modifier = Modifier.height(10.dp))
 
-                    // The part dependent of what is being edited/created for the spell
-                    ShowBrewPart(show, createViewModel)
+                            // The part dependent of what is being edited/created for the spell
+                            ShowBrewPart(show, createViewModel)
 
-                    // Testing the possibility of jumping in parts
-                    NavigateBrewParts(
-                        brewParts = BrewParts.values().toList(),
-                        dropName = "Parts of spell to edit",
-                        brewChange = {
-                            changeShow = it
-                            alpha = 0f
+                            // Testing the possibility of jumping in parts
+                            NavigateBrewParts(
+                                brewParts = BrewParts.values().toList(),
+                                dropName = "Parts of spell to edit",
+                                brewChange = {
+                                    changeShow = it
+                                    alpha = 0f
+                                }
+                            )
                         }
-                    )
+                    }
                 }
             }
         }
     }
-        }
 
 
 
@@ -345,7 +358,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.name.toString(),
+                        label = "Name",
                         onInputChanged = {
                             viewModel.updateName(it)
                         },
@@ -353,6 +366,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.name.toString()
                     )
                 }
             })
@@ -386,6 +400,12 @@ class HomeBrewInstantiator {
     @Composable
     private fun Description(viewModel: CreateSpellViewModel) {
 
+        var showVal = viewModel.spell.desc.toString()
+
+        if (showVal.length >= 2) {
+            showVal = showVal.substring(1, showVal.length - 1)
+        }
+
         CreateBrewPartDependentRegion(
             description = "Explain what the spell does\nWhat effect does it have, how is it used, anything can be put here",
             userChoise = {
@@ -395,7 +415,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.desc.toString(),
+                        label = "Description",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateDescription(listOf(it))
@@ -404,6 +424,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
+                        initialInput = showVal
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -413,6 +434,12 @@ class HomeBrewInstantiator {
 
     @Composable
     private fun HigherLevel(viewModel: CreateSpellViewModel) {
+
+        var showVal = viewModel.spell.atHigherLevel.toString()
+
+        if (showVal.length >= 2) {
+            showVal = showVal.substring(1, showVal.length - 1)
+        }
 
         CreateBrewPartDependentRegion(
             description = "Optional: Tell how the spell function at higher levels",
@@ -424,7 +451,7 @@ class HomeBrewInstantiator {
 
 
                     UserInputField(
-                        label = viewModel.spell.atHigherLevel.toString(),
+                        label = "At higher level quirks",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateHigherLevel(listOf(it))
@@ -433,6 +460,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
+                        initialInput = showVal
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -526,7 +554,7 @@ class HomeBrewInstantiator {
                     ) {
 
                         UserInputField(
-                            label = viewModel.spell.materials.toString(),
+                            label = "Materials",
                             //Should connect with name
                             onInputChanged = {
                                 viewModel.updateMaterial(it)
@@ -535,6 +563,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
+                            initialInput = viewModel.spell.materials.toString()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
 
@@ -603,6 +632,7 @@ class HomeBrewInstantiator {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 if (specific) {
+                    viewModel.spell.range = ""
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -618,6 +648,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
+                            initialInput = viewModel.spell.range.toString()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -660,6 +691,7 @@ class HomeBrewInstantiator {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 if (specific) {
+                    viewModel.spell.duration = ""
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -676,6 +708,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
+                            initialInput = viewModel.spell.duration.toString()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -707,7 +740,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.casting_time.toString(),
+                        label = "Cast time",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateCastTime(it)
@@ -716,6 +749,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.casting_time.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -819,7 +853,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.attackType.toString(),
+                        label = "Attack type",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateAttackType(it)
@@ -828,6 +862,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.attackType.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -846,7 +881,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.damage!!.damageType!!.name.toString(),
+                        label = "Damage",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateDamage(it)
@@ -855,6 +890,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.damage!!.damageType!!.name.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -874,7 +910,7 @@ class HomeBrewInstantiator {
                 ) {
 
                     UserInputField(
-                        label = viewModel.spell.dc.toString(),
+                        label = "Difficulty Class",
                         //Should connect with name
                         onInputChanged = {
                             viewModel.updateDC(it)
@@ -883,6 +919,7 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
+                        initialInput = viewModel.spell.dc.toString()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
