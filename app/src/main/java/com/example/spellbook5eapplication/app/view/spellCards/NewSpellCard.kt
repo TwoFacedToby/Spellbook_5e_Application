@@ -60,6 +60,7 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
+import com.example.spellbook5eapplication.app.view.viewutilities.OverlayBox
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import kotlinx.coroutines.CoroutineScope
@@ -197,7 +198,9 @@ fun SpellCard(
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     IconButton(
-                        onClick = { showDialog = true }) {
+                        onClick = {
+                            GlobalOverlayState.currentSpell = spell
+                            GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
                             contentDescription = "Add to spellbook",
@@ -268,10 +271,6 @@ fun SpellCard(
                 }
             }
         }
-    }
-
-    if (showDialog) {
-        SelectSpellbookDialog(spellbooks = spellbooks, onDismiss = { showDialog = false }, spell = spell)
     }
 
 }
@@ -426,44 +425,5 @@ fun NewSpellCardPreview() {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun SelectSpellbookDialog(spellbooks: List<Spellbook>, onDismiss: () -> Unit, spell: Spell.SpellInfo) {
 
 
-
-    AlertDialog(
-        onDismissRequest = { onDismiss() },
-        title = { Text("Select Spellbook") },
-        text = {
-            LazyColumn {
-                items(spellbooks.size) { index ->
-
-                    if(!spellbooks[index].spells.contains(spell.index)){
-                    ListItem(
-                        text = {
-                            Text(spellbooks[index].spellbookName) }
-                            ,
-                        modifier = Modifier.clickable {
-                            Log.d("POKE", spell.name.toString())
-                            Log.d("POKE", spellbooks[index].spellbookName)
-
-                            spellbooks[index].addSpellToSpellbook(spell.index ?: "")
-                            SpellbookManager.saveSpellbookToFile(spellbooks[index].spellbookName)
-                            LocalDataLoader.getContext()?.get()?.let { context ->
-                                Toast.makeText(context, "${spell.name}" + " added to " +"${spellbooks[index].spellbookName}", Toast.LENGTH_SHORT).show()
-                            }
-                            onDismiss()
-                        }
-                    )
-                }
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = { onDismiss() }) {
-                Text("Cancel")
-            }
-        }
-    )
-}

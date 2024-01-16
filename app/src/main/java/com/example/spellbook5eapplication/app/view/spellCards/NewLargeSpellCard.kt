@@ -321,6 +321,6 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
         }
     }
     if (showDialog) {
-        SelectSpellbookDialog(spellbooks = spellbooks, onDismiss = { showDialog = false }, spell = spell)
+        //SelectSpellbookDialog(spellbooks = spellbooks, onDismiss = { showDialog = false }, spell = spell)
     }
 }

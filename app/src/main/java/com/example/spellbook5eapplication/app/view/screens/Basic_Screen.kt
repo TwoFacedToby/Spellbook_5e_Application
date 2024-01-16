@@ -2,43 +2,62 @@ package com.example.spellbook5eapplication.app.view.screens
 
 import SpellQueryViewModel
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
@@ -51,6 +70,7 @@ import com.example.spellbook5eapplication.app.view.spellCards.SpellQuery
 import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.viewutilities.CustomOverlay
 import com.example.spellbook5eapplication.app.view.viewutilities.FilterButton
+import com.example.spellbook5eapplication.app.view.viewutilities.OverlayBox
 import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellbookViewModel
@@ -234,8 +254,6 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
 
                 val spellQueryViewModel : SpellQueryViewModel = viewModel()
                 CreateOverlay(
-                    /*message = "Do you want to remove ${GlobalOverlayState.currentSpell!!.name} from " +
-                            "${GlobalOverlayState.currentSpellbook!!.spellbookName}?"*/
                     message = "Do you want to remove ${GlobalOverlayState.currentSpell!!.name}",
                     button1Message = "Cancel",
                     button2Message = "Remove",
@@ -245,6 +263,14 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
 
                         GlobalOverlayState.dismissOverlay()}
                 )
+
+            }
+            OverlayType.ADD_TO_SPELLBOOK -> {
+                val spellbooks = SpellbookManager.getAllSpellbooks()
+                val spell = GlobalOverlayState.currentSpell!!
+                CustomOverlay(OverlayType.ADD_TO_SPELLBOOK) {
+                    add_to_spellbook(spellbooks = spellbooks, spell = spell)
+                }
 
             }
             else -> {}
@@ -333,3 +359,144 @@ fun SearchFilterBar(
                 }
 
             }*/
+/*
+@Composable
+fun SelectSpellbookDialog(
+    spellbooks: List<Spellbook>,
+    onDismiss: () -> Unit,
+    spell: Spell.SpellInfo
+) {
+    val something = add_to_spellbook(spellbooks = spellbooks, onDismiss = { /*TODO*/ }, spell = spell)
+
+    CustomOverlay(overlayType = OverlayType.ADD_TO_SPELLBOOK) {
+        add_to_spellbook(spellbooks = spellbooks, onDismiss = { /*TODO*/ }, spell = spell)
+    }
+
+
+}*/
+
+
+@Composable
+fun add_to_spellbook(
+    spellbooks: List<Spellbook>,
+    spell: Spell.SpellInfo
+) {
+        // Use your custom OverlayBox composable for the dialog content
+    Column(
+        modifier = Modifier.padding(top = 8.dp, start = 15.dp, end = 15.dp)
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Divider(
+            modifier = Modifier
+                .width(250.dp)
+                .height(15.dp)
+                .clip(shape = RoundedCornerShape(5.dp)),
+            color = colorResource(id = R.color.black).copy(alpha = 0.2F),
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        OverlayBox {
+            item {
+                Text(
+                    text = "Add Spell To Spellbook",
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            items(spellbooks.size) { index ->
+                val spellbook = spellbooks[index]
+                if (!spellbook.spells.contains(spell.index)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .clickable {
+
+                                spellbook.addSpellToSpellbook(spell.index ?: "")
+                                SpellbookManager.saveSpellbookToFile(spellbook.spellbookName)
+                                LocalDataLoader
+                                    .getContext()
+                                    ?.get()
+                                    ?.let { context ->
+                                        Toast
+                                            .makeText(
+                                                context,
+                                                "${spell.name} added to ${spellbook.spellbookName}",
+                                                Toast.LENGTH_SHORT
+                                            )
+                                            .show()
+                                    }
+                                Log.d("WEDO", "DISMISS")
+                                GlobalOverlayState.dismissOverlay() // close the dialog afterwards
+                            },
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = spellbook.spellbookName,
+                            fontSize = 16.sp,
+                            color = Color.White,
+                            modifier = Modifier.padding(start = 16.dp)
+                        )
+                        Icon(
+                            imageVector = Icons.Outlined.Add,
+                            contentDescription = "Add to spellbook",
+                            tint = Color.White,
+                            modifier = Modifier.padding(end = 16.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SpellbookRow(
+    spellbook: Spellbook,
+    spell: Spell.SpellInfo,
+    onDismiss: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                // Logic to add spell to the spellbook and save
+                spellbook.addSpellToSpellbook(spell.index ?: "")
+                SpellbookManager.saveSpellbookToFile(spellbook.spellbookName)
+                LocalDataLoader
+                    .getContext()
+                    ?.get()
+                    ?.let { context ->
+                        Toast
+                            .makeText(
+                                context,
+                                "${spell.name} added to ${spellbook.spellbookName}",
+                                Toast.LENGTH_SHORT
+                            )
+                            .show()
+                    }
+                onDismiss()
+            },
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = spellbook.spellbookName,
+            modifier = Modifier.padding(15.dp),
+            color = colorResource(id = R.color.white)
+        )
+        Icon(
+            imageVector = Icons.Outlined.Add,
+            contentDescription = "Add to spellbook",
+            tint = colorResource(id = R.color.spellcard_button),
+            modifier = Modifier.size(35.dp)
+        )
+    }
+}
