@@ -1,6 +1,8 @@
 package com.example.spellbook5eapplication.app.view.Overlays
 
+import SignInViewModel
 import SpellQueryViewModel
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -39,8 +41,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
+import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
 //import com.example.spellbook5eapplication.app.view.Overlays.UserInputMethods
 import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.viewutilities.EditableList
@@ -50,6 +54,7 @@ import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
 import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.app.viewmodel.SpellCardViewModel
 
 
 //Works with BrewFactory2 to create homebrews
@@ -201,6 +206,8 @@ class HomeBrewInstantiator {
                                 //Save the spell on the device here
                                 createViewModel.saveSpell()
                                 spellQueryViewModel.loadHomebrewList()
+                                createViewModel.saveSpellToFirebase()
+                                Log.d("savetofirebase", "UserID is: ${GlobalLogInState.userId}")
                                 GlobalOverlayState.dismissOverlay()
                             }
                         }
@@ -236,6 +243,8 @@ class HomeBrewInstantiator {
      */
     @Composable
     fun EditSpell(createViewModel: CreateSpellViewModel) {
+
+
 
         val spellQueryViewModel: SpellQueryViewModel = viewModel()
         val oldIndex = createViewModel.spell.index
@@ -323,6 +332,7 @@ class HomeBrewInstantiator {
                                     createViewModel.replaceSpell(oldIndex!!)
                                     spellQueryViewModel.loadHomebrewList()
                                     GlobalOverlayState.dismissOverlay()
+
                                 }
                         }
 

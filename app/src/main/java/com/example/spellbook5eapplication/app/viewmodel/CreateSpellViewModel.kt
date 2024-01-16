@@ -1,14 +1,22 @@
     package com.example.spellbook5eapplication.app.viewmodel
 
+    import SignInViewModel
     import androidx.compose.runtime.getValue
     import androidx.compose.runtime.mutableStateOf
     import androidx.compose.runtime.setValue
     import androidx.lifecycle.ViewModel
+    import androidx.lifecycle.compose.collectAsStateWithLifecycle
     import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
+    import com.example.spellbook5eapplication.app.Repository.HomeBrewRepository
     import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
+    import androidx.lifecycle.viewmodel.compose.viewModel
+    import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
+    import com.example.spellbook5eapplication.app.view.AuthUI.SignInState
     import com.google.gson.Gson
 
-    class CreateSpellViewModel : ViewModel() {
+    class CreateSpellViewModel() : ViewModel() {
+        private val repository: HomeBrewRepository = HomeBrewRepository()
+
         var spell by mutableStateOf(Spell.SpellInfo(
             json = "",
             index = null,
@@ -190,5 +198,23 @@
                 println("Index given is null can not replace")
             }
         }
+
+        fun saveSpellToFirebase(){
+                repository.saveHomeBrewSpell(GlobalLogInState.userId, spell.name!!, spell.json!!)
+        }
+
+        fun loadSpellFromFirebase(spellName: String){
+                repository.loadHomeBrewSpell(GlobalLogInState.userId, spellName)
+        }
+
+        fun deleteSpellFromFirebase(spellName: String){
+                repository.deleteHomeBrewSpell(GlobalLogInState.userId, spellName)
+        }
+
+        fun editSpellFromFirebase(spellName: String){
+                repository.editHomeBrewSpell(GlobalLogInState.userId, spellName, spell.json!!)
+        }
+
+
 
     }

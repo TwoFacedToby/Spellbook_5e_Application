@@ -95,7 +95,8 @@ fun UserOverlay(
             signInState.data?.let { userData ->
                 UserCard(userData)
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = {val database = Firebase.database
+                Button(onClick = {
+                    val database = Firebase.database
                     val myRef = database.getReference("User/${signInState.data?.userId}/${signInState.data?.name}")
 
                     myRef.setValue("Hello, World!")

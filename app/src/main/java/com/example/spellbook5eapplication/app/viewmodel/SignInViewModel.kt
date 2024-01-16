@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.activity.result.IntentSenderRequest
 import com.example.spellbook5eapplication.app.Model.Data_Model.SignInResult
 import com.example.spellbook5eapplication.app.Model.Data_Model.UserData
+import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
 import com.example.spellbook5eapplication.app.Utility.SignInEvent
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInIntentSender
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInState
@@ -51,6 +52,7 @@ class SignInViewModel(
                 if (signInResult.data != null) {
                     _eventFlow.emit(SignInEvent.SignInSuccess)
                     _eventFlow.emit(SignInEvent.DismissOverlay)
+                    GlobalLogInState.setLoggedInState(signInResult.data.userId, signInResult.data.name!!, signInResult.data.profilePictureUrl!!)
                 } else {
                     _eventFlow.emit(SignInEvent.SignInFailure)
                 }
@@ -68,6 +70,7 @@ class SignInViewModel(
             googleAuthUIClient.signOut()
             _state.update { SignInState(isSignInSuccessful = false, signInError = null) }
             _eventFlow.emit(SignInEvent.SignOutSuccess)
+            GlobalLogInState.reset()
         }
     }
 
