@@ -67,8 +67,6 @@ import kotlinx.coroutines.launch
 fun LargeSpellCard(spell: Spell.SpellInfo) {
 
     val images = SpellCardCreation(spell)
-
-    var showDialog by remember { mutableStateOf(false) }
     val spellbooks = SpellbookManager.getAllSpellbooks()
 
     Box(modifier = Modifier
@@ -117,7 +115,9 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
                             IconButton(
-                                onClick = { showDialog = true }){
+                                onClick = {
+                                    GlobalOverlayState.currentSpell = spell
+                                    GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }){
                                 Icon(
                                     imageVector = Icons.Outlined.Add,
                                     contentDescription = "Add to Spellbook",
@@ -320,7 +320,5 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
             }
         }
     }
-    if (showDialog) {
-        //SelectSpellbookDialog(spellbooks = spellbooks, onDismiss = { showDialog = false }, spell = spell)
-    }
+
 }
