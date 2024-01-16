@@ -333,3 +333,4 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
     }
 
 }
+}

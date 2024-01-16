@@ -3,6 +3,7 @@ package com.example.spellbook5eapplication.app.viewmodel
 enum class OverlayType {
     LARGE_SPELLCARD,
     ERASE_PROMPT,
+    ADD_TO_SPELLBOOK,
     SETTINGS,
     PROFILE,
     FILTER,

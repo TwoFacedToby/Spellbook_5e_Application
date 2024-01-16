@@ -27,7 +27,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
@@ -391,7 +390,7 @@ fun add_to_spellbook(
                 .width(250.dp)
                 .height(15.dp)
                 .clip(shape = RoundedCornerShape(5.dp)),
-            color = colorResource(id = R.color.black).copy(alpha = 0.2F),
+            color = Color.Black.copy(alpha = 0.2F),
         )
         Spacer(modifier = Modifier.height(20.dp))
         OverlayBox {
@@ -440,13 +439,13 @@ fun add_to_spellbook(
                         Text(
                             text = spellbook.spellbookName,
                             fontSize = 16.sp,
-                            color = Color.White,
+                            color = MaterialTheme.colorScheme.onTertiary,
                             modifier = Modifier.padding(start = 16.dp)
                         )
                         Icon(
                             imageVector = Icons.Outlined.Add,
                             contentDescription = "Add to spellbook",
-                            tint = Color.White,
+                            tint = MaterialTheme.colorScheme.onTertiary,
                             modifier = Modifier.padding(end = 16.dp)
                         )
                     }
@@ -456,46 +455,3 @@ fun add_to_spellbook(
     }
 }
 
-@Composable
-fun SpellbookRow(
-    spellbook: Spellbook,
-    spell: Spell.SpellInfo,
-    onDismiss: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                // Logic to add spell to the spellbook and save
-                spellbook.addSpellToSpellbook(spell.index ?: "")
-                SpellbookManager.saveSpellbookToFile(spellbook.spellbookName)
-                LocalDataLoader
-                    .getContext()
-                    ?.get()
-                    ?.let { context ->
-                        Toast
-                            .makeText(
-                                context,
-                                "${spell.name} added to ${spellbook.spellbookName}",
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                    }
-                onDismiss()
-            },
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = spellbook.spellbookName,
-            modifier = Modifier.padding(15.dp),
-            color = colorResource(id = R.color.white)
-        )
-        Icon(
-            imageVector = Icons.Outlined.Add,
-            contentDescription = "Add to spellbook",
-            tint = colorResource(id = R.color.spellcard_button),
-            modifier = Modifier.size(35.dp)
-        )
-    }
-}
