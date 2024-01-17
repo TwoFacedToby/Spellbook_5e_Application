@@ -96,7 +96,7 @@ fun UserOverlay(
     ) {
         Text(
             text = "User",
-            color = colorResource(id = R.color.white),
+            color = MaterialTheme.colorScheme.onPrimary,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )

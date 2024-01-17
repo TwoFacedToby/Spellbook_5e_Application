@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import com.example.spellbook5eapplication.app.Utility.Displayable
 import com.example.spellbook5eapplication.app.view.spellCards.SpellbookCard
 
-class Spellbook(var spellbookName: String): Displayable {
+class Spellbook(var spellbookName: String, var imageIdentifier: String = "spellbook_brown", var description: String = ""): Displayable {
 
     val spells: MutableList<String> = mutableListOf()
 
@@ -19,9 +19,7 @@ class Spellbook(var spellbookName: String): Displayable {
         spells.remove(spellName)
     }
 
-    override fun toString(): String {
-        return "Spellbook(spellbookName='$spellbookName', spells=$spells)"
-    }
+
 
     override fun renderCardComposable(spellBook: Displayable): @Composable () -> Unit {
         return {
@@ -35,4 +33,10 @@ class Spellbook(var spellbookName: String): Displayable {
 
         }
     }
+
+    override fun toString(): String {
+        return "Spellbook(spellbookName='$spellbookName', imageIdentifier='$imageIdentifier', description='$description', spells=$spells)"
+    }
+
+
 }

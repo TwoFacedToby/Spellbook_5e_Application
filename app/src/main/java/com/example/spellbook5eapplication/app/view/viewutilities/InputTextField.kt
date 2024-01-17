@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -71,42 +73,28 @@ fun UserInputField(
         ),
         keyboardActions = KeyboardActions(
             onSearch = {
-                //onInputChanged(input)
                 keyboardController?.hide() // Hide the keyboard
             },
             onDone = {
-                //onInputChanged(input)
                 keyboardController?.hide() // Hide the keyboard
             },
 
         ),
-        /*onValueChange = {
-            input = it
-            coroutineScope.launch {
-                delay(500)  // Wait for 300ms
-                if (input == it) {
-                    onInputChanged(it)
-                }
-            }
-        },*/
-        /*onValueChange = {
-            input = it
-            onInputChanged(it)
-        },*/
+
         modifier = modifier,
         singleLine = singleLine,
-        cursorBrush = SolidColor(colorResource(id = R.color.white)),
-        textStyle = LocalTextStyle.current.copy(color = colorResource(id = R.color.white)),
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.onPrimary),
+        textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onPrimary),
         decorationBox = {
                 innerTextField ->
             Box(
                 modifier = Modifier
                     .border(
                         width = 2.dp,
-                        color = colorResource(id = R.color.border_color),
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
                         shape = RoundedCornerShape(2.dp))
                     .background(
-                        colorResource(id = R.color.main_color),
+                        MaterialTheme.colorScheme.primary,
                         shape = RoundedCornerShape(2.dp))
                     .fillMaxWidth()
             ) {
@@ -116,20 +104,18 @@ fun UserInputField(
                     verticalAlignment = alignment
                 )
                 {
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.size(4.dp, 20.dp))
                     if (input.isEmpty())
                         Text(
                             text = label,
                             style = LocalTextStyle.current.copy(
-                                color = colorResource(id = R.color.border_color),
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp
                             )
                         )
 
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Spacer(modifier = Modifier.height(20.dp))
+                    Spacer(modifier = Modifier.size(4.dp, 20.dp))
                     innerTextField()
                 }
             }

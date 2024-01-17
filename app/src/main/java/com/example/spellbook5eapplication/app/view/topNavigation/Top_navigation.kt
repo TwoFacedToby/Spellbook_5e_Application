@@ -27,6 +27,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberAsyncImagePainter
@@ -35,7 +36,9 @@ import com.example.spellbook5eapplication.app.view.Overlays.SettingsOverlay
 import com.example.spellbook5eapplication.app.view.bottomNavigation.Screens
 import com.example.spellbook5eapplication.app.view.viewutilities.CustomOverlay
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.app.viewmodel.MainViewModel
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.app.viewmodel.TitleState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,7 +46,12 @@ fun TopBar(navController: NavController
 , signInViewModel: SignInViewModel){
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val currentTitle = Screens.titleForRoute(currentRoute)
+    val navigationTitle = Screens.titleForRoute(currentRoute)
+
+    val customTitle = TitleState.currentTitle.value
+
+    val currentTitle = customTitle ?: navigationTitle
+
     val signInState by signInViewModel.state.collectAsStateWithLifecycle()
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -64,9 +72,9 @@ fun TopBar(navController: NavController
                         imageVector = Icons.Outlined.Settings,
                         contentDescription = "Settings button",
                         tint = if (GlobalOverlayState.isOverlayVisible(OverlayType.SETTINGS)) {
-                            colorResource(id = R.color.white)
+                            MaterialTheme.colorScheme.onPrimary
                         } else {
-                            colorResource(id = R.color.unselected_icon)
+                            MaterialTheme.colorScheme.onPrimaryContainer
                         },
                         modifier = Modifier.size(35.dp)
                     )
@@ -105,8 +113,8 @@ fun TopBar(navController: NavController
                 }
             }},
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                containerColor = colorResource(id = R.color.main_color),
-                titleContentColor = colorResource(id = R.color.white)
+                containerColor = MaterialTheme.colorScheme.primary,
+                titleContentColor = MaterialTheme.colorScheme.onPrimary
             )
         )
     }

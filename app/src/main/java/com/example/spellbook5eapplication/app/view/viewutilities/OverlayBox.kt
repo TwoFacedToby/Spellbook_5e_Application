@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +24,7 @@ fun OverlayBox(
             .height(380.dp)
             .fillMaxWidth()
             .background(
-                color = colorResource(id = R.color.overlay_box_color),
+                color = MaterialTheme.colorScheme.tertiary,
                 shape = RoundedCornerShape(20.dp)
             ),
         contentAlignment = Alignment.TopCenter

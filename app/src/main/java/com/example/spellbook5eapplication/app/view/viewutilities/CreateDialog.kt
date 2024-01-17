@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,13 +33,12 @@ import androidx.compose.ui.window.Dialog
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 
 @Composable
 fun CreateDialog(
     onDismissRequest: () -> Unit
 ){
-
-    //Initializing viewModel to make the app recompose when a new spellbook is selected.
     var newSpellbookName by remember { mutableStateOf("") }
 
     Dialog(
@@ -49,13 +49,13 @@ fun CreateDialog(
             modifier = Modifier
                 .size(width = 250.dp, height = 150.dp)
                 .background(
-                    color = colorResource(id = R.color.main_color),
-                    shape = RoundedCornerShape(15.dp)
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.medium
                 )
                 .border(
                     width = 2.dp,
-                    color = colorResource(id = R.color.border_color),
-                    shape = RoundedCornerShape(15.dp)
+                    color = MaterialTheme.colorScheme.tertiary,
+                    shape = MaterialTheme.shapes.medium
                 )
         ){
             Column(
@@ -86,12 +86,12 @@ fun CreateDialog(
                     ColouredButton(
                         label = "Cancel",
                         modifier = Modifier,
-                        color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.red_button)),
+                        color = ButtonDefaults.buttonColors(containerColor = ButtonColors.RedButton),
                         onClick = { onDismissRequest() })
                     ColouredButton(
                         label = "Create",
                         modifier = Modifier,
-                        color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
+                        color = ButtonDefaults.buttonColors(containerColor = ButtonColors.GreenButton),
                         onClick = {
                             val newSpellbook = Spellbook(newSpellbookName)
                             SpellbookManager.addSpellbook(newSpellbook)

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -26,6 +27,7 @@ import androidx.compose.ui.window.Dialog
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 
 @Composable
 fun CreateOverlay(message: String, button1Message: String, button2Message: String, button2Function: () -> Unit) {
@@ -37,13 +39,13 @@ fun CreateOverlay(message: String, button1Message: String, button2Message: Strin
             modifier = Modifier
                 .size(width = 350.dp, height = 100.dp)
                 .background(
-                    color = colorResource(id = R.color.main_color),
-                    shape = RoundedCornerShape(15.dp)
+                    color = MaterialTheme.colorScheme.primary,
+                    shape = MaterialTheme.shapes.medium
                 )
                 .border(
                     width = 2.dp,
-                    color = colorResource(id = R.color.border_color),
-                    shape = RoundedCornerShape(15.dp)
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    shape = MaterialTheme.shapes.medium
                 )
         ) {
             Column(
@@ -72,9 +74,7 @@ fun CreateOverlay(message: String, button1Message: String, button2Message: Strin
                         button1Message, modifier = Modifier
                             .height(38.dp)
                             .width(100.dp), color = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(
-                                id = androidx.appcompat.R.color.material_grey_800
-                            )
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer
                         )
                     ) {
                         GlobalOverlayState.dismissOverlay()
@@ -86,9 +86,7 @@ fun CreateOverlay(message: String, button1Message: String, button2Message: Strin
                         button2Message, modifier = Modifier
                             .height(38.dp)
                             .width(100.dp), color = ButtonDefaults.buttonColors(
-                            containerColor = colorResource(
-                                id = R.color.red_button
-                            )
+                            containerColor = ButtonColors.RedButton
                         )
                     ) {
                         GlobalOverlayState.dismissOverlay()

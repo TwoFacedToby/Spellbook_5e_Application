@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 
@@ -35,6 +36,12 @@ sealed class Screens(
         icon = Icons.Outlined.Add
     )
 
+    object QuickPlay: Screens(
+        route = "quickplay_screen",
+        title = "Quick Play",
+        icon = Icons.Outlined.PlayArrow
+    )
+
     companion object {
         fun titleForRoute(route: String?): String {
             return when(route) {
@@ -42,6 +49,7 @@ sealed class Screens(
                 Favorite.route -> Favorite.title
                 Spellbooks.route -> Spellbooks.title
                 Homebrew.route -> Homebrew.title
+                QuickPlay.route -> QuickPlay.title
                 else -> ""
             }
         }

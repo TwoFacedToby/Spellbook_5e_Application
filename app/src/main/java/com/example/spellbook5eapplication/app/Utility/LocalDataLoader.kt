@@ -119,6 +119,7 @@ object LocalDataLoader {
             DataType.HOMEBREW -> "Homebrews"
             DataType.INDIVIDUAL -> "IndividualSpells"
             DataType.SPELLBOOK -> "Spellbooks"
+            DataType.LOCAL -> "LocalJSONData"
             else -> {""}
         }
         if(directoryName == ""){
@@ -194,6 +195,7 @@ object LocalDataLoader {
 
         return modifiedList
     }
+
     private fun getLocalJson(fileName: String) : String? {
         val file = File(baseDirectory, "$fileName.json")
         if (file.exists()) {
@@ -205,11 +207,13 @@ object LocalDataLoader {
         val directoryName = when(dataType){
             DataType.HOMEBREW -> "Homebrews"
             DataType.INDIVIDUAL -> "IndividualSpells"
+            DataType.LOCAL -> "LocalJSONData"
+            DataType.SPELLBOOK -> "Spellbooks"
             else -> {""}
         }
         try {
             // Locate the file in the specified directory
-            val file = File(baseDirectory, "$directoryName/$fileName")
+            val file = File(baseDirectory, "$directoryName/$fileName.json")
 
             if (file.exists()) {
                 // Attempt to delete the file and return the result
@@ -235,6 +239,10 @@ object LocalDataLoader {
         FAVOURITES("Favourites"),
         HOMEBREW("Homebrews"),
         LOCAL("LocalJSONData"),
+    }
+
+    fun getContext(): WeakReference<Context>? {
+        return context
     }
 
 }

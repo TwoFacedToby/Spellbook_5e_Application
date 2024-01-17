@@ -5,6 +5,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,7 +29,7 @@ fun ColouredButton(
         onClick = onClick,
         colors = color,
         border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.border_color)),
-        shape = RoundedCornerShape(5.dp),
+        shape = MaterialTheme.shapes.extraSmall,
     ) {
         Text(
             text = label,

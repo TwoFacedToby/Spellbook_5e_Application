@@ -1,6 +1,11 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
+import SpellQueryViewModel
+import android.util.Log
+import android.widget.Toast
+import android.widget.Toast.makeText
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -12,20 +17,29 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.IconButton
+import androidx.compose.material.ListItem
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Favorite
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,25 +56,39 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
+import com.example.spellbook5eapplication.app.view.viewutilities.OverlayBox
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.example.spellbook5eapplication.app.viewmodel.TitleState
 
 @Composable
 fun SpellCard(
     spell: Spell.SpellInfo
 ) {
-    val cardColor = colorResource(id = R.color.spellcard_color)
+    val cardColor = MaterialTheme.colorScheme.secondary
     val images = SpellCardCreation(spell)
+    var showDialog by remember { mutableStateOf(false) }
+
+    val spellbooks = SpellbookManager.getAllSpellbooks()
+
+    val spellQueryViewModel: SpellQueryViewModel = viewModel()
+
+    // Checker to see if we are viewing spells in a spellbook
+    val isSpellbookView = TitleState.currentTitle.value != null
 
     Card(
         elevation = 10.dp,
-        shape = RoundedCornerShape(10.dp),
+        shape = MaterialTheme.shapes.small,
         backgroundColor = cardColor,
         modifier = Modifier
             .fillMaxWidth()
@@ -88,25 +116,42 @@ fun SpellCard(
                         .weight(3F),
                 ) {
                     Row{
-                        Image(
-                            painter = painterResource(id = images.schoolID),
-                            contentDescription = "Spell school",
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(RoundedCornerShape(2.dp))
-                                .border(
-                                    0.5.dp,
-                                    colorResource(id = R.color.border_color),
-                                    shape = RoundedCornerShape(2.dp)
-                                )
-                        )
+                        if(spell.index != null){
+                            Image(
+                                painter = painterResource(id = images.schoolID),
+                                contentDescription = "Spell school",
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .border(
+                                        0.5.dp,
+                                        MaterialTheme.colorScheme.tertiary,
+                                        shape = RoundedCornerShape(2.dp)
+                                    )
+                            )
+                        }
+                        else
+                        {
+                            Box(
+                                modifier = Modifier
+                                    .background(colorResource(id = R.color.unselected_icon))
+                                    .size(48.dp)
+                                    .clip(RoundedCornerShape(2.dp))
+                                    .border(
+                                        0.5.dp,
+                                        colorResource(id = R.color.border_color),
+                                        shape = RoundedCornerShape(2.dp)
+                                    )
+                            )
+                        }
+
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(5.dp, 0.dp)
                         ) {
                             Text(
-                                text = spell.name ?: "UNIDENTIFIED",
+                                text = spell.name ?: "", //loading icon
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 18.sp,
                                 maxLines = 1,
@@ -137,7 +182,7 @@ fun SpellCard(
                                             .clip(RoundedCornerShape(2.dp))
                                             .border(
                                                 0.5.dp,
-                                                colorResource(id = R.color.border_color),
+                                                MaterialTheme.colorScheme.tertiary,
                                                 shape = RoundedCornerShape(2.dp)
                                             )
                                             .shadow(elevation = 5.dp)
@@ -156,22 +201,27 @@ fun SpellCard(
                     verticalArrangement = Arrangement.SpaceEvenly
                 ) {
                     IconButton(
-                        onClick = { /*TODO*/ }) {
+                        onClick = {
+                            GlobalOverlayState.currentSpell = spell
+                            GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK) }) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
                             contentDescription = "Add to spellbook",
-                            tint = colorResource(id = R.color.spellcard_button),
+                            tint = ButtonColors.SpellCardButton,
                             modifier = Modifier.size(48.dp)
                         )
                     }
 
                     val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
                     var favouriteImage by remember { mutableStateOf(defaultFavouriteImage) }
-                    androidx.compose.material3.IconButton(
+                    IconButton(
                         onClick = {
                             spell.index?.let { spellIndex ->
                                 val favouritesSpellbook =
                                     SpellbookManager.getSpellbook("Favourites")
+
+                                Log.d("LOLOL400", favouritesSpellbook.toString())
+
                                 favouriteImage =
                                     if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
                                         // Remove spell from favorites
@@ -197,14 +247,35 @@ fun SpellCard(
                         Icon(
                             imageVector = favouriteImage,
                             contentDescription = "Favorite button",
-                            tint = colorResource(id = R.color.spellcard_button),
+                            tint = ButtonColors.SpellCardButton,
                             modifier = Modifier.size(48.dp)
                         )
                     }
                 }
             }
+
+            if (isSpellbookView) {
+                IconButton(
+                    onClick = {
+                        GlobalOverlayState.currentSpell = spell
+                        GlobalOverlayState.currentSpellbook = SpellbookManager.getSpellbook(TitleState.currentTitle.value!!)
+                        GlobalOverlayState.showOverlay(OverlayType.REMOVE_SPELL_FROM_SPELLBOOK)
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(bottom = 4.dp, end = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Delete Spell",
+                        modifier = Modifier.size(24.dp),
+                        tint = colorResource(id = R.color.spellcard_button)
+                    )
+                }
+            }
         }
     }
+
 }
 
 @Composable
@@ -243,7 +314,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.range?: "UNIDENTIFIED",
+                text = spell.range?: "", //loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
@@ -263,7 +334,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.school?.name ?: "UNIDENTIFIED",
+                text = spell.school?.name ?: "", //loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
@@ -277,7 +348,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.duration?: "UNIDENTIFIED",
+                text = spell.duration?: "", //loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
@@ -297,7 +368,7 @@ fun SpellInfoNew(spell: Spell.SpellInfo){
                 overflow = TextOverflow.Ellipsis
             )
             Text(
-                text = spell.casting_time?: "UNIDENTIFIED",
+                text = spell.casting_time?: "", //loading icon
                 fontSize = fontSize,
                 maxLines = 1,
                 color = textColor,
@@ -356,3 +427,6 @@ fun NewSpellCardPreview() {
         )
     )
 }
+
+
+

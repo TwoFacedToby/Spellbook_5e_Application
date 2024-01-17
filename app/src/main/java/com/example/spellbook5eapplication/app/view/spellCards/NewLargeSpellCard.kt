@@ -36,6 +36,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -61,6 +62,7 @@ import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import com.example.spellbook5eapplication.app.viewmodel.SpellCardViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -68,20 +70,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun LargeSpellCard(spell: Spell.SpellInfo) {
+fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
 
     val images = SpellCardCreation(spell)
+    val spellbooks = SpellbookManager.getAllSpellbooks()
 
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black.copy(alpha = 0.5f))
-        .clickable { GlobalOverlayState.dismissOverlay() },
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.5f))
+            .clickable { GlobalOverlayState.dismissOverlay() },
         contentAlignment = Alignment.Center
-        ) {
+    ) {
         Card(
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors = CardDefaults.cardColors(containerColor = colorResource(id = R.color.spellcard_color)),
+            shape = MaterialTheme.shapes.small,
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondary),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(600.dp)
@@ -105,7 +109,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                                 .weight(1F)
                         ) {
                             Text(
-                                text = spell.name?: "UNIDENTIFIED",
+                                text = spell.name ?: "UNIDENTIFIED",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 24.sp,
                                 modifier = Modifier.padding(5.dp, 0.dp),
@@ -115,59 +119,75 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                         Row(
                             modifier = Modifier
                                 .weight(1F),
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                            horizontalArrangement = if (!fromQuickPlay) Arrangement.SpaceEvenly else Arrangement.End
                         ) {
-                            IconButton(
-                                onClick = { /*TODO*/ }){
-                                Icon(
-                                    imageVector = Icons.Outlined.Add,
-                                    contentDescription = "Add to Spellbook",
-                                    tint = colorResource(id = R.color.spellcard_button),
-                                    modifier = Modifier.size(48.dp)
-                                )
-                            }
-                            val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
-                            var favouriteImage by remember { mutableStateOf(defaultFavouriteImage) }
-                            IconButton(
-                                onClick = { spell.index?.let { spellIndex ->
-                                    val favouritesSpellbook = SpellbookManager.getSpellbook("Favourites")
-                                    favouriteImage = if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
-                                        // Remove spell from favorites
-                                        favouritesSpellbook.removeSpell(spellIndex)
+                            if (!fromQuickPlay) {
+                                IconButton(
+                                    onClick = {
+                                        GlobalOverlayState.currentSpell = spell
+                                        GlobalOverlayState.showOverlay(OverlayType.ADD_TO_SPELLBOOK)
+                                    }) {
+                                    Icon(
+                                        imageVector = Icons.Outlined.Add,
+                                        contentDescription = "Add to Spellbook",
+                                        tint = ButtonColors.SpellCardButton,
+                                        modifier = Modifier.size(48.dp)
+                                    )
+                                }
+                                val defaultFavouriteImage = Icons.Outlined.FavoriteBorder
+                                var favouriteImage by remember {
+                                    mutableStateOf(
                                         defaultFavouriteImage
-                                    } else {
-                                        // Add spell to favorites
-                                        favouritesSpellbook?.addSpellToSpellbook(spellIndex)
-                                        Icons.Filled.Favorite // Change this to the filled heart icon
+                                    )
+                                }
+                                IconButton(
+                                    onClick = {
+                                        spell.index?.let { spellIndex ->
+                                            val favouritesSpellbook =
+                                                SpellbookManager.getSpellbook("Favourites")
+                                            favouriteImage =
+                                                if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
+                                                    // Remove spell from favorites
+                                                    favouritesSpellbook.removeSpell(spellIndex)
+                                                    defaultFavouriteImage
+                                                } else {
+                                                    // Add spell to favorites
+                                                    favouritesSpellbook?.addSpellToSpellbook(
+                                                        spellIndex
+                                                    )
+                                                    Icons.Filled.Favorite // Change this to the filled heart icon
+                                                }
+                                            // Save the updated favorites list
+                                            CoroutineScope(Dispatchers.IO).launch {
+                                                SpellbookManager.saveSpellbookToFile("Favourites")
+                                                println("Favorites updated")
+                                            }
+                                        }
                                     }
-                                    // Save the updated favorites list
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        SpellbookManager.saveSpellbookToFile("Favourites")
-                                        println("Favorites updated")
+                                ) {
+                                    if (SpellbookManager.getSpellbook("Favourites")?.spells?.contains(
+                                            spell.index
+                                        ) == true
+                                    ) {
+                                        favouriteImage = Icons.Filled.Favorite
                                     }
+                                    Icon(
+                                        imageVector = favouriteImage,
+                                        contentDescription = "Favorite button",
+                                        tint = ButtonColors.SpellCardButton,
+                                        modifier = Modifier.size(48.dp)
+                                    )
                                 }
-                                }
-                            ){
-                                if(SpellbookManager.getSpellbook("Favourites")?.spells?.contains(spell.index) == true)
-                                {
-                                    favouriteImage = Icons.Filled.Favorite
-                                }
-                                Icon(
-                                    imageVector = favouriteImage,
-                                    contentDescription = "Favorite button",
-                                    tint = colorResource(id = R.color.spellcard_button),
-                                    modifier = Modifier.size(48.dp)
-                                )
                             }
-
                             IconButton(
-                                onClick = { GlobalOverlayState.dismissOverlay() }){
+                                onClick = { GlobalOverlayState.dismissOverlay() }) {
                                 Icon(
                                     imageVector = Icons.Outlined.Close,
                                     contentDescription = "Close",
-                                    tint = colorResource(id = R.color.spellcard_button),
+                                    tint = ButtonColors.SpellCardButton,
                                     modifier = Modifier.size(48.dp)
                                 )
+
                             }
                         }
                     }
@@ -200,7 +220,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                                         .clip(RoundedCornerShape(2.dp))
                                         .border(
                                             0.5.dp,
-                                            colorResource(id = R.color.border_color),
+                                            MaterialTheme.colorScheme.tertiary,
                                             shape = RoundedCornerShape(2.dp)
                                         )
                                         .shadow(elevation = 5.dp)
@@ -215,14 +235,17 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                             .weight(2F)
                             .padding(0.dp, 5.dp)
                     ) {
-                        Box(modifier = Modifier
-                            .weight(3F)
-                        ){
+                        Box(
+                            modifier = Modifier
+                                .weight(4F)
+                        ) {
                             SpellInfoNew(spell)
                         }
-                        Box(modifier = Modifier
-                            .weight(1F)
-                        ){
+                        Box(
+                            modifier = Modifier
+                                .weight(1F),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
                             Image(
                                 painter = painterResource(id = images.schoolID),
                                 contentDescription = "Spell school",
@@ -231,15 +254,16 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                                     .clip(RoundedCornerShape(2.dp))
                                     .border(
                                         0.5.dp,
-                                        colorResource(id = R.color.border_color),
+                                        MaterialTheme.colorScheme.tertiary,
                                         shape = RoundedCornerShape(2.dp)
                                     )
                             )
                         }
                     }
-                    Column(modifier = Modifier
-                        .fillMaxSize()
-                        .weight(7F),
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .weight(7F),
                     ) {
                         Text(
                             text = "Spell description",
@@ -251,11 +275,16 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                             modifier = Modifier
                                 .padding(top = 10.dp)
                                 .fillMaxHeight()
-                        ){
-                            val combinedDescriptions = (spell.desc ?: emptyList()) + (spell.atHigherLevel ?: emptyList())
+                        ) {
+                            val combinedDescriptions =
+                                (spell.desc ?: emptyList()) + (spell.atHigherLevel
+                                    ?: emptyList())
                             items(combinedDescriptions.size) { index ->
                                 if (spell.atHigherLevel?.isNotEmpty() == true)
-                                    if (combinedDescriptions[index] == spell.atHigherLevel?.get(0)) {
+                                    if (combinedDescriptions[index] == spell.atHigherLevel?.get(
+                                            0
+                                        )
+                                    ) {
                                         Text(
                                             text = "At Higher Levels",
                                             color = Color.Black,
@@ -276,12 +305,12 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                             }
                         }
                     }
-                    Row (
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        if(spell.homebrew == true) {
+                        if (spell.homebrew == true) {
 
                             IconButton(onClick = {
                                 GlobalOverlayState.showOverlay(OverlayType.SHARE_TOKEN)
@@ -318,13 +347,13 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
                                     imageVector = Icons.Outlined.Edit,
                                     contentDescription = "Edit Homebrew",
                                     modifier = Modifier.size(48.dp),
-                                    colorResource(id = R.color.spellcard_button)
+                                    ButtonColors.SpellCardButton
                                 )
                             }
                         }
                     }
                     Divider(
-                        color = colorResource(id = R.color.black),
+                        color = Color.Black,
                         thickness = 1.dp,
                         modifier = Modifier.padding(start = 5.dp, end = 5.dp, bottom = 10.dp)
                     )
@@ -332,4 +361,6 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
             }
         }
     }
+
 }
+
