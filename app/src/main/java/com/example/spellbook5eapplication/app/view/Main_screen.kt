@@ -8,8 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.spellbook5eapplication.app.Repository.SpellController
-import com.example.spellbook5eapplication.app.Repository.SpelllistLoader
 import com.example.spellbook5eapplication.app.view.bottomNavigation.BottomBar
 import com.example.spellbook5eapplication.app.view.bottomNavigation.BottomNavigationGraph
 import com.example.spellbook5eapplication.app.view.topNavigation.TopBar
@@ -32,7 +30,7 @@ fun MainScreen(signInViewModel: SignInViewModel){
         bottomBar = { BottomBar(navController = navController) }
     ){
         BottomNavigationGraph(
-            navController = navController,
+            navController = navController
         )
     }
 }

@@ -32,7 +32,6 @@ class MainActivity : ComponentActivity() {
             SpellDataFetcher.PreLoadSpells()
         }
 
-
         setContent {
             val isDarkTheme = true
 
