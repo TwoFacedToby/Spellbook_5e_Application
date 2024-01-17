@@ -70,6 +70,7 @@ fun SpellQuery(
     //val spells by spellQueryViewModel.spells.observeAsState(emptyList())
 
     val spells by spellsLiveData.observeAsState(emptyList())
+    val shouldScrollToTop by spellQueryViewModel.shouldScrollToTop.observeAsState(false)
     val isLoading by spellQueryViewModel.isLoading.observeAsState(false)
 
     val lazyListState = rememberLazyListState()
@@ -91,10 +92,14 @@ fun SpellQuery(
         }
     }
 
+    LaunchedEffect(shouldScrollToTop){
+        lazyListState.scrollToItem(0)
+        spellQueryViewModel.resetScrollToTop()
+    }
+
     if (spells.isEmpty() && !isLoading) {
         NoSpellsFoundMessage()
     } else {
-
         LazyColumn(
             state = lazyListState,
             modifier = Modifier

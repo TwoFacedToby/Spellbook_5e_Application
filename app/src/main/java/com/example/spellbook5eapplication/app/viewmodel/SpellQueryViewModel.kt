@@ -1,5 +1,6 @@
 import android.util.Log
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -27,8 +28,6 @@ class SpellQueryViewModel() : ViewModel() {
     //Spell name list for API
     private var spellList: SpellList? = null
 
-
-
     //Loading from pagination
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading: LiveData<Boolean> = _isLoading
@@ -51,6 +50,17 @@ class SpellQueryViewModel() : ViewModel() {
 
     private var _indexListFromAPI = mutableListOf<String>()
     var indexListFromAPI: List<String> = _indexListFromAPI
+
+    private val _shouldScrollToTop = MutableLiveData<Boolean>()
+    val shouldScrollToTop: LiveData<Boolean> = _shouldScrollToTop
+
+    fun onNewSearch() {
+        _shouldScrollToTop.value = true
+    }
+
+    fun resetScrollToTop() {
+        _shouldScrollToTop.value = false
+    }
 
     fun getLiveData(type: String): LiveData<List<Displayable?>> {
         loadFavoriteSpells()

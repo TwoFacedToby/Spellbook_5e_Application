@@ -101,6 +101,7 @@ fun SpellbookCard(
             .clickable {
                 TitleState.currentTitle.value = spellbook.spellbookName
                 spellQueryViewModel.loadSpellsFromSpellbook(spellbook)
+                spellQueryViewModel.onNewSearch()
             }
     ) {
         Row(modifier = Modifier.fillMaxSize()) {
