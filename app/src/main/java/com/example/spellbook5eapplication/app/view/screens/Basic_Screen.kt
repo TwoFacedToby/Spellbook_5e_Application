@@ -27,6 +27,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
+import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Text
@@ -87,6 +88,7 @@ import androidx.compose.material3.ButtonDefaults as Material3ButtonDefaults
 fun Basic_Screen(
                  spellsLiveData: LiveData<List<Displayable?>>,
                  enablePagination: Boolean,
+                 seachEnabled: Boolean,
                  customContent: @Composable (() -> Unit)? = null){
 
     val filter by remember { mutableStateOf(Filter())}
@@ -119,9 +121,6 @@ fun Basic_Screen(
                     .padding(top = 60.dp, bottom = 50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                SearchFilterBar()
-
                 SubcomposeLayout { constraints ->
                     val spellQueryLayout = subcompose("spellQuery") {
 
@@ -133,16 +132,21 @@ fun Basic_Screen(
                                 side = FadeSide.TOP,
                                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4F),
                                 width = 40.dp,
-                                isVisible = true,
+                                isVisible = seachEnabled,
                                 spec = null
                             )
                             //.padding(top = 10.dp),
-                            ,contentAlignment = Alignment.Center
+                            ,contentAlignment = Alignment.TopCenter
                         ){
                             SpellQuery(
                                 spellsLiveData = spellsLiveData,
-                                enablePagination = enablePagination
+                                enablePagination = enablePagination,
+                                searchBarPresent = seachEnabled
                             )
+
+                            if(seachEnabled) {
+                                SearchFilterBar()
+                            }
                         }
 
                     }.first().measure(constraints)
@@ -288,7 +292,7 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 val spellbooks = SpellbookManager.getAllSpellbooks()
                 val spell = GlobalOverlayState.currentSpell!!
                 CustomOverlay(OverlayType.ADD_TO_SPELLBOOK) {
-                    add_to_spellbook(spellbooks = spellbooks, spell = spell)
+                    Add_to_spellbook(spellbooks = spellbooks, spell = spell)
                 }
 
             }
@@ -305,7 +309,6 @@ fun SearchFilterBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.4F))
             .padding(20.dp),
         horizontalArrangement = Arrangement.Center
     )
@@ -331,80 +334,14 @@ fun SearchFilterBar(
     }
 }
 
-// Old way of doing Overlay State
-/*for (overlayType in GlobalOverlayState.getOverlayStack()) {
-                when (overlayType) {
-                    OverlayType.LARGE_SPELLCARD -> {
-                        LargeSpellCardOverlay(GlobalOverlayState, { GlobalOverlayState.dismissOverlay() }, overlaySpell)
-                    }
-                    OverlayType.ADD_TO_SPELLBOOK -> {
-                        CustomOverlay(
-                            globalOverlayState = GlobalOverlayState,
-                            overlayType = OverlayType.ADD_TO_SPELLBOOK,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
-                        ) {
-                            AddToSpellBookOverlay(
-                                spellInfo = overlaySpell,
-                                onDismissRequest = { globalOverlayState.dismissOverlay() }
-                            )
-                        }
-                    }
-                    OverlayType.FILTER -> {
-                        CustomOverlay(
-                            globalOverlayState = GlobalOverlayState,
-                            overlayType = OverlayType.FILTER,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
-                        ){
-                            FiltersOverlay(
-                                onDismissRequest = { GlobalOverlayState.dismissOverlay() },
-                                currentfilter = filter,
-                                createNewFilter = { Filter() },
-                                updateFilterState = { newFilter ->
-                                    filter = newFilter
-                                    println("Filter updated: $filter") }
-                            )
-                        }
-                    }
-                    OverlayType.MAKE_SPELL -> {
-                        CustomOverlay(
-                            globalOverlayState = GlobalOverlayState,
-                            overlayType = OverlayType.MAKE_SPELL,
-                            onDismissRequest = { globalOverlayState.dismissOverlay() }
-                        ) {
-                            NewSpellOverlay(onDismissRequest = {
-                                GlobalOverlayState.dismissOverlay()
-
-                            }, onFilterSelected = {/* TODO */ })
-                        }
-                    }
-                    else -> Unit
-                }
-
-            }*/
-/*
 @Composable
-fun SelectSpellbookDialog(
-    spellbooks: List<Spellbook>,
-    onDismiss: () -> Unit,
-    spell: Spell.SpellInfo
-) {
-    val something = add_to_spellbook(spellbooks = spellbooks, onDismiss = { /*TODO*/ }, spell = spell)
-
-    CustomOverlay(overlayType = OverlayType.ADD_TO_SPELLBOOK) {
-        add_to_spellbook(spellbooks = spellbooks, onDismiss = { /*TODO*/ }, spell = spell)
-    }
-
-
-}*/
-
-
-@Composable
-fun add_to_spellbook(
+fun Add_to_spellbook(
     spellbooks: List<Spellbook>,
     spell: Spell.SpellInfo
 ) {
     Column(
-        modifier = Modifier.padding(top = 8.dp, start = 15.dp, end = 15.dp)
+        modifier = Modifier
+            .padding(top = 8.dp, start = 15.dp, end = 15.dp)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -416,19 +353,17 @@ fun add_to_spellbook(
             color = Color.Black.copy(alpha = 0.2F),
         )
         Spacer(modifier = Modifier.height(20.dp))
+        Text(
+            text = "Add Spell To Spellbook",
+            color = Color.White,
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center
+        )
         OverlayBox {
-            item {
-                Text(
-                    text = "Add Spell To Spellbook",
-                    color = Color.White,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
-                    textAlign = TextAlign.Center
-                )
-            }
 
             items(spellbooks.size) { index ->
                 val spellbook = spellbooks[index]
@@ -436,41 +371,44 @@ fun add_to_spellbook(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(8.dp)
-                            .clickable {
-
-                                spellbook.addSpellToSpellbook(spell.index ?: "")
-                                SpellbookManager.saveSpellbookToFile(spellbook.spellbookName)
-                                LocalDataLoader
-                                    .getContext()
-                                    ?.get()
-                                    ?.let { context ->
-                                        Toast
-                                            .makeText(
-                                                context,
-                                                "${spell.name} added to ${spellbook.spellbookName}",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
-                                    }
-                                Log.d("WEDO", "DISMISS")
-                                GlobalOverlayState.dismissOverlay() // close the dialog afterwards
-                            },
+                            .padding(8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
                             text = spellbook.spellbookName,
-                            fontSize = 16.sp,
+                            fontSize = 20.sp,
                             color = MaterialTheme.colorScheme.onTertiary,
                             modifier = Modifier.padding(start = 16.dp)
                         )
-                        Icon(
-                            imageVector = Icons.Outlined.Add,
-                            contentDescription = "Add to spellbook",
-                            tint = MaterialTheme.colorScheme.onTertiary,
-                            modifier = Modifier.padding(end = 16.dp)
-                        )
+                        IconButton(onClick = {
+                            spellbook.addSpellToSpellbook(spell.index ?: "")
+                            SpellbookManager.saveSpellbookToFile(spellbook.spellbookName)
+                            LocalDataLoader
+                                .getContext()
+                                ?.get()
+                                ?.let { context ->
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "${spell.name} added to ${spellbook.spellbookName}",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                }
+                            Log.d("WEDO", "DISMISS")
+                            GlobalOverlayState.dismissOverlay()
+                        }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Add,
+                                contentDescription = "Add to spellbook",
+                                tint = MaterialTheme.colorScheme.onTertiary,
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .padding(end = 16.dp)
+                            )
+                        }
                     }
                 }
             }

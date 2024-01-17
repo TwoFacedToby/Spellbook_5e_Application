@@ -29,23 +29,16 @@ fun FilterButton(onShowFiltersRequest: () -> Unit){
                 shape = RoundedCornerShape(2.dp)
             )
             .border(
-                BorderStroke(2.dp, MaterialTheme.colorScheme.onPrimaryContainer),
+                BorderStroke(2.dp, MaterialTheme.colorScheme.secondaryContainer),
                 shape = RoundedCornerShape(2.dp)
             ),
         colors = IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.primary, contentColor = MaterialTheme.colorScheme.onPrimary)
     )
     {
         Icon(
-            painter = painterResource(id = R.drawable.filter), // Use your drawable resource ID
-            contentDescription = "Filter" // Provide a meaningful description for accessibility
+            painter = painterResource(id = R.drawable.filter),
+            contentDescription = "Filter",
+            tint = MaterialTheme.colorScheme.secondary
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun FilterButtonPreview() {
-    SpellbookTheme {
-        FilterButton(onShowFiltersRequest = {println("show filters")})
     }
 }

@@ -100,7 +100,6 @@ fun FiltersOverlay(
                 }
             )
         }
-        Spacer(modifier = Modifier.height(10.dp))
         Box(
             modifier = Modifier
                 .height(500.dp)
@@ -108,7 +107,8 @@ fun FiltersOverlay(
                 .background(
                     color = MaterialTheme.colorScheme.tertiary,
                     shape = MaterialTheme.shapes.large
-                ),
+                )
+                .padding(10.dp),
             contentAlignment = Alignment.TopCenter
         ) {
             LazyColumn(
@@ -292,8 +292,8 @@ fun FilterButton(
                 filter.isSelected.value = !filter.isSelected.value
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (filter.isSelected.value) ButtonColors.SelectedButton
-                else ButtonColors.UnselectedButton
+                containerColor = if (filter.isSelected.value) MaterialTheme.colorScheme.onTertiaryContainer
+                else MaterialTheme.colorScheme.tertiaryContainer
             ),
             border = BorderStroke(
                 width = 2.dp,
@@ -315,8 +315,8 @@ fun FilterButton(
                 filter.isSelected.value = !filter.isSelected.value
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = if (filter.isSelected.value) ButtonColors.SelectedButton
-                else ButtonColors.UnselectedButton
+                containerColor = if (filter.isSelected.value) MaterialTheme.colorScheme.onTertiaryContainer
+                else MaterialTheme.colorScheme.tertiaryContainer
             ),
             border = BorderStroke(
                 width = 2.dp,

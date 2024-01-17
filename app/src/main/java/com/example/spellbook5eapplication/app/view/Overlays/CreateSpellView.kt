@@ -158,7 +158,7 @@ class HomeBrewInstantiator {
                                             .height(38.dp)
                                             .width(100.dp),
                                         color = ButtonDefaults.buttonColors(
-                                            containerColor = ButtonColors.SelectedButton
+                                            containerColor = MaterialTheme.colorScheme.onTertiaryContainer
                                         )
                                     ) {
 
@@ -291,8 +291,8 @@ class HomeBrewInstantiator {
                             .height(600.dp)
                             .fillMaxWidth()
                             .background(
-                                color = colorResource(id = R.color.overlay_box_color),
-                                shape = RoundedCornerShape(20.dp)
+                                color = MaterialTheme.colorScheme.tertiary,
+                                shape = MaterialTheme.shapes.large
                             ),
                         contentAlignment = Alignment.TopCenter
                     ) {
@@ -331,9 +331,7 @@ class HomeBrewInstantiator {
                                     "Done", modifier = Modifier
                                         .height(38.dp) // Sets the height of the button
                                         .width(100.dp), color = ButtonDefaults.buttonColors(
-                                        containerColor = colorResource(
-                                            id = R.color.green_button
-                                        )
+                                        containerColor = ButtonColors.GreenButton
                                     )
                                 ) {
                                     createViewModel.replaceSpell(oldIndex!!)

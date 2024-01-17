@@ -4,10 +4,12 @@ import SpellQueryViewModel
 import android.util.Log
 import android.widget.Toast
 import android.widget.Toast.makeText
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -62,7 +64,7 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
-import com.example.spellbook5eapplication.app.view.viewutilities.OverlayBox
+import com.example.spellbook5eapplication.app.view.Overlays.CreateOverlay
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import com.example.spellbook5eapplication.ui.theme.ButtonColors
@@ -71,6 +73,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.spellbook5eapplication.app.viewmodel.TitleState
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SpellCard(
     spell: Spell.SpellInfo
@@ -94,10 +97,18 @@ fun SpellCard(
             .fillMaxWidth()
             .height(160.dp)
             .padding(10.dp)
-            .clickable {
-                GlobalOverlayState.currentSpell = spell
-                GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
-            }
+            .combinedClickable(
+                onClick = {
+                    GlobalOverlayState.currentSpell = spell
+                    GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+                },
+                onLongClick = { if (isSpellbookView)
+                    GlobalOverlayState.currentSpell = spell
+                    GlobalOverlayState.currentSpellbook = SpellbookManager.getSpellbook(TitleState.currentTitle.value!!)
+                    GlobalOverlayState.showOverlay(OverlayType.REMOVE_SPELL_FROM_SPELLBOOK)
+                },
+            )
+
     ) {
         Box(
             modifier = Modifier
@@ -251,26 +262,6 @@ fun SpellCard(
                             modifier = Modifier.size(48.dp)
                         )
                     }
-                }
-            }
-
-            if (isSpellbookView) {
-                IconButton(
-                    onClick = {
-                        GlobalOverlayState.currentSpell = spell
-                        GlobalOverlayState.currentSpellbook = SpellbookManager.getSpellbook(TitleState.currentTitle.value!!)
-                        GlobalOverlayState.showOverlay(OverlayType.REMOVE_SPELL_FROM_SPELLBOOK)
-                    },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
-                        .padding(bottom = 4.dp, end = 4.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Delete,
-                        contentDescription = "Delete Spell",
-                        modifier = Modifier.size(24.dp),
-                        tint = colorResource(id = R.color.spellcard_button)
-                    )
                 }
             }
         }

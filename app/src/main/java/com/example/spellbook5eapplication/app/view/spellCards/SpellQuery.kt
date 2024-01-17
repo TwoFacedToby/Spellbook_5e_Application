@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -51,6 +52,7 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 fun SpellQuery(
     spellsLiveData: LiveData<List<Displayable?>>,
     enablePagination: Boolean,
+    searchBarPresent: Boolean = false,
     modifier: Modifier = Modifier
 ) {
 
@@ -99,15 +101,25 @@ fun SpellQuery(
             modifier = Modifier
                 .fillMaxWidth()
                 .fadingEdge(
+                    side = FadeSide.TOP,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
+                    width = 200.dp,
+                    isVisible = lazyListState.canScrollBackward,
+                    spec = tween(500)
+                )
+                .fadingEdge(
                     side = FadeSide.BOTTOM,
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
-                    width = 40.dp,
+                    width = 100.dp,
                     isVisible = lazyListState.canScrollForward,
                     spec = tween(500)
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            item {
+                if(searchBarPresent) Spacer(modifier = Modifier.height(80.dp))
+            }
             items(spells.size) { index ->
                 spells[index]?.let {
                     when (it) {
@@ -129,6 +141,9 @@ fun SpellQuery(
 
                 }
             }
+            item {
+                Spacer(modifier = Modifier.height(60.dp))
+            }
 
             // Loading indicator only when pagination is enabled
             if (isLoading && enablePagination) {
@@ -148,7 +163,7 @@ fun NoSpellsFoundMessage() {
     ) {
         Divider(
             color = Color.Transparent,
-            modifier = Modifier.height(60.dp)
+            modifier = Modifier.height(80.dp)
         )
         Text(
             text = "Could not find spells matching filter or no internet connection.",
