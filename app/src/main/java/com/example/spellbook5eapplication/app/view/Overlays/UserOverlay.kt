@@ -8,27 +8,38 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.UserData
+import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
+import com.example.spellbook5eapplication.app.Utility.JsonTokenManager.loadAllSpellsFromFirebase
+import com.example.spellbook5eapplication.app.Utility.JsonTokenManager.saveTokenAsHomebrew
 import com.example.spellbook5eapplication.app.Utility.SignInEvent
 import com.example.spellbook5eapplication.app.view.AuthUI.CreateAccountScreen
 import com.example.spellbook5eapplication.app.view.AuthUI.LoginScreen
@@ -42,6 +53,7 @@ fun UserOverlay(
 ) {
     val signInState by signInViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val showDialog = remember { mutableStateOf(false) }
 
 
     val signInResultLauncher = rememberLauncherForActivityResult(
@@ -92,33 +104,45 @@ fun UserOverlay(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (signInState.isSignInSuccessful) {
+            val spellQueryViewModel: SpellQueryViewModel = viewModel()
             signInState.data?.let { userData ->
                 UserCard(userData)
                 Spacer(modifier = Modifier.height(16.dp))
-                Button(onClick = {
-                    val database = Firebase.database
-                    val myRef = database.getReference("User/${signInState.data?.userId}/${signInState.data?.name}")
 
-                    myRef.setValue("Hello, World!")
-                    Log.d("myRef123", myRef.toString())}) {
+                // Button to import homebrew
+                Button(onClick = { showDialog.value = true }) {
                     Text("Import Homebrew")
                 }
-                SignOutButton(signInViewModel){
+                ImportHomebrewDialog(showDialog = showDialog) { token ->
+                    saveTokenAsHomebrew(token)
+                    if(token != null){
+                        Toast.makeText(context, "Homebrew imported", Toast.LENGTH_SHORT).show()
+                        spellQueryViewModel.loadHomebrewList()
+                    }
+                }
+
+                Button(onClick = { loadAllSpellsFromFirebase { Toast.makeText(context, "Homebrews restored", Toast.LENGTH_LONG).show()
+                    spellQueryViewModel.loadHomebrewList()} }) {
+                    Text("Restore all Homebrews")
+                    }
+
+
+                }
+
+                SignOutButton(signInViewModel) {
                     onDismissRequest()
                 }
+            } else {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    SignInWithGoogle(signInViewModel, signInResultLauncher)
+                }
             }
-
-        } else {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                SignInWithGoogle(signInViewModel, signInResultLauncher)
-            }
+            Spacer(modifier = Modifier.height(16.dp))
         }
-        Spacer(modifier = Modifier.height(16.dp))
     }
-}
 
 @Composable
 fun UserCard(userData: UserData) {
@@ -146,7 +170,7 @@ fun SignInWithGoogle(signInViewModel: SignInViewModel, signInResultLauncher: Act
             bitmap = it,
             contentDescription = "Sign in with Google",
             modifier = Modifier
-                .size(192.dp, 48.dp) // Adjust the size to fit your layout
+                .size(192.dp, 48.dp)
                 .clickable {
                     signInViewModel.signInWithGoogle { intentSenderRequest ->
                         signInResultLauncher.launch(intentSenderRequest)
@@ -166,5 +190,48 @@ fun SignOutButton(signInViewModel: SignInViewModel, onSignOut: () -> Unit) {
 
 
 
+    }
+}
+
+@Composable
+fun ImportHomebrewDialog(
+    showDialog: MutableState<Boolean>,
+    onSaveToken: (String) -> Unit
+) {
+    val tokenInput = remember { mutableStateOf("") }
+    if (showDialog.value) {
+        AlertDialog(
+            onDismissRequest = { showDialog.value = false },
+            title = { Text(text = "Import Homebrew Token") },
+            text = {
+
+                val scrollState = rememberScrollState()
+
+                Column(modifier = Modifier.verticalScroll(scrollState)) {
+                    TextField(
+                        value = tokenInput.value,
+                        onValueChange = { tokenInput.value = it },
+                        modifier = Modifier.fillMaxWidth(),
+                        maxLines = 10,
+                        textStyle = TextStyle(fontFamily = FontFamily.Monospace)
+                    )
+                }
+            },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        onSaveToken(tokenInput.value)
+                        showDialog.value = false
+                    }
+                ) {
+                    Text("Save")
+                }
+            },
+            dismissButton = {
+                Button(onClick = { showDialog.value = false }) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }

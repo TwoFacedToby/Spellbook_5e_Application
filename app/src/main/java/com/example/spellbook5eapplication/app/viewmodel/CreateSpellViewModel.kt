@@ -200,7 +200,7 @@
         }
 
         fun saveSpellToFirebase(){
-                repository.saveHomeBrewSpell(GlobalLogInState.userId, spell.name!!, spell.json!!)
+                repository.saveHomeBrewSpell(GlobalLogInState.userId, spell.index!!, spell.json!!)
         }
 
         fun loadSpellFromFirebase(spellName: String){

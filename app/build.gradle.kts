@@ -93,6 +93,11 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
     implementation("com.google.firebase:firebase-database:20.3.0")
 
+    //Tokenizing homebrews using jwt:
+    implementation ("io.github.nefilim.kjwt:kjwt-core:0.3.0")
+    implementation ("com.auth0:java-jwt:3.18.2")
+    implementation ("commons-codec:commons-codec:1.15")
+
 
     //Test and Debug:
     testImplementation("junit:junit:4.13.2")

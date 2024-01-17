@@ -285,12 +285,11 @@ fun LargeSpellCard(spell: Spell.SpellInfo) {
 
                             IconButton(onClick = {
                                 GlobalOverlayState.showOverlay(OverlayType.SHARE_TOKEN)
-
                             }
                             ) {
                                 Icon(
                                     imageVector = Icons.Filled.Share,
-                                    contentDescription = "delete Homebrew",
+                                    contentDescription = "Share Homebrew",
                                     modifier = Modifier.size(48.dp),
                                     colorResource(id = R.color.spellcard_button)
                                 )

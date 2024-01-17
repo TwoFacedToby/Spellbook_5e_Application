@@ -14,7 +14,6 @@ class SpellCardCreation(spell: Spell.SpellInfo) {
         if(spell.classes != null) setClassImages(spell.classes!!)
         if(spell.school != null) setSchoolImage(spell.school!!)
     }
-    // TODO // set class ids to actual right images once they've been created.
 
     private fun setClassImages(classes : List<Spell.SpellClass>){
         classImageIDs.clear()

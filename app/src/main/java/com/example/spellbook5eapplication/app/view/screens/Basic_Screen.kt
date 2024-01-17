@@ -1,7 +1,11 @@
 package com.example.spellbook5eapplication.app.view.screens
 
 import SpellQueryViewModel
+import android.content.ClipData
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
+import android.content.ClipboardManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,6 +37,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Utility.Displayable
+import com.example.spellbook5eapplication.app.Utility.JsonTokenManager
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.view.Overlays.CreateOverlay
 import com.example.spellbook5eapplication.app.view.Overlays.FiltersOverlay
@@ -46,12 +51,14 @@ import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+import androidx.compose.ui.platform.LocalContext
 
 @Composable
 fun Basic_Screen(
                  spellsLiveData: LiveData<List<Displayable?>>,
                  enablePagination: Boolean,
                  customContent: @Composable (() -> Unit)? = null){
+
 
     val filter by remember { mutableStateOf(Filter())}
     Log.d("FilterViewModel", "Basic screen, filter: $filter")
@@ -149,6 +156,7 @@ fun Basic_Screen(
 
 @Composable
 fun OverlayRenderer(overlayStack: List<OverlayType>) {
+
     overlayStack.forEach { overlayType ->
         when (overlayType) {
             OverlayType.LARGE_SPELLCARD ->  {
@@ -182,6 +190,7 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
             OverlayType.DELETE_PROMPT -> {
                 // To refresh screen and that it is gone
                 val spellQueryViewModel: SpellQueryViewModel = viewModel()
+                val createSpellViewModel: CreateSpellViewModel = viewModel()
 
                 CreateOverlay(
                     message = "Delete ${GlobalOverlayState.currentSpell!!.name}?",
@@ -190,8 +199,31 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                     button2Function = {
                             LocalDataLoader.deleteFile(GlobalOverlayState.currentSpell!!.index +".json", LocalDataLoader.DataType.HOMEBREW)
                         spellQueryViewModel.loadHomebrewList()
+                        createSpellViewModel.deleteSpellFromFirebase(GlobalOverlayState.currentSpell!!.name!!)
                         GlobalOverlayState.dismissOverlay()}
                 )
+            }
+            OverlayType.SHARE_TOKEN -> {
+                val context = LocalContext.current
+                val token = JsonTokenManager.tokenMyHomebrew(GlobalOverlayState.currentSpell!!.index!!)
+                CreateOverlay(
+                    message = "Token: ${token.take(15)}...",
+                    button1Message = "Cancel",
+                    button2Message = "Copy"
+                ) {
+                    val clipboard =
+                        context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip = ClipData.newPlainText("Token", token)
+                    clipboard.setPrimaryClip(clip)
+
+                    // Display a message or do additional actions after copying
+                    Toast.makeText(context, "Token copied to clipboard", Toast.LENGTH_SHORT).show()
+
+                    GlobalOverlayState.dismissOverlay()
+                    GlobalOverlayState.showOverlay(
+                        OverlayType.LARGE_SPELLCARD,
+                    )
+                }
             }
             else -> {}
         }
