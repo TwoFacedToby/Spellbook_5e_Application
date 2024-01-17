@@ -50,11 +50,14 @@ class MainActivity : ComponentActivity() {
 
 
         lifecycleScope.launch {
-            SpellDataFetcher.sneakyQuickLoader()
+            SpellDataFetcher.PreLoadSpells()
         }
 
+
         setContent {
-            SpellbookTheme {
+            val isDarkTheme = true
+
+            SpellbookTheme(isDarkTheme) {
                 MainScreen(signInViewModel)
             }
         }

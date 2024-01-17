@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -47,6 +48,8 @@ fun UserInputField(
 ){
     var input by remember { mutableStateOf(initialInput) }
     val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
     //val coroutineScope = rememberCoroutineScope()
 
     var alignment = Alignment.CenterVertically
@@ -73,10 +76,12 @@ fun UserInputField(
         ),
         keyboardActions = KeyboardActions(
             onSearch = {
-                keyboardController?.hide() // Hide the keyboard
+                keyboardController?.hide()
+                focusManager.clearFocus()
             },
             onDone = {
-                keyboardController?.hide() // Hide the keyboard
+                keyboardController?.hide()
+                focusManager.clearFocus()
             },
 
         ),
@@ -91,7 +96,7 @@ fun UserInputField(
                 modifier = Modifier
                     .border(
                         width = 2.dp,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = MaterialTheme.colorScheme.secondaryContainer,
                         shape = RoundedCornerShape(2.dp))
                     .background(
                         MaterialTheme.colorScheme.primary,
@@ -109,7 +114,7 @@ fun UserInputField(
                         Text(
                             text = label,
                             style = LocalTextStyle.current.copy(
-                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                color = MaterialTheme.colorScheme.secondary,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp
                             )

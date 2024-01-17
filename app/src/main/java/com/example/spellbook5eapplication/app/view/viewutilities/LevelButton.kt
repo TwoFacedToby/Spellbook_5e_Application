@@ -24,8 +24,8 @@ fun LevelButton(
         modifier = Modifier.padding(5.dp),
         onClick = { onClick() },
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isSelected) ButtonColors.SelectedButton
-            else ButtonColors.UnselectedButton
+            containerColor = if (isSelected) MaterialTheme.colorScheme.onTertiaryContainer
+            else MaterialTheme.colorScheme.tertiaryContainer
         ),
         border = BorderStroke(
             width = 2.dp, color = MaterialTheme.colorScheme.secondaryContainer

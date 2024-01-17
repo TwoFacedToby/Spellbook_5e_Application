@@ -5,7 +5,6 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Utility.CurrentSettings
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
-import com.example.spellbook5eapplication.app.viewmodel.SettingsViewModel
 import com.example.spellbook5eapplication.app.viewmodel.SpellsViewModel
 import com.google.gson.Gson
 import com.google.gson.JsonObject
@@ -122,9 +121,9 @@ object SpellDataFetcher {
         }
     }
 
-    suspend fun sneakyQuickLoader(){
-        val sneakyList = SpellsViewModel.fetchAllSpellNames()
-        sneakyList.getIndexList().forEach {
+    suspend fun PreLoadSpells(){
+        val preloaded = SpellsViewModel.fetchAllSpellNames()
+        preloaded.getIndexList().forEach {
             localOrAPI(it)
         }
     }

@@ -73,7 +73,7 @@ fun RowScope.AddItem(
                 contentDescription = "Navigation icon",
                 modifier = Modifier.size(35.dp))
         },
-        selectedContentColor = Color.White,
+        selectedContentColor = MaterialTheme.colorScheme.onPrimary,
         unselectedContentColor = MaterialTheme.colorScheme.onPrimaryContainer
     )
 }

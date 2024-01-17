@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view.viewutilities
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SettingComponent(name : String, boolean: Boolean, onClickRequest:() -> Unit) {
+    Log.d("SettingsComp", "$name : $boolean")
     // State to hold the current value of the Switch
     val isChecked = remember { mutableStateOf(boolean) }
 
