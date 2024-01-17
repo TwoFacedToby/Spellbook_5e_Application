@@ -14,7 +14,7 @@ object QuickPlayHandler {
             Class.FIGHTER -> getFighter(getSpellLevelFromCharLevel(c, lvl))
             Class.PALADIN -> getPaladin(getSpellLevelFromCharLevel(c, lvl))
             Class.RANGER -> getRanger(getSpellLevelFromCharLevel(c, lvl))
-            Class.ROGUE -> getRogue(getSpellLevelFromCharLevel(c, lvl))
+            Class.ROGUE -> getFighter(getSpellLevelFromCharLevel(c, lvl))
             Class.WARLOCK -> getWarlock(getSpellLevelFromCharLevel(c, lvl))
             Class.WIZARD -> getWizard(getSpellLevelFromCharLevel(c, lvl))
             Class.SORCERER -> getSorcerer(getSpellLevelFromCharLevel(c, lvl))
