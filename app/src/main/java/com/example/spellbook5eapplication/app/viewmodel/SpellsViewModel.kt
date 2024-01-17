@@ -15,6 +15,7 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.SpellList
 import com.example.spellbook5eapplication.app.Model.JSON_to_Spell
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.example.spellbook5eapplication.app.Repository.SpellDataFetcher
+import com.example.spellbook5eapplication.app.Utility.CurrentSettings
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -45,7 +46,7 @@ object SpellsViewModel : ViewModel() {
 
     suspend fun fetchAllSpellNames(): SpellList {
         if(allSpellNames != null) return allSpellNames as SpellList
-        else allSpellNames = withContext(Dispatchers.IO) {
+        else if(CurrentSettings.currentSettings.useInternet) allSpellNames = withContext(Dispatchers.IO) {
             try {
                 val response = api.getSpells()
                 Log.d(TAG, "MKL: " + response.body().toString())
@@ -66,6 +67,13 @@ object SpellsViewModel : ViewModel() {
                 Log.d(TAG, "We did it my baby")
             }
         }
+        else {
+            allSpellNames = SpellList()
+            allSpellNames!!.setIndexList(LocalDataLoader.getIndexList(LocalDataLoader.DataType.INDIVIDUAL))
+
+        }
+
+
         return allSpellNames as SpellList
     }
 

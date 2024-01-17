@@ -2,6 +2,7 @@ package com.example.spellbook5eapplication.app.view.Overlays
 
 import SpellQueryViewModel
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -33,13 +34,13 @@ import com.example.spellbook5eapplication.app.Repository.SpellController.viewMod
 import com.example.spellbook5eapplication.app.view.viewutilities.SettingComponent
 import com.example.spellbook5eapplication.app.viewmodel.SettingsViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.spellbook5eapplication.app.Utility.CurrentSettings
 
 @Composable
 fun SettingsOverlay(onDismissRequest: () -> Unit) {
 
     val settingsViewModel: SettingsViewModel = viewModel()
-    val liveData = settingsViewModel.currentSettings
-    val currentSettings by liveData.observeAsState(Settings())
+    var currentSettings = settingsViewModel.currentSettings.value!!
 
     Column(
     modifier = Modifier
@@ -62,8 +63,8 @@ fun SettingsOverlay(onDismissRequest: () -> Unit) {
 
         Spacer(modifier = Modifier.height(24.dp))
 
-
-
+        currentSettings = CurrentSettings.currentSettings
+        Log.d("SettingsComp", "Creating: ${currentSettings.toString()}")
         LazyColumn(
             Modifier.fillMaxHeight(0.8f).padding(top = 16.dp)
         ){
