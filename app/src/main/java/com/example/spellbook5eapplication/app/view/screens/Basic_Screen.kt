@@ -49,6 +49,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
@@ -121,9 +122,6 @@ fun Basic_Screen(
                     .padding(top = 60.dp, bottom = 50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                SubcomposeLayout { constraints ->
-                    val spellQueryLayout = subcompose("spellQuery") {
-
                         Box(modifier = Modifier
                             .fillMaxHeight()
                             .fillMaxWidth()
@@ -141,41 +139,57 @@ fun Basic_Screen(
                             SpellQuery(
                                 spellsLiveData = spellsLiveData,
                                 enablePagination = enablePagination,
-                                searchBarPresent = seachEnabled
                             )
 
                             if(seachEnabled) {
                                 SearchFilterBar()
                             }
+
+                            if (customContent != null) {
+                                Box(modifier = Modifier.padding(20.dp)){
+                                    customContent()
+                                }
+                            }
                         }
 
+                    /*SubcomposeLayout { constraints ->
+                    val spellQueryLayout = subcompose("spellQuery") {
                     }.first().measure(constraints)
 
                     val customContentLayout = customContent?.let {
-                        subcompose("customContent", customContent).first().measure(constraints)
+                        val customConstraints = constraints.copy(minHeight = 0, maxHeight = Constraints.Infinity)
+                        subcompose("customContent", customContent).first().measure(customConstraints)
                     }
 
-                    val spellQueryHeight = if (customContentLayout != null) {
+                    val spellQueryHeight = if (customContentLayout != null && seachEnabled) {
                         constraints.maxHeight - customContentLayout.height - bottomPadding
                     } else {
                         spellQueryLayout.height
                     }
 
                     layout(constraints.maxWidth, constraints.maxHeight) {
-                        spellQueryLayout.placeRelative(0, 0)
-
-                        customContentLayout?.let {
-                            val xCenter = (constraints.maxWidth - it.width) / 2
-                            it.placeRelative(xCenter, spellQueryHeight)
+                        if(seachEnabled){
+                            spellQueryLayout.placeRelative(0, 0)
+                            customContentLayout?.let {
+                                val xCenter = (constraints.maxWidth - it.width) / 2
+                                it.placeRelative(xCenter, spellQueryHeight)
+                            }
+                        } else {
+                            spellQueryLayout.placeRelative(0, 0)
+                            customContentLayout?.let {
+                                val xCenter = (constraints.maxWidth - it.width) / 2
+                                it.placeRelative(xCenter, 0)
+                            }
                         }
+
                     }
+                    }*/
                 }
             }
             OverlayRenderer(GlobalOverlayState.getOverlayStack())
         }
 
     }
-}
 
 @Composable
 fun OverlayRenderer(overlayStack: List<OverlayType>) {

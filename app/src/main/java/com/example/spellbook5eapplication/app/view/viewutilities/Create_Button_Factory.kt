@@ -2,6 +2,7 @@ package com.example.spellbook5eapplication.app.view.viewutilities
 
 import android.util.Log
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

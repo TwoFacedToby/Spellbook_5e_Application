@@ -52,7 +52,6 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 fun SpellQuery(
     spellsLiveData: LiveData<List<Displayable?>>,
     enablePagination: Boolean,
-    searchBarPresent: Boolean = false,
     modifier: Modifier = Modifier
 ) {
 
@@ -118,7 +117,7 @@ fun SpellQuery(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
-                if(searchBarPresent) Spacer(modifier = Modifier.height(80.dp))
+                /*if(searchBarPresent)*/ Spacer(modifier = Modifier.height(80.dp))
             }
             items(spells.size) { index ->
                 spells[index]?.let {
@@ -141,9 +140,9 @@ fun SpellQuery(
 
                 }
             }
-            item {
+            /*item {
                 Spacer(modifier = Modifier.height(60.dp))
-            }
+            }*/
 
             // Loading indicator only when pagination is enabled
             if (isLoading && enablePagination) {
