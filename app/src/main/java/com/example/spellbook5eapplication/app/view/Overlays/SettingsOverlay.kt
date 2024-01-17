@@ -82,13 +82,7 @@ fun SettingsOverlay(onDismissRequest: () -> Unit) {
                     newSettings.useInternet = !newSettings.useInternet
                     settingsViewModel.updateSettings(newSettings)
                 }
-                SettingComponent(name = "Dark-mode",
-                    currentSettings.darkmode
-                ) {
-                    val newSettings = currentSettings.copy()
-                    newSettings.darkmode = !newSettings.darkmode
-                    settingsViewModel.updateSettings(newSettings)
-                }
+
             }
         }
 
