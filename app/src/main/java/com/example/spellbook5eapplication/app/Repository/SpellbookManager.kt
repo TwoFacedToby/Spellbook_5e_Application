@@ -9,6 +9,16 @@ import com.google.gson.Gson
 object SpellbookManager {
     private val spellbooks: MutableList<Spellbook> = mutableListOf()
 
+    fun removeHomebrewFromSpellbook(index: String){
+        spellbooks.forEach{book ->
+            book.spells.forEach {
+                if(it.contains(index)){
+                    book.removeSpell(index)
+                }
+            }
+        }
+    }
+
     fun addSpellbook(spellbook: Spellbook) {
         spellbooks.add(spellbook)
     }

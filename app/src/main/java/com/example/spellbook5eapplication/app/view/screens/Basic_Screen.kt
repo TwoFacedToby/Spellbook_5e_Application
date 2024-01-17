@@ -247,6 +247,7 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                     button1Message = "Cancel",
                     button2Message = "Delete",
                     button2Function = {
+                            SpellbookManager.removeHomebrewFromSpellbook(GlobalOverlayState.currentSpell!!.index.toString())
                             LocalDataLoader.deleteFile(GlobalOverlayState.currentSpell!!.index.toString(), LocalDataLoader.DataType.HOMEBREW)
                         spellQueryViewModel.loadHomebrewList()
                         createSpellViewModel.deleteSpellFromFirebase(GlobalOverlayState.currentSpell!!.name!!)
