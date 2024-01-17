@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material.MaterialTheme.colors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.outlined.Person
@@ -141,7 +142,7 @@ fun TopBar(navController: NavController
                 modifier = Modifier
                     .size(32.dp)
                     .clip(CircleShape)
-                    .border(1.dp, MaterialTheme.colors.onSurface, CircleShape)
+                    .border(1.dp, colors.onSurface, CircleShape)
             )
         } else {
             Icon(
