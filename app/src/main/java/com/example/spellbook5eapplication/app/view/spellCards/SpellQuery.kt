@@ -52,6 +52,7 @@ const val bottomDistance = 10 //How many spell cards from the bottom should the 
 fun SpellQuery(
     spellsLiveData: LiveData<List<Displayable?>>,
     enablePagination: Boolean,
+    searchBarPresent: Boolean = false,
     modifier: Modifier = Modifier
 ) {
 
@@ -100,22 +101,25 @@ fun SpellQuery(
             modifier = Modifier
                 .fillMaxWidth()
                 .fadingEdge(
-                    side = FadeSide.BOTTOM,
+                    side = FadeSide.TOP,
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
-                    width = 80.dp,
-                    isVisible = lazyListState.canScrollForward,
+                    width = 200.dp,
+                    isVisible = lazyListState.canScrollBackward,
                     spec = tween(500)
                 )
                 .fadingEdge(
-                    side = FadeSide.TOP,
+                    side = FadeSide.BOTTOM,
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
-                    width = 40.dp,
-                    isVisible = lazyListState.canScrollBackward,
+                    width = 100.dp,
+                    isVisible = lazyListState.canScrollForward,
                     spec = tween(500)
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
+            item {
+                if(searchBarPresent) Spacer(modifier = Modifier.height(80.dp))
+            }
             items(spells.size) { index ->
                 spells[index]?.let {
                     when (it) {
@@ -159,7 +163,7 @@ fun NoSpellsFoundMessage() {
     ) {
         Divider(
             color = Color.Transparent,
-            modifier = Modifier.height(60.dp)
+            modifier = Modifier.height(80.dp)
         )
         Text(
             text = "Could not find spells matching filter or no internet connection.",

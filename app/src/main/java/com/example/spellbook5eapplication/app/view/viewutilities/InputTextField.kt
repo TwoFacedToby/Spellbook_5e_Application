@@ -109,7 +109,7 @@ fun UserInputField(
                         Text(
                             text = label,
                             style = LocalTextStyle.current.copy(
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                color = MaterialTheme.colorScheme.secondary,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp
                             )

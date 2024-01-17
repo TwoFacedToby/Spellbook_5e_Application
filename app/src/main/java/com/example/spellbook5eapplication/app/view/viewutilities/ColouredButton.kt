@@ -1,6 +1,7 @@
 package com.example.spellbook5eapplication.app.view.viewutilities
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -20,7 +21,7 @@ import com.example.spellbook5eapplication.R
 @Composable
 fun ColouredButton(
     label : String,
-    modifier : Modifier,
+    modifier : Modifier = Modifier.height(48.dp),
     color : ButtonColors,
     onClick: () -> Unit
 ){
@@ -28,7 +29,7 @@ fun ColouredButton(
         modifier = modifier,
         onClick = onClick,
         colors = color,
-        border = BorderStroke(width = 2.dp, color = colorResource(id = R.color.border_color)),
+        border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.secondaryContainer),
         shape = MaterialTheme.shapes.extraSmall,
     ) {
         Text(
@@ -37,15 +38,5 @@ fun ColouredButton(
             fontWeight = FontWeight.Bold,
             color = Color.White
         )
-    }
-}
-
-@Preview
-@Composable
-fun ColouredButtonPreview(){
-    ColouredButton("Create", modifier = Modifier, color = ButtonDefaults.buttonColors(containerColor = colorResource(
-        id =R.color.green_button
-    ))){
-        println("Button clicked")
     }
 }

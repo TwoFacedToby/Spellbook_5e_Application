@@ -36,8 +36,9 @@ fun FilterButton(onShowFiltersRequest: () -> Unit){
     )
     {
         Icon(
-            painter = painterResource(id = R.drawable.filter), // Use your drawable resource ID
-            contentDescription = "Filter" // Provide a meaningful description for accessibility
+            painter = painterResource(id = R.drawable.filter),
+            contentDescription = "Filter",
+            tint = MaterialTheme.colorScheme.secondary
         )
     }
 }

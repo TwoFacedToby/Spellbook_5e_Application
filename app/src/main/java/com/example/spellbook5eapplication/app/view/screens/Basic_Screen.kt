@@ -120,10 +120,6 @@ fun Basic_Screen(
                     .padding(top = 60.dp, bottom = 50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                if(seachEnabled) {
-                    SearchFilterBar()
-                }
-
                 SubcomposeLayout { constraints ->
                     val spellQueryLayout = subcompose("spellQuery") {
 
@@ -139,12 +135,17 @@ fun Basic_Screen(
                                 spec = null
                             )
                             //.padding(top = 10.dp),
-                            ,contentAlignment = Alignment.Center
+                            ,contentAlignment = Alignment.TopCenter
                         ){
                             SpellQuery(
                                 spellsLiveData = spellsLiveData,
-                                enablePagination = enablePagination
+                                enablePagination = enablePagination,
+                                searchBarPresent = seachEnabled
                             )
+
+                            if(seachEnabled) {
+                                SearchFilterBar()
+                            }
                         }
 
                     }.first().measure(constraints)
@@ -307,7 +308,6 @@ fun SearchFilterBar(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.4F))
             .padding(20.dp),
         horizontalArrangement = Arrangement.Center
     )
