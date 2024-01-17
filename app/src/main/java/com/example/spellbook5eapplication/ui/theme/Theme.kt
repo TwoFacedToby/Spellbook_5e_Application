@@ -20,7 +20,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 
-private val PrimaryColorScheme = lightColorScheme(
+private val DarkColorScheme = darkColorScheme(
     primary = DarkGrey,
     onPrimary = Color.White,
     onPrimaryContainer = LightGrey,
@@ -29,8 +29,26 @@ private val PrimaryColorScheme = lightColorScheme(
     secondaryContainer = MediumGrey,
     onSecondaryContainer = LightGrey,
     tertiary = OverlayGrey,
+    tertiaryContainer = UnselectedButton,
+    onTertiaryContainer = SelectedButton,
     onTertiary = Color.White,
     surface = Color.White
+)
+
+private val LightColorScheme = lightColorScheme(
+    primary = Cream,
+    onPrimary = DarkGrey,
+    onPrimaryContainer = LightGrey,
+    secondary = Cream,
+    onSecondary = Color.Black,
+    secondaryContainer = LightGrey,
+    onSecondaryContainer = MediumGrey,
+    tertiary = LightGrey,
+    onTertiary = Color.White,
+    tertiaryContainer = SelectedButton,
+    onTertiaryContainer = UnselectedButton,
+    surface = Color.White
+
 )
 
 object ButtonColors {
@@ -52,23 +70,23 @@ val shapes = Shapes(
 
 @Composable
 fun SpellbookTheme(
-    darkTheme: Boolean = false, //isSystemInDarkTheme(),
+    darkTheme: Boolean, //isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    val colorScheme = PrimaryColorScheme/*when {
+    val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
             if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> PrimaryColorScheme
-        else -> PrimaryColorScheme
-    } */
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
+    }
 
     val view = LocalView.current
-    /*
+
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
@@ -76,10 +94,10 @@ fun SpellbookTheme(
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
 
-    }*/
+    }
 
     MaterialTheme(
-        colorScheme = PrimaryColorScheme,
+        colorScheme = colorScheme,
         typography = Typography,
         shapes = shapes,
         content = content

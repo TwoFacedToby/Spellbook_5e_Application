@@ -25,7 +25,8 @@ class MainActivity : ComponentActivity() {
 
 
         setContent {
-            SpellbookTheme {
+            val isDarkTheme = true
+            SpellbookTheme(isDarkTheme) {
                 MainScreen()
             }
         }

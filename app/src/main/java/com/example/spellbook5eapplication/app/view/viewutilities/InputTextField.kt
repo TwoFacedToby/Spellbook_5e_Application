@@ -91,7 +91,7 @@ fun UserInputField(
                 modifier = Modifier
                     .border(
                         width = 2.dp,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = MaterialTheme.colorScheme.secondaryContainer,
                         shape = RoundedCornerShape(2.dp))
                     .background(
                         MaterialTheme.colorScheme.primary,
@@ -109,7 +109,7 @@ fun UserInputField(
                         Text(
                             text = label,
                             style = LocalTextStyle.current.copy(
-                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 15.sp
                             )

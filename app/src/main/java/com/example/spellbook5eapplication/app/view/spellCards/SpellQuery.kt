@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -101,8 +102,15 @@ fun SpellQuery(
                 .fadingEdge(
                     side = FadeSide.BOTTOM,
                     color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
-                    width = 40.dp,
+                    width = 80.dp,
                     isVisible = lazyListState.canScrollForward,
+                    spec = tween(500)
+                )
+                .fadingEdge(
+                    side = FadeSide.TOP,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6F),
+                    width = 40.dp,
+                    isVisible = lazyListState.canScrollBackward,
                     spec = tween(500)
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -128,6 +136,9 @@ fun SpellQuery(
 
 
                 }
+            }
+            item {
+                Spacer(modifier = Modifier.height(60.dp))
             }
 
             // Loading indicator only when pagination is enabled

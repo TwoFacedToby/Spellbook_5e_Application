@@ -87,6 +87,7 @@ import androidx.compose.material3.ButtonDefaults as Material3ButtonDefaults
 fun Basic_Screen(
                  spellsLiveData: LiveData<List<Displayable?>>,
                  enablePagination: Boolean,
+                 seachEnabled: Boolean,
                  customContent: @Composable (() -> Unit)? = null){
 
     val filter by remember { mutableStateOf(Filter())}
@@ -119,8 +120,9 @@ fun Basic_Screen(
                     .padding(top = 60.dp, bottom = 50.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-
-                SearchFilterBar()
+                if(seachEnabled) {
+                    SearchFilterBar()
+                }
 
                 SubcomposeLayout { constraints ->
                     val spellQueryLayout = subcompose("spellQuery") {
@@ -133,7 +135,7 @@ fun Basic_Screen(
                                 side = FadeSide.TOP,
                                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4F),
                                 width = 40.dp,
-                                isVisible = true,
+                                isVisible = seachEnabled,
                                 spec = null
                             )
                             //.padding(top = 10.dp),
