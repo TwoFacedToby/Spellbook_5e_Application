@@ -1,5 +1,8 @@
 package com.example.spellbook5eapplication.app.view.viewutilities
 
+import android.graphics.Rect
+import android.util.Log
+import android.view.ViewTreeObserver
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -35,8 +38,10 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -51,9 +56,11 @@ fun UserInputField(
     modifier : Modifier,
     singleLine : Boolean,
     imeAction: ImeAction,
-    initialInput: String
+    initialInput: String,
 ) {
     var input by remember { mutableStateOf(initialInput) }
+
+    val focusRequester = remember { FocusRequester() }
 
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -69,6 +76,15 @@ fun UserInputField(
             .fillMaxSize()
             .padding(vertical = 10.dp)
             .padding(start = 5.dp)
+    }
+
+    KeyboardVisibilityDetector { isVisible ->
+        Log.d("MILK26", isVisible.toString())
+
+        if(!isVisible){
+            focusManager.clearFocus()
+        }
+
     }
 
         BasicTextField(
@@ -91,7 +107,19 @@ fun UserInputField(
                 }
             ),
 
-            modifier = modifier,
+            modifier = modifier
+                .focusRequester(focusRequester)
+                .onFocusChanged { focusState ->
+                    if (focusState.isFocused) {
+                        // Perform additional actions here when the field is focused/tapped
+                        Log.d("MILK23", "TextField is focused")
+                        // Optionally show the keyboard if not already shown
+                        keyboardController?.show()
+                    }
+                    else{
+                        Log.d("MILK23", focusState.toString())
+                    }
+                },
             singleLine = singleLine,
             cursorBrush = SolidColor(MaterialTheme.colorScheme.onPrimary),
             textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onPrimary),
@@ -133,3 +161,23 @@ fun UserInputField(
             }
         )
     }
+
+
+@Composable
+fun KeyboardVisibilityDetector(onKeyboardVisibilityChanged: (Boolean) -> Unit) {
+    val view = LocalView.current
+
+    DisposableEffect(view) {
+        val listener = ViewTreeObserver.OnGlobalLayoutListener {
+            val rect = Rect()
+            view.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = view.rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+            onKeyboardVisibilityChanged(keypadHeight > screenHeight * 0.15)
+        }
+        view.viewTreeObserver.addOnGlobalLayoutListener(listener)
+        onDispose {
+            view.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        }
+    }
+}
