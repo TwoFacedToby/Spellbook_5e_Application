@@ -177,22 +177,6 @@ class SpellQueryViewModel() : ViewModel() {
         }
 
     }
-    /*fun loadQuickPlayer(){
-        viewModelScope.launch {
-            val spellBookList = SpellbookManager.getAllSpellbooks()
-            _spellBooks.postValue(spellBookList)
-
-
-
-            val spellList = SpellList()
-            val indexList = QuickPlayHandler.getQuickPlayList(Class.WIZARD, 6)
-            spellList.setIndexList(indexList)
-
-
-
-
-        }
-    }*/
 
     fun loadSpellBooks(){
         val spellBookList = SpellbookManager.getAllSpellbooks()
@@ -247,9 +231,9 @@ class SpellQueryViewModel() : ViewModel() {
             without this delay, the list is not emptied, as it knows it is gonna be filled shortly thereafter.
             It is just 1 millisecond, it is okay. We'll live love laugh.
             * */
-
+            Log.d("SearchDebug", "IndexList: ${spellList!!.getIndexList().count()} infolist: ${spellList!!.getSpellInfoList().count()}")
             //If it is not loaded fully -> load it fully.
-            if(spellList!!.getLoaded() < spellList!!.getIndexList().count()){
+            if(spellList!!.getLoaded() <= spellList!!.getIndexList().count()){
                 val spellInfoList = mutableListOf<Spell.SpellInfo>()
                 for(spell in spellList!!.getIndexList())
                 {

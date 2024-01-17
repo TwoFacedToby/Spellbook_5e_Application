@@ -93,8 +93,8 @@ fun SpellQuery(
     }
 
     LaunchedEffect(shouldScrollToTop){
-        lazyListState.scrollToItem(0)
         spellQueryViewModel.resetScrollToTop()
+        lazyListState.scrollToItem(0)
     }
 
     if (spells.isEmpty() && !isLoading) {

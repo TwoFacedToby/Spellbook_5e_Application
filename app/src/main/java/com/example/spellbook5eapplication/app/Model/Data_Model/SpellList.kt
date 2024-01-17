@@ -14,32 +14,9 @@ class SpellList {
 
 
     // Method to add SpellInfo objects to the map
-    fun addSpellInfo(spellInfo: SpellInfo) {
-        spellInfo.index?.let { index ->
-            spellInfoMap.putIfAbsent(index, spellInfo)
-        }
-    }
 
-    fun getSpellInfo(index: String?): SpellInfo? {
-        return spellInfoMap[index]
-    }
 
-    fun hasSpellInfo(index: String?): Boolean {
-        return spellInfoMap.containsKey(index)
-    }
 
-    fun loadSpellInfos(spellInfos: List<SpellInfo?>) {
-        for (spellInfo in spellInfos) {
-            addSpellInfo(spellInfo!!)
-        }
-    }
-
-    suspend fun getOrFetchSpellInfo(index: String): SpellInfo? {
-        Log.d("SpellList", spellInfoMap.size.toString() + " spells loaded and was it already in map: "+ spellInfoMap.containsKey(index))
-        return spellInfoMap[index] ?: SpellDataFetcher.localOrAPI(index)?.also { spellInfo ->
-            spellInfoMap[index] = spellInfo
-        }
-    }
 
     fun getLoaded(): Int {
         return loaded
