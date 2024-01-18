@@ -89,6 +89,9 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import com.example.spellbook5eapplication.app.viewmodel.TitleState
 import androidx.compose.material3.ButtonDefaults as Material3ButtonDefaults
 import androidx.compose.ui.platform.LocalContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun Basic_Screen(
@@ -428,7 +431,9 @@ fun Add_to_spellbook(
                         )
                         IconButton(onClick = {
                             spellbook.addSpellToSpellbook(spell.index ?: "")
+
                             SpellbookManager.saveSpellbookToFile(spellbook.spellbookName)
+
                             LocalDataLoader
                                 .getContext()
                                 ?.get()

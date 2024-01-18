@@ -144,7 +144,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                     onClick = {
                                         spell.index?.let { spellIndex ->
                                             val favouritesSpellbook =
-                                                SpellbookManager.getSpellbook("Favourites")
+                                                SpellbookManager.getSpellbook("favourites")
                                             favouriteImage =
                                                 if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
                                                     // Remove spell from favorites
@@ -159,13 +159,13 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                                 }
                                             // Save the updated favorites list
                                             CoroutineScope(Dispatchers.IO).launch {
-                                                SpellbookManager.saveSpellbookToFile("Favourites")
+                                                SpellbookManager.saveSpellbookToFile("favourites")
                                                 println("Favorites updated")
                                             }
                                         }
                                     }
                                 ) {
-                                    if (SpellbookManager.getSpellbook("Favourites")?.spells?.contains(
+                                    if (SpellbookManager.getSpellbook("favourites")?.spells?.contains(
                                             spell.index
                                         ) == true
                                     ) {

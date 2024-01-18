@@ -18,6 +18,7 @@ object SpelllistLoader {
     suspend fun loadSpellbookAsSpellList(index: String): SpellList {
         // Read the spellbook JSON
         val list = LocalDataLoader.getSpellBookIndexList(index)
+        Log.d("MILK255", list.toString())
         val spellbook = Spellbook(index)
         list.forEach {
             spellbook.addSpellToSpellbook(it)
@@ -66,7 +67,7 @@ object SpelllistLoader {
      * @return A SpellList containing the favourite spells.
      */
     fun loadFavouritesAsSpellList(): SpellList {
-        val json = LocalDataLoader.getJson("Favourites", LocalDataLoader.DataType.SPELLBOOK)
+        val json = LocalDataLoader.getJson("favourites", LocalDataLoader.DataType.SPELLBOOK)
         if(json != null){
             val favourites = Gson().fromJson(json, Spellbook::class.java)
             if (favourites != null) {
@@ -83,7 +84,7 @@ object SpelllistLoader {
             }
         }
 
-        SpellbookManager.addSpellbook(Spellbook("Favourites"))
+        SpellbookManager.addSpellbook(Spellbook("favourites"))
         return SpellList()
 
 
@@ -113,7 +114,7 @@ object SpelllistLoader {
                 println("Favourites JSON file is empty.")
             }
         } else {
-            SpellbookManager.addSpellbook(Spellbook("Favourites"))
+            SpellbookManager.addSpellbook(Spellbook("favourites"))
         }
 
         return SpellList() // Return an empty SpellList if there were any issues

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.google.gson.Gson
 import org.json.JSONArray
@@ -33,7 +34,7 @@ object LocalDataLoader {
                 directoryName = "LocalJSONData"
             }
             DataType.FAVOURITES ->  {
-                fileName = "Favourites"
+                fileName = "favourites"
                 directoryName = "Spellbooks"
             }
 
@@ -55,7 +56,7 @@ object LocalDataLoader {
             }
             DataType.FAVOURITES -> {
                 directoryName = "Spellbooks"
-                fileName = "Favourites"
+                fileName = "favourites"
             }
             else -> {return}
         }
@@ -145,6 +146,7 @@ object LocalDataLoader {
         println("Created file $fileName")
         val file = File(baseDirectory, "$directoryName/$fileName.json")
         val emptySpellbook = Spellbook(fileName)
+        SpellbookManager.addSpellbook(Spellbook(fileName))
         val gson = Gson()
         val json = gson.toJson(emptySpellbook)
         file.writeText(json)
@@ -236,7 +238,7 @@ object LocalDataLoader {
     enum class DataType(val value: String) {
         INDIVIDUAL("IndividualSpells"),
         SPELLBOOK("Spellbooks"),
-        FAVOURITES("Favourites"),
+        FAVOURITES("favourites"),
         HOMEBREW("Homebrews"),
         LOCAL("LocalJSONData"),
     }

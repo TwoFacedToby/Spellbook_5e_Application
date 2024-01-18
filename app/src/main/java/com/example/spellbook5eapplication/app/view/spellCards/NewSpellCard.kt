@@ -229,7 +229,7 @@ fun SpellCard(
                         onClick = {
                             spell.index?.let { spellIndex ->
                                 val favouritesSpellbook =
-                                    SpellbookManager.getSpellbook("Favourites")
+                                    SpellbookManager.getSpellbook("favourites")
 
                                 Log.d("LOLOL400", favouritesSpellbook.toString())
 
@@ -237,10 +237,12 @@ fun SpellCard(
                                     if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
                                         // Remove spell from favorites
                                         favouritesSpellbook.removeSpell(spellIndex)
+                                        SpellbookManager.saveSpellbookToFile(favouritesSpellbook!!.spellbookName)
                                         defaultFavouriteImage
                                     } else {
                                         // Add spell to favorites
                                         favouritesSpellbook?.addSpellToSpellbook(spellIndex)
+                                        SpellbookManager.saveSpellbookToFile(favouritesSpellbook!!.spellbookName)
                                         Icons.Filled.Favorite // Change this to the filled heart icon
                                     }
                                 // Save the updated favorites list
@@ -251,7 +253,7 @@ fun SpellCard(
                             }
                         }
                     ) {
-                        if(SpellbookManager.getSpellbook("Favourites")?.spells?.contains(spell.index) == true)
+                        if(SpellbookManager.getSpellbook("favourites")?.spells?.contains(spell.index) == true)
                         {
                             favouriteImage = Icons.Outlined.Favorite
                         }
