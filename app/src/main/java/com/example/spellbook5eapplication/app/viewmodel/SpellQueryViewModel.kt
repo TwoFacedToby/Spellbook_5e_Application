@@ -121,6 +121,12 @@ class SpellQueryViewModel() : ViewModel() {
 
     fun loadMoreSpells() {
         viewModelScope.launch {
+
+
+            if(canLoadMoreSpells() != null && spellList != null)
+            Log.d("LOADER", "CanLoadMoreSpells:" + canLoadMoreSpells().toString()
+            + " Spellist.getLoaded(): " + spellList!!.getLoaded() + " count: " + spellList!!.getIndexList().count())
+
             if (canLoadMoreSpells() && spellList!!.getLoaded() < spellList!!.getIndexList().count()) {
                 _isLoading.postValue(true)
                 val nextSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
@@ -151,8 +157,8 @@ class SpellQueryViewModel() : ViewModel() {
         val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
         val loaded = try { spellList!!.getLoaded() }
         catch (e : Exception){ 0 } //Loaded is null
-        val toReturn = lastVisibleItem > (loaded - 3) //We minus by three, because we want it to start loading before we reach the bottom
-        Log.d("SpellQuery", "Should load more: $toReturn\nLast: $lastVisibleItem\nLoaded: $loaded")
+        val toReturn = lastVisibleItem > (loaded - 10) //We minus by three, because we want it to start loading before we reach the bottom
+        Log.d("SpellQuery999", "Should load more: $toReturn\nLast: $lastVisibleItem\nLoaded: $loaded")
         return toReturn
     }
 
