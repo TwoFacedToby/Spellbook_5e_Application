@@ -32,9 +32,7 @@ class Search {
                 }
             }
         }
-        Log.d("Search", "Matches: $matches")
         spellList.setIndexList(matches.toList())
-        Log.d("Search12345", "Matches $matches")
         matchLists(spellList)
         return sortSpellsDueToKeywordRelevance(keywords, spellList)
     }
@@ -47,15 +45,12 @@ class Search {
     private fun matchLists(spellList : SpellList){
         if(spellList.getSpellInfoList().isEmpty()) return
         val names = spellList.getIndexList()
-        Log.d("Search123", "Names: $names")
         val spells = mutableListOf<Spell.SpellInfo>()
         for(info in spellList.getSpellInfoList()){
             if(info.index != null)
                 if(names.contains(info.index))
                     spells.add(info)
         }
-        Log.d("Search123", "Spells: ${spellList.getIndexList()}")
-        Log.d("Search123", "Spells: ${spellList.getSpellInfoList()}")
         spellList.setSpellInfoList(spells.toList())
     }
     /**@author Tobias s224271
@@ -69,7 +64,6 @@ class Search {
      */
 
     fun searchSpellListWithFilter(spellList: SpellList, filter : Filter) : SpellList {
-        Log.d("Search", "RecievedList: $spellList")
         var changingSpellList = spellList
         if(filter.getSpellName() != "") changingSpellList = searchSpellNames(changingSpellList, filter.getSpellName())
         if(filter.getCastingTime().isNotEmpty()) filterSpells(spellList, "casting_time", filter)
@@ -83,7 +77,6 @@ class Search {
         if(filter.getClasses().isNotEmpty()) filterSpells(spellList, "classes", filter)
         if(filter.getIsConcentration().isNotEmpty()) filterSpells(spellList, "concentration", filter)
 
-        Log.d("Search", "ReturnedSpellList: $changingSpellList")
         return changingSpellList
     }
 
@@ -102,10 +95,8 @@ class Search {
             "level" -> {
                 var index = 0
                 while(index < list.size){
-                    Log.d("Search", "${filter.getLevel()}")
                     if(!filter.getLevel().contains(list[index].level)) {
                         list.remove(list[index])
-                        Log.d("Search", "List after remove: $list")
                     }
                     else{
                         index++
@@ -245,8 +236,6 @@ class Search {
         var indexes = spellList.getIndexList().toMutableList()
         var infos = spellList.getSpellInfoList().toMutableList()
         val relevances : MutableList<Relevance> = emptyList<Relevance>().toMutableList()
-        Log.d("Search1234", "Indexes: $indexes")
-        Log.d("Search1234", "Infos: $infos")
 
         for(i in indexes.indices){
             val relevance = Relevance()

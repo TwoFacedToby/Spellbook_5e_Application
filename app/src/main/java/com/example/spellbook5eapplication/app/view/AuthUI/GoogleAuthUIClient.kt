@@ -57,7 +57,6 @@ class GoogleAuthUIClient(private val context: Context) {
     fun signOut() {
         googleSignInClient.signOut().addOnCompleteListener {
             auth.signOut()
-            Log.d("GoogleAuthUIClient", "User signed out successfully")
         }
     }
 

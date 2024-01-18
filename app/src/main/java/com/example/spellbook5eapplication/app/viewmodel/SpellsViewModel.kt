@@ -50,10 +50,8 @@ object SpellsViewModel : ViewModel() {
             withContext(Dispatchers.IO) {
                 try {
                     val response = api.getSpells()
-                    Log.d(TAG, "MKL: " + response.body().toString())
                     if (response.isSuccessful) {
                         response.body()?.let { spellsResponse ->
-                            Log.d(TAG, jsonToSpell.jsonToSpellList(spellsResponse).toString())
                             jsonToSpell.jsonToSpellList(spellsResponse)
                         } ?: SpellList()
                     } else {
@@ -67,8 +65,6 @@ object SpellsViewModel : ViewModel() {
                 } catch (e: Exception) {
                     Log.e(TAG, "Error: ${e.message}")
                     SpellList()
-                } finally {
-                    Log.d(TAG, "We did it my baby")
                 }
             }
         else {

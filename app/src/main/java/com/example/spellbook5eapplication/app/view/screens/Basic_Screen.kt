@@ -61,9 +61,6 @@ fun Basic_Screen(
 
 
     val filter by remember { mutableStateOf(Filter())}
-    Log.d("FilterViewModel", "Basic screen, filter: $filter")
-    println("Current filter: $filter")
-    println("Current filter level size: " + filter.getLevel().size)
 
     Surface(
         modifier = Modifier

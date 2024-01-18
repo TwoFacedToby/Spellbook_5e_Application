@@ -98,7 +98,6 @@ fun Add_to_spellbook(
                                         )
                                         .show()
                                 }
-                            Log.d("WEDO", "DISMISS")
                             GlobalOverlayState.dismissOverlay()
                         }
                         ) {

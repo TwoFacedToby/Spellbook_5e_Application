@@ -52,12 +52,10 @@ class HomeBrewRepository {
                     }
                 }
                 onDataReceived(dataMap)
-                Log.d("TESTfourhundredten", "onDataChange: $dataMap")
                 importSpellsFromDatabase()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("HomeBrewRepository", "Failed to read value.", error.toException())
                 onDataReceived(emptyMap())
             }
         })
@@ -73,7 +71,6 @@ class HomeBrewRepository {
                     val json = spellSnapshot.getValue<String>() // The JSON string of the spell
 
                     if (index != null && json != null) {
-                        Log.d("JsonDataFromFirebase", json)
                         LocalDataLoader.saveJson(json, index, LocalDataLoader.DataType.HOMEBREW)
                     }
                 }

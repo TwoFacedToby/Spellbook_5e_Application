@@ -13,9 +13,6 @@ class SpellList {
     private var loaded = 0
 
 
-    // Method to add SpellInfo objects to the map
-
-
 
 
     fun getLoaded(): Int {
@@ -45,31 +42,7 @@ class SpellList {
     fun getSpellInfoList(): List<SpellInfo> {
         return spellInfoList
     }
-     /*
-    private var indexList: MutableList<String> = mutableListOf()
-    private var spellInfoList: MutableList<Spell_Info.SpellInfo> = mutableListOf()
-    private var loaded = 0;
 
-    fun getLoaded() : Int{
-        return loaded
-    }
-    fun setLoaded(loaded : Int){
-        this.loaded = loaded
-    }
-    fun setIndexList(names: List<String>) {
-        indexList = names.toMutableList()
-    }
-    fun getIndexList(): List<String> {
-        return indexList
-    }
-    fun setSpellInfoList(spellInfo: List<Spell_Info.SpellInfo>) {
-        spellInfoList = spellInfo.toMutableList()
-    }
-    fun getSpellInfoList(): List<Spell_Info.SpellInfo> {
-        return spellInfoList
-    }
-
-      */
     fun printIndexesToConsole(){
         println("Printing spells from list:")
         for(name in indexList){

@@ -51,7 +51,6 @@ fun CustomOverlay(
                 .background(Color.Black.copy(alpha = 0.2f))
                 .clickable(
                     onClick = {
-                        Log.d("Overlay", "We dismiss")
                         GlobalOverlayState.dismissOverlay()
                     }
                 )
@@ -62,10 +61,8 @@ fun CustomOverlay(
                     thresholds = { _, _ -> FractionalThreshold(0.9f) }
                 )
         ) {
-            Log.d("Overlay", "swipeableState: ${swipeableState.currentValue}")
             LaunchedEffect(swipeableState.currentValue) {
                 if (swipeableState.currentValue == 1) {
-                    Log.d("Overlay", "We dismiss")
                     GlobalOverlayState.dismissOverlay()
                 }
             }
@@ -83,7 +80,6 @@ fun CustomOverlay(
                     .padding(5.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
-                Log.d("CustomOverlay", "Is content null?: ${content == null}")
                 if (content != null) {
                     content()
                 } else {

@@ -47,7 +47,6 @@ class SignInViewModel(
                         data = signInResult.data
                     )
                 }
-                Log.d("LogDataSignInResult", "signInResult $signInResult.data")
                 if (signInResult.data != null) {
                     _eventFlow.emit(SignInEvent.SignInSuccess)
                     _eventFlow.emit(SignInEvent.DismissOverlay)

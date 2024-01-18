@@ -236,8 +236,6 @@ fun SpellCard(
                                 val favouritesSpellbook =
                                     SpellbookManager.getSpellbook("favourites")
 
-                                Log.d("LOLOL400", favouritesSpellbook.toString())
-
                                 favouriteImage =
                                     if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
                                         // Remove spell from favorites

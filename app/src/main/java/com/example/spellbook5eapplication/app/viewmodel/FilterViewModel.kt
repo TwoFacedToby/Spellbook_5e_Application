@@ -32,7 +32,6 @@ class FilterViewModel : ViewModel() {
         processList(concentration) { value -> newFilter.addConcentration(value.toBoolean())}
         processList(ritual) { value -> newFilter.addRitual(value.toBoolean())}
 
-        Log.d("FilterViewModel", "New filter: $newFilter")
         _currentFilter.value = newFilter
         _isUpdated.value = true
     }
@@ -86,7 +85,6 @@ class FilterViewModel : ViewModel() {
     fun resetCurrentFilter() {
         _currentFilter.value = Filter()
         _isUpdated.value = true
-        Log.d("FilterViewModel", "After reset: $currentFilter")// Reset to a new, blank Filter instance
     }
 
     fun updateFilterWithSearchName(searchName: String) {
@@ -108,7 +106,6 @@ class FilterViewModel : ViewModel() {
         current.getIsRitual().forEach { newFilter.addRitual(it) }
         current.getSaveReq().forEach { newFilter.addSaveReq(it) }
 
-        Log.d("FilterViewModel", "After name added: $newFilter")
         _currentFilter.value = newFilter
         _isUpdated.value = true
     }

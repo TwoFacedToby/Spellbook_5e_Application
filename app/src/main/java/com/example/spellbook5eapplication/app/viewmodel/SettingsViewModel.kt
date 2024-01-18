@@ -20,16 +20,13 @@ class SettingsViewModel : ViewModel() {
     }
     fun updateSettings(newSettings: Settings) {
         viewModelScope.launch {
-            Log.d("Settings", "Updated Settings")
             _currentSettings.postValue(newSettings)
             save()
         }
     }
     fun resetSettings(){
         viewModelScope.launch {
-            Log.d("Settings", "Reset Settings")
             _currentSettings.value!!.resetToDefault()
-            Log.d("Settings","New Settings: ${_currentSettings.value.toString()}")
             save()
         }
     }
@@ -42,7 +39,6 @@ class SettingsViewModel : ViewModel() {
     fun save (){
         val gson = Gson()
         val json = gson.toJson(currentSettings)
-        Log.d("Settings Save", "Saving: ${currentSettings.value.toString()}")
         LocalDataLoader.saveJson(json, "settings", LocalDataLoader.DataType.LOCAL)
         CurrentSettings.currentSettings = currentSettings.value!!
     }
@@ -54,7 +50,6 @@ class SettingsViewModel : ViewModel() {
             return
         }
         val newSetting = gson.fromJson(json, Settings::class.java)
-        Log.d("LoadedSettings", newSetting.toString())
         _currentSettings.value = newSetting
         CurrentSettings.currentSettings = currentSettings.value!!
 

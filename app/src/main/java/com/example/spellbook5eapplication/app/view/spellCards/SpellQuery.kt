@@ -70,12 +70,8 @@ fun SpellQuery(
 
     LaunchedEffect(key1 = lazyListState.firstVisibleItemIndex) {
 
-        Log.d("SpellQuery2166", spellQueryViewModel.shouldLoadMoreData(lazyListState).toString())
-
         if (spellQueryViewModel.shouldLoadMoreData(lazyListState)) {
-            Log.d("SpellQuery21", "Should: True")
             if (enablePagination && filter.count() == 0 && !isLoading) {
-                Log.d("SpellQuery2", "Loading More")
                 spellQueryViewModel.loadMoreSpells()
             }
         }
@@ -129,7 +125,6 @@ fun SpellQuery(
 
                         is Spellbook -> {
                             // New logic for handling Spellbook
-                            Log.d("WEMADEIT", "We didnt actually make it")
                             SpellbookCard(
                                 spellbook = it
                             )
