@@ -1,7 +1,7 @@
 package com.example.spellbook5eapplication.app.Model.Data_Model
 
 class Settings{
-    var saveSpellData: Boolean = true //TODO set to false before hand in, this makes it so you have to change the setting before it downloads to your device.
+    var saveSpellData: Boolean = true
     var useInternet: Boolean = true
     var darkmode: Boolean = true
 

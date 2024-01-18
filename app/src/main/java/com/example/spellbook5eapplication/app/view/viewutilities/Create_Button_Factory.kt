@@ -27,7 +27,6 @@ fun DynamicButtonFactory(buttonType: String, navController: NavController) {
     val buttonOnClick = {
         when (buttonType) {
             "HOMEBREW" -> {
-                Log.d("MINI", "It does come here")
                 GlobalOverlayState.showOverlay(
                     OverlayType.MAKE_SPELL,
                 )

@@ -60,10 +60,8 @@ class QuickPlayViewModel : ViewModel() {
     fun updateCurrentClass(newValue: Class) {
         _currentClass.value = newValue
         viewModelScope.launch {
-            Log.d("QuickPlayViewModel", "Class: $newValue")
             _availableCharacterLevelsLiveDate.postValue(emptyList())
             val levels = QuickPlayHandler.getAvailableLevelsForClass(newValue)
-            Log.d("QuickPlayViewModel", "Levels: $levels")
             _availableCharacterLevelsLiveDate.postValue(levels)
         }
     }

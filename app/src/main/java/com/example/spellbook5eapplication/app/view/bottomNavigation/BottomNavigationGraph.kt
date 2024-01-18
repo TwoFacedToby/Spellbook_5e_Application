@@ -28,7 +28,6 @@ fun BottomNavigationGraph(
         }
         composable(route = Screens.Favorite.route){
             val spellList = SpellQueryViewModelFactory.create(type = "FAVORITES")
-            Log.d("TAGGERKLAPPER", spellList.value.toString())
             Basic_Screen(spellList, false, false, false)
         }
         composable(route = Screens.Spellbooks.route){

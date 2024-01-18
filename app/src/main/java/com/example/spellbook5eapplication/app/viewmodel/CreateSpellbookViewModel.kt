@@ -41,7 +41,6 @@ class CreateSpellbookViewModel : ViewModel() {
         val gson = Gson()
         val jsonSpellbook = gson.toJson(spellbook)
 
-        Log.d("SODA", jsonSpellbook)
 
 
 

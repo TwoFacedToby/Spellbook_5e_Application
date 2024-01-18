@@ -68,8 +68,6 @@ fun UserInputField(
     }
 
     KeyboardVisibilityDetector { isVisible ->
-        Log.d("MILK26", isVisible.toString())
-
         if (!isVisible) {
             focusManager.clearFocus()
         }
@@ -100,10 +98,7 @@ fun UserInputField(
             .focusRequester(focusRequester)
             .onFocusChanged { focusState ->
                 if (focusState.isFocused) {
-                    Log.d("MILK23", "TextField is focused")
                     keyboardController?.show()
-                } else {
-                    Log.d("MILK23", focusState.toString())
                 }
             },
         singleLine = singleLine,

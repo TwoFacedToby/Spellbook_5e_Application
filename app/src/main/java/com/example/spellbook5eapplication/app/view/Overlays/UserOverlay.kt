@@ -62,7 +62,6 @@ fun UserOverlay(
     val signInResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        Log.d("ResultCode", result.resultCode.toString() + Activity.RESULT_OK.toString())
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.let { intent ->
                 signInViewModel.onSignInResult(intent)

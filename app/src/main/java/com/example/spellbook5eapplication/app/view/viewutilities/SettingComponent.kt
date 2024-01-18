@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun SettingComponent(name: String, boolean: Boolean, onClickRequest: () -> Unit) {
-    Log.d("SettingsComp", "$name : $boolean")
     val isChecked = remember { mutableStateOf(boolean) }
 
     Row(

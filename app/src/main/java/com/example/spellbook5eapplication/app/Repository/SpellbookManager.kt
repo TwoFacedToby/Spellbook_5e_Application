@@ -24,13 +24,11 @@ object SpellbookManager {
     }
 
     fun addSpellbook(spellbook: Spellbook) {
-        Log.d("ADDED", spellbook.toString())
         spellbooks.add(spellbook)
     }
 
     fun removeSpellbook(spellbookName: String) {
         var delete = LocalDataLoader.deleteFile(spellbookName.lowercase(), LocalDataLoader.DataType.SPELLBOOK)
-        Log.d("DIDIT", delete.toString())
         if(delete){
             spellbooks.removeAll { it.spellbookName == spellbookName }
         }
@@ -58,13 +56,9 @@ object SpellbookManager {
         CoroutineScope(Dispatchers.IO).launch {
 
             val spellbook = getSpellbook(spellBookName)
-            Log.d("LOLOL100", spellBookName)
-            Log.d("LOLOL300", spellbook.toString())
             spellbook?.let {
                 val gson = Gson()
                 val spellbookJson = gson.toJson(it)
-
-                Log.d("LOLOL300", spellbookJson)
 
                 LocalDataLoader.saveJson(
                     spellbookJson,
@@ -86,7 +80,6 @@ object SpellbookManager {
 
 
     fun getAllSpellbooks(): List<Spellbook> {
-        Log.d("LOLO", spellbooks.toList().toString())
 
         // Removing "favourite spellbook" from Spellbooklist
         return spellbooks.filter { it.spellbookName != "favourites" }
