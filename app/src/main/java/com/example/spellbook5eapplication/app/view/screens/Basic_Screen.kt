@@ -89,6 +89,8 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import com.example.spellbook5eapplication.app.viewmodel.TitleState
 import androidx.compose.material3.ButtonDefaults as Material3ButtonDefaults
 import androidx.compose.ui.platform.LocalContext
+import com.example.spellbook5eapplication.app.view.Overlays.Add_to_spellbook
+import com.example.spellbook5eapplication.app.view.viewutilities.SearchFilterBar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -160,39 +162,6 @@ fun Basic_Screen(
                                 }
                             }
                         }
-
-                    /*SubcomposeLayout { constraints ->
-                    val spellQueryLayout = subcompose("spellQuery") {
-                    }.first().measure(constraints)
-
-                    val customContentLayout = customContent?.let {
-                        val customConstraints = constraints.copy(minHeight = 0, maxHeight = Constraints.Infinity)
-                        subcompose("customContent", customContent).first().measure(customConstraints)
-                    }
-
-                    val spellQueryHeight = if (customContentLayout != null && seachEnabled) {
-                        constraints.maxHeight - customContentLayout.height - bottomPadding
-                    } else {
-                        spellQueryLayout.height
-                    }
-
-                    layout(constraints.maxWidth, constraints.maxHeight) {
-                        if(seachEnabled){
-                            spellQueryLayout.placeRelative(0, 0)
-                            customContentLayout?.let {
-                                val xCenter = (constraints.maxWidth - it.width) / 2
-                                it.placeRelative(xCenter, spellQueryHeight)
-                            }
-                        } else {
-                            spellQueryLayout.placeRelative(0, 0)
-                            customContentLayout?.let {
-                                val xCenter = (constraints.maxWidth - it.width) / 2
-                                it.placeRelative(xCenter, 0)
-                            }
-                        }
-
-                    }
-                    }*/
                 }
             }
             OverlayRenderer(GlobalOverlayState.getOverlayStack())
@@ -241,7 +210,6 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 createView.createNewSpellbook(createSpellbookViewModel)
             }
             OverlayType.DELETE_PROMPT -> {
-                // To refresh screen and that it is gone
                 val spellQueryViewModel: SpellQueryViewModel = viewModel()
                 val createSpellViewModel: CreateSpellViewModel = viewModel()
 
@@ -345,123 +313,6 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                 }
             }
             else -> {}
-        }
-    }
-}
-
-
-@Composable
-fun SearchFilterBar(
-){
-    val filterViewModel: FilterViewModel = viewModel()
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp),
-        horizontalArrangement = Arrangement.Center
-    )
-    {
-        UserInputField(
-            label = "Search",
-            singleLine = true,
-            onInputChanged = { input ->
-                filterViewModel.updateFilterWithSearchName(input)
-            },
-            modifier = Modifier.size(height = 48.dp, width = 220.dp),
-            imeAction = ImeAction.Search,
-            initialInput = ""
-        )
-        Spacer(modifier = Modifier.width(5.dp))
-        FilterButton(
-            onShowFiltersRequest = {
-                GlobalOverlayState.showOverlay(
-                    OverlayType.FILTER,
-                )
-            }
-        )
-    }
-}
-
-@Composable
-fun Add_to_spellbook(
-    spellbooks: List<Spellbook>,
-    spell: Spell.SpellInfo
-) {
-    Column(
-        modifier = Modifier
-            .padding(top = 8.dp, start = 15.dp, end = 15.dp)
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Divider(
-            modifier = Modifier
-                .width(250.dp)
-                .height(15.dp)
-                .clip(shape = RoundedCornerShape(5.dp)),
-            color = Color.Black.copy(alpha = 0.2F),
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        Text(
-            text = "Add Spell To Spellbook",
-            color = Color.White,
-            fontSize = 26.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            textAlign = TextAlign.Center
-        )
-        OverlayBox {
-
-            items(spellbooks.size) { index ->
-                val spellbook = spellbooks[index]
-                if (!spellbook.spells.contains(spell.index)) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = spellbook.spellbookName,
-                            fontSize = 20.sp,
-                            color = MaterialTheme.colorScheme.onTertiary,
-                            modifier = Modifier.padding(start = 16.dp)
-                        )
-                        IconButton(onClick = {
-                            spellbook.addSpellToSpellbook(spell.index ?: "")
-
-                            SpellbookManager.saveSpellbookToFile(spellbook.spellbookName)
-
-                            LocalDataLoader
-                                .getContext()
-                                ?.get()
-                                ?.let { context ->
-                                    Toast
-                                        .makeText(
-                                            context,
-                                            "${spell.name} added to ${spellbook.spellbookName}",
-                                            Toast.LENGTH_SHORT
-                                        )
-                                        .show()
-                                }
-                            Log.d("WEDO", "DISMISS")
-                            GlobalOverlayState.dismissOverlay()
-                        }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Add,
-                                contentDescription = "Add to spellbook",
-                                tint = MaterialTheme.colorScheme.onTertiary,
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .padding(end = 16.dp)
-                            )
-                        }
-                    }
-                }
-            }
         }
     }
 }

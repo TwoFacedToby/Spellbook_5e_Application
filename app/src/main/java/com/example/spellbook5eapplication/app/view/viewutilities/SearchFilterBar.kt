@@ -1,0 +1,49 @@
+package com.example.spellbook5eapplication.app.view.viewutilities
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+import com.example.spellbook5eapplication.app.viewmodel.OverlayType
+
+@Composable
+fun SearchFilterBar(
+){
+    val filterViewModel: FilterViewModel = viewModel()
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp),
+        horizontalArrangement = Arrangement.Center
+    )
+    {
+        UserInputField(
+            label = "Search",
+            singleLine = true,
+            onInputChanged = { input ->
+                filterViewModel.updateFilterWithSearchName(input)
+            },
+            modifier = Modifier.size(height = 48.dp, width = 220.dp),
+            imeAction = ImeAction.Search,
+            initialInput = ""
+        )
+        Spacer(modifier = Modifier.width(5.dp))
+        FilterButton(
+            onShowFiltersRequest = {
+                GlobalOverlayState.showOverlay(
+                    OverlayType.FILTER,
+                )
+            }
+        )
+    }
+}

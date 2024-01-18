@@ -49,8 +49,7 @@ import com.example.spellbook5eapplication.app.viewmodel.QuickPlayViewModel
 import com.example.spellbook5eapplication.ui.theme.ButtonColors
 
 @Composable
-fun QuickPlaySpellBooks(
-) {
+fun QuickPlaySpellBooks() {
     val quickPlayViewModel: QuickPlayViewModel = viewModel()
 
     val possibleLevels by quickPlayViewModel.availableCharacterLevels.observeAsState(initial = emptyList())

@@ -23,8 +23,15 @@ class QuickPlayViewModel : ViewModel() {
     private val _preventReset = MutableLiveData<Boolean>(false)
     val preventReset: LiveData<Boolean> = _preventReset
 
+    private val _showDialog = MutableLiveData<Boolean>(false)
+    val showDialog: LiveData<Boolean> = _showDialog
+
     fun setPreventReset(preventReset: Boolean) {
         _preventReset.value = preventReset
+    }
+
+    fun setShowDialog(showDialog: Boolean){
+        _showDialog.value = showDialog
     }
 
     fun resetValuesIfNeeded() {
