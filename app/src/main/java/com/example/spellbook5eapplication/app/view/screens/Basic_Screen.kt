@@ -108,8 +108,6 @@ fun Basic_Screen(
     println("Current filter: $filter")
     println("Current filter level size: " + filter.getLevel().size)
 
-    val bottomPadding = with(LocalDensity.current) { 20.dp.toPx().toInt() }
-
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -124,7 +122,7 @@ fun Basic_Screen(
             )
             Box(
                 modifier = Modifier
-                    .fillMaxSize() // Fill the parent size
+                    .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.4f))
             )
             Column (
@@ -144,7 +142,6 @@ fun Basic_Screen(
                                 isVisible = seachEnabled,
                                 spec = null
                             )
-                            //.padding(top = 10.dp),
                             ,contentAlignment = Alignment.TopCenter
                         ){
                             SpellQuery(
@@ -303,7 +300,6 @@ fun OverlayRenderer(overlayStack: List<OverlayType>) {
                     val clip = ClipData.newPlainText("Token", token)
                     clipboard.setPrimaryClip(clip)
 
-                    // Display a message or do additional actions after copying
                     Toast.makeText(context, "Token copied to clipboard", Toast.LENGTH_SHORT).show()
 
                     GlobalOverlayState.dismissOverlay()
