@@ -23,7 +23,7 @@ class GoogleAuthUIClient(private val context: Context) {
             .requestIdToken(context.getString(R.string.web_client_id))
             .requestEmail()
             .build()
-                googleSignInClient = GoogleSignIn.getClient(context, gso)
+        googleSignInClient = GoogleSignIn.getClient(context, gso)
     }
 
     fun signIn(): Intent {
