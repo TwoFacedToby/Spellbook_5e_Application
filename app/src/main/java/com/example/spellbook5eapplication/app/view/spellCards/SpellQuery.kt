@@ -69,6 +69,9 @@ fun SpellQuery(
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = lazyListState.firstVisibleItemIndex) {
+
+        Log.d("SpellQuery2166", spellQueryViewModel.shouldLoadMoreData(lazyListState).toString())
+
         if (spellQueryViewModel.shouldLoadMoreData(lazyListState)) {
             Log.d("SpellQuery21", "Should: True")
             if (enablePagination && filter.count() == 0 && !isLoading) {

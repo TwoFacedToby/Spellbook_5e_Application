@@ -99,13 +99,18 @@ fun SpellCard(
             .padding(10.dp)
             .combinedClickable(
                 onClick = {
-                    GlobalOverlayState.currentSpell = spell
-                    GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+                    if(spell.index != null){
+                        GlobalOverlayState.currentSpell = spell
+                        GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+                    }
+
                 },
-                onLongClick = { if (isSpellbookView)
+                onLongClick = { if (isSpellbookView){
                     GlobalOverlayState.currentSpell = spell
                     GlobalOverlayState.currentSpellbook = SpellbookManager.getSpellbook(TitleState.currentTitle.value!!)
                     GlobalOverlayState.showOverlay(OverlayType.REMOVE_SPELL_FROM_SPELLBOOK)
+                }
+
                 },
             )
 
