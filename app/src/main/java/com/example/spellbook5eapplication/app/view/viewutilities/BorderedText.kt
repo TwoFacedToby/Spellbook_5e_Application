@@ -29,14 +29,14 @@ fun DrawScope.drawTextWithBorder(text: String, position: Offset) {
         color = Color.Black.toArgb()
         textSize = 38.sp.toPx()
         strokeWidth = 8f
-        style = android.graphics.Paint.Style.STROKE // For border
+        style = android.graphics.Paint.Style.STROKE
     }
 
     drawContext.canvas.nativeCanvas.drawText(text, position.x, position.y, paint)
 
     paint.apply {
         color = Color.White.toArgb()
-        style = android.graphics.Paint.Style.FILL // For text itself
+        style = android.graphics.Paint.Style.FILL
     }
 
     drawContext.canvas.nativeCanvas.drawText(text, position.x, position.y, paint)

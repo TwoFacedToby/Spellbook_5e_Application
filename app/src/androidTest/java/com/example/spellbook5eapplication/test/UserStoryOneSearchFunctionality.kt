@@ -94,9 +94,9 @@ class UserStoryOneSearchFunctionality {
     fun the_user_enters_spell_name() {
         val filter = Filter().apply { setSpellName("fire") }
 
-        if (fakeSpellList != null && fakeSpellList!!.getIndexList().isNotEmpty() && fakeSpellList!!.getSpellInfoList().isNotEmpty()){
+        if (fakeSpellList != null && fakeSpellList.getIndexList().isNotEmpty() && fakeSpellList.getSpellInfoList().isNotEmpty()){
             val search = Search()
-            fakeSpellList = search.searchSpellListWithFilter(fakeSpellList!!, filter)
+            fakeSpellList = search.searchSpellListWithFilter(fakeSpellList, filter)
         } else {
             println("Spell list is empty or not initialized.")
         }
@@ -104,8 +104,8 @@ class UserStoryOneSearchFunctionality {
 
     @Then("the search results should display all spells where the name contains the entered text, sorted by relevance")
     fun verify_search_results() {
-        val fakeSpellInfoList = fakeSpellList?.getSpellInfoList()
-        var filteredSearch = true;
+        val fakeSpellInfoList = fakeSpellList.getSpellInfoList()
+        var filteredSearch = true
         for (spellinfo in fakeSpellInfoList!!) {
             if(!spellinfo.name?.lowercase(Locale.getDefault())?.contains("fire")!!){
                 filteredSearch = false

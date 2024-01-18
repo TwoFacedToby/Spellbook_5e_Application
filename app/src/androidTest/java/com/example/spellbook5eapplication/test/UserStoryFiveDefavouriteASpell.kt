@@ -12,7 +12,7 @@ import io.cucumber.java.en.When
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 
-public class UserStoryFiveDefavouriteASpell {
+class UserStoryFiveDefavouriteASpell {
 
     private var selectedSpellbook = mutableStateOf<Spellbook?>(null)
     private val spellbooks = mutableStateListOf<Spellbook>()
@@ -50,7 +50,7 @@ public class UserStoryFiveDefavouriteASpell {
     @When("the tapped spell is already favourited, the spell should be removed from the favourites list")
     fun the_tapped_spell_is_already_favourited_the_spell_should_be_removed_from_the_favourites_list() {
         Log.d("Executed5", "Second When")
-        favourites?.removeSpell("Healing Word")
+        favourites.removeSpell("Healing Word")
         val containsSpell = favourites.spells.contains("Healing Word")
         assertFalse("Favourites spellbook should not contain the marked spell", containsSpell)
     }

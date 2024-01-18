@@ -237,7 +237,7 @@ fun SpellCard(
                                     if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
                                         // Remove spell from favorites
                                         favouritesSpellbook.removeSpell(spellIndex)
-                                        SpellbookManager.saveSpellbookToFile(favouritesSpellbook!!.spellbookName)
+                                        SpellbookManager.saveSpellbookToFile(favouritesSpellbook.spellbookName)
                                         defaultFavouriteImage
                                     } else {
                                         // Add spell to favorites

@@ -64,7 +64,7 @@ fun SettingsOverlay(onDismissRequest: () -> Unit) {
         Spacer(modifier = Modifier.height(24.dp))
 
         currentSettings = CurrentSettings.currentSettings
-        Log.d("SettingsComp", "Creating: ${currentSettings.toString()}")
+        Log.d("SettingsComp", "Creating: $currentSettings")
         LazyColumn(
             Modifier.fillMaxHeight(0.8f).padding(top = 16.dp)
         ){

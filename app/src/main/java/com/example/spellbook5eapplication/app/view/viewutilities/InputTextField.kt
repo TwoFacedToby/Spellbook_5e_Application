@@ -18,7 +18,6 @@ import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,22 +29,20 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.math.max
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun UserInputField(
     label: String,
     onInputChanged: (String) -> Unit,
-    modifier : Modifier,
-    singleLine : Boolean,
+    modifier: Modifier,
+    singleLine: Boolean,
     imeAction: ImeAction,
     initialInput: String,
 ) {
@@ -73,84 +70,83 @@ fun UserInputField(
     KeyboardVisibilityDetector { isVisible ->
         Log.d("MILK26", isVisible.toString())
 
-        if(!isVisible){
+        if (!isVisible) {
             focusManager.clearFocus()
         }
 
     }
 
-        BasicTextField(
-            value = input,
-            onValueChange = {
-                input = it
-                onInputChanged(it)
+    BasicTextField(
+        value = input,
+        onValueChange = {
+            input = it
+            onInputChanged(it)
+        },
+        keyboardOptions = KeyboardOptions.Default.copy(
+            imeAction = imeAction
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                keyboardController?.hide()
+                focusManager.clearFocus()
             },
-            keyboardOptions = KeyboardOptions.Default.copy(
-                imeAction = imeAction
-            ),
-            keyboardActions = KeyboardActions(
-                onSearch = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
-                },
-                onDone = {
-                    keyboardController?.hide()
-                    focusManager.clearFocus()
+            onDone = {
+                keyboardController?.hide()
+                focusManager.clearFocus()
+            }
+        ),
+
+        modifier = modifier
+            .focusRequester(focusRequester)
+            .onFocusChanged { focusState ->
+                if (focusState.isFocused) {
+                    Log.d("MILK23", "TextField is focused")
+                    keyboardController?.show()
+                } else {
+                    Log.d("MILK23", focusState.toString())
                 }
-            ),
-
-            modifier = modifier
-                .focusRequester(focusRequester)
-                .onFocusChanged { focusState ->
-                    if (focusState.isFocused) {
-                        Log.d("MILK23", "TextField is focused")
-                        keyboardController?.show()
-                    }
-                    else{
-                        Log.d("MILK23", focusState.toString())
-                    }
-                },
-            singleLine = singleLine,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.onPrimary),
-            textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onPrimary),
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = Modifier
-                        .border(
-                            width = 2.dp,
-                            color = MaterialTheme.colorScheme.secondaryContainer,
-                            shape = RoundedCornerShape(2.dp)
-                        )
-                        .background(
-                            MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(2.dp)
-                        )
-                        .fillMaxWidth()
-                ) {
-
-                    Row(
-                        modifier = otherModifier,
-                        verticalAlignment = alignment
+            },
+        singleLine = singleLine,
+        cursorBrush = SolidColor(MaterialTheme.colorScheme.onPrimary),
+        textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onPrimary),
+        decorationBox = { innerTextField ->
+            Box(
+                modifier = Modifier
+                    .border(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = RoundedCornerShape(2.dp)
                     )
-                    {
-                        Spacer(modifier = Modifier.size(4.dp, 20.dp))
-                        if (input.isEmpty())
-                            Text(
-                                text = label,
-                                style = LocalTextStyle.current.copy(
-                                    color = MaterialTheme.colorScheme.secondary,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp
-                                )
-                            )
+                    .background(
+                        MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(2.dp)
+                    )
+                    .fillMaxWidth()
+            ) {
 
-                        Spacer(modifier = Modifier.size(4.dp, 20.dp))
-                        innerTextField()
-                    }
+                Row(
+                    modifier = otherModifier,
+                    verticalAlignment = alignment
+                )
+                {
+                    Spacer(modifier = Modifier.size(4.dp, 20.dp))
+                    if (input.isEmpty())
+                        Text(
+                            text = label,
+                            style = LocalTextStyle.current.copy(
+                                color = MaterialTheme.colorScheme.secondary,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 15.sp
+                            )
+                        )
+
+                    Spacer(modifier = Modifier.size(4.dp, 20.dp))
+                    innerTextField()
                 }
             }
-        )
-    }
+        }
+    )
+}
 
 
 

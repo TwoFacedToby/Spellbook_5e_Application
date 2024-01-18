@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.rememberSwipeableState
@@ -27,11 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 
@@ -47,7 +44,7 @@ fun CustomOverlay(
     val sizePx = with(LocalDensity.current) { overlayHeight.toPx() }
     val anchors = mapOf(0F to 0, sizePx to 1)
 
-    if(GlobalOverlayState.getTopOverlay() == overlayType) {
+    if (GlobalOverlayState.getTopOverlay() == overlayType) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -82,7 +79,7 @@ fun CustomOverlay(
                         MaterialTheme.colorScheme.primary,
                         shape = MaterialTheme.shapes.large
                     )
-                    .clickable { /*Leaving it empty so that it consume the outer box' click event*/ }
+                    .clickable { }
                     .padding(5.dp),
                 contentAlignment = Alignment.TopCenter
             ) {
@@ -105,7 +102,12 @@ fun DefaultContent() {
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(text = "Hardcoded Title", color = Color.White, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        Text(
+            text = "Hardcoded Title",
+            color = Color.White,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = { GlobalOverlayState.dismissOverlay() }) {
             Text("Hardcoded Button Text")

@@ -83,7 +83,7 @@ object SpellController {
      */
     fun loadNextFromSpellList(amount : Int, spellList: SpellList) : List<Spell.SpellInfo?>? {
 
-        val current = if(spellList.getLoaded() == 0) 0 else spellList.getLoaded() + 1;
+        val current = if(spellList.getLoaded() == 0) 0 else spellList.getLoaded() + 1
         if (spellList.getIndexList().size <= current) return null
         val list: MutableList<String> = emptyList<String>().toMutableList()
 
@@ -160,15 +160,15 @@ object SpellController {
         runBlocking {
             spellInfoJson = getJsonsFromIndexes(indexes)
         }
-        if (spellInfoJson.isEmpty()) return emptyList();
+        if (spellInfoJson.isEmpty()) return emptyList()
         val spellInfoList = mutableListOf<Spell.SpellInfo>()
         for (spell in spellInfoJson) {
             if (spell != null) {
                 val spellInfo = jsonToSpell.jsonToSpell(spell)
-                if (spellInfo != null) spellInfoList.add(spellInfo);
+                if (spellInfo != null) spellInfoList.add(spellInfo)
             }
         }
-        return spellInfoList.toList();
+        return spellInfoList.toList()
     }
 
 }

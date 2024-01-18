@@ -36,7 +36,7 @@ object SpellDataFetcher {
                 LocalDataLoader.deleteFile(index, LocalDataLoader.DataType.INDIVIDUAL)
             }
             else{
-                Log.d("SpellDataFetcher", "Fetched from local storage: $index - ${spellInfo.toString()}")
+                Log.d("SpellDataFetcher", "Fetched from local storage: $index - $spellInfo")
                 addSpellInfo(spellInfo)
                 return spellInfo
             }
@@ -50,7 +50,7 @@ object SpellDataFetcher {
                 LocalDataLoader.deleteFile(index, LocalDataLoader.DataType.HOMEBREW)
             }
             else{
-                Log.d("SpellDataFetcher", "Fetched from homebrew storage: $index - ${spellInfo.toString()}")
+                Log.d("SpellDataFetcher", "Fetched from homebrew storage: $index - $spellInfo")
                 addSpellInfo(spellInfo)
                 return spellInfo
             }
@@ -59,7 +59,7 @@ object SpellDataFetcher {
         if(CurrentSettings.currentSettings.useInternet){ //If user has allowed internet
             return fetchFromAPI(index)?.also { spellInfo ->
                 addSpellInfo(spellInfo)
-                Log.d("SpellDataFetcher", "Fetched from API: $index - ${spellInfo.toString()}")
+                Log.d("SpellDataFetcher", "Fetched from API: $index - $spellInfo")
             }
         }
         return null
