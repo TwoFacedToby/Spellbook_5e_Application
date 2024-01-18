@@ -1,6 +1,8 @@
 package com.example.spellbook5eapplication.app.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
@@ -8,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Class
+import com.example.spellbook5eapplication.app.Model.Data_Model.Filter
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Model.QuickPlayHandler
@@ -20,15 +23,8 @@ class QuickPlayViewModel : ViewModel() {
     private val _preventReset = MutableLiveData<Boolean>(false)
     val preventReset: LiveData<Boolean> = _preventReset
 
-    private val _showDialog = MutableLiveData<Boolean>(false)
-    val showDialog: LiveData<Boolean> = _showDialog
-
     fun setPreventReset(preventReset: Boolean) {
         _preventReset.value = preventReset
-    }
-
-    fun setShowDialog(showDialog: Boolean){
-        _showDialog.value = showDialog
     }
 
     fun resetValuesIfNeeded() {
