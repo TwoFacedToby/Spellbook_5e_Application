@@ -56,7 +56,8 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 fun Basic_Screen(
                  spellsLiveData: LiveData<List<Displayable?>>,
                  enablePagination: Boolean,
-                 seachEnabled: Boolean,
+                 searchEnabled: Boolean,
+                 contentVisible: Boolean,
                  customContent: @Composable (() -> Unit)? = null){
 
 
@@ -96,7 +97,7 @@ fun Basic_Screen(
                                 side = FadeSide.TOP,
                                 color = MaterialTheme.colorScheme.primary.copy(alpha = 0.4F),
                                 width = 40.dp,
-                                isVisible = seachEnabled,
+                                isVisible = searchEnabled,
                                 spec = null
                             )
                             ,contentAlignment = Alignment.TopCenter
@@ -104,9 +105,10 @@ fun Basic_Screen(
                             SpellQuery(
                                 spellsLiveData = spellsLiveData,
                                 enablePagination = enablePagination,
+                                contentVisible = contentVisible
                             )
 
-                            if(seachEnabled) {
+                            if(searchEnabled) {
                                 SearchFilterBar()
                             }
 

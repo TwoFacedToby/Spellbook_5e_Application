@@ -1,7 +1,9 @@
 package com.example.spellbook5eapplication.app.viewmodel
 
 import android.util.Log
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,6 +17,12 @@ class FilterViewModel : ViewModel() {
     val currentFilter: State<Filter> = _currentFilter
     private val _isUpdated = mutableStateOf(false)
     val isUpdated : State<Boolean> = _isUpdated
+    private val _filterNumber = mutableIntStateOf(0)
+    val filterNumber: MutableIntState = _filterNumber
+
+    private val _inputText = mutableStateOf("")
+    val inputText: State<String> = _inputText
+
     fun applyFilters(
         spellLevel: List<FilterItem>,
         components: List<FilterItem>,
@@ -24,7 +32,7 @@ class FilterViewModel : ViewModel() {
         ritual: List<FilterItem>
     ) {
         val newFilter = Filter()
-
+        newFilter.setSpellName(_currentFilter.value.getSpellName())
         processList(spellLevel) { value -> newFilter.addLevel(value.toInt()) }
         processList(components) { value -> newFilter.addComponent(mapComponent(value)) }
         processList(saveReq) { value -> newFilter.addSaveReq(mapSaveReq(value))}
@@ -34,6 +42,9 @@ class FilterViewModel : ViewModel() {
 
         Log.d("FilterViewModel", "New filter: $newFilter")
         _currentFilter.value = newFilter
+        if(_currentFilter.value.getSpellName() != "") {
+            _filterNumber.intValue = newFilter.count() - 1
+        } else _filterNumber.intValue = newFilter.count()
         _isUpdated.value = true
     }
 
@@ -85,17 +96,20 @@ class FilterViewModel : ViewModel() {
 
     fun resetCurrentFilter() {
         _currentFilter.value = Filter()
+        _filterNumber.intValue = 0
+        _inputText.value = ""
         _isUpdated.value = true
         Log.d("FilterViewModel", "After reset: $currentFilter")// Reset to a new, blank Filter instance
     }
 
     fun updateFilterWithSearchName(searchName: String) {
+        _inputText.value = searchName
+
         val newFilter = Filter()
         newFilter.setSpellName(searchName)
 
         val current = _currentFilter.value
 
-        // Copying other attributes from current to newFilter
         current.getSchool().forEach { newFilter.addSchool(it) }
         current.getCastingTime().forEach { newFilter.addCastingTime(it) }
         current.getAreaOfEffect().forEach { newFilter.addAreaOfEffect(it) }

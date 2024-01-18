@@ -48,6 +48,7 @@ const val bottomDistance =
 fun SpellQuery(
     spellsLiveData: LiveData<List<Displayable?>>,
     enablePagination: Boolean,
+    contentVisible: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -117,7 +118,8 @@ fun SpellQuery(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
-                Spacer(modifier = Modifier.height(80.dp))
+                if(contentVisible)
+                    Spacer(modifier = Modifier.height(80.dp))
             }
             items(spells.size) { index ->
                 spells[index]?.let {

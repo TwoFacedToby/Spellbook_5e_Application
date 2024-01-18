@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -20,6 +21,8 @@ import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 fun SearchFilterBar(
 ){
     val filterViewModel: FilterViewModel = viewModel()
+    val inputText by filterViewModel.inputText
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,7 +38,7 @@ fun SearchFilterBar(
             },
             modifier = Modifier.size(height = 48.dp, width = 220.dp),
             imeAction = ImeAction.Search,
-            initialInput = ""
+            initialInput = inputText
         )
         Spacer(modifier = Modifier.width(5.dp))
         FilterButton(
@@ -43,7 +46,8 @@ fun SearchFilterBar(
                 GlobalOverlayState.showOverlay(
                     OverlayType.FILTER,
                 )
-            }
+            },
+            filtersCount = filterViewModel.filterNumber.intValue
         )
     }
 }
