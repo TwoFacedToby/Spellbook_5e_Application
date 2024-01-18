@@ -245,11 +245,6 @@ fun SpellCard(
                                         SpellbookManager.saveSpellbookToFile(favouritesSpellbook!!.spellbookName)
                                         Icons.Filled.Favorite // Change this to the filled heart icon
                                     }
-                                // Save the updated favorites list
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    SpellbookManager.saveSpellbookToFile("Favourites")
-                                    println("Favorites updated")
-                                }
                             }
                         }
                     ) {
