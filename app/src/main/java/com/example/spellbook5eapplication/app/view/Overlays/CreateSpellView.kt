@@ -769,7 +769,6 @@ class HomeBrewInstantiator {
                 Spacer(modifier = Modifier.height(5.dp))
 
                 if (specific) {
-                    viewModel.spell.range = ""
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center
@@ -785,7 +784,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
-                            initialInput = viewModel.spell.range.toString()
+                            initialInput = ""
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -844,7 +843,7 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
-                            initialInput = viewModel.spell.duration.toString()
+                            initialInput = ""
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
