@@ -60,6 +60,8 @@ fun QuickPlaySpellBooks() {
 
     val quickPlaySpellList by quickPlayViewModel.currentQuickPlaySpellList.observeAsState(initial = emptyList())
 
+    var showError by remember { mutableStateOf(false) }
+
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(GlobalOverlayState.getTopOverlay()) {
@@ -94,6 +96,12 @@ fun QuickPlaySpellBooks() {
             fontSize = 20.sp,
             fontStyle = FontStyle.Italic
         )
+        if(showError){
+            Text(
+                text = "Please select your character level",
+                color = Color.Red,
+            )
+        }
         val rowState = rememberLazyListState()
         LazyRow(
             state = rowState,
@@ -188,7 +196,12 @@ fun QuickPlaySpellBooks() {
                 modifier = Modifier,
                 color = ButtonDefaults.buttonColors(ButtonColors.GreenButton)
             ) {
-                showDialog = true
+                if(selectedLevel == 0) {
+                    showError = true
+                } else {
+                    showError = false
+                    showDialog = true
+                }
             }
         }
         Spacer(modifier = Modifier.weight(1F))

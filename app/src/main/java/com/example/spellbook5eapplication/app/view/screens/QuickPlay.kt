@@ -1,5 +1,6 @@
 package com.example.spellbook5eapplication.app.view.screens
 
+import androidx.compose.ui.graphics.Color
 import android.widget.Toast
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -149,7 +150,7 @@ fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
                     if (showError) {
                         Text(
                             text = errorMessage,
-                            color = ButtonColors.RedButton,
+                            color = Color.Red,
                         )
                     }
                 }
