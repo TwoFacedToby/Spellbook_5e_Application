@@ -60,9 +60,11 @@ class UserStoryFourFavouriteASpell {
     @Then("that spell should be saved to a dedicated Favorites section")
     fun that_spell_should_be_saved_to_a_dedicated_favorites_section() {
         Log.d("Executed", "Then")
-        val updatedFavouriteSpellbook = favourites?.spells?.contains("Lightning Bolt") ?: false
+        val updatedFavouriteSpellbook = favourites.spells?.contains("Lightning Bolt") ?: false
         Log.d("asmodkoasdnk", updatedFavouriteSpellbook.toString())
-        Assert.assertTrue("Favourites spellbook should contain the marked spell", updatedFavouriteSpellbook!!)
+        Assert.assertTrue("Favourites spellbook should contain the marked spell",
+            updatedFavouriteSpellbook
+        )
     }
 
 

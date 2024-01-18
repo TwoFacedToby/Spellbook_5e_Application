@@ -23,7 +23,7 @@ import com.example.spellbook5eapplication.app.viewmodel.TitleState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SpellQueryViewModel() : ViewModel() {
+class SpellQueryViewModel : ViewModel() {
 
     //Spell name list for API
     private var spellList: SpellList? = null
@@ -112,7 +112,7 @@ class SpellQueryViewModel() : ViewModel() {
                 }
                 val initialSpells = loadedSpells + loadingSpells
                 Log.d("API_RESPONSE_NEW","IS: " + initialSpells.toString())
-                val displayableSpells = initialSpells?.map { it as Displayable }
+                val displayableSpells = initialSpells.map { it }
                 _spells.postValue(displayableSpells!!)
                 _isLoading.postValue(false)
             }
@@ -130,7 +130,7 @@ class SpellQueryViewModel() : ViewModel() {
             if (canLoadMoreSpells() && spellList!!.getLoaded() < spellList!!.getIndexList().count()) {
                 _isLoading.postValue(true)
                 val nextSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
-                val displayableNextSpells = nextSpells.map { it as Displayable }
+                val displayableNextSpells = nextSpells.map { it }
 
                 val updatedList = _spells.value.orEmpty().toMutableList()
 
@@ -169,7 +169,7 @@ class SpellQueryViewModel() : ViewModel() {
             val spellList = SpelllistLoader.loadSpellbookAsSpellList("favourites")
             Log.d("MILK2", spellList.toString())
 
-            val displayableFavorites = spellList.getSpellInfoList().map { it as Displayable }
+            val displayableFavorites = spellList.getSpellInfoList().map { it }
 
             _favorite.postValue(displayableFavorites)
         }
@@ -178,7 +178,7 @@ class SpellQueryViewModel() : ViewModel() {
     fun loadHomebrewList(){
         viewModelScope.launch {
             val spellList = SpelllistLoader.loadHomeBrewSpellList()
-            val displayableHomebrews = spellList.getSpellInfoList().map { it as Displayable }
+            val displayableHomebrews = spellList.getSpellInfoList().map { it }
             _homebrew.postValue(displayableHomebrews)
         }
 
@@ -222,7 +222,7 @@ class SpellQueryViewModel() : ViewModel() {
     }
 
     fun loadSpellsBasedOnFilter(filter: Filter) {
-        Log.d("SpellQueryViewModel", "LoadSpellsBasedOnFilter start: ${filter.toString()}")
+        Log.d("SpellQueryViewModel", "LoadSpellsBasedOnFilter start: $filter")
 
         _isLoading.value = true
         _spells.value = emptyList()

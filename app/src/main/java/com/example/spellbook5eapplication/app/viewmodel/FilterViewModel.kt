@@ -86,7 +86,7 @@ class FilterViewModel : ViewModel() {
     fun resetCurrentFilter() {
         _currentFilter.value = Filter()
         _isUpdated.value = true
-        Log.d("FilterViewModel", "After reset: ${currentFilter.toString()}")// Reset to a new, blank Filter instance
+        Log.d("FilterViewModel", "After reset: $currentFilter")// Reset to a new, blank Filter instance
     }
 
     fun updateFilterWithSearchName(searchName: String) {

@@ -1,8 +1,7 @@
 package com.example.spellbook5eapplication.app.view.Overlays
 
-import SignInViewModel
+//import com.example.spellbook5eapplication.app.view.Overlays.UserInputMethods
 import SpellQueryViewModel
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -21,7 +20,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -38,17 +36,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.spellbook5eapplication.R
-import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
-//import com.example.spellbook5eapplication.app.view.Overlays.UserInputMethods
 import com.example.spellbook5eapplication.app.view.viewutilities.ColouredButton
 import com.example.spellbook5eapplication.app.view.viewutilities.EditableList
 import com.example.spellbook5eapplication.app.view.viewutilities.UserButtons
@@ -58,7 +51,6 @@ import com.example.spellbook5eapplication.app.viewmodel.CreateSpellViewModel
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import com.example.spellbook5eapplication.ui.theme.ButtonColors
-import com.example.spellbook5eapplication.app.viewmodel.SpellCardViewModel
 
 
 //Works with BrewFactory2 to create homebrews

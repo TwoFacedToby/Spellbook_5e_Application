@@ -124,7 +124,7 @@ fun SpellbookCard(
                     TextField(
                         value = newTitle,
                         onValueChange = { newTitle = it },
-                        keyboardOptions = KeyboardOptions(imeAction = androidx.compose.ui.text.input.ImeAction.Done),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                         keyboardActions = KeyboardActions(onDone = {
                             onTitleChangeConfirm()
                         }),

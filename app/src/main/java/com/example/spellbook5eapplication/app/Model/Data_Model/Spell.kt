@@ -122,7 +122,7 @@ data class SpellInfo(
     )
 
     data class SpellData(
-        val spell: Spell.SpellInfo?
+        val spell: SpellInfo?
     )
 
 

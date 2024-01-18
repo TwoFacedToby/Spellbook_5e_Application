@@ -7,17 +7,17 @@ import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 class SpellCardCreation(spell: Spell.SpellInfo) {
 
 
-    val classImageIDs : MutableList<Int> = emptyList<Int>().toMutableList()
+    val classImageIDs: MutableList<Int> = emptyList<Int>().toMutableList()
     var schoolID = R.drawable.abjuration
 
     init {
-        if(spell.classes != null) setClassImages(spell.classes!!)
-        if(spell.school != null) setSchoolImage(spell.school!!)
+        if (spell.classes != null) setClassImages(spell.classes!!)
+        if (spell.school != null) setSchoolImage(spell.school!!)
     }
 
-    private fun setClassImages(classes : List<Spell.SpellClass>){
+    private fun setClassImages(classes: List<Spell.SpellClass>) {
         classImageIDs.clear()
-        for(c in classes){
+        for (c in classes) {
             when (c.name) {
                 null -> println("null class")
                 "Artificer" -> classImageIDs.add(R.drawable.artificer)
@@ -27,7 +27,7 @@ class SpellCardCreation(spell: Spell.SpellInfo) {
                 "Druid" -> classImageIDs.add(R.drawable.druid)
                 "Fighter" -> classImageIDs.add(R.drawable.fighter)
                 "Monk" -> classImageIDs.add(R.drawable.monk)
-                "Paladin" ->classImageIDs.add(R.drawable.paladin)
+                "Paladin" -> classImageIDs.add(R.drawable.paladin)
                 "Ranger" -> classImageIDs.add(R.drawable.ranger)
                 "Rogue" -> classImageIDs.add(R.drawable.rouge)
                 "Sorcerer" -> classImageIDs.add(R.drawable.sorcerer)
@@ -36,9 +36,10 @@ class SpellCardCreation(spell: Spell.SpellInfo) {
             }
         }
     }
+
     // TODO // set school ids to actual right images once they've been created.
     private fun setSchoolImage(school: Spell.SpellSchool) {
-        when(school.name){
+        when (school.name) {
             null -> println("null school")
             "Abjuration" -> schoolID = R.drawable.abjuration
             "Conjuration" -> schoolID = R.drawable.conjuration

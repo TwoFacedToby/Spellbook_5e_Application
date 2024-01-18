@@ -1,19 +1,14 @@
 package com.example.spellbook5eapplication.app.viewmodel
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.currentRecomposeScope
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.Settings
-import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Utility.CurrentSettings
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.google.gson.Gson
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class SettingsViewModel : ViewModel() {
@@ -27,7 +22,7 @@ class SettingsViewModel : ViewModel() {
         viewModelScope.launch {
             Log.d("Settings", "Updated Settings")
             _currentSettings.postValue(newSettings)
-            save() // Save the new settings to persistent storage if needed
+            save()
         }
     }
     fun resetSettings(){
@@ -54,8 +49,8 @@ class SettingsViewModel : ViewModel() {
     private fun load() {
         val gson = Gson()
         val json = LocalDataLoader.getJson("settings", LocalDataLoader.DataType.LOCAL)
-        if(json == null){ //First time, it does not exist yet.
-            save() //Save a default/null version of settings
+        if(json == null){
+            save()
             return
         }
         val newSetting = gson.fromJson(json, Settings::class.java)

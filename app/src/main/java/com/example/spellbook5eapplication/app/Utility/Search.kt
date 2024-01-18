@@ -267,7 +267,7 @@ class Search {
         return spellList
     }
 
-    class Relevance (){
+    class Relevance {
         private var spell : String = ""
         private var spellInfo : Spell.SpellInfo? = null
         private var name : List<String> = emptyList()

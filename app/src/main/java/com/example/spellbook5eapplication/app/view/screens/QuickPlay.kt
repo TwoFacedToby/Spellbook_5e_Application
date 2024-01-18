@@ -1,7 +1,6 @@
 package com.example.spellbook5eapplication.app.view.screens
 
 import android.widget.Toast
-import androidx.compose.ui.unit.sp
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,10 +15,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,6 +32,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -99,7 +99,7 @@ fun QuickPlay() {
                     items(classes.size) {
                         ClassCard(type = classes[it])
                     }
-                    item { 
+                    item {
                         Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
@@ -108,6 +108,7 @@ fun QuickPlay() {
         OverlayRenderer(overlayStack = GlobalOverlayState.getOverlayStack())
     }
 }
+
 @Composable
 fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
     val quickPlayViewModel: QuickPlayViewModel = viewModel()
@@ -117,7 +118,7 @@ fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
 
     Dialog(
         onDismissRequest = {
-        onDissmiss()
+            onDissmiss()
         },
         properties = DialogProperties(
             dismissOnBackPress = true,
@@ -137,7 +138,7 @@ fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
                     MaterialTheme.shapes.large
                 ),
             contentAlignment = Alignment.Center
-        ){
+        ) {
             Column(
                 modifier = Modifier
                     .padding(10.dp),
@@ -160,7 +161,7 @@ fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
                     fontWeight = FontWeight.Bold,
                     fontSize = 20.sp,
                     fontStyle = FontStyle.Italic
-                    )
+                )
                 UserInputField(
                     label = "spell book name",
                     onInputChanged = {
@@ -179,7 +180,7 @@ fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
                         .height(48.dp),
                     color = ButtonDefaults.buttonColors(ButtonColors.GreenButton)
                 ) {
-                    if(spellbookName.isEmpty()){
+                    if (spellbookName.isEmpty()) {
                         errorMessage = "Your spell book must have a name"
                         showError = true
                     } else {

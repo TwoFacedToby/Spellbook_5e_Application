@@ -10,7 +10,7 @@ class SpellList {
     private val spellInfoMap = HashMap<String, SpellInfo>()
     private var indexList: List<String> = emptyList()
     private var spellInfoList: List<SpellInfo> = emptyList()
-    private var loaded = 0;
+    private var loaded = 0
 
 
     // Method to add SpellInfo objects to the map
@@ -42,7 +42,7 @@ class SpellList {
 
 
 
-    fun getSpellInfoList(): List<Spell.SpellInfo> {
+    fun getSpellInfoList(): List<SpellInfo> {
         return spellInfoList
     }
      /*
@@ -85,7 +85,7 @@ class SpellList {
             }
 
             println("${spell.name}")
-            println("- Classes: ${spellClasses.toString()}")
+            println("- Classes: $spellClasses")
             println("- Casting Time: ${spell.casting_time}")
             println("- Duration: ${spell.duration}")
             println("- Spell Level: ${spell.level}")
@@ -97,10 +97,10 @@ class SpellList {
 
 
     fun getCopy() : SpellList{
-        val copy = SpellList();
-        copy.loaded = loaded;
+        val copy = SpellList()
+        copy.loaded = loaded
         val indexes = emptyList<String>().toMutableList()
-        val spellInfos = emptyList<Spell.SpellInfo>().toMutableList()
+        val spellInfos = emptyList<SpellInfo>().toMutableList()
         for(spell in indexList){
             indexes.add(spell)
         }
@@ -109,7 +109,7 @@ class SpellList {
         }
         copy.setIndexList(indexes)
         copy.setSpellInfoList(spellInfos)
-        return copy;
+        return copy
     }
 
     override fun toString(): String {
@@ -121,7 +121,7 @@ class SpellList {
         indexList.forEach {
             indexListNew.add(it)
         }
-        val infoListNew = mutableListOf<Spell.SpellInfo>()
+        val infoListNew = mutableListOf<SpellInfo>()
         spellInfoList.forEach {
             infoListNew.add(it)
         }

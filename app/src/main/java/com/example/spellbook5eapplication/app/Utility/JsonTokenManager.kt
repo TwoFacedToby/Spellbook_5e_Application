@@ -79,7 +79,7 @@ object JsonTokenManager {
     }
 
     fun saveSpellToFirebase(index: String, spell: String){
-        repository.saveHomeBrewSpell(GlobalLogInState.userId, index!!, spell!!)
+        repository.saveHomeBrewSpell(GlobalLogInState.userId, index, spell)
     }
 
     fun loadAllSpellsFromFirebase(onDataReceived: (Map<String, String?>) -> Unit) {

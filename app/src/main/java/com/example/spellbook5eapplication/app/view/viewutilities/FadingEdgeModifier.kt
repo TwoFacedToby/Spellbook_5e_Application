@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 enum class FadeSide {
     LEFT, RIGHT, BOTTOM, TOP
 }
+
 fun Modifier.fadingEdge(
     side: FadeSide,
     color: Color,

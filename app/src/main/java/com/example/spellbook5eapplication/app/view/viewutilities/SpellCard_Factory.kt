@@ -12,7 +12,7 @@ interface SpellCardFactory {
     ): @Composable () -> Unit
 }
 
-class DefaultSpellCardFactory(): SpellCardFactory {
+class DefaultSpellCardFactory : SpellCardFactory {
     override fun createSpellCard(
         displayable: Displayable,
     ): @Composable () -> Unit {

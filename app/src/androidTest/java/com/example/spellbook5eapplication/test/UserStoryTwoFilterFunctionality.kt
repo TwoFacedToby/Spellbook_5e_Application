@@ -97,9 +97,9 @@ class UserStoryTwoFilterFunctionality {
         val filter = Filter()
         filter.apply { addLevel(2) }
 
-        if (fakeSpellList != null && fakeSpellList!!.getIndexList().isNotEmpty()) {
+        if (fakeSpellList != null && fakeSpellList.getIndexList().isNotEmpty()) {
             val search = Search()
-            fakeSpellList = search.searchSpellListWithFilter(fakeSpellList!!, filter)
+            fakeSpellList = search.searchSpellListWithFilter(fakeSpellList, filter)
         } else {
             println("Spell list is empty or not initialized.")
         }
@@ -108,8 +108,8 @@ class UserStoryTwoFilterFunctionality {
 
     @Then("the list should update to show only spells that match the selected attributes")
     fun the_list_should_update_to_show_only_spells_that_match_the_selected_attributes( ) {
-        val fakeSpellInfoList = fakeSpellList?.getSpellInfoList()
-        var filteredSearch = true;
+        val fakeSpellInfoList = fakeSpellList.getSpellInfoList()
+        var filteredSearch = true
         for (spellinfo in fakeSpellInfoList!!) {
             if(spellinfo.level?.equals(2) != true){
                 filteredSearch = false
