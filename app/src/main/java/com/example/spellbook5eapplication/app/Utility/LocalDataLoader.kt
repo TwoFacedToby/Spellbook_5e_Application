@@ -143,10 +143,14 @@ object LocalDataLoader {
         }
     }
     private fun createEmptySpellbook(directoryName: String, fileName: String){
-        println("Created file $fileName")
+
         val file = File(baseDirectory, "$directoryName/$fileName.json")
         val emptySpellbook = Spellbook(fileName)
-        SpellbookManager.addSpellbook(Spellbook(fileName))
+        if(fileName != "individualSpells"){
+            Log.d("MINIME","Created file $fileName")
+            SpellbookManager.addSpellbook(Spellbook(fileName))
+        }
+
         val gson = Gson()
         val json = gson.toJson(emptySpellbook)
         file.writeText(json)

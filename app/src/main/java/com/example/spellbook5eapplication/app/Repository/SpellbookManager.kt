@@ -24,6 +24,7 @@ object SpellbookManager {
     }
 
     fun addSpellbook(spellbook: Spellbook) {
+        Log.d("ADDED", spellbook.toString())
         spellbooks.add(spellbook)
     }
 
