@@ -2,6 +2,7 @@ package com.example.spellbook5eapplication.app.Utility
 
 object GlobalLogInState {
     var isloggedIn = false
+    var isSimpleLogin = false
     var userId = ""
     var userName = ""
     var userPhotoUrl = ""
@@ -13,8 +14,9 @@ object GlobalLogInState {
         userPhotoUrl = ""
     }
 
-    fun setLoggedInState(userId: String, userName: String, userPhotoUrl: String?) {
-        isloggedIn = true
+    fun setLoggedInState(simpleLogin: Boolean, userId: String, userName: String, userPhotoUrl: String?) {
+        this.isloggedIn = true
+        this.isSimpleLogin = simpleLogin
         if(userId != null){
             this.userId = userId
         } else {

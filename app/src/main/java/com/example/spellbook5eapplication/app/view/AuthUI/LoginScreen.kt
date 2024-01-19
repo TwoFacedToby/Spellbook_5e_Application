@@ -71,6 +71,9 @@ fun LoginScreen(
                 is SignInEvent.DismissOverlay -> {
                     onDismissRequest()
                 }
+                is SignInEvent.CreateAccountFailed -> {
+                    Toast.makeText(context, "Create account failed", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

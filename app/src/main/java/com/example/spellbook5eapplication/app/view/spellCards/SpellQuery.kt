@@ -2,7 +2,9 @@ package com.example.spellbook5eapplication.app.view.spellCards
 
 import SpellQueryViewModel
 import android.annotation.SuppressLint
+import android.os.Build
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -48,8 +50,7 @@ const val bottomDistance =
 fun SpellQuery(
     spellsLiveData: LiveData<List<Displayable?>>,
     enablePagination: Boolean,
-    contentVisible: Boolean,
-    modifier: Modifier = Modifier
+    contentVisible: Boolean
 ) {
 
 

@@ -1,4 +1,5 @@
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.SignInResult
@@ -7,6 +8,11 @@ import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
 import com.example.spellbook5eapplication.app.Utility.SignInEvent
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInIntentSender
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInState
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,10 +20,15 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class SignInViewModel(
     private val googleAuthUIClient: GoogleAuthUIClient // Inject GoogleAuthUIClient
 ): ViewModel() {
+
+    private val auth: FirebaseAuth = Firebase.auth
+
+
 
     var signInIntentSender: SignInIntentSender? = null
     private val _state = MutableStateFlow(SignInState())
@@ -32,6 +43,29 @@ class SignInViewModel(
     fun signInWithGoogle(onIntentReady: (Intent) -> Unit) {
         val signInIntent = googleAuthUIClient.signIn()
         onIntentReady(signInIntent)
+    }
+
+    fun createAccountWithEmail(email: String, password: String, name: String) {
+        viewModelScope.launch {
+            try {
+                val authResult = auth.createUserWithEmailAndPassword(email, password).await()
+
+                val user = authResult.user
+
+                val profileUpdates = UserProfileChangeRequest.Builder()
+                    .setDisplayName("User Display Name") // Replace with actual name if available
+                    .build()
+
+                user?.updateProfile(profileUpdates)?.await()
+
+                signInEmail(email, password)
+
+            } catch (e: Exception) {
+
+                _eventFlow.emit(SignInEvent.SignInFailure)
+
+            }
+        }
     }
 
     // Function to process the result of the sign-in attempt
@@ -49,7 +83,7 @@ class SignInViewModel(
                 if (signInResult.data != null) {
                     _eventFlow.emit(SignInEvent.SignInSuccess)
                     _eventFlow.emit(SignInEvent.DismissOverlay)
-                    GlobalLogInState.setLoggedInState(signInResult.data.userId, signInResult.data.name!!, signInResult.data.profilePictureUrl)
+                    GlobalLogInState.setLoggedInState(false, signInResult.data.userId, signInResult.data.name!!, signInResult.data.profilePictureUrl)
                 } else {
                     _eventFlow.emit(SignInEvent.SignInFailure)
                 }
@@ -57,7 +91,7 @@ class SignInViewModel(
                 _state.update {
                     it.copy(isSignInSuccessful = false, signInError = e.message)
                 }
-                _eventFlow.emit(SignInEvent.SignInFailure)
+                _eventFlow.emit(SignInEvent.CreateAccountFailed)
             }
         }
     }
@@ -71,10 +105,21 @@ class SignInViewModel(
         }
     }
 
+    fun getSignedInUser(): FirebaseUser? {
+        return FirebaseAuth.getInstance().currentUser
+    }
+
     fun signInEmail(username: String, password: String) {
         viewModelScope.launch {
-            val signInResult: Unit = googleAuthUIClient.signInEmail(username, password)
-            if(GlobalLogInState.isloggedIn) {
+            val signInResult = googleAuthUIClient.signInEmail(username, password)
+            _state.update {
+                it.copy(
+                    isSignInSuccessful = signInResult.data != null,
+                    signInError = signInResult.error,
+                    data = signInResult.data
+                )
+            }
+            if (signInResult.data != null) {
                 _eventFlow.emit(SignInEvent.SignInSuccess)
                 _eventFlow.emit(SignInEvent.DismissOverlay)
             } else {
@@ -82,6 +127,7 @@ class SignInViewModel(
             }
         }
     }
+
 
     private fun setUserProfile(userData: UserData) {
         _userData.value = userData

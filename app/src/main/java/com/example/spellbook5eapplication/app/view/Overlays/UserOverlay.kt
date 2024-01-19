@@ -1,10 +1,7 @@
-import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -45,9 +42,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.UserData
 import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
@@ -56,8 +50,8 @@ import com.example.spellbook5eapplication.app.Utility.JsonTokenManager.saveToken
 import com.example.spellbook5eapplication.app.Utility.SignInEvent
 import com.example.spellbook5eapplication.app.view.bottomNavigation.Screens
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+
 
 @Composable
 fun UserOverlay(
@@ -70,15 +64,6 @@ fun UserOverlay(
     val showDialog = remember { mutableStateOf(false) }
 
 
-    val signInResultLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let { intent ->
-                signInViewModel.onSignInResult(intent)
-                }
-            }
-        }
 
     LaunchedEffect(signInViewModel) {
         signInViewModel.eventFlow.collect { event ->
@@ -97,6 +82,9 @@ fun UserOverlay(
 
                 is SignInEvent.DismissOverlay -> {
                     onDismissRequest()
+                }
+                is SignInEvent.CreateAccountFailed -> {
+                    Toast.makeText(context, "Create account failed", Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -118,9 +106,13 @@ fun UserOverlay(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (GlobalLogInState.isloggedIn) {
+            val user = signInViewModel.getSignedInUser()
             val spellQueryViewModel: SpellQueryViewModel = viewModel()
+            Log.d("signInStateData", "signInStateData: ${signInState.data}")
+            Text("Name: ${GlobalLogInState.userId}")
             signInState.data?.let { userData ->
                 UserCard(userData)
+            }
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Button to import homebrew
@@ -139,9 +131,6 @@ fun UserOverlay(
                     spellQueryViewModel.loadHomebrewList()} }) {
                     Text("Restore all Homebrews")
                     }
-
-
-                }
 
                 SignOutButton(signInViewModel) {
                     onDismissRequest()
@@ -181,7 +170,9 @@ fun UserCard(userData: UserData) {
             modifier = Modifier.padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = userData.name ?: "", fontWeight = FontWeight.Bold)
+            Log.d("UserCard", "UserCard: ${userData.name}, ${userData.userId}, ${userData.profilePictureUrl}")
+
+            Text(text = GlobalLogInState.userId ?: "", fontWeight = FontWeight.Bold)
         }
     }
 }

@@ -13,6 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.tasks.await
 
 
@@ -28,35 +29,35 @@ class GoogleAuthUIClient(private val context: Context) {
         googleSignInClient = GoogleSignIn.getClient(context, gso)
     }
 
-    fun signInEmail(email : String, password : String) {
-        Log.d("emailLogin", "Email: $email, Password: $password")
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("emailLogin", "signInWithEmail:success")
-                    val user = FirebaseAuth.getInstance().currentUser
-                    var uid = ""
-                    var displayName = "John Doe"
-                    var photoURL = ""
-                    if(user?.uid != null) {
-                        uid = user?.uid!!
-                    }
-                    if (user?.displayName != null) {
-                        displayName = user?.displayName!!
-                    }
-                    if(user?.photoUrl != null) {
-                        photoURL = user?.photoUrl.toString()
-                    }
-                        GlobalLogInState.setLoggedInState(
-                            uid,
-                            displayName,
-                            photoURL
-                        )
-                    } else {
-                    Log.w("emailLogin", "signInWithEmail:failure", task.exception)
-            }
+    suspend fun signInEmail(email: String, password: String): SignInResult {
+        return try {
+            val authResult = auth.signInWithEmailAndPassword(email, password).await()
+            val user = authResult.user
+
+            val uid = user?.uid ?: ""
+            val displayName = user?.displayName ?: "John Doe"
+            val photoURL = user?.photoUrl?.toString() ?: ""
+
+            GlobalLogInState.setLoggedInState(
+                simpleLogin = true,
+                userId = uid,
+                userName = displayName,
+                userPhotoUrl = photoURL
+            )
+            SignInResult(
+                data = UserData(
+                    userId = uid,
+                    name = displayName,
+                    profilePictureUrl = photoURL
+                ),
+                error = null
+            )
+        } catch (exception: Exception) {
+            Log.w("emailLogin", "signInWithEmail:failure", exception)
+            SignInResult(data = null, error = exception.localizedMessage)
         }
     }
+
 
     fun signIn(): Intent {
         return googleSignInClient.signInIntent
@@ -92,7 +93,6 @@ class GoogleAuthUIClient(private val context: Context) {
         }
     }
 
-    // Function to get the currently signed in user
     fun getSignedInUser(): UserData? {
         return auth.currentUser?.run {
             UserData(
