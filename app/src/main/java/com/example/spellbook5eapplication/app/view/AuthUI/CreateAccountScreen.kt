@@ -154,7 +154,7 @@ fun CreateAccountScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextButton(onClick = { navController.navigate("LoginScreen") }) {
+        TextButton(onClick = { navController.navigate("login_screen") }) {
             Text("Already have an account? Log in")
         }
     }
