@@ -84,7 +84,7 @@ fun LoginScreen(
 
         Column(
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
@@ -114,7 +114,6 @@ fun LoginScreen(
             Button(onClick = { signInViewModel.signInEmail(username, password)}) {
                 Text("Sign In")
             }
-            Spacer(modifier = Modifier.height(22.dp))
             Button(onClick = { navController.navigate("create_account_screen") }) {
                 Text("Create Account")
             }
