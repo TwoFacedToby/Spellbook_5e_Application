@@ -25,10 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.spellbook5eapplication.app.Utility.SignInEvent
 
@@ -55,13 +52,7 @@ fun CreateAccountScreen(
         passwordError = password.isEmpty()
 
         if (!(nameError || emailError || passwordError)) {
-            try {
                 signInViewModel.createAccountWithEmail(email, password, name)
-                Toast.makeText(context, "Account created successfully", Toast.LENGTH_LONG).show()
-            } catch (e: Exception) {
-                Toast.makeText(context, "Create account failed", Toast.LENGTH_SHORT).show()
-            }
-            navController.navigate("search_screen")
         }
     }
 
@@ -93,7 +84,12 @@ fun CreateAccountScreen(
                 is SignInEvent.DismissOverlay -> {
                     onDismissRequest()
                 }
+
                 is SignInEvent.CreateAccountFailed -> {
+                    Toast.makeText(context, "Create account failed", Toast.LENGTH_SHORT).show()
+                }
+
+                is SignInEvent.CreateAccountFailedAlternative -> {
                     Toast.makeText(context, "Create account failed", Toast.LENGTH_SHORT).show()
                 }
             }

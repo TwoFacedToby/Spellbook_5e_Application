@@ -62,6 +62,8 @@ class SignInViewModel(
                 // Proceed with sign in or further account setup
                 signInEmail(email, password)
 
+
+
             } catch (e: FirebaseAuthUserCollisionException) {
 
                 // Handle duplicate email case
