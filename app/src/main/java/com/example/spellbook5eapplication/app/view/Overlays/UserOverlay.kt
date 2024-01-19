@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -92,8 +93,8 @@ fun UserOverlay(
 
     Column(
         modifier = Modifier
-            .padding(16.dp)
-            .fillMaxWidth(),
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -106,7 +107,6 @@ fun UserOverlay(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (GlobalLogInState.isloggedIn) {
-            val user = signInViewModel.getSignedInUser()
             val spellQueryViewModel: SpellQueryViewModel = viewModel()
             Log.d("signInStateData", "signInStateData: ${signInState.data}")
             Text("Name: ${GlobalLogInState.userId}")

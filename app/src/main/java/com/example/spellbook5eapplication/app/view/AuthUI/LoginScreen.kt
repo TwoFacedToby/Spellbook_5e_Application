@@ -114,7 +114,7 @@ fun LoginScreen(
             Button(onClick = { signInViewModel.signInEmail(username, password)}) {
                 Text("Sign In")
             }
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(22.dp))
             Button(onClick = { navController.navigate("create_account_screen") }) {
                 Text("Create Account")
             }
