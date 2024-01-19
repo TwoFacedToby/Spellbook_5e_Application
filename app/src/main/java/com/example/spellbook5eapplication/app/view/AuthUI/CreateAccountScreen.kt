@@ -52,6 +52,8 @@ fun CreateAccountScreen(
 
         if (!(nameError || emailError || passwordError)) {
             signInViewModel.createAccountWithEmail(email, password, name)
+            Toast.makeText(context, "Account created successfully", Toast.LENGTH_LONG).show()
+            navController.navigate("search_screen")
         }
     }
 
