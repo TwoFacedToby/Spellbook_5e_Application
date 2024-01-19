@@ -30,6 +30,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -223,7 +224,10 @@ fun ImportHomebrewDialog(
     if (showDialog.value) {
         AlertDialog(
             onDismissRequest = { showDialog.value = false },
-            title = { Text(text = "Import Homebrew Token") },
+            title = { Text(
+                text = "Import Homebrew Token",
+                color = Color.Black
+            ) },
             text = {
 
                 val scrollState = rememberScrollState()
