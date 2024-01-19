@@ -174,7 +174,6 @@ fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
                     singleLine = true,
                     imeAction = ImeAction.Done,
                     initialInput = "",
-                    visualTransformation = PasswordVisualTransformation()
                 )
                 ColouredButton(
                     label = "OK",

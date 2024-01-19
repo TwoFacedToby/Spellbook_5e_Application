@@ -45,8 +45,7 @@ fun UserInputField(
     modifier: Modifier,
     singleLine: Boolean,
     imeAction: ImeAction,
-    initialInput: String,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
+    initialInput: String
 ) {
     var input by remember { mutableStateOf(initialInput) }
 
@@ -77,7 +76,6 @@ fun UserInputField(
     }
 
     BasicTextField(
-        visualTransformation = visualTransformation,
         value = input,
         onValueChange = {
             input = it

@@ -16,8 +16,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -81,29 +83,33 @@ fun LoginScreen(
     Box(modifier = Modifier.clickable(onClick = { GlobalOverlayState.dismissOverlay() })) {
 
         Column(
-            modifier = Modifier.fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            UserInputField(
-                label = "Username",
-                onInputChanged = { username = it },
-                modifier = Modifier
-                    .size(width = 220.dp, height = 48.dp),
+            OutlinedTextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Username") },
                 singleLine = true,
-                imeAction = ImeAction.Next,
-                initialInput = "",
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                modifier = Modifier
+                    .fillMaxWidth()
             )
+
             Spacer(modifier = Modifier.height(16.dp))
-            UserInputField(
-                label = "Password",
-                onInputChanged = { password = it },
-                modifier = Modifier
-                    .size(width = 220.dp, height = 48.dp),
+
+            OutlinedTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
                 singleLine = true,
-                imeAction = ImeAction.Done,
-                initialInput = "",
-                visualTransformation = PasswordVisualTransformation()
+                visualTransformation = PasswordVisualTransformation(),
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                modifier = Modifier
+                    .fillMaxWidth()
             )
             Button(onClick = { signInViewModel.signInEmail(username, password)}) {
                 Text("Sign In")

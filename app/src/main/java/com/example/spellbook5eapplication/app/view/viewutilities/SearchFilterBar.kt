@@ -40,7 +40,6 @@ fun SearchFilterBar(
             singleLine = true,
             imeAction = ImeAction.Search,
             initialInput = inputText,
-            visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.width(5.dp))
         FilterButton(

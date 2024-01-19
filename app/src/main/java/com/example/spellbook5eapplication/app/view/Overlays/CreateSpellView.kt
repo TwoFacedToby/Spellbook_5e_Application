@@ -38,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -497,7 +496,6 @@ class HomeBrewInstantiator {
                         singleLine = true,
                         imeAction = ImeAction.Default,
                         initialInput = viewModel.spell.name.toString(),
-                        visualTransformation = PasswordVisualTransformation()
                     )
                 }
             })
@@ -556,7 +554,6 @@ class HomeBrewInstantiator {
                         singleLine = false,
                         imeAction = ImeAction.Default,
                         initialInput = showVal,
-                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -593,7 +590,6 @@ class HomeBrewInstantiator {
                         singleLine = false,
                         imeAction = ImeAction.Default,
                         initialInput = showVal,
-                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -697,7 +693,6 @@ class HomeBrewInstantiator {
                             singleLine = true,
                             imeAction = ImeAction.Default,
                             initialInput = viewModel.spell.materials.toString(),
-                            visualTransformation = PasswordVisualTransformation()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
 
@@ -782,7 +777,6 @@ class HomeBrewInstantiator {
                             singleLine = true,
                             imeAction = ImeAction.Default,
                             initialInput = "",
-                            visualTransformation = PasswordVisualTransformation()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -842,7 +836,6 @@ class HomeBrewInstantiator {
                             singleLine = true,
                             imeAction = ImeAction.Default,
                             initialInput = "",
-                            visualTransformation = PasswordVisualTransformation()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -884,7 +877,6 @@ class HomeBrewInstantiator {
                         singleLine = true,
                         imeAction = ImeAction.Default,
                         initialInput = viewModel.spell.casting_time.toString(),
-                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -998,7 +990,6 @@ class HomeBrewInstantiator {
                         singleLine = true,
                         imeAction = ImeAction.Default,
                         initialInput = viewModel.spell.attackType.toString(),
-                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -1027,7 +1018,6 @@ class HomeBrewInstantiator {
                         singleLine = true,
                         imeAction = ImeAction.Default,
                         initialInput = viewModel.spell.damage!!.damageType!!.name.toString(),
-                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -1057,7 +1047,6 @@ class HomeBrewInstantiator {
                         singleLine = true,
                         imeAction = ImeAction.Default,
                         initialInput = viewModel.spell.dc.toString(),
-                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }

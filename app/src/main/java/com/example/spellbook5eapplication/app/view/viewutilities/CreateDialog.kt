@@ -78,7 +78,6 @@ fun CreateDialog(
                     singleLine = true,
                     imeAction = ImeAction.Done,
                     initialInput = "",
-                    visualTransformation = PasswordVisualTransformation()
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(
