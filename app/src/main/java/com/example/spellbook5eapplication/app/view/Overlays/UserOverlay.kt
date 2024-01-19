@@ -113,12 +113,10 @@ fun UserOverlay(
         Spacer(modifier = Modifier.height(16.dp))
 
         if (GlobalLogInState.isloggedIn) {
-            val spellQueryViewModel: SpellQueryViewModel = viewModel()
-            Log.d("signInStateData", "signInStateData: ${signInState.data}")
-            Text("Name: ${GlobalLogInState.userId}")
-            signInState.data?.let { userData ->
-                UserCard(userData)
-            }
+            val user = FirebaseAuth.getInstance().currentUser
+            val displayName = user?.displayName
+            Text("Name: ${displayName ?: "Unknown"}")
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Button to import homebrew
@@ -129,12 +127,11 @@ fun UserOverlay(
                     saveTokenAsHomebrew(token)
                     if(token != null){
                         Toast.makeText(context, "Homebrew imported", Toast.LENGTH_SHORT).show()
-                        spellQueryViewModel.loadHomebrewList()
                     }
                 }
 
                 Button(onClick = { loadAllSpellsFromFirebase { Toast.makeText(context, "Homebrews restored", Toast.LENGTH_LONG).show()
-                    spellQueryViewModel.loadHomebrewList()} }) {
+                    } }) {
                     Text("Restore all Homebrews")
                     }
 
