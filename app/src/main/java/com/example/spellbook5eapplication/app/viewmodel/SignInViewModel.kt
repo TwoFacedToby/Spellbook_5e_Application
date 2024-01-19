@@ -9,6 +9,7 @@ import com.example.spellbook5eapplication.app.Utility.SignInEvent
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInIntentSender
 import com.example.spellbook5eapplication.app.view.AuthUI.SignInState
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.auth.ktx.auth
@@ -50,20 +51,23 @@ class SignInViewModel(
             try {
                 val authResult = auth.createUserWithEmailAndPassword(email, password).await()
 
+                // Optionally set the user's display name
                 val user = authResult.user
-
                 val profileUpdates = UserProfileChangeRequest.Builder()
-                    .setDisplayName("User Display Name") // Replace with actual name if available
+                    .setDisplayName(name) // Use the provided name
                     .build()
 
                 user?.updateProfile(profileUpdates)?.await()
 
+                // Proceed with sign in or further account setup
                 signInEmail(email, password)
 
+            } catch (e: FirebaseAuthUserCollisionException) {
+
+                // Handle duplicate email case
+                _eventFlow.emit(SignInEvent.CreateAccountFailed)
             } catch (e: Exception) {
-
-                _eventFlow.emit(SignInEvent.SignInFailure)
-
+                _eventFlow.emit(SignInEvent.CreateAccountFailedAlternative)
             }
         }
     }

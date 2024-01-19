@@ -27,6 +27,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.spellbook5eapplication.app.Utility.SignInEvent
 
@@ -45,14 +47,20 @@ fun CreateAccountScreen(
     var passwordError by remember { mutableStateOf(false) }
     var context = LocalContext.current
 
+
+
     fun handleCreateAccount() {
         nameError = name.isEmpty()
         emailError = email.isEmpty()
         passwordError = password.isEmpty()
 
         if (!(nameError || emailError || passwordError)) {
-            signInViewModel.createAccountWithEmail(email, password, name)
-            Toast.makeText(context, "Account created successfully", Toast.LENGTH_LONG).show()
+            try {
+                signInViewModel.createAccountWithEmail(email, password, name)
+                Toast.makeText(context, "Account created successfully", Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                Toast.makeText(context, "Create account failed", Toast.LENGTH_SHORT).show()
+            }
             navController.navigate("search_screen")
         }
     }

@@ -36,22 +36,30 @@ class SettingsViewModel : ViewModel() {
             LocalDataLoader.deleteFile(it, LocalDataLoader.DataType.INDIVIDUAL)
         }
     }
-    fun save (){
+    fun save() {
         val gson = Gson()
-        val json = gson.toJson(currentSettings)
-        LocalDataLoader.saveJson(json, "settings", LocalDataLoader.DataType.LOCAL)
-        CurrentSettings.currentSettings = currentSettings.value!!
+        val currentSettingsValue = currentSettings.value
+        if (currentSettingsValue != null) {
+            val json = gson.toJson(currentSettingsValue)
+            LocalDataLoader.saveJson(json, "settings", LocalDataLoader.DataType.LOCAL)
+            CurrentSettings.currentSettings = currentSettingsValue
+        } else {
+            val defaultSettings = Settings()
+            _currentSettings.value = defaultSettings
+            CurrentSettings.currentSettings = defaultSettings
+            save()
+        }
     }
+
     private fun load() {
         val gson = Gson()
         val json = LocalDataLoader.getJson("settings", LocalDataLoader.DataType.LOCAL)
-        if(json == null){
+        if (json != null) {
+            val newSetting = gson.fromJson(json, Settings::class.java)
+            _currentSettings.value = newSetting
+            CurrentSettings.currentSettings = newSetting
+        } else {
             save()
-            return
         }
-        val newSetting = gson.fromJson(json, Settings::class.java)
-        _currentSettings.value = newSetting
-        CurrentSettings.currentSettings = currentSettings.value!!
-
     }
 }
