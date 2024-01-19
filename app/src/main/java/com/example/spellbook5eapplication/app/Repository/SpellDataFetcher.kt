@@ -19,6 +19,7 @@ object SpellDataFetcher {
 
     suspend fun localOrAPI(index: String): Spell.SpellInfo? {
         if(spellInfoMap.containsKey(index)) {
+            Log.d("SpellDataFetcher", "Fetched from HashMap: $index - ${spellInfoMap[index].toString()}")
             return spellInfoMap[index]
         }
 

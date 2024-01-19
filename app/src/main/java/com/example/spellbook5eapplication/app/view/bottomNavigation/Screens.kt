@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Book
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.List
+import androidx.compose.material.icons.outlined.MenuBook
 import androidx.compose.material.icons.outlined.PlayArrow
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -42,6 +43,19 @@ sealed class Screens(
         icon = Icons.Outlined.PlayArrow
     )
 
+    object Login: Screens(
+        route = "login_screen",
+        title = "Login",
+        icon = Icons.AutoMirrored.Outlined.MenuBook
+
+    )
+
+    object CreateAccount: Screens(
+        route = "create_account_screen",
+        title = "Create Account",
+        icon = Icons.AutoMirrored.Outlined.List
+    )
+
     companion object {
         fun titleForRoute(route: String?): String {
             return when(route) {
@@ -50,6 +64,7 @@ sealed class Screens(
                 Spellbooks.route -> Spellbooks.title
                 Homebrew.route -> Homebrew.title
                 QuickPlay.route -> QuickPlay.title
+                Login.route -> Login.title
                 else -> ""
             }
         }

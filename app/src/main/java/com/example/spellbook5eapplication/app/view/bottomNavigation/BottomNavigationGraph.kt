@@ -1,14 +1,19 @@
 package com.example.spellbook5eapplication.app.view.bottomNavigation
 
+import GoogleAuthUIClient
+import SignInViewModel
 import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.spellbook5eapplication.app.view.AuthUI.CreateAccountScreen
+import com.example.spellbook5eapplication.app.view.AuthUI.LoginScreen
 import com.example.spellbook5eapplication.app.view.screens.Basic_Screen
 import com.example.spellbook5eapplication.app.view.screens.QuickPlay
 import com.example.spellbook5eapplication.app.view.viewutilities.DynamicButtonFactory
@@ -57,6 +62,18 @@ fun BottomNavigationGraph(
         }
         composable(route = Screens.QuickPlay.route){
             QuickPlay()
+        }
+        composable(route = Screens.Login.route){
+            val Context = LocalContext.current
+            val googleAuthUIClient = GoogleAuthUIClient(context = Context)
+            val signInViewModel = SignInViewModel(googleAuthUIClient = googleAuthUIClient)
+            LoginScreen(signInViewModel = signInViewModel, navController = navController)
+        }
+        composable(route = Screens.CreateAccount.route){
+            val Context = LocalContext.current
+            val googleAuthUIClient = GoogleAuthUIClient(context = Context)
+            val signInViewModel = SignInViewModel(googleAuthUIClient = googleAuthUIClient)
+            CreateAccountScreen(signInViewModel = signInViewModel, navController = navController)
         }
     }
 }

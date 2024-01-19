@@ -32,6 +32,7 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -41,8 +42,8 @@ import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
 import com.example.spellbook5eapplication.app.Utility.JsonTokenManager.loadAllSpellsFromFirebase
 import com.example.spellbook5eapplication.app.Utility.JsonTokenManager.saveTokenAsHomebrew
 import com.example.spellbook5eapplication.app.Utility.SignInEvent
-import com.example.spellbook5eapplication.app.view.AuthUI.CreateAccountScreen
-import com.example.spellbook5eapplication.app.view.AuthUI.LoginScreen
+import com.example.spellbook5eapplication.app.view.bottomNavigation.Screens
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
@@ -50,6 +51,7 @@ import com.google.firebase.ktx.Firebase
 fun UserOverlay(
     signInViewModel: SignInViewModel,
     onDismissRequest: () -> Unit,
+    navHostController: NavController
 ) {
     val signInState by signInViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -138,7 +140,20 @@ fun UserOverlay(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    SignInWithGoogle(signInViewModel, signInResultLauncher)
+                    Button(onClick = {
+                            if (GlobalOverlayState.getOverlayStack().isNotEmpty()) {
+                                GlobalOverlayState.dismissOverlay()
+                            }
+                            navHostController.navigate(Screens.Login.route) {
+                                popUpTo(navHostController.graph.findStartDestination().id) {
+                                    saveState = true
+                                }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                    }) {
+                        Text(text = "Sign In")
+                    }
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))

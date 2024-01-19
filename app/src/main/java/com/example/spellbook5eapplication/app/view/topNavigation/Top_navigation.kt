@@ -127,7 +127,7 @@ fun TopBar(navController: NavController
         }
         OverlayType.PROFILE -> {
             CustomOverlay(OverlayType.PROFILE) {
-                UserOverlay(signInViewModel, onDismissRequest = { GlobalOverlayState.dismissOverlay()})
+                UserOverlay(signInViewModel, onDismissRequest = { GlobalOverlayState.dismissOverlay()}, navController)
             }
         }
         else -> Unit // Do nothing

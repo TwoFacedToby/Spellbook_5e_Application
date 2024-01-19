@@ -8,8 +8,10 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,6 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -33,40 +36,40 @@ import com.example.spellbook5eapplication.R
 @Composable
 fun LoginScreen(
     signInViewModel: SignInViewModel,
-    navController: NavController // Assuming you are using NavController for navigation
+    navController: NavController
 ) {
     val signInResultLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            result.data?.let { intent ->
-                signInViewModel.onSignInResult(intent)
+        // ... existing code ...
+    }
+
+    Box(
+        modifier = Modifier
+            .padding(16.dp)
+            .padding(top = 50.dp)
+            .padding(bottom = 50.dp)
+            .border(1.dp, Color.Gray)
+            .padding(16.dp)
+
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            Button(onClick = { /*...*/ }) {
+                Text("Log In")
+            }
+            Spacer(modifier = Modifier.height(32.dp))
+            Button(onClick = { navController.navigate("create_account_screen") }) {
+                Text("Create Account")
             }
         }
     }
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-
-        Button(onClick = { /* Handle email/password login */ }) {
-            Text("Log In")
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        SignInWithGoogle(signInViewModel, signInResultLauncher)
-
-        Spacer(modifier
-= Modifier.height(16.dp))
-    TextButton(onClick = { navController.navigate("CreateAccount") }) {
-        Text("Create Account")
-        }
-    }
+}
 
     @Composable
     fun SignInWithGoogle(signInViewModel: SignInViewModel, signInResultLauncher: ActivityResultLauncher<Intent>) {
@@ -79,7 +82,7 @@ fun LoginScreen(
                 bitmap = it,
                 contentDescription = "Sign in with Google",
                 modifier = Modifier
-                    .size(192.dp, 48.dp) // Adjust the size to fit your layout
+                    .size(192.dp, 48.dp)
                     .clickable {
                         signInViewModel.signInWithGoogle { intentSenderRequest ->
                             signInResultLauncher.launch(intentSenderRequest)
@@ -88,4 +91,3 @@ fun LoginScreen(
             )
         }
     }
-}
