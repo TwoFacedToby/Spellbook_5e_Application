@@ -1,24 +1,46 @@
 package com.example.spellbook5eapplication.app.view.Overlays
 
-/*
+import android.util.Log
+import android.widget.Toast
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
+import androidx.compose.material.IconButton
+import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
+import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
+import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
+import com.example.spellbook5eapplication.app.view.viewutilities.OverlayBox
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+
 @Composable
-fun AddToSpellBookOverlay(
-    onDismissRequest: () -> Unit,
-    spellInfo: Spell.SpellInfo
+fun Add_to_spellbook(
+    spellbooks: List<Spellbook>,
+    spell: Spell.SpellInfo
 ) {
-    //Initializing viewModel to make the app recompose when a new spellbook is selected.
-
-    TODO Make a new ViewModel that uses LiveData
-    val viewModel: SpellbookViewModel = viewModel(
-        factory = SpellbookViewModelFactory(SpellController, SpelllistLoader)
-    )
-
-
-    val context = LocalContext.current
-    //val spellbooks = viewModel.spellbooks
-    var showDialog by remember { mutableStateOf(false) }
-
-
     Column(
         modifier = Modifier
             .padding(top = 8.dp, start = 15.dp, end = 15.dp)
@@ -29,95 +51,68 @@ fun AddToSpellBookOverlay(
             modifier = Modifier
                 .width(250.dp)
                 .height(15.dp)
-                .clip(shape = RoundedCornerShape(5.dp))
-                .clickable { onDismissRequest() },
-            color = colorResource(id = R.color.black).copy(alpha = 0.2F),
+                .clip(shape = RoundedCornerShape(5.dp)),
+            color = Color.Black.copy(alpha = 0.2F),
         )
         Spacer(modifier = Modifier.height(20.dp))
         Text(
-            text = "Add to spellbook",
-            color = colorResource(id = R.color.white),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+            text = "Add Spell To Spellbook",
+            color = Color.White,
+            fontSize = 26.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            textAlign = TextAlign.Center
         )
+        OverlayBox {
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-
-        OverlayBox(
-            content = {
-                if (spellbooks != null) {
-                    items(spellbooks) { string ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(
-                                text = string.spellbookName,
-                                modifier = Modifier.padding(15.dp),
-                                color = colorResource(id = R.color.white)
-                            )
-                            IconButton(
-                                onClick = { // Replace 'YourTag' with an appropriate tag for your log messages
-                                    println("Spellbook clicked: ${string.spellbookName}")
-                                    val chosenSpellBook = SpellbookManager.getSpellbook(string.spellbookName)
-                                    if (chosenSpellBook != null) {
-                                        var wasAdded = SpellbookManager.getSpellbook(chosenSpellBook.spellbookName)?.spells?.add(spellInfo.index!!)
-
-
-                                        if(wasAdded!!){
-                                            SpellbookManager.saveSpellbookToFile(chosenSpellBook.spellbookName)
-                                            Toast.makeText(context, "Added to ${chosenSpellBook.spellbookName}", Toast.LENGTH_SHORT).show()
-                                        }
-                                    }
-                                    println("Added spell ${spellInfo.index} to spellbook ${string.spellbookName}")
-                                }
-
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Add,
-                                    contentDescription = "Add to spellbook",
-                                    tint = colorResource(id = R.color.spellcard_button),
-                                    modifier = Modifier.size(35.dp)
-                                )
-                            }
-                        }
-                    }
-                } else {
-                    items(1) {
+            items(spellbooks.size) { index ->
+                val spellbook = spellbooks[index]
+                if (!spellbook.spells.contains(spell.index)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
-                            text = "You have not created any spellbooks yet",
-                            fontWeight = FontWeight.Bold,
-                            color = colorResource
-                                (id = R.color.white),
-                            modifier = Modifier.padding(20.dp)
+                            text = spellbook.spellbookName,
+                            fontSize = 20.sp,
+                            color = MaterialTheme.colorScheme.onTertiary,
+                            modifier = Modifier.padding(start = 16.dp)
                         )
+                        IconButton(onClick = {
+                            spellbook.addSpellToSpellbook(spell.index ?: "")
+                            SpellbookManager.saveSpellbookToFile(spellbook.spellbookName)
+                            LocalDataLoader
+                                .getContext()
+                                ?.get()
+                                ?.let { context ->
+                                    Toast
+                                        .makeText(
+                                            context,
+                                            "${spell.name} added to ${spellbook.spellbookName}",
+                                            Toast.LENGTH_SHORT
+                                        )
+                                        .show()
+                                }
+                            GlobalOverlayState.dismissOverlay()
+                        }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Add,
+                                contentDescription = "Add to spellbook",
+                                tint = MaterialTheme.colorScheme.onTertiary,
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .padding(end = 16.dp)
+                            )
+                        }
                     }
                 }
             }
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        ColouredButton(
-            label = "Create new spellbook",
-            modifier = Modifier,
-            color = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.green_button)),
-            onClick = { showDialog = true})
-        if (showDialog) {
-            CreateDialog(onDismissRequest = { showDialog = false })
-
         }
     }
 }
-
-/*
-@Preview
-@Composable
-fun SpellBookOverlayPreview(){
-    AddToSpellBookOverlay(onDismissRequest = {
-        println("Dismiss button clicked")
-    })
-}
-
- */
-*/

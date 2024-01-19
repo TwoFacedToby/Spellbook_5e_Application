@@ -1,10 +1,14 @@
 package com.example.spellbook5eapplication.app.Repository
 
 import android.util.Log
+import androidx.lifecycle.lifecycleScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.LocalDataLoader
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object SpellbookManager {
     private val spellbooks: MutableList<Spellbook> = mutableListOf()
@@ -25,7 +29,6 @@ object SpellbookManager {
 
     fun removeSpellbook(spellbookName: String) {
         var delete = LocalDataLoader.deleteFile(spellbookName.lowercase(), LocalDataLoader.DataType.SPELLBOOK)
-        Log.d("DIDIT", delete.toString())
         if(delete){
             spellbooks.removeAll { it.spellbookName == spellbookName }
         }
@@ -38,6 +41,7 @@ object SpellbookManager {
 
         spellbook!!.spells.remove(spell.index)
 
+
         saveSpellbookToFile(spellbookName)
 
     }
@@ -48,20 +52,20 @@ object SpellbookManager {
     }
 
     fun saveSpellbookToFile(spellBookName: String) {
-        val spellbook = getSpellbook(spellBookName)
-        Log.d("LOLOL100", spellBookName)
-        Log.d("LOLOL300", spellbook.toString())
-        spellbook?.let {
-            val gson = Gson()
-            val spellbookJson = gson.toJson(it)
 
-            Log.d("LOLOL300", spellbookJson)
+        CoroutineScope(Dispatchers.IO).launch {
 
-            LocalDataLoader.saveJson(
-                spellbookJson,
-                spellBookName.lowercase(),
-                LocalDataLoader.DataType.SPELLBOOK
-            )
+            val spellbook = getSpellbook(spellBookName)
+            spellbook?.let {
+                val gson = Gson()
+                val spellbookJson = gson.toJson(it)
+
+                LocalDataLoader.saveJson(
+                    spellbookJson,
+                    spellBookName.lowercase(),
+                    LocalDataLoader.DataType.SPELLBOOK
+                )
+            }
         }
     }
 
@@ -76,9 +80,8 @@ object SpellbookManager {
 
 
     fun getAllSpellbooks(): List<Spellbook> {
-        Log.d("LOLO", spellbooks.toList().toString())
 
         // Removing "favourite spellbook" from Spellbooklist
-        return spellbooks.filter { it.spellbookName != "Favourites" }
+        return spellbooks.filter { it.spellbookName != "favourites" }
     }
 }

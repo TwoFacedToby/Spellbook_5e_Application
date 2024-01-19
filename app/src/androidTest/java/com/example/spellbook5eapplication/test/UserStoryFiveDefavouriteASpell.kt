@@ -12,7 +12,7 @@ import io.cucumber.java.en.When
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
 
-public class UserStoryFiveDefavouriteASpell {
+class UserStoryFiveDefavouriteASpell {
 
     private var selectedSpellbook = mutableStateOf<Spellbook?>(null)
     private val spellbooks = mutableStateListOf<Spellbook>()
@@ -37,27 +37,22 @@ public class UserStoryFiveDefavouriteASpell {
         SpellbookManager.addSpellbook(favourites)
 
         // Assign the favourites spellbook after adding it to the manager
-        Log.d("nasdjnasdnjasnj", "favouritesSpellbook contains: $favourites: ")
     }
 
     @Given("the user has a spell marked as favourite")
     fun the_user_has_a_spell_marked_as_favourite( ) {
-        Log.d("Executed5", "Given")
-        Log.d("Executed5given", favourites.spells.contains("Healing Word").toString())
         assertTrue("Spellbook Should contain the spell Healing Word", favourites.spells.contains("Healing Word"))
     }
 
     @When("the tapped spell is already favourited, the spell should be removed from the favourites list")
     fun the_tapped_spell_is_already_favourited_the_spell_should_be_removed_from_the_favourites_list() {
-        Log.d("Executed5", "Second When")
-        favourites?.removeSpell("Healing Word")
+        favourites.removeSpell("Healing Word")
         val containsSpell = favourites.spells.contains("Healing Word")
         assertFalse("Favourites spellbook should not contain the marked spell", containsSpell)
     }
 
     @Then("the favourites list should not contain that spell")
     fun the_favourites_list_should_not_contain_that_spell( ) {
-        Log.d("Executed5", "Then")
         val contains = SpellbookManager.getSpellbook("FavouritesTest")?.spells?.contains("Healing Word")
         if (contains != null) {
             assertFalse("Favourites spellbook should not contain the marked spell", contains)

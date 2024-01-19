@@ -99,13 +99,18 @@ fun SpellCard(
             .padding(10.dp)
             .combinedClickable(
                 onClick = {
-                    GlobalOverlayState.currentSpell = spell
-                    GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+                    if(spell.index != null){
+                        GlobalOverlayState.currentSpell = spell
+                        GlobalOverlayState.showOverlay(OverlayType.LARGE_SPELLCARD)
+                    }
+
                 },
-                onLongClick = { if (isSpellbookView)
+                onLongClick = { if (isSpellbookView){
                     GlobalOverlayState.currentSpell = spell
                     GlobalOverlayState.currentSpellbook = SpellbookManager.getSpellbook(TitleState.currentTitle.value!!)
                     GlobalOverlayState.showOverlay(OverlayType.REMOVE_SPELL_FROM_SPELLBOOK)
+                }
+
                 },
             )
 
@@ -229,29 +234,24 @@ fun SpellCard(
                         onClick = {
                             spell.index?.let { spellIndex ->
                                 val favouritesSpellbook =
-                                    SpellbookManager.getSpellbook("Favourites")
-
-                                Log.d("LOLOL400", favouritesSpellbook.toString())
+                                    SpellbookManager.getSpellbook("favourites")
 
                                 favouriteImage =
                                     if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
                                         // Remove spell from favorites
                                         favouritesSpellbook.removeSpell(spellIndex)
+                                        SpellbookManager.saveSpellbookToFile(favouritesSpellbook.spellbookName)
                                         defaultFavouriteImage
                                     } else {
                                         // Add spell to favorites
                                         favouritesSpellbook?.addSpellToSpellbook(spellIndex)
+                                        SpellbookManager.saveSpellbookToFile(favouritesSpellbook!!.spellbookName)
                                         Icons.Filled.Favorite // Change this to the filled heart icon
                                     }
-                                // Save the updated favorites list
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    SpellbookManager.saveSpellbookToFile("Favourites")
-                                    println("Favorites updated")
-                                }
                             }
                         }
                     ) {
-                        if(SpellbookManager.getSpellbook("Favourites")?.spells?.contains(spell.index) == true)
+                        if(SpellbookManager.getSpellbook("favourites")?.spells?.contains(spell.index) == true)
                         {
                             favouriteImage = Icons.Outlined.Favorite
                         }

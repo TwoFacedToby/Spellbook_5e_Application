@@ -1,6 +1,5 @@
 package com.example.spellbook5eapplication.app.viewmodel
 
-import android.os.Debug
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,22 +34,22 @@ class CreateSpellbookViewModel : ViewModel() {
     }
 
     fun saveSpellbook() {
-        // Assuming you have similar properties in your Spellbook model
         val spellbook = Spellbook(spellbookName, selectedImageIdentifier, spellbookDescription)
 
         SpellbookManager.addSpellbook(spellbook)
 
-        // Convert the Spellbook object to JSON
         val gson = Gson()
         val jsonSpellbook = gson.toJson(spellbook)
 
-        Log.d("SODA", jsonSpellbook)
 
 
 
 
-        // Save the JSON to local storage
-        LocalDataLoader.saveJson(jsonSpellbook, spellbookName.lowercase(), LocalDataLoader.DataType.SPELLBOOK)
+        LocalDataLoader.saveJson(
+            jsonSpellbook,
+            spellbookName.lowercase(),
+            LocalDataLoader.DataType.SPELLBOOK
+        )
         println(jsonSpellbook)
     }
 

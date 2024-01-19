@@ -1,10 +1,7 @@
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
-import android.content.IntentSender
-import android.util.Log
-import androidx.activity.result.IntentSenderRequest
 import com.example.spellbook5eapplication.app.Model.Data_Model.SignInResult
 import com.example.spellbook5eapplication.app.Model.Data_Model.UserData
 import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
@@ -17,6 +14,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class SignInViewModel(
     private val googleAuthUIClient: GoogleAuthUIClient // Inject GoogleAuthUIClient
@@ -49,7 +47,6 @@ class SignInViewModel(
                         data = signInResult.data
                     )
                 }
-                Log.d("LogDataSignInResult", "signInResult $signInResult.data")
                 if (signInResult.data != null) {
                     _eventFlow.emit(SignInEvent.SignInSuccess)
                     _eventFlow.emit(SignInEvent.DismissOverlay)

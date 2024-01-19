@@ -1,7 +1,5 @@
 package com.example.spellbook5eapplication.app.view.spellCards
 
-import SignInViewModel
-import SpellQueryViewModel
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -29,7 +27,6 @@ import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -51,20 +48,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Popup
-import androidx.compose.ui.window.PopupProperties
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
-import com.example.spellbook5eapplication.ui.theme.ButtonColors
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
-import com.example.spellbook5eapplication.app.viewmodel.SpellCardViewModel
+import com.example.spellbook5eapplication.ui.theme.ButtonColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -73,7 +64,6 @@ import kotlinx.coroutines.launch
 fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
 
     val images = SpellCardCreation(spell)
-    val spellbooks = SpellbookManager.getAllSpellbooks()
 
     Box(
         modifier = Modifier
@@ -90,7 +80,7 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                 .fillMaxWidth()
                 .height(600.dp)
                 .padding(10.dp)
-                .clickable { /*Nothing here, it consumes the outer box's click event*/ }
+                .clickable { }
         ) {
             Box(
                 modifier = Modifier
@@ -144,28 +134,26 @@ fun LargeSpellCard(spell: Spell.SpellInfo, fromQuickPlay: Boolean) {
                                     onClick = {
                                         spell.index?.let { spellIndex ->
                                             val favouritesSpellbook =
-                                                SpellbookManager.getSpellbook("Favourites")
+                                                SpellbookManager.getSpellbook("favourites")
                                             favouriteImage =
                                                 if (favouritesSpellbook?.spells?.contains(spellIndex) == true) {
-                                                    // Remove spell from favorites
+
                                                     favouritesSpellbook.removeSpell(spellIndex)
                                                     defaultFavouriteImage
                                                 } else {
-                                                    // Add spell to favorites
                                                     favouritesSpellbook?.addSpellToSpellbook(
                                                         spellIndex
                                                     )
-                                                    Icons.Filled.Favorite // Change this to the filled heart icon
+                                                    Icons.Filled.Favorite
                                                 }
-                                            // Save the updated favorites list
                                             CoroutineScope(Dispatchers.IO).launch {
-                                                SpellbookManager.saveSpellbookToFile("Favourites")
+                                                SpellbookManager.saveSpellbookToFile("favourites")
                                                 println("Favorites updated")
                                             }
                                         }
                                     }
                                 ) {
-                                    if (SpellbookManager.getSpellbook("Favourites")?.spells?.contains(
+                                    if (SpellbookManager.getSpellbook("favourites")?.spells?.contains(
                                             spell.index
                                         ) == true
                                     ) {

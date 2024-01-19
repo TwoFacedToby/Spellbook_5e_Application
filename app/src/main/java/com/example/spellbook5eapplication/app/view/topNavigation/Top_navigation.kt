@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.outlined.Person
@@ -18,6 +17,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -28,7 +28,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.rememberAsyncImagePainter
@@ -37,14 +36,14 @@ import com.example.spellbook5eapplication.app.view.Overlays.SettingsOverlay
 import com.example.spellbook5eapplication.app.view.bottomNavigation.Screens
 import com.example.spellbook5eapplication.app.view.viewutilities.CustomOverlay
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
-import com.example.spellbook5eapplication.app.viewmodel.MainViewModel
 import com.example.spellbook5eapplication.app.viewmodel.OverlayType
 import com.example.spellbook5eapplication.app.viewmodel.TitleState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(navController: NavController
-, signInViewModel: SignInViewModel){
+fun TopBar(
+    navController: NavController, signInViewModel: SignInViewModel
+) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val navigationTitle = Screens.titleForRoute(currentRoute)
@@ -67,7 +66,8 @@ fun TopBar(navController: NavController
             navigationIcon = {
                 IconButton(onClick = {
                     GlobalOverlayState.dismissAllOverlays()
-                    GlobalOverlayState.showOverlay(OverlayType.SETTINGS) }
+                    GlobalOverlayState.showOverlay(OverlayType.SETTINGS)
+                }
                 ) {
                     Icon(
                         imageVector = Icons.Outlined.Settings,
@@ -88,7 +88,6 @@ fun TopBar(navController: NavController
                         GlobalOverlayState.showOverlay(OverlayType.PROFILE)
                     }) {
                     if (signInState.isSignInSuccessful) {
-                        // User is signed in, show the profile image
                         signInState.data?.profilePictureUrl?.let { url ->
                             Image(
                                 painter = rememberAsyncImagePainter(model = url),
@@ -100,7 +99,6 @@ fun TopBar(navController: NavController
                             )
                         }
                     } else {
-                        // User is not signed in, show default icon
                         Icon(
                             imageVector = Icons.Outlined.Person,
                             contentDescription = "Profile button",
@@ -111,8 +109,9 @@ fun TopBar(navController: NavController
                             },
                             modifier = Modifier.size(35.dp)
                         )
+                    }
                 }
-            }},
+            },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = MaterialTheme.colorScheme.primary,
                 titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -125,12 +124,14 @@ fun TopBar(navController: NavController
                 SettingsOverlay(onDismissRequest = { GlobalOverlayState.dismissOverlay() })
             }
         }
+
         OverlayType.PROFILE -> {
             CustomOverlay(OverlayType.PROFILE) {
                 UserOverlay(signInViewModel, onDismissRequest = { GlobalOverlayState.dismissOverlay()}, navController)
             }
         }
-        else -> Unit // Do nothing
+
+        else -> Unit
     }
 
     @Composable

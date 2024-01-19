@@ -38,7 +38,6 @@ object JsonTokenManager {
     fun saveTokenAsHomebrew(token: String) {
         val parts = token.split(".")
         if (parts.size != 3) {
-            Log.d("TOKEN1", "Not a usual token")
             return
         }
 
@@ -47,11 +46,8 @@ object JsonTokenManager {
         val json = jsonClaim.asString() ?: ""
 
         if (json.isEmpty()) {
-            Log.e("TOKEN1", "JSON claim is empty.")
             return
         }
-
-        Log.d("TOKEN1", "JSON: $json")
 
         try {
             val graphQLResponse = Gson().fromJson(json, Spell.GraphQLResponse::class.java)
@@ -66,10 +62,6 @@ object JsonTokenManager {
                 )
                 saveSpellToFirebase(graphQLResponse.data.spell.index!!, json)
 
-                Log.d(
-                    "TOKEN1",
-                    "Token saved as homebrew with index: ${graphQLResponse.data.spell.index}"
-                )
             } else {
                 Log.d("TOKEN1", "Token does not have the required structure.")
             }
@@ -79,7 +71,7 @@ object JsonTokenManager {
     }
 
     fun saveSpellToFirebase(index: String, spell: String){
-        repository.saveHomeBrewSpell(GlobalLogInState.userId, index!!, spell!!)
+        repository.saveHomeBrewSpell(GlobalLogInState.userId, index, spell)
     }
 
     fun loadAllSpellsFromFirebase(onDataReceived: (Map<String, String?>) -> Unit) {

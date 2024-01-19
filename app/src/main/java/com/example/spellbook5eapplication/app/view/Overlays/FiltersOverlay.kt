@@ -160,7 +160,7 @@ fun FiltersOverlay(
                                 fontWeight = FontWeight.Bold
                             )
                             Row {
-                                concentration.forEach() { concentration ->
+                                concentration.forEach { concentration ->
                                     FilterButton(
                                         modifier = Modifier.size(46.dp),
                                         contentPaddingValues = PaddingValues(1.dp),
@@ -180,7 +180,7 @@ fun FiltersOverlay(
                                 fontWeight = FontWeight.Bold
                             )
                             Row {
-                                ritual.forEach() { ritual ->
+                                ritual.forEach { ritual ->
                                     FilterButton(
                                         modifier = Modifier.size(46.dp),
                                         contentPaddingValues = PaddingValues(1.dp),
@@ -208,7 +208,7 @@ fun FiltersOverlay(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
                         ) {
-                            components.forEach() { components ->
+                            components.forEach { components ->
                                 FilterButton(
                                     modifier = Modifier.size(width = 100.dp, height = 40.dp),
                                     contentPaddingValues = PaddingValues(1.dp),

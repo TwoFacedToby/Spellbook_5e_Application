@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
+import com.example.spellbook5eapplication.app.Repository.SpellbookManager
 import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.google.gson.Gson
 import org.json.JSONArray
@@ -22,7 +23,6 @@ object LocalDataLoader {
         baseDirectory = context!!.get()?.filesDir
     }
     fun getIndexList(dataType : DataType) : List<String>{
-        Log.d("1234567", dataType.value + " is datatype")
         if(dataType == DataType.HOMEBREW) return getIndexListFromDirectory("Homebrews")
         if(dataType == DataType.SPELLBOOK) return getIndexListFromDirectory("Spellbooks")
         var fileName = ""
@@ -33,7 +33,7 @@ object LocalDataLoader {
                 directoryName = "LocalJSONData"
             }
             DataType.FAVOURITES ->  {
-                fileName = "Favourites"
+                fileName = "favourites"
                 directoryName = "Spellbooks"
             }
 
@@ -55,7 +55,7 @@ object LocalDataLoader {
             }
             DataType.FAVOURITES -> {
                 directoryName = "Spellbooks"
-                fileName = "Favourites"
+                fileName = "favourites"
             }
             else -> {return}
         }
@@ -72,7 +72,6 @@ object LocalDataLoader {
         return getIndexListFromFileName("Spellbooks", name)
     }
     fun saveJson(json : String, fileName: String, dataType: DataType) {
-        Log.d("tobylog", dataType.value + "is datatype" + fileName + "is filename" + json + "is json")
         if(dataType == DataType.SPELLBOOK) saveJsonToFile(json, "Spellbooks", fileName)
         else
         {
@@ -135,16 +134,19 @@ object LocalDataLoader {
                 directory.mkdirs() // Make the directory if it does not exist
             }
             val file = File(directory, "$fileName.json")
-            Log.d("deez12312", file.absolutePath)
             file.writeText(json)
         } catch (e: Exception) {
             println("Failed to save JSON to file: ${e.message}")
         }
     }
     private fun createEmptySpellbook(directoryName: String, fileName: String){
-        println("Created file $fileName")
+
         val file = File(baseDirectory, "$directoryName/$fileName.json")
         val emptySpellbook = Spellbook(fileName)
+        if(fileName != "individualSpells"){
+            SpellbookManager.addSpellbook(Spellbook(fileName))
+        }
+
         val gson = Gson()
         val json = gson.toJson(emptySpellbook)
         file.writeText(json)
@@ -177,7 +179,6 @@ object LocalDataLoader {
             spellsList.add(spellsArray.getString(i))
         }
 
-        Log.d("deez", spellsList.toString())
 
         return spellsList
     }
@@ -236,7 +237,7 @@ object LocalDataLoader {
     enum class DataType(val value: String) {
         INDIVIDUAL("IndividualSpells"),
         SPELLBOOK("Spellbooks"),
-        FAVOURITES("Favourites"),
+        FAVOURITES("favourites"),
         HOMEBREW("Homebrews"),
         LOCAL("LocalJSONData"),
     }

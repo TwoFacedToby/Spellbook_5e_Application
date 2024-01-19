@@ -1,6 +1,5 @@
 package com.example.spellbook5eapplication.app.viewmodel
 import androidx.compose.runtime.mutableStateListOf
-import com.example.spellbook5eapplication.app.Model.Class
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 

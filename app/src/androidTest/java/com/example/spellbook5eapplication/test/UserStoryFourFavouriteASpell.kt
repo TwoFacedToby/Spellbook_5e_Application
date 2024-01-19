@@ -39,30 +39,26 @@ class UserStoryFourFavouriteASpell {
         SpellbookManager.addSpellbook(favourites)
 
         // Assign the favourites spellbook after adding it to the manager
-        Log.d("nasdjnasdnjasnj", "favouritesSpellbook contains: $favourites: ")
     }
 
     @Given("the user is viewing a list of spells not favourited")
     fun the_user_is_viewing_a_list_of_spells_not_favourited() {
-        Log.d("Executed", "Given")
         Assert.assertNotNull("Favourites spellbook should not be null", favourites)
     }
 
     @When("the user marks a spell as a favorite by tapping the heart icon")
     fun the_user_marks_a_spell_as_a_favorite_by_tapping_the_heart_icon() {
-        Log.d("Executed", "First When")
         val spellToAdd = "Lightning Bolt"
         SpellbookManager.getSpellbook("FavouritesTest")?.addSpellToSpellbook(spellToAdd)
-        Log.d("nasdjnasdnjasnj1234", "favouritesSpellbook contains: ${favourites}: ")
         SpellbookManager.saveSpellbookToFile("FavouritesTest")
         }
 
     @Then("that spell should be saved to a dedicated Favorites section")
     fun that_spell_should_be_saved_to_a_dedicated_favorites_section() {
-        Log.d("Executed", "Then")
-        val updatedFavouriteSpellbook = favourites?.spells?.contains("Lightning Bolt") ?: false
-        Log.d("asmodkoasdnk", updatedFavouriteSpellbook.toString())
-        Assert.assertTrue("Favourites spellbook should contain the marked spell", updatedFavouriteSpellbook!!)
+        val updatedFavouriteSpellbook = favourites.spells?.contains("Lightning Bolt") ?: false
+        Assert.assertTrue("Favourites spellbook should contain the marked spell",
+            updatedFavouriteSpellbook
+        )
     }
 
 

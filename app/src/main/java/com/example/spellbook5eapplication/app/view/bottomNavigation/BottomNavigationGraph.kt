@@ -29,12 +29,11 @@ fun BottomNavigationGraph(
     NavHost(navController = navController, startDestination = Screens.Search.route){
         composable(route = Screens.Search.route){
             val spellList = SpellQueryViewModelFactory.create(type = "ALL_SPELLS")
-            Basic_Screen(spellList, true, true)
+            Basic_Screen(spellList, true, true, true)
         }
         composable(route = Screens.Favorite.route){
             val spellList = SpellQueryViewModelFactory.create(type = "FAVORITES")
-            Log.d("TAGGERKLAPPER", spellList.value.toString())
-            Basic_Screen(spellList, false, false)
+            Basic_Screen(spellList, false, false, false)
         }
         composable(route = Screens.Spellbooks.route){
             val buttonType = if (TitleState.currentTitle.value != null) "VIEW_SPELLS" else "SPELLBOOK"
@@ -42,7 +41,7 @@ fun BottomNavigationGraph(
             val spellList = SpellQueryViewModelFactory.create(type = "SPELLBOOK")
 
 
-            Basic_Screen(spellsLiveData = spellList, false, false, customContent = {
+            Basic_Screen(spellsLiveData = spellList, false, false, true, customContent = {
                 Spacer(modifier = Modifier.height(20.dp))
                 DynamicButtonFactory(
                     buttonType = buttonType,
@@ -52,7 +51,7 @@ fun BottomNavigationGraph(
         }
         composable(route = Screens.Homebrew.route){
             val spellList = SpellQueryViewModelFactory.create(type = "HOMEBREW")
-            Basic_Screen(spellsLiveData = spellList, false, false, customContent = {
+            Basic_Screen(spellsLiveData = spellList, false, false, true, customContent = {
                 Spacer(modifier = Modifier.height(20.dp))
                 DynamicButtonFactory(
                     buttonType = "HOMEBREW",

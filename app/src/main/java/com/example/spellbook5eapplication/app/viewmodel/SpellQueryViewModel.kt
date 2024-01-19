@@ -23,7 +23,7 @@ import com.example.spellbook5eapplication.app.viewmodel.TitleState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class SpellQueryViewModel() : ViewModel() {
+class SpellQueryViewModel : ViewModel() {
 
     //Spell name list for API
     private var spellList: SpellList? = null
@@ -92,7 +92,6 @@ class SpellQueryViewModel() : ViewModel() {
 
             }
             _indexListFromAPI = spellList!!.getIndexList().toMutableList()
-            Log.d("API_RESPONSE_NEW", spellList.toString())
             loadInitialSpells()
         }
     }
@@ -100,7 +99,6 @@ class SpellQueryViewModel() : ViewModel() {
     private fun loadInitialSpells() {
         viewModelScope.launch {
 
-            Log.d("API_RESPONSE_NEW",_spells.value.isNullOrEmpty().toString())
 
             // Load initial spells only if the spell list is empty
             if (_spells.value.isNullOrEmpty()) {
@@ -111,8 +109,7 @@ class SpellQueryViewModel() : ViewModel() {
                     loadingSpells.add(SpellsViewModel.getEmptySpell())
                 }
                 val initialSpells = loadedSpells + loadingSpells
-                Log.d("API_RESPONSE_NEW","IS: " + initialSpells.toString())
-                val displayableSpells = initialSpells?.map { it as Displayable }
+                val displayableSpells = initialSpells.map { it }
                 _spells.postValue(displayableSpells!!)
                 _isLoading.postValue(false)
             }
@@ -121,10 +118,14 @@ class SpellQueryViewModel() : ViewModel() {
 
     fun loadMoreSpells() {
         viewModelScope.launch {
+
+
+            if(canLoadMoreSpells() != null && spellList != null)
+
             if (canLoadMoreSpells() && spellList!!.getLoaded() < spellList!!.getIndexList().count()) {
                 _isLoading.postValue(true)
                 val nextSpells = SpellsViewModel.fetchNextSpellDetails(spellList!!, 10)
-                val displayableNextSpells = nextSpells.map { it as Displayable }
+                val displayableNextSpells = nextSpells.map { it }
 
                 val updatedList = _spells.value.orEmpty().toMutableList()
 
@@ -151,8 +152,7 @@ class SpellQueryViewModel() : ViewModel() {
         val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
         val loaded = try { spellList!!.getLoaded() }
         catch (e : Exception){ 0 } //Loaded is null
-        val toReturn = lastVisibleItem > (loaded - 3) //We minus by three, because we want it to start loading before we reach the bottom
-        Log.d("SpellQuery", "Should load more: $toReturn\nLast: $lastVisibleItem\nLoaded: $loaded")
+        val toReturn = lastVisibleItem > (loaded - 10) //We minus by three, because we want it to start loading before we reach the bottom
         return toReturn
     }
 
@@ -161,9 +161,8 @@ class SpellQueryViewModel() : ViewModel() {
     private fun loadFavoriteSpells() {
         viewModelScope.launch {
             val spellList = SpelllistLoader.loadSpellbookAsSpellList("favourites")
-            Log.d("MILK2", spellList.toString())
 
-            val displayableFavorites = spellList.getSpellInfoList().map { it as Displayable }
+            val displayableFavorites = spellList.getSpellInfoList().map { it }
 
             _favorite.postValue(displayableFavorites)
         }
@@ -172,7 +171,7 @@ class SpellQueryViewModel() : ViewModel() {
     fun loadHomebrewList(){
         viewModelScope.launch {
             val spellList = SpelllistLoader.loadHomeBrewSpellList()
-            val displayableHomebrews = spellList.getSpellInfoList().map { it as Displayable }
+            val displayableHomebrews = spellList.getSpellInfoList().map { it }
             _homebrew.postValue(displayableHomebrews)
         }
 
@@ -195,10 +194,6 @@ class SpellQueryViewModel() : ViewModel() {
     fun totalSpellsLoaded(): Int = spellList!!.getIndexList().size
 
     fun loadSpellsFromSpellbook(spellbook: Spellbook) {
-
-
-        Log.d("MAY", spellbook.toString())
-
         viewModelScope.launch {
             val spellInfos = spellbook.spells.mapNotNull { spellName ->
                 try {
@@ -208,16 +203,11 @@ class SpellQueryViewModel() : ViewModel() {
                     null
                 }
             }
-
-            Log.d("MAY", spellInfos.toString())
-
             _spellBooks.postValue(spellInfos)
         }
     }
 
     fun loadSpellsBasedOnFilter(filter: Filter) {
-        Log.d("SpellQueryViewModel", "LoadSpellsBasedOnFilter start: ${filter.toString()}")
-
         _isLoading.value = true
         _spells.value = emptyList()
 
@@ -231,7 +221,6 @@ class SpellQueryViewModel() : ViewModel() {
             without this delay, the list is not emptied, as it knows it is gonna be filled shortly thereafter.
             It is just 1 millisecond, it is okay. We'll live love laugh.
             * */
-            Log.d("SearchDebug", "IndexList: ${spellList!!.getIndexList().count()} infolist: ${spellList!!.getSpellInfoList().count()}")
             //If it is not loaded fully -> load it fully.
             if(spellList!!.getLoaded() <= spellList!!.getIndexList().count()){
                 val spellInfoList = mutableListOf<Spell.SpellInfo>()

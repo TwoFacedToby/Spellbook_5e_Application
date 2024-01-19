@@ -53,7 +53,6 @@ class UserStoryThreeSelectSpecificSpellbook {
     fun the_user_selects_a_specific_spellbook() {
         selectedSpellbookTemp = selectedSpellbook.value
 
-        Log.d("LOLOLOLOLOL","Spellbook Size ${spellbooks.size.toString()}")
         if(spellbooks.size > 1) {
             selectedSpellbook.value = spellbooks.getOrNull(1)
         }

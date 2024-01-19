@@ -33,11 +33,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.ui.theme.ButtonColors
 
 /**
@@ -64,10 +62,10 @@ fun UserDropOnly(
     var current by remember { mutableStateOf(dropName) }
     var selectedDropdownItem by remember { mutableStateOf("") }
 
-Row(
-modifier = Modifier.fillMaxWidth(),
-horizontalArrangement = Arrangement.Center
-) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
+    ) {
 
 
         // Button to open dropdown
@@ -79,7 +77,7 @@ horizontalArrangement = Arrangement.Center
             )
         )
         { expand = true }
-}
+    }
 
     Spacer(modifier = Modifier.height(5.dp))
 
@@ -98,28 +96,36 @@ horizontalArrangement = Arrangement.Center
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 dropdown.forEach { item ->
-                    item {Text(
-                        text = item,
-                        color = MaterialTheme.colorScheme.onTertiary,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                selectedDropdownItem = item
-                                dropChange(item)
-                                current = item
-                                expand = false
-                            }
-                            .padding(vertical = 5.dp) // Size of each dropdown item
-                    )}
-                    item {Divider(
-                        //color = R.color.selected_button,
-                        thickness = 1.dp,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(1.dp)
-                    )}
-                }}}}}
+                    item {
+                        Text(
+                            text = item,
+                            color = MaterialTheme.colorScheme.onTertiary,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    selectedDropdownItem = item
+                                    dropChange(item)
+                                    current = item
+                                    expand = false
+                                }
+                                .padding(vertical = 5.dp) // Size of each dropdown item
+                        )
+                    }
+                    item {
+                        Divider(
+                            //color = R.color.selected_button,
+                            thickness = 1.dp,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(1.dp)
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 /**
@@ -196,7 +202,7 @@ fun EditableList(
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
 
-    ) {
+        ) {
         items(choosen) { item ->
             Card(
                 backgroundColor = Color.Gray,

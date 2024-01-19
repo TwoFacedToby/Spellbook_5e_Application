@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -27,13 +26,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spell
 import com.example.spellbook5eapplication.app.Model.Data_Model.Spellbook
 import com.example.spellbook5eapplication.app.Utility.Displayable
@@ -41,17 +37,18 @@ import com.example.spellbook5eapplication.app.view.viewutilities.DefaultSpellCar
 import com.example.spellbook5eapplication.app.view.viewutilities.FadeSide
 import com.example.spellbook5eapplication.app.view.viewutilities.fadingEdge
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
-import kotlinx.coroutines.launch
 
 const val amountToLoad = 10
 const val pagination = true //Run app with pagination
-const val bottomDistance = 10 //How many spell cards from the bottom should the next 10 be loaded. (The lower it is, there more loading stops you will see, the higher it is the more spells you will load and might cause the app to be slower sometimes)
+const val bottomDistance =
+    10 //How many spell cards from the bottom should the next 10 be loaded. (The lower it is, there more loading stops you will see, the higher it is the more spells you will load and might cause the app to be slower sometimes)
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun SpellQuery(
     spellsLiveData: LiveData<List<Displayable?>>,
     enablePagination: Boolean,
+    contentVisible: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -65,10 +62,6 @@ fun SpellQuery(
     val isUpdated by filterViewModel.isUpdated
 
 
-
-    //Back-up
-    //val spells by spellQueryViewModel.spells.observeAsState(emptyList())
-
     val spells by spellsLiveData.observeAsState(emptyList())
     val shouldScrollToTop by spellQueryViewModel.shouldScrollToTop.observeAsState(false)
     val isLoading by spellQueryViewModel.isLoading.observeAsState(false)
@@ -77,22 +70,21 @@ fun SpellQuery(
     val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(key1 = lazyListState.firstVisibleItemIndex) {
+
         if (spellQueryViewModel.shouldLoadMoreData(lazyListState)) {
-            Log.d("SpellQuery21", "Should: True")
             if (enablePagination && filter.count() == 0 && !isLoading) {
-                Log.d("SpellQuery2", "Loading More")
                 spellQueryViewModel.loadMoreSpells()
             }
         }
     }
     LaunchedEffect(filter) {
-        if(isUpdated){
+        if (isUpdated) {
             spellQueryViewModel.loadSpellsBasedOnFilter(filter)
             filterViewModel.resetUpdatedValue()
         }
     }
 
-    LaunchedEffect(shouldScrollToTop){
+    LaunchedEffect(shouldScrollToTop) {
         spellQueryViewModel.resetScrollToTop()
         lazyListState.scrollToItem(0)
     }
@@ -122,7 +114,8 @@ fun SpellQuery(
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             item {
-                /*if(searchBarPresent)*/ Spacer(modifier = Modifier.height(80.dp))
+                if(contentVisible)
+                    Spacer(modifier = Modifier.height(80.dp))
             }
             items(spells.size) { index ->
                 spells[index]?.let {
@@ -131,9 +124,9 @@ fun SpellQuery(
                             val spellCardComposable = spellCardFactory.createSpellCard(it)
                             spellCardComposable()
                         }
+
                         is Spellbook -> {
                             // New logic for handling Spellbook
-                            Log.d("WEMADEIT", "We didnt actually make it")
                             SpellbookCard(
                                 spellbook = it
                             )
@@ -145,11 +138,7 @@ fun SpellQuery(
 
                 }
             }
-            /*item {
-                Spacer(modifier = Modifier.height(60.dp))
-            }*/
 
-            // Loading indicator only when pagination is enabled
             if (isLoading && enablePagination) {
                 item { LoadingIndicator() }
             }
