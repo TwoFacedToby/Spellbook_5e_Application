@@ -7,4 +7,5 @@ sealed class SignInEvent {
     object DismissOverlay : SignInEvent()
     object CreateAccountFailed : SignInEvent()
     object CreateAccountFailedAlternative : SignInEvent()
+    object CreateAccountSuccess : SignInEvent()
 }

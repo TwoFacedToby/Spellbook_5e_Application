@@ -2,6 +2,7 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -92,6 +93,11 @@ fun CreateAccountScreen(
                 is SignInEvent.CreateAccountFailedAlternative -> {
                     Toast.makeText(context, "Create account failed", Toast.LENGTH_SHORT).show()
                 }
+
+                is SignInEvent.CreateAccountSuccess -> {
+                    Toast.makeText(context, "Create account success", Toast.LENGTH_SHORT).show()
+                    navController.navigate("search_screen")
+                }
             }
         }
     }
@@ -158,7 +164,7 @@ fun CreateAccountScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        TextButton(onClick = { navController.navigate("login_screen") }) {
+        TextButton(onClick = { navController.navigate("login_screen") }, modifier = Modifier.background(Color.DarkGray)) {
             Text("Already have an account? Log in")
         }
     }

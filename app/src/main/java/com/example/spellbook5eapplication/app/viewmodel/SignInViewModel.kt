@@ -51,16 +51,18 @@ class SignInViewModel(
             try {
                 val authResult = auth.createUserWithEmailAndPassword(email, password).await()
 
-                // Optionally set the user's display name
                 val user = authResult.user
                 val profileUpdates = UserProfileChangeRequest.Builder()
-                    .setDisplayName(name) // Use the provided name
+                    .setDisplayName(name)
                     .build()
 
                 user?.updateProfile(profileUpdates)?.await()
 
+                _eventFlow.emit(SignInEvent.CreateAccountSuccess)
+
                 // Proceed with sign in or further account setup
                 signInEmail(email, password)
+
 
 
 

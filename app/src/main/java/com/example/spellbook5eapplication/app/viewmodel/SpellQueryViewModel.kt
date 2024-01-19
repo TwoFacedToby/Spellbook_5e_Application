@@ -152,7 +152,7 @@ class SpellQueryViewModel : ViewModel() {
         val lastVisibleItem = layoutInfo.visibleItemsInfo.lastOrNull()?.index ?: 0
         val loaded = try { spellList!!.getLoaded() }
         catch (e : Exception){ 0 } //Loaded is null
-        val toReturn = lastVisibleItem > (loaded - 10) //We minus by three, because we want it to start loading before we reach the bottom
+        val toReturn = lastVisibleItem > (loaded - 30) //We minus by three, because we want it to start loading before we reach the bottom
         return toReturn
     }
 

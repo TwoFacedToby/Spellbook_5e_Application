@@ -79,6 +79,9 @@ fun LoginScreen(
                 is SignInEvent.CreateAccountFailedAlternative -> {
                     Toast.makeText(context, "Unknown Error - Try again later", Toast.LENGTH_SHORT).show()
                 }
+                else -> {
+                    // Do nothing
+                }
             }
         }
     }
