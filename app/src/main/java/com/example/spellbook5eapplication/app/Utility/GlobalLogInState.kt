@@ -13,10 +13,22 @@ object GlobalLogInState {
         userPhotoUrl = ""
     }
 
-    fun setLoggedInState(userId: String, userName: String, userPhotoUrl: String) {
+    fun setLoggedInState(userId: String, userName: String, userPhotoUrl: String?) {
         isloggedIn = true
-        this.userId = userId
-        this.userName = userName
-        this.userPhotoUrl = userPhotoUrl
+        if(userId != null){
+            this.userId = userId
+        } else {
+            this.userId = ""
+        }
+        if(userName != null){
+            this.userName = userName
+        } else {
+            this.userName = ""
+        }
+        if (userPhotoUrl == null) {
+            this.userPhotoUrl = ""
+        } else {
+            this.userPhotoUrl = userPhotoUrl
+        }
     }
 }

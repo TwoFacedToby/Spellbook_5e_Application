@@ -1,5 +1,4 @@
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.spellbook5eapplication.app.Model.Data_Model.SignInResult
@@ -50,7 +49,7 @@ class SignInViewModel(
                 if (signInResult.data != null) {
                     _eventFlow.emit(SignInEvent.SignInSuccess)
                     _eventFlow.emit(SignInEvent.DismissOverlay)
-                    GlobalLogInState.setLoggedInState(signInResult.data.userId, signInResult.data.name!!, signInResult.data.profilePictureUrl!!)
+                    GlobalLogInState.setLoggedInState(signInResult.data.userId, signInResult.data.name!!, signInResult.data.profilePictureUrl)
                 } else {
                     _eventFlow.emit(SignInEvent.SignInFailure)
                 }
@@ -69,6 +68,18 @@ class SignInViewModel(
             _state.update { SignInState(isSignInSuccessful = false, signInError = null) }
             _eventFlow.emit(SignInEvent.SignOutSuccess)
             GlobalLogInState.reset()
+        }
+    }
+
+    fun signInEmail(username: String, password: String) {
+        viewModelScope.launch {
+            val signInResult: Unit = googleAuthUIClient.signInEmail(username, password)
+            if(GlobalLogInState.isloggedIn) {
+                _eventFlow.emit(SignInEvent.SignInSuccess)
+                _eventFlow.emit(SignInEvent.DismissOverlay)
+            } else {
+                _eventFlow.emit(SignInEvent.SignInFailure)
+            }
         }
     }
 

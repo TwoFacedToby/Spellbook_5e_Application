@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -495,7 +496,8 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
-                        initialInput = viewModel.spell.name.toString()
+                        initialInput = viewModel.spell.name.toString(),
+                        visualTransformation = PasswordVisualTransformation()
                     )
                 }
             })
@@ -553,7 +555,8 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
-                        initialInput = showVal
+                        initialInput = showVal,
+                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -589,7 +592,8 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
-                        initialInput = showVal
+                        initialInput = showVal,
+                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }
@@ -692,7 +696,8 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
-                            initialInput = viewModel.spell.materials.toString()
+                            initialInput = viewModel.spell.materials.toString(),
+                            visualTransformation = PasswordVisualTransformation()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
 
@@ -776,7 +781,8 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
-                            initialInput = ""
+                            initialInput = "",
+                            visualTransformation = PasswordVisualTransformation()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -835,7 +841,8 @@ class HomeBrewInstantiator {
                                 .size(width = 220.dp, height = 48.dp),
                             singleLine = true,
                             imeAction = ImeAction.Default,
-                            initialInput = ""
+                            initialInput = "",
+                            visualTransformation = PasswordVisualTransformation()
                             //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                         )
                     }
@@ -876,7 +883,8 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
-                        initialInput = viewModel.spell.casting_time.toString()
+                        initialInput = viewModel.spell.casting_time.toString(),
+                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -989,7 +997,8 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
-                        initialInput = viewModel.spell.attackType.toString()
+                        initialInput = viewModel.spell.attackType.toString(),
+                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -1017,7 +1026,8 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
-                        initialInput = viewModel.spell.damage!!.damageType!!.name.toString()
+                        initialInput = viewModel.spell.damage!!.damageType!!.name.toString(),
+                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
 
@@ -1046,7 +1056,8 @@ class HomeBrewInstantiator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
-                        initialInput = viewModel.spell.dc.toString()
+                        initialInput = viewModel.spell.dc.toString(),
+                        visualTransformation = PasswordVisualTransformation()
                         //input = input (In the future one could make so the input isnt "" by default, this will make editing easier)
                     )
                 }

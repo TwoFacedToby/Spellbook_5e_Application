@@ -1,6 +1,5 @@
 package com.example.spellbook5eapplication.app.view.viewutilities
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -33,6 +32,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -45,6 +46,7 @@ fun UserInputField(
     singleLine: Boolean,
     imeAction: ImeAction,
     initialInput: String,
+    visualTransformation: VisualTransformation = VisualTransformation.None,
 ) {
     var input by remember { mutableStateOf(initialInput) }
 
@@ -75,6 +77,7 @@ fun UserInputField(
     }
 
     BasicTextField(
+        visualTransformation = visualTransformation,
         value = input,
         onValueChange = {
             input = it

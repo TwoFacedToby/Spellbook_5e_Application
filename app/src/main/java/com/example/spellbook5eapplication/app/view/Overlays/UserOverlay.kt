@@ -50,6 +50,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.UserData
+import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
 import com.example.spellbook5eapplication.app.Utility.JsonTokenManager.loadAllSpellsFromFirebase
 import com.example.spellbook5eapplication.app.Utility.JsonTokenManager.saveTokenAsHomebrew
 import com.example.spellbook5eapplication.app.Utility.SignInEvent
@@ -116,7 +117,7 @@ fun UserOverlay(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        if (signInState.isSignInSuccessful) {
+        if (GlobalLogInState.isloggedIn) {
             val spellQueryViewModel: SpellQueryViewModel = viewModel()
             signInState.data?.let { userData ->
                 UserCard(userData)

@@ -4,6 +4,7 @@ import android.util.Log
 import com.example.spellbook5eapplication.R
 import com.example.spellbook5eapplication.app.Model.Data_Model.SignInResult
 import com.example.spellbook5eapplication.app.Model.Data_Model.UserData
+import com.example.spellbook5eapplication.app.Utility.GlobalLogInState
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -13,6 +14,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
+
 
 class GoogleAuthUIClient(private val context: Context) {
     private val auth: FirebaseAuth = Firebase.auth
@@ -24,6 +26,36 @@ class GoogleAuthUIClient(private val context: Context) {
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(context, gso)
+    }
+
+    fun signInEmail(email : String, password : String) {
+        Log.d("emailLogin", "Email: $email, Password: $password")
+        auth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Log.d("emailLogin", "signInWithEmail:success")
+                    val user = FirebaseAuth.getInstance().currentUser
+                    var uid = ""
+                    var displayName = "John Doe"
+                    var photoURL = ""
+                    if(user?.uid != null) {
+                        uid = user?.uid!!
+                    }
+                    if (user?.displayName != null) {
+                        displayName = user?.displayName!!
+                    }
+                    if(user?.photoUrl != null) {
+                        photoURL = user?.photoUrl.toString()
+                    }
+                        GlobalLogInState.setLoggedInState(
+                            uid,
+                            displayName,
+                            photoURL
+                        )
+                    } else {
+                    Log.w("emailLogin", "signInWithEmail:failure", task.exception)
+            }
+        }
     }
 
     fun signIn(): Intent {

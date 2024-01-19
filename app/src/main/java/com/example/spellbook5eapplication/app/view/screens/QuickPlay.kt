@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -172,7 +173,8 @@ fun SaveSpellBookDialog(onDissmiss: () -> Unit) {
                         .size(200.dp, 48.dp),
                     singleLine = true,
                     imeAction = ImeAction.Done,
-                    initialInput = ""
+                    initialInput = "",
+                    visualTransformation = PasswordVisualTransformation()
                 )
                 ColouredButton(
                     label = "OK",

@@ -17,6 +17,7 @@ import com.example.spellbook5eapplication.app.view.AuthUI.LoginScreen
 import com.example.spellbook5eapplication.app.view.screens.Basic_Screen
 import com.example.spellbook5eapplication.app.view.screens.QuickPlay
 import com.example.spellbook5eapplication.app.view.viewutilities.DynamicButtonFactory
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
 import com.example.spellbook5eapplication.app.viewmodel.SpellQueryViewModelFactory
 import com.example.spellbook5eapplication.app.viewmodel.TitleState
 
@@ -66,7 +67,7 @@ fun BottomNavigationGraph(
             val Context = LocalContext.current
             val googleAuthUIClient = GoogleAuthUIClient(context = Context)
             val signInViewModel = SignInViewModel(googleAuthUIClient = googleAuthUIClient)
-            LoginScreen(signInViewModel = signInViewModel, navController = navController)
+            LoginScreen(signInViewModel = signInViewModel, onDismissRequest = {GlobalOverlayState.dismissOverlay()}, navController = navController)
         }
         composable(route = Screens.CreateAccount.route){
             val Context = LocalContext.current

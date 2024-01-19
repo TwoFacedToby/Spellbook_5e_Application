@@ -38,6 +38,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -244,7 +245,8 @@ class SpellbookCreator {
                             .size(width = 220.dp, height = 48.dp),
                         singleLine = true,
                         imeAction = ImeAction.Default,
-                        initialInput = ""
+                        initialInput = "",
+                        visualTransformation = PasswordVisualTransformation()
                     )
                 }
             }
@@ -267,7 +269,8 @@ class SpellbookCreator {
                             .size(width = 220.dp, height = 240.dp),
                         singleLine = false,
                         imeAction = ImeAction.Default,
-                        initialInput = ""
+                        initialInput = "",
+                        visualTransformation = PasswordVisualTransformation()
                     )
                 }
             }

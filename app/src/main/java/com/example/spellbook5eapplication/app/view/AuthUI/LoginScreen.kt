@@ -1,12 +1,9 @@
 package com.example.spellbook5eapplication.app.view.AuthUI
 
-import SignInWithGoogle
 import SignInViewModel
-import android.app.Activity
 import android.content.Intent
-import androidx.activity.compose.rememberLauncherForActivityResult
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -15,13 +12,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,35 +36,74 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
 import com.example.spellbook5eapplication.R
 
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.example.spellbook5eapplication.app.Utility.SignInEvent
+import com.example.spellbook5eapplication.app.view.viewutilities.UserInputField
+import com.example.spellbook5eapplication.app.viewmodel.GlobalOverlayState
+
 @Composable
 fun LoginScreen(
     signInViewModel: SignInViewModel,
+    onDismissRequest: () -> Unit,
     navController: NavController
 ) {
-    val signInResultLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        // ... existing code ...
+    var username by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    LaunchedEffect(signInViewModel) {
+        signInViewModel.eventFlow.collect { event ->
+            when (event) {
+                is SignInEvent.SignInSuccess -> {
+                    Toast.makeText(context, "Logged in successfully", Toast.LENGTH_SHORT).show()
+                    navController.navigate("search_screen")
+                }
+
+                is SignInEvent.SignInFailure -> {
+                    Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()
+                }
+
+                is SignInEvent.SignOutSuccess -> {
+                    Toast.makeText(context, "Logged out successfully", Toast.LENGTH_SHORT).show()
+                }
+
+                is SignInEvent.DismissOverlay -> {
+                    onDismissRequest()
+                }
+            }
+        }
     }
 
-    Box(
-        modifier = Modifier
-            .padding(16.dp)
-            .padding(top = 50.dp)
-            .padding(bottom = 50.dp)
-            .border(1.dp, Color.Gray)
-            .padding(16.dp)
+    Box(modifier = Modifier.clickable(onClick = { GlobalOverlayState.dismissOverlay() })) {
 
-    ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
-            Button(onClick = { /*...*/ }) {
-                Text("Log In")
+            UserInputField(
+                label = "Username",
+                onInputChanged = { username = it },
+                modifier = Modifier
+                    .size(width = 220.dp, height = 48.dp),
+                singleLine = true,
+                imeAction = ImeAction.Next,
+                initialInput = "",
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            UserInputField(
+                label = "Password",
+                onInputChanged = { password = it },
+                modifier = Modifier
+                    .size(width = 220.dp, height = 48.dp),
+                singleLine = true,
+                imeAction = ImeAction.Done,
+                initialInput = "",
+                visualTransformation = PasswordVisualTransformation()
+            )
+            Button(onClick = { signInViewModel.signInEmail(username, password)}) {
+                Text("Sign In")
             }
             Spacer(modifier = Modifier.height(32.dp))
             Button(onClick = { navController.navigate("create_account_screen") }) {
@@ -69,10 +111,12 @@ fun LoginScreen(
             }
         }
     }
-}
 
     @Composable
-    fun SignInWithGoogle(signInViewModel: SignInViewModel, signInResultLauncher: ActivityResultLauncher<Intent>) {
+    fun SignInWithGoogle(
+        signInViewModel: SignInViewModel,
+        signInResultLauncher: ActivityResultLauncher<Intent>
+    ) {
         val context = LocalContext.current
         val drawable = ContextCompat.getDrawable(context, R.drawable.android_light_rd_si_4x)
         val imageBitmap = drawable?.toBitmap()?.asImageBitmap()
@@ -91,3 +135,4 @@ fun LoginScreen(
             )
         }
     }
+}

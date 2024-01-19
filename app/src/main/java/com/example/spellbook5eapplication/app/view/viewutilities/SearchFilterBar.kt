@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.spellbook5eapplication.app.viewmodel.FilterViewModel
@@ -32,13 +33,14 @@ fun SearchFilterBar(
     {
         UserInputField(
             label = "Search",
-            singleLine = true,
             onInputChanged = { input ->
                 filterViewModel.updateFilterWithSearchName(input)
             },
             modifier = Modifier.size(height = 48.dp, width = 220.dp),
+            singleLine = true,
             imeAction = ImeAction.Search,
-            initialInput = inputText
+            initialInput = inputText,
+            visualTransformation = PasswordVisualTransformation()
         )
         Spacer(modifier = Modifier.width(5.dp))
         FilterButton(

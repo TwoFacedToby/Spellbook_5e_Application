@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.spellbook5eapplication.R
@@ -76,7 +77,8 @@ fun CreateDialog(
                         .width(200.dp),
                     singleLine = true,
                     imeAction = ImeAction.Done,
-                    initialInput = ""
+                    initialInput = "",
+                    visualTransformation = PasswordVisualTransformation()
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(
